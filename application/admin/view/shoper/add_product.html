@@ -1,0 +1,811 @@
+{css href="__STATIC__/kindeditor/themes/default/default.css"}
+{css href="__STATIC__/js/daterangepicker/daterangepicker-bs3.css"}
+{css href="__STATIC__/js/timepicker/bootstrap-timepicker.min.css"}
+{css href="__STATIC__/js/datepicker/datepicker3.css"}
+{js href="__STATIC__/kindeditor/kindeditor-min.js"}
+{js href="__STATIC__/kindeditor/lang/zh_CN.js"}
+{js href="__STATIC__/js/moment/moment.min.js"}
+{js href="__STATIC__/js/datepicker/bootstrap-datepicker.js"}
+{js href="__STATIC__/js/daterangepicker/daterangepicker.js"}
+{js href="__STATIC__/js/timepicker/bootstrap-timepicker.min.js"}
+<!-- lzc -->
+{css href="__STATIC__/lvyangtian/app.css"}
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+{js href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"}
+<style>
+	.img-box{width:200px;height:150px;border:#cfcfcf dashed 1px;margin:10px 0px;background-color:#f3f3f3;background-size:contain;background-position:center;position:relative;background-repeat:no-repeat;}
+	.cross{width:20px;height:20px;border-radius:10px;line-height:18px;text-align:center;font-size:14px;color:#fff;background-color:rgba(207,207,207,0.8);position:absolute;top:-10px;right:-10px;cursor:pointer;display:none;}
+	.cross.gcross{width:16px;height:16px;border-radius:8px;font-size:12px;line-height:14px;top:-6px;right:-6px;display:block;}
+
+	.upload-img-box{width:100%;padding:5px;border:#ccc dashed 1px;font-size:0;margin-top:10px;}
+	.upload-img-box .upload-pre-item{width:100px;height:75px;display:inline-block;vertical-align:center;margin:2.5px 8px 2.5px 0px;background-color:#efefef;background-size:cover;background-position:center;background-repeat:no-repeat;position:relative;}
+	.upload-img-box .upload-pre-item:last-child{margin:2.5px 0px 2.5px 0px;}
+
+	.sku-container{width:100%;padding:5px;border:#efefef solid 1px;background-color:#fff;}
+	.sku-container .gray-top{width:100%;padding:6px 8px;background-color:#f8f8f8;position:relative;}
+	.sku-container .sku-add-format{width:150px;height:40px;padding:5px;font-size:14px;color:#333;text-align:center;background-color:#e1e1e1;border:none;border-radius:3px;}
+	.sku-container .sku-add-format:hover,.sku-container .sku-add-format:active{background-color:#c5c5c5;}
+	.sku-container .sku-group{width:100%;height:auto;}
+	.sku-container .gray-top button.am-dropdown-toggle{background-color:#fff !important;}
+	.sku-container .sku-group .sku-item-box{width:100%;height:auto;padding:15px 8px;font-size:0;}
+	.sku-container .sku-group .sku-item-box a.sku-add-item{font-size:14px;color:#428bca;margin:0px 8px;cursor:pointer;}
+	.sku-container .sku-group .sku-item-box a.sku-add-item:hover,.sku-container .sku-group .sku-item-box a.sku-add-item:active{text-decoration:underline;}
+	.sku-container .sku-group .sku-item-box span.item-choice{display:inline-block;font-size:14px;padding:5px;border:#ccc solid 1px;border-radius:3px;color:#333;margin:0px 5px;position:relative;}
+	.sku-container .sku-group .sku-item-box span.item-choice>label{font-weight:normal;margin:0;padding:0;}
+	.sku-container .sku-group a.sku-cross{display:block;width:19px;height:19px;color:#fff;text-align:center;font-size:14px;background-color:rgba(153,153,153,0.6);cursor:pointer;border-radius:9px;line-height:19px;text-indent:0;}
+	.sku-container .sku-group a.sku-cross.format-remove{position:absolute;top:15px;right:20px;}
+	.sku-container .sku-group a.sku-cross.item-remove{position:absolute;top:-10px;right:-10px;}
+	.sku-container .sku-group a.sku-cross.rmhide{display:none;}
+	.sku-container table.table-sku-stock{width:100%;background-color:#fff;text-align:left;}
+	.sku-container table.table-sku-stock thead tr,.sku-container table.table-sku-stock thead td{border:none;}
+	.sku-container table.table-sku-stock tbody td{border:#e5e5e5 solid 1px;padding:8px;}
+	.sku-container table.table-sku-stock tbody td:first-of-type{border-left:none;}
+	.sku-container table.table-sku-stock tbody td:last-of-type{border-right:none;}
+	.sku-container table.table-sku-stock tbody tr:nth-child(even){background-color:#efefef;}
+
+	.gray-top .form-control.pro-select{width:300px;}
+	.sku-input,.freight-input{width:99%;padding-left:1%;border:#ddd solid 1px;}
+	.sku-input.allset,.freight-input.allset{width:96%;margin-top:5px;height:35px;}
+	thead th,tfoot td{text-align:center;}
+</style>
+<!-- Main content -->
+<section class="content" style="margin-top:30px;">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- general form elements -->
+		      <div class="nav-tabs-custom">
+		        <ul class="nav nav-tabs">
+		        	<li class="active"><a href="#tab_1" data-toggle="tab">基本信息</a></li>
+		        	<!-- lzc -->
+		        	<!-- <li><a href="#tab_2" data-toggle="tab">产品规格</a></li> -->
+		        	<li><a href="#tab_3" data-toggle="tab">图文详情</a></li>
+		        	<!-- <li><a href="#tab_4" data-toggle="tab">其他配置</a></li> -->
+		        </ul>
+		        <!-- /.box-header -->
+		        <!-- form start -->
+		        <form id="form" role="form">
+		          <div class="tab-content">
+		          	<div class="tab-pane active" id="tab_1">
+			          	<div class="col-md-8">
+			          		<div class="form-group">
+				               <label style="display:block;">所属分类</label>
+				               <select name="cid" class="form-control select2">
+				               	{volist name="classify" id="vo"}
+				               		<option value="{$vo.id}">{$vo.title}</option>
+				               	{/volist}
+				               </select>
+				            </div>
+			          		<div class="form-group">
+				              <label>产品编码</label>
+				              <input type="text" name="sn_code" class="form-control" placeholder="产品的唯一编码" value="">
+				            </div>
+				            <div class="form-group">
+				              <label>产品名称</label>
+				              <input type="text" name="name" class="form-control" placeholder="产品的名称" value="">
+				            </div>
+				            <div class="form-group">
+				              <label>产品描述</label>
+				              <textarea name="description" class="form-control" placeholder="产品的简短描述(150字以内)"></textarea>
+				            </div>
+				            <div class="form-group">
+				              <label>产品现价</label>
+				              <input type="text" name="price" class="form-control" placeholder="产品的销售现价" value="">
+				            </div>
+				            <div class="form-group">
+				              <label>产品原价</label>
+				              <input type="text" name="starprice" class="form-control" placeholder="产品的销售原价" value="">
+				            </div>
+							<div class="form-group">
+								<label>重量</label>
+									<input type="text" name="weight" class="form-control" placeholder="产品的重量" value="">
+									<!--<input type="text" name="starprice" class="form-control" placeholder="" value="" style="float: left;width: 200px;">-->
+							</div>
+							<div class="form-group">
+								<label>单位</label>
+								<input type="text" name="unit" class="form-control" placeholder="产品的单位" value="">
+							</div>
+							<!-- lzc -->
+				            <!-- <div class="form-group">
+				            	<label style="display:block;">优惠活动</label>
+				                <label>
+				                  <input type="radio" name="is_promote" class="minimal" value="1">
+				                  开启
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="is_promote" class="minimal" value="0" checked>
+				                  关闭
+				                </label>
+				            </div> -->
+				            <!-- <div id="promote-box" style="display:none;">
+				            	<div class="form-group">
+    					              <label>优惠价格</label>
+    					              <input type="text" name="promote_price" class="form-control" placeholder="优惠活动开始时的销售价格" value="">
+    					            </div>
+    					            <div class="form-group">
+    					            	<label>活动时间</label>
+    					            	<div class="input-group">
+    					                  	<div class="input-group-addon">
+    					                    	<i class="fa fa-clock-o"></i>
+    					                  	</div>
+    					                  	<input type="text" name="promote_time" class="form-control pull-right" id="promotetime" readonly>
+    					                </div>
+    					            </div>
+				            	</div> -->
+				            <div class="form-group">
+				              <label>产品库存</label>
+				              <input type="text" name="store" class="form-control" placeholder="产品的库存数量" value="">
+				            </div>
+				            <div class="form-group">
+				              <label>虚拟销量</label>
+				              <input type="text" name="virtual_sale" class="form-control" placeholder="产品的虚拟销量" value="">
+				            </div>
+				            <div class="form-group">
+				              <div><label>配送时间</label></div>
+				              <select class="js-example-basic-single" name="deliverytime" style="width: 500px;" >
+					            <option value="0">次日配送</option>
+					            <option value="1">当日配送</option>
+						  	  </select>
+				            </div>
+				            <div class="form-group">
+				              <label style="display:block;">售罄功能</label>
+				              <label>
+				                  <input type="radio" name="sold_out" class="minimal" value="1">
+				                  开启
+				              </label>
+				              &nbsp;&nbsp;
+				              <label>
+				                  <input type="radio" name="sold_out" class="minimal" value="0" checked>
+				                  关闭
+				              </label>
+				              <div class="text-red" style="font-size:10px;margin-top:5px;">(注意:开启售罄功能后，产品库存为"0"时不会自动下架，但前台会显示已售罄并不可购买.)</div>
+				            </div>
+				            <!-- lzc -->
+				            <span id="app">
+				            	<div class="form-group">
+					            	<div><label>供应商</label></div>
+					            	<select class="js-example-basic-single" name="supplier" style="width: 500px;" >
+					            		<option value="0">选择供应商</option>
+										<option v-for="item in gys" :value="item.id">{{ item.name }}</option>
+						  			</select>
+					  			</div>
+					            <div class="form-group">
+					            	<div><label>采购员</label></div>
+					            	<select class="js-example-basic-single" name="caigouyuan" style="width: 500px;" >
+					            		<option value="0">选择采购员</option>
+										<option v-for="item in cgy" :value="item.id">{{ item.name }}</option>
+						  			</select>
+					  			</div>
+					  			<div class="form-group">
+					            	<div><label>分拣组</label></div>
+					            	<select class="js-example-basic-single" name="fenjianzu" style="width: 500px;" >
+					            		<option value="0">选择分拣组</option>
+										<option v-for="item in fjz" :value="item.id">{{ item.name }}</option>
+						  			</select>
+					  			</div>
+						        <div class="form-group">
+						          <label style="display:block;">是否套餐</label>
+						          <label >
+						              <input type="radio" name="taocan" id="taocan" value="1" v-on:click="taocanoff" v-model="off">
+						              开启
+						          </label>
+						          &nbsp;&nbsp;
+						          <label>
+						              <input type="radio" name="taocan" id="taocan" value="0"  v-on:click="taocanoff" v-model="off" checked>
+						              关闭
+						          </label>
+						        </div>
+						        <div class="form-group" id="taocanxz" style="display: none">
+						        	<label for="id_label_single">
+									  	<select class="js-example-basic-multiple" id="shuju" style="width: 500px;" multiple="multiple">
+											<option v-for="item in shopmuen" :value="item.id" id-name="item.name">{{ item.name }}</option>
+									  	</select>
+									  	<span class="btn btn-info btn-flat" v-on:click="shopmuenok">添加</span>
+									</label>
+								</div>
+								<div class="form-group" style="display: none" id="taocankuan">
+									<div class="taocanbig" id="taocanbig"> 
+										
+									</div>			
+								</div>
+							</span>
+				            <div class="form-group">
+				              <label>库存警告</label>
+				              <input type="text" name="warn_num" class="form-control" placeholder="产品的库存警告数量" value="">
+				            </div>
+				            <div class="form-group">
+				              <label>产品排序</label>
+				              <input type="text" name="sort" class="form-control" placeholder="产品的排序号码,数字越大越靠前" value="">
+				            </div>
+				            <div class="form-group" style="margin-bottom:5px;">
+			                	<label>产品缩略图</label>
+			                </div>
+			                <div class="form-group">
+			                	<button type="button" id="getImage" class="btn btn-success">上传图片</button>
+			                	<div id="ibox" class="img-box">
+			                		<div id="icross" class="cross">x</div>
+			                		<input type="hidden" id="imgurl" name="shotcut" value="">
+			                	</div>
+			                </div>
+			                <div class="form-group" style="margin-bottom:5px;">
+			                	<label>产品轮播图</label>
+			                </div>
+			                <div class="form-group">
+			                	<button type="button" id="getGallery" class="btn btn-success">上传图片</button>
+			                	<div id="gallery-box" class="upload-img-box"></div>
+			                </div>
+			                <!-- lzc -->
+			                <!-- <div class="form-group">
+				            	<label>产品分组</label>
+				            	<div>
+					                置顶&nbsp;<input type="checkbox" class="minimal" name="is_top" value="1">&nbsp;&nbsp;
+					                热卖&nbsp;<input type="checkbox" class="minimal" name="is_hot" value="1">&nbsp;&nbsp;
+					                新品&nbsp;<input type="checkbox" class="minimal" name="is_new" value="1">
+				                </div>
+				            </div> -->
+				            <div class="form-group">
+				            	<label style="display:block;">该商品是否为赠品</label>
+				                <label>
+				                  <input type="radio" name="gift" class="minimal" value="1" >
+				                  是
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="gift" class="minimal" value="0" checked>
+				                  否
+				                </label>
+				            </div>
+				            <div class="form-group">
+				            	<label style="display:block;">产品状态</label>
+				                <label>
+				                  <input type="radio" name="is_sell" class="minimal" value="1" checked>
+				                  上架
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="is_sell" class="minimal" value="0">
+				                  下架
+				                </label>
+				            </div>
+						</div>
+					</div>
+					<div class="tab-pane" id="tab_2">
+						<div class="col-md-8">
+							<div class="form-group">
+								<label>产品规格</label>
+							</div>
+							<div class="form-group">
+								<div id="sku-container" class="sku-container">
+									<div id="add-format-top" class="gray-top">
+					                  <button id="addFormat" type="button" class="sku-add-format">添加规格项目</button>
+					                </div>
+								</div>
+								<div class="sku-container" style="margin-top:15px;">
+					               <table id="sku_stock" class="table-sku-stock"></table>
+					            </div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="tab_3">
+						<div class="col-md-8">
+							<div class="form-group">
+			                	<label>图文详情</label>
+			                	<textarea name="content" id="content" style="width:100%;height:550px;"></textarea>
+			                </div>
+						</div>
+					</div>
+					<div class="tab-pane" id="tab_4">
+						<div class="col-md-8">
+							<div class="form-group">
+				            	<label>商家公告</label>
+				            	<div>
+				            		{volist name="sjnote" id="vo"}
+					                	{$vo.title}&nbsp;<input type="checkbox" class="minimal" name="notice[]" value="{$vo.id}">&nbsp;&nbsp;
+					                {/volist}
+				                </div>
+				            </div>
+				            <div class="form-group">
+				            	<label>运费配置</label>
+				            	<div class="sku-container" style="margin-top:15px;">
+					            	<table class="table-sku-stock">
+				               			<thead>
+				               				<tr>
+				               					<th>地区</th><th>运费(元)</th>
+				               				</tr>
+				               			</thead>
+				               			<tbody>
+				               				{volist name="freights" id="vo"}
+				               					<tr>
+				               						<td>{$vo.name}</td>
+				               						<td>
+				               							<input type="number" name="freights[]" class="freight-price sku-input" value="" placeholder="请填写运费" />
+				               						</td>
+				               					</tr>
+				               				{/volist}
+				            			</tbody>
+				            			<tfoot>
+				               				<tr>
+					               				<td>快捷更改运费</td>
+					               				<td><input type="number" id="allfreight" class="freight-input allset" value="" placeholder="请填写运费" /></td>
+				               				</tr>
+				               			</tfoot>
+						            </table>
+					            </div>
+				            </div>
+						</div>
+					</div>
+					<div style="clear:both;float:none;"></div>
+		          </div>
+		          <!-- /.box-body -->
+
+		          <div class="box-footer">
+		            <button type="button" id="submit" class="btn btn-primary">提交保存</button>
+		          </div>
+		        </form>
+		      </div>
+		    <!-- /.box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+{include file="public/input" /}
+<script>
+	var content;
+	KindEditor.ready(function(K) {
+		var editor = K.editor({
+			imageUploadLimit : 5,
+	    	allowFileManager : true
+	    });
+	    content = K.create('#content');
+        K('#getImage').click(function(){
+	        editor.loadPlugin('image', function() {
+	          	editor.plugin.imageDialog({
+	            	fileUrl : K('#imgurl').val(),
+	            	clickFn : function(url, title){
+	              		K('#imgurl').val(url);
+	              		K('#ibox').css({'backgroundImage':'url('+url+')'});
+	              		K('#icross').css({'display':'block'});
+	              		editor.hideDialog();
+	              		K('#getImage').attr('disabled',true);
+	            	}
+	          	});
+	        });
+	    });
+	    K('#getGallery').click(function(){
+	        editor.loadPlugin('multiimage', function() {
+	          	editor.plugin.multiImageDialog({
+	            	clickFn : function(list){
+	            		var hstr = '';
+	            		K.each(list,function(index,data){
+	            			if(data.url!=''){
+	            				hstr += '<div class="upload-pre-item" style="background-image:url('+data.url+');"><div class="cross gcross">x</div><input type="hidden" name="gallery[]" value="'+data.url+'"></div>';
+	            			}
+	            		});
+	              		K('#gallery-box').html(K('#gallery-box').html()+hstr);
+	              		editor.hideDialog();
+	            	}
+	          	});
+	        });
+	    });
+    });
+
+    //Date range picker with time picker
+    $('#promotetime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'YYYY/MM/DD h:mm A'});
+
+	$('.select2,.pro-select').select2();
+
+	//iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+	      checkboxClass: 'icheckbox_minimal-blue',
+	      radioClass: 'iradio_minimal-blue'
+    });
+
+    $('#icross').click(function(){
+  		var val = $(this).next('input').val();
+  		if(!val){
+  			return false;
+  		}
+  		$.post('{:url("admin/shoper/delproductimg")}',{durl:val},function(data){
+  			if(data.status==1){
+				$('#icross').hide();
+				$('#ibox').css({'backgroundImage':'none'});
+				$('#getImage').prop('disabled',false);
+				$('#imgurl').val('');
+  			}else{
+  				$('#myDialog .dialog-box').text(data.info);
+  				$('#myDialog #dialogSta').val(data.status);
+  				$('#myDialog').modal();
+  			}
+  		});
+  	});
+
+  	$('.gcross').click(function(){
+  		var context = $(this);
+  		var val = context.children('input').val();
+  		if(!val){
+  			return false;
+  		}
+  		$.post('{:url("admin/shoper/delgallery")}',{durl:val},function(data){
+  			if(data.status==1){
+				context.parent('div.upload-pre-item').remove();
+  			}else{
+  				$('#myDialog .dialog-box').text(data.info);
+  				$('#myDialog #dialogSta').val(data.status);
+  				$('#myDialog').modal();
+  			}
+  		});
+  	});
+
+  	$('input[name="is_promote"].minimal').on('ifChecked',function(){
+  		if($(this).val()==1){
+  			$('#promote-box').show();
+  		}else{
+  			$('#promote-box').hide();
+  		}
+  	});
+
+
+    $('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.href = "{:url('admin/shoper/product')}";
+	    }
+  	});
+
+  	//运费绑定
+  	$('#allfreight').off('input').on('input',function(e){
+        $('.freight-price.sku-input').val($(this).val());
+    });
+
+   //商品规格处理
+  var seloptions = [{id:0,text:"选择规格"}{foreach name="format" item="vo"},{id:"{$vo.id},{$vo.key}",text:"{$vo.key}"}{/foreach}];
+  var table = $("#sku_stock");
+  var selnum = 0;
+  $(function(){
+      $('#submit').click(function(){
+      	if($(this).hasClass('disabled')){
+			return false;
+		}
+        $('#content').val(content.html());
+        var value = $("#form").serialize();
+        $(this).addClass('disabled');
+        $.ajax({
+          url:'{:url("admin/shoper/addproduct")}',
+          data:value,
+          dataType:'json',
+          success:function(data){
+          		$('#myDialog .dialog-box').text(data.info);
+            	$('#myDialog #dialogSta').val(data.status);
+				$('#myDialog').modal();
+            	if(data.status == 0){
+					$('#submit').removeClass('disabled');
+            	}
+          },
+          type:'POST',
+          error:function(){
+	            $('#myDialog .dialog-box').text("网络出错...");
+	            $('#myDialog #dialogSta').val(0);
+				$('#myDialog').modal();
+				$('#submit').removeClass('disabled');
+          }
+        })
+      });
+
+      var sku_container = $("#sku-container");
+      $(".sku-group .gray-top").mouseover(function(){
+        var sta = $(this).children('.sku-cross').hasClass('rmhide');
+        if(sta){
+            $(this).children('.sku-cross').removeClass('rmhide');
+        }
+      });
+      $(".sku-group .gray-top").mouseleave(function(){
+        var sta = $(this).children('.sku-cross').hasClass('rmhide');
+        if(!sta){
+            $(this).children('.sku-cross').addClass('rmhide');
+        }
+      });
+
+      $(".sku-item-box .item-choice").mouseover(function(){
+        var sta = $(this).children('.sku-cross').hasClass('rmhide');
+        if(sta){
+            $(this).children('.sku-cross').removeClass('rmhide');
+        }
+      });
+      $(".sku-item-box .item-choice").mouseleave(function(){
+        var sta = $(this).children('.sku-cross').hasClass('rmhide');
+        if(!sta){
+            $(this).children('.sku-cross').addClass('rmhide');
+        }
+      });
+
+      $("ul.am-selected-list li").click(function(e){
+          var val = $(this).find('span.am-selected-text').text();
+          var status = false;
+          $.each($("span.am-selected-status"),function(sli,sle){
+              if($(this).text()==val){
+                  alert("该规格已被选择");
+                  status = true;
+                  return false;
+              }
+          });
+          if(status==true) e.stopPropagation();
+      });
+
+      $(".sku-cross.format-remove").click(function(){
+        $(this).parent(".gray-top").parent(".sku-group").remove();
+        if($('.sku-group').size()<5){
+            $(".sku-add-format").parent('.gray-top').show();
+        }
+        selnum--;
+        makeTable();
+      });
+
+      $(".sku-cross.item-remove").click(function(){
+        $(this).parent(".item-choice").remove();
+        makeTable();
+      });
+
+      $(".sku-add-format").click(function(){
+          selnum++;
+          var html = '<div class="sku-group"><div class="gray-top"><select id="property'+selnum+'" name="props[]" class="form-control pro-select"></select><a class="sku-cross format-remove rmhide">×</a></div><div id="sibox'+selnum+'" class="sku-item-box"><a class="sku-add-item" onclick="showModal('+selnum+');">+添加属性值</a></div></div>';
+          $(html).insertBefore('#add-format-top');
+          $('#property'+selnum).select2({data:seloptions}).on('select2:selecting',function(e){
+              var val = e.params.args.data.id;
+              var status = false;
+              $.each($('.form-control.pro-select'),function(sli,sle){
+              	if(($(sle).attr('id')!='property'+selnum)&&($(sle).val()==val)){
+                      alert("该规格已被选择");
+                      status = true;
+                      return false;
+                }
+              });
+              if(status==true) e.preventDefault();
+          });
+          $(".sku-group .gray-top").off('mouseover');
+          $(".sku-group .gray-top").mouseover(function(){
+            var sta = $(this).children('.sku-cross').hasClass('rmhide');
+            if(sta){
+                $(this).children('.sku-cross').removeClass('rmhide');
+            }
+          });
+          $(".sku-group .gray-top").off('mouseleave');
+          $(".sku-group .gray-top").mouseleave(function(){
+            var sta = $(this).children('.sku-cross').hasClass('rmhide');
+            if(!sta){
+                $(this).children('.sku-cross').addClass('rmhide');
+            }
+          });
+          $(".sku-cross.format-remove").off('click');
+          $(".sku-cross.format-remove").click(function(){
+            $(this).parent(".gray-top").parent(".sku-group").remove();
+            if($('.sku-group').size()<5){
+              $(".sku-add-format").parent('.gray-top').show();
+            }
+            selnum--;
+            makeTable();
+          });
+          if($('.sku-group').size()>=5){
+              $(this).parent('.gray-top').hide();
+          }
+      });
+  });
+
+  	function showModal(num){
+  		if($('#property'+num).val()==0){
+  			$('#myDialog .dialog-box').text('请先选择规格');
+		    $('#myDialog #dialogSta').val(0);
+			$('#myDialog').modal();
+  			return false;
+  		}
+       $("#myInput").modal();
+       $("#myInput").find('input[name=propnum]').val(num);
+    }
+
+    $('#myInput #inputConfirm').click(function(){
+    	var value = $("#myInput").find('input[name=propname]').val();
+	    var num = $("#myInput").find('input[name=propnum]').val();
+	    if(value!=''){
+	    	var same = false;
+	    	$('#sibox'+num).children('.item-choice').each(function(ind,elm){
+	    		if($(elm).find('label').text()==value){
+	    			same = true;
+	    			return false;
+	    		}
+	    	});
+	    	if(same) return false;
+	    	$("#myInput").modal('hide');
+		    $.post('{:url("admin/shoper/ajaxaddproperty")}',{val:value},function(data) {
+		        if(data.status==1){
+		            var html = '<span class="item-choice" data-vid="'+data.id+'"><label>'+data.value+'</label><a class="sku-cross item-remove rmhide">×</a><input type="hidden" name="pvals'+(parseInt(num)-1)+'[]" value="'+data.id+','+data.value+'"></span>';
+		            $(html).insertBefore('#sibox'+num+' .sku-add-item');
+		            $(".sku-item-box .item-choice").off('mouseover');
+		            $(".sku-item-box .item-choice").mouseover(function(){
+		              var sta = $(this).children('.sku-cross').hasClass('rmhide');
+		              if(sta){
+		                  $(this).children('.sku-cross').removeClass('rmhide');
+		              }
+		            });
+		            $(".sku-item-box .item-choice").off('mouseleave');
+		            $(".sku-item-box .item-choice").mouseleave(function(){
+		              var sta = $(this).children('.sku-cross').hasClass('rmhide');
+		              if(!sta){
+		                  $(this).children('.sku-cross').addClass('rmhide');
+		              }
+		            });
+		            $(".sku-cross.item-remove").off('click');
+		            $(".sku-cross.item-remove").click(function(){
+		              $(this).parent(".item-choice").remove();
+		              makeTable();
+		            });
+		            $("#value").val('');
+		            makeTable();
+		        }else{
+		            $('#myDialog .dialog-box').text(data.info);
+		            $('#myDialog #dialogSta').val(0);
+					$('#myDialog').modal();
+		        }
+		    });
+	  	}
+    });
+
+    $('#myInput').on('hidden.bs.modal',function(){
+	    $(this).find('input[name=propname]').val('');
+  	});
+
+     function makeTable(){
+        var sku_arr = [];
+        var key_arr = [];
+        var sku_arr_count = 0;
+        var thead = '<thead><tr><th>#</th><th>规格组合</th><th>价格(元)</th><th>运费(元)</th><th>库存</th></tr></thead>';
+        var tbody = '<tbody>';
+        $('.sku-group').each(function(index,element){
+            if($(this).children('.sku-item-box').find('.item-choice').size()>0){
+                var text = $(this).children('.gray-top').children('select').find('option:selected').text();
+                key_arr.push(text);
+                sku_arr[text] = [];
+                $(this).children('.sku-item-box').children('.item-choice').each(function(ind,elm){
+					sku_arr[text].push({id:$(elm).data('vid'),text:$(elm).children('label').text()});
+                });
+            }
+        });
+        res = Descartes(key_arr,sku_arr,1);
+        sku_arr_count = res.length;
+        if(!sku_arr_count){
+        	table.empty();
+        	return ;
+        }else{
+			for(var obj in res){
+				tbody += '<tr><td>'+(parseInt(obj)+1)+'</td><td>'+res[obj].texts+'<input type="hidden" name="skus[]" value="'+res[obj].ids+'"></td><td><input type="number" name="skuprices[]" class="sku-price sku-input" value="" placeholder="请填写价格" /></td><td><input type="number" name="skustores[]" class="sku-store sku-input" value="" placeholder="请填写库存" /></td></tr>';
+        	}
+        }
+        tbody += '</tbody><tfoot><td>*</td><td>快捷更改规格组合属性</td><td><input type="number" id="allprice" class="sku-input allset" value="" placeholder="请填写价格" /></td><td><input type="number" id="allstore" class="sku-input allset" value="" placeholder="请填写库存" /></td></tfoot>';
+        delete res;
+        table.html(thead+tbody);
+        $('#allprice').off('input').on('input',function(e){
+        	$('.sku-price.sku-input').val($(this).val());
+        });
+        $('#allstore').off('input').on('input',function(e){
+        	$('.sku-store.sku-input').val($(this).val());
+        });
+        $('.sku-store.sku-input,#allstore').off('change').on('change',function(e){
+        	var chageStore = 0;
+        	$('.sku-store.sku-input').each(function(ind,elm){
+        		var oneStore = parseInt($(elm).val());
+        		if(!isNaN(oneStore)){
+        			chageStore += oneStore;
+        		}
+        	});
+        	$('input[name=store]').val(chageStore);
+        });
+     }
+
+     function Descartes(key,list,index,lresult){
+     	var result = [];
+     	var len = key.length;
+     	if(len===1){
+     		var sindex = 0;
+     		var kname = key[sindex];
+     		for(var obj in list[kname]){
+     			result.push({ids:list[kname][obj].id,texts:list[kname][obj].text});
+     		}
+     		return result;
+     	}else{
+     		var sindex = parseInt(index) || 1;
+     		if(sindex<=1){
+     			var kname = key[sindex];
+	     		var skname = key[sindex-1];
+	     		for(var sobj in list[skname]){
+	     			for(var obj in list[kname]){
+	     				var tkey = [];
+	     				var tval = [];
+	     				tkey.push(list[skname][sobj].id);
+	     				tkey.push(list[kname][obj].id);
+	     				tval.push(list[skname][sobj].text);
+	     				tval.push(list[kname][obj].text);
+	     				result.push({ids:tkey.join(','),texts:tval.join('-')});
+	     			}
+	     		}
+     		}else{
+     			var kname = key[sindex];
+     			for(var sobj in lresult){
+     				for(var obj in list[kname]){
+	     				var tkey = [];
+	     				var tval = [];
+	     				tkey.push(lresult[sobj].ids);
+	     				tkey.push(list[kname][obj].id);
+	     				tval.push(lresult[sobj].texts);
+	     				tval.push(list[kname][obj].text);
+	     				result.push({ids:tkey.join(','),texts:tval.join('-')});
+	     			}
+     			}
+     		}
+     		if(sindex<len-1){
+     			return Descartes(key,list,sindex+1,result);
+     		}
+     		return result;
+     	}
+     }
+</script>
+<!-- lzc -->
+<script type="text/javascript">
+  	new Vue({
+		el: '#app',
+  		data: {
+    		off: 0,
+    		shopmuen:null,
+    		muennub:null,
+    		cgy:null,
+    		fjz:null,
+    		gys:null,
+  		},
+ 		created:function(){
+ 			
+			this.ready()
+		},
+  		methods:{
+  			ready:function(){
+  				var self = this
+  				$.post("{:url('admin/Shoper/selectcaigou')}",{pid:1},function(data){
+  					self.fjz = JSON.parse(data).msg.shuju
+  				})
+  				$.post("{:url('admin/Shoper/selectcaigou')}",{pid:2},function(data){
+  					self.cgy = JSON.parse(data).msg.shuju
+  				})
+  				$.post("{:url('admin/Shoper/selectcaigou')}",{pid:3},function(data){
+  					self.gys = JSON.parse(data).msg.shuju
+  				})
+  			},
+  			taocanoff:function(){
+  				var self = this
+  				var nr = self.off
+  				if(nr == 0){
+  					$('#taocanxz').hide()
+  					$('#taocankuan').hide()
+		  		}else{
+		  			$('#taocanxz').show()
+		  			$('#taocankuan').show()
+		  			$.post("{:url('admin/Shoper/selectshop')}",function(data){
+		  				var data = JSON.parse(data).msg.shopmuen
+		  				self.shopmuen = data
+					})
+		  		}
+  			},
+  			shopmuenok:function(){
+  				$('#taocanbig').empty()
+  				var self = this
+  				var id = $('#shuju').val()
+  				$.post("{:url('admin/Shoper/infoshop')}",{id:id},function(data){
+  					$('#taocanbig').empty()
+		  			var data = JSON.parse(data).msg.shopname
+		  			for (var k = 0; k < data.length; k++) {
+						$('#taocanbig').append('<div class="taocank"><div class="wz">'+data[k]+'</div> <input type="text" name="pinzhong[]" class="input"><input type="hidden" name="pinzhongid[]" class="input" value="'+id[k]+'"></div>')
+					}
+				})  				
+  			},
+  		}
+	})
+</script>
+<script type="text/javascript">
+	$(".js-example-basic-multiple").select2();
+	$(".js-example-basic-single").select2();
+</script>

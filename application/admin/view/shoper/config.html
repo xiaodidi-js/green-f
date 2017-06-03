@@ -1,0 +1,494 @@
+{css href="__STATIC__/kindeditor/themes/default/default.css"}
+{js href="__STATIC__/kindeditor/kindeditor-min.js"}
+{js href="__STATIC__/kindeditor/lang/zh_CN.js"}
+<style>
+	.img-box{width:100px;height:100px;border:#cfcfcf dashed 1px;margin:10px auto;background-color:#f3f3f3;background-size:cover;background-position:center;position:relative;}
+	.cross{width:20px;height:20px;border-radius:10px;line-height:18px;text-align:center;font-size:14px;color:#fff;background-color:rgba(207,207,207,0.8);position:absolute;top:-10px;right:-10px;cursor:pointer;display:none;}
+	.fcross{margin-left:10px;width:20px;height:20px;border-radius:10px;line-height:18px;text-align:center;font-size:14px;color:#fff;background-color:rgba(207,207,207,0.8);cursor:pointer;display:inline-block;display:none;}
+	/* 套餐搜索 */
+	.sm-input,.sm-box{width:100%;padding:10px 0px;}
+	.sm-box{padding:10px;border:#ccc dashed 1px;font-size:0;}
+	.sm-input input{padding:8px 5px;}
+	.sm-input input{border:#ccc solid 1px;}
+	.sm-input button{width:80px;padding:9px 5px;}
+	.sm-box .items{display:inline-block;padding:3px 5px;margin:5px;border:#ccc solid 1px;border-radius:5px;cursor:pointer;font-size:14px;position:relative;}
+	.sm-box .items:hover{border:#8eb96c solid 1px;color:#8eb96c;}
+	.sm-box .items>input{width:30px;height:25px;border:none;background-color:#fff;border:#ccc solid 1px;border-radius:3px;text-align:center;margin-left:5px;}
+	.sm-box .items .cross{width:16px;height:16px;border-radius:8px;background-color:rgba(56,56,56,0.3);font-size:12px;color:#fff;line-height:16px;text-align:center;position:absolute;left:-8px;top:-8px;display:none;}
+	/* 套餐搜索 */
+</style>
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<!-- general form elements -->
+	          <div class="box box-success">
+	            <div class="box-header with-border">
+	              <h3 class="box-title">商家基本资料配置</h3>
+	            </div>
+	            <!-- /.box-header -->
+	            <!-- form start -->
+	            <form id="profile" role="form">
+	              <div class="box-body">
+
+	                <div class="col-md-4" style="border-right:#ccc dashed 1px;">
+	                	<div class="form-group">
+		                  <label>商家名称:</label>
+		                  <input type="text" name="name" class="form-control" placeholder="输入店铺名称" value="{$profile.name}">
+		                </div>
+		                <div class="form-group">
+		                  <label>商家描述:</label>
+		                  <textarea name="description" class="form-control" placeholder="商家简短描述" rows="5">{$profile.description}</textarea>
+		                </div>
+		                <div class="from-group" style="margin-bottom:15px;">
+		                	<label>商城推荐产品</label>
+		                	<div class="sm-input">
+				                <input type="text" id="smSearch" value="" placeholder="搜索商品名称" />
+				                <button type="button" id="smBtn" class="btn btn-primary">搜索</button>
+				            </div>
+				            <p>搜索结果:</p>
+				            <div id="smResult" class="sm-box" style="margin-bottom:10px;"></div>
+				            <p>推荐内容:</p>
+				            <div id="smContent" class="sm-box">
+				                {notempty name="profile.commend"}
+				                    {foreach name="profile.commend" item="vo" key="k"}
+				                        <div class="items" data-id="{$k}" onmouseover="showConItems(this);" onmouseout="hideConItem(this);">{$vo}<div class="cross" onclick="clickConItems(this);">x</div></div>
+				                    {/foreach}
+				                {/notempty}
+				            </div>
+		                </div>
+		                <div class="form-group">
+		                  <label>微信分享文字:</label>
+		                  <input type="text" name="share_word" class="form-control" placeholder="输入微信分享的文字" value="{$profile.share_word}">
+		                </div>
+		                <div class="form-group">
+		                  <label>微信分享描述:</label>
+		                  <textarea name="share_desc" class="form-control" placeholder="微信分享描述" rows="5">{$profile.share_desc}</textarea>
+		                </div>
+		                <div class="form-group" style="margin-bottom:5px;">
+		                	<label>微信分享图片:</label>
+		                </div>
+		                <div class="form-group" style="text-align:center;">
+		                {if condition="$profile.share_image neq ''"}
+		                	<div id="ibox" class="img-box" style="background-image:url({$profile.share_image});">
+		                		<div id="icross" class="cross" style="display:block;">x</div>
+		                		<input type="hidden" id="imgurl" name="share_image" value="{$profile.share_image}">
+		                	</div>
+		                	<button type="button" id="getImage" class="btn btn-success" disabled>上传图片</button>
+		                {else/}
+		                	<div id="ibox" class="img-box">
+		                		<div id="icross" class="cross">x</div>
+		                		<input type="hidden" id="imgurl" name="share_image" value="">
+		                	</div>
+		                	<button type="button" id="getImage" class="btn btn-success">上传图片</button>
+		                {/if}
+		                	<div class="text-red" style="font-size:10px;margin-top:5px;">(注意:微信分享图片需要300px*300px以上.)</div>
+		                </div>
+		                <div class="form-group">
+		                  <label>微信appid:</label>
+		                  <input type="text" class="form-control" name="appid" placeholder="公众号身份的唯一标识" value="{$profile.appid}">
+		                </div>
+		                <div class="form-group">
+		                  <label>微信appsecret:</label>
+		                  <input type="text" class="form-control" name="appsecret" placeholder="公众号的appsecret" value="{$profile.appsecret}">
+		                </div>
+	                </div>
+
+	                <div class="col-md-8">
+	                	<div class="form-group">
+		                  <label style="display:block;">关于我们详情页内容:</label>
+		                  <textarea id="detail" name="detail" style="width:100%;min-height:990px;">{$profile.detail|htmlspecialchars_decode}</textarea>
+		                </div>
+	                </div>
+
+	              </div>
+	              <!-- /.box-body -->
+
+	              <div class="box-footer">
+	                <button type="button" id="pbtn" class="btn btn-success pull-right">保存资料</button>
+	              </div>
+	            </form>
+	          </div>
+	        <!-- /.box -->
+
+			<!-- general form elements -->
+	          <div class="box box-primary">
+	            <div class="box-header with-border">
+	              <h3 class="box-title">支付配置</h3>
+	            </div>
+	            <!-- /.box-header -->
+	            <!-- form start -->
+	            <form id="config" role="form">
+	              <div class="box-body">
+						
+						<div class="col-md-4">
+			                <div class="form-group">
+								<h4>到店自提配置</h4>
+							</div>
+							<div class="form-group">
+				            {eq name="pay.handtake" value="1"}
+				                <label>
+				                  <input type="radio" name="handtake" class="minimal" checked value="1">
+				                  &nbsp;启用
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="handtake" class="minimal" value="0">
+				                  &nbsp;禁用
+				                </label>
+				            {else/}
+				            	<label>
+				                  <input type="radio" name="handtake" class="minimal" value="1">
+				                  &nbsp;启用
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="handtake" class="minimal" checked value="0">
+				                  &nbsp;禁用
+				                </label>
+				            {/eq}
+				            </div>
+				            <div class="form-group" style="border-bottom:#ccc dashed 1px;padding-bottom:10px;">
+				            	<a href="{:url('admin/shoper/handtakeplace')}" class="btn btn-primary">设置自提点详情</a>
+				            	<div class="text-red" style="font-size:10px;margin-top:5px;">(注意:请先点击右下角按钮保存配置.)</div>
+				            </div>
+				            <div class="form-group">
+								<h4>快递配送配置</h4>
+							</div>
+							<div class="form-group" style="border-bottom:#ccc dashed 1px;padding-bottom:10px;">
+				            {eq name="pay.express" value="1"}
+				                <label>
+				                  <input type="radio" name="express" class="minimal" checked value="1">
+				                  &nbsp;启用
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="express" class="minimal" value="0">
+				                  &nbsp;禁用
+				                </label>
+				            {else/}
+				            	<label>
+				                  <input type="radio" name="express" class="minimal" value="1">
+				                  &nbsp;启用
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="express" class="minimal" checked value="0">
+				                  &nbsp;禁用
+				                </label>
+				            {/eq}
+				            </div>
+				            <div class="form-group">
+								<h4>货到付款配置</h4>
+							</div>
+							<div class="form-group">
+							{eq name="pay.facepay" value="1"}
+				                <label>
+				                  <input type="radio" name="facepay" class="minimal" checked value="1">
+				                  &nbsp;启用
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="facepay" class="minimal" value="0">
+				                  &nbsp;禁用
+				                </label>
+				            {else/}
+				            	<label>
+				                  <input type="radio" name="facepay" class="minimal" value="1">
+				                  &nbsp;启用
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="facepay" class="minimal" checked value="0">
+				                  &nbsp;禁用
+				                </label>
+				            {/eq}
+				            </div>
+		                </div>
+
+		                <div class="col-md-4">
+		                	<div class="form-group">
+								<h4>支付宝支付配置</h4>
+							</div>
+							<div class="form-group" style="margin-bottom:10px;">
+				            {eq name="pay.alipay" value="1"}
+				                <label>
+				                  <input type="radio" name="alipay" class="minimal" checked value="1">
+				                  &nbsp;启用
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="alipay" class="minimal" value="0">
+				                  &nbsp;禁用
+				                </label>
+				            {else/}
+				            	<label>
+				                  <input type="radio" name="alipay" class="minimal" value="1">
+				                  &nbsp;启用
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="alipay" class="minimal" checked value="0">
+				                  &nbsp;禁用
+				                </label>
+				            {/eq}
+				            </div>
+			                <div class="form-group">
+			                  <label>商户账号:</label>
+			                  <input type="text" class="form-control" name="partner" placeholder="输入支付宝商户账号" value="{$pay.partner}">
+			                </div>
+			                <div class="form-group">
+			                  <label>PID:</label>
+			                  <input type="text" class="form-control" name="pid" placeholder="输入支付宝合作者身份(PID)" value="{$pay.pid}">
+			                </div>
+			                <div class="form-group">
+			                  <label>KEY:</label>
+			                  <input type="text" class="form-control" name="ali_key" placeholder="输入支付宝密匙(KEY)" value="{$pay.ali_key}">
+			                </div>
+			                <div class="form-group">
+			                  <label style="display:block;">上传支付宝私钥:</label>
+			                  {if condition="$pay.rsa neq ''"}
+			                  		<button type="button" id="getFile" class="btn btn-primary" disabled>上传私钥</button>
+	                				<label id="flabel" style="display:inline-block;color:#aaa;font-size:12px;font-weight:normal;margin-left:5px;">已上传文件</label>
+		                			<div id="fcross" class="fcross" style="display:inline-block;">x</div>
+				        			<input type="hidden" id="fileurl" name="rsa" value="{$pay.rsa}">
+			                  {else/}
+			                  		<button type="button" id="getFile" class="btn btn-primary">上传私钥</button>
+			                  		<label id="flabel" style="display:inline-block;color:#aaa;font-size:12px;font-weight:normal;margin-left:5px;">未上传文件</label>
+		                			<div id="fcross" class="fcross">x</div>
+				        			<input type="hidden" id="fileurl" name="rsa" value="">
+			                  {/if}
+			                  
+			                  <p class="help-block text-red" style="font-size:10px;margin-top:5px;">(注意:公/私钥需要手动生成.)</p>
+			                </div>
+		                </div>
+
+		                <div class="col-md-4">
+		                	<div class="form-group">
+								<h4>微信支付配置</h4>
+							</div>
+							<div class="form-group" style="margin-bottom:10px;">
+				            {eq name="pay.wxpay" value="1"}
+				                <label>
+				                  <input type="radio" name="wxpay" class="minimal" checked value="1">
+				                  &nbsp;启用
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="wxpay" class="minimal" value="0">
+				                  &nbsp;禁用
+				                </label>
+				            {else/}
+				            	<label>
+				                  <input type="radio" name="wxpay" class="minimal" value="1">
+				                  &nbsp;启用
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="wxpay" class="minimal" checked value="0">
+				                  &nbsp;禁用
+				                </label>
+				            {/eq}
+				            </div>
+			                <div class="form-group">
+			                  <label>paySignKey:</label>
+			                  <input type="text" class="form-control" name="pay_sign_key" placeholder="公众号支付请求中用于加密的密钥Key" value="{$pay.pay_sign_key}">
+			                </div>
+			                <div class="form-group">
+			                  <label>partnerId:</label>
+			                  <input type="text" class="form-control" name="partner_id" placeholder="财付通商户身份的标识" value="{$pay.partner_id}">
+			                </div>
+			                <div class="form-group">
+			                  <label>partnerKey:</label>
+			                  <input type="text" class="form-control" name="partner_key" placeholder="财付通商户权限密钥Key" value="{$pay.partner_key}">
+			                </div>
+		                </div>
+		                
+	              </div>
+	              <!-- /.box-body -->
+
+	              <div class="box-footer">
+	                <button type="button" id="cbtn" class="btn btn-primary pull-right">保存配置</button>
+	              </div>
+	            </form>
+	          </div>
+	        <!-- /.box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+<script>
+	var detail;
+	KindEditor.ready(function(K) {
+		var editor = K.editor({
+	       allowFileManager : true
+	    });
+        detail = K.create('#detail');
+        K('#getImage').click(function(){
+	        editor.loadPlugin('image', function() {
+	          	editor.plugin.imageDialog({
+	            	fileUrl : K('#imgurl').val(),
+	            	clickFn : function(url, title){
+	              		K('#imgurl').val(url);
+	              		K('#ibox').css({'backgroundImage':'url('+url+')'});
+	              		K('#icross').css({'display':'block'});
+	              		editor.hideDialog();
+	              		K('#getImage').attr('disabled',true);
+	            	}
+	          	});
+	        });
+	    });
+	    K('#getFile').click(function(){
+	        editor.loadPlugin('insertfile', function() {
+	          	editor.plugin.fileDialog({
+	            	fileUrl : K('#fileurl').val(),
+	            	clickFn : function(url, title){
+	              		K('#fileurl').val(url);
+	              		K('#flabel').html('已上传文件');
+	              		K('#fcross').css({'display':'inline-block'});
+	              		editor.hideDialog();
+	              		K('#getFile').attr('disabled',true);
+	            	}
+	          	});
+	        });
+	    });
+    });
+
+	//iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+	      checkboxClass: 'icheckbox_minimal-blue',
+	      radioClass: 'iradio_minimal-blue'
+    });
+
+    $('#smBtn').click(function(){
+        var smkey = $('#smSearch').val();
+        $('#smResult').html('<span style="font-size:14px;">数据加载中...</span>');
+        $.post('{:url("admin/shoper/searchproducts")}',{'key':smkey},function(data){
+            if(data.status==1){
+                var html = '';
+                $.each(data.list,function(index,item){
+                    html += '<div class="items" data-id="'+index+'" onclick="clickResItems(this);">'+item+'</div>';
+                });
+                $('#smResult').html(html);
+            }else{
+                $('#smResult').html('<span style="font-size:14px;">'+data.info+'</span>');
+            }
+        });
+    });
+
+    function clickResItems(it){
+        var status = true;
+        $.each($('#smContent .items'),function(index,item){
+            if($(it).data('id')==$(item).data('id')){
+                status = false;
+                return false;
+            }
+        });
+        if(!status){
+            $('#myDialog .dialog-box').text('商品已在组合中');
+			$('#myDialog').modal();
+			$('#myDialog #dialogSta').val(0);
+            return false;
+        }else if($('#smContent .items').length>=10){
+            $('#myDialog .dialog-box').text('最多添加10个推荐商品');
+			$('#myDialog').modal();
+			$('#myDialog #dialogSta').val(0);
+            return false;
+        }
+        $('#smContent').append('<div class="items" data-id="'+$(it).data('id')+'" onmouseover="showConItems(this);" onmouseout="hideConItem(this);">'+$(it).text()+'<div class="cross" onclick="clickConItems(this);">x</div></div>');
+        $(it).remove();
+    }
+
+    function checkResItems(it){
+        if(!$(it).hasClass('checked')){
+        	$('#smMain .items.checked').removeClass('checked');
+        	$(it).addClass('checked');
+        }
+    }
+
+    function clickConItems(it){
+        if(confirm('确定删除？')){
+          $(it).parent('.items').remove();
+        }
+    }
+
+    function showConItems(it){
+      $(it).children('.cross').show();
+    }
+
+    function hideConItem(it){
+      $(it).children('.cross').hide();
+    }
+
+    $('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.reload();
+	    }
+  	});
+
+  	$('.cross,.fcross').click(function(){
+  		var val = $(this).next('input').val();
+  		var el = $(this).attr('class');
+  		if(!val){
+  			return false;
+  		}
+  		$.post('{:url("admin/shoper/delresource")}',{durl:val,type:el},function(data){
+  			if(data.status==1){
+  				if(el=='cross'){
+  					$('#icross').hide();
+  					$('#ibox').css({'backgroundImage':'none'});
+  					$('#getImage').prop('disabled',false);
+  				}else{
+  					$('#fcross').hide();
+  					$('#flabel').text('未上传文件');
+  					$('#getFile').prop('disabled',false);
+  				}
+  			}else{
+  				$('#myDialog .dialog-box').text(data.info);
+  				$('#myDialog #dialogSta').val(data.status);
+  				$('#myDialog').modal();
+  			}
+  		});
+  	});
+
+  	$('#pbtn').click(function(){
+  		if($(this).hasClass('disabled')){
+			return false;
+		}else if($('#smContent .items').length>10){
+        	$('#myDialog .dialog-box').text('最多添加10个推荐商品');
+			$('#myDialog').modal();
+			$('#myDialog #dialogSta').val(0);
+    		return false;
+        }
+        var smids = new Array();
+        $.each($('#smContent .items'),function(ind,itm){
+            smids.push($(itm).data('id'));
+        });
+        $('#profile').append('<input type="hidden" name="commend" value="'+smids.join(",")+'" />');
+  		$('#detail').val(detail.html());
+  		var form = $('#profile').serialize();
+  		$(this).addClass('disabled');
+  		$.post('{:url("admin/shoper/profileconfig")}',form,function(data){
+  			$('#myDialog .dialog-box').text(data.info);
+  			$('#myDialog #dialogSta').val(0);
+  			$('#myDialog').modal();
+  			$('#pbtn').removeClass('disabled');
+  		});
+  	});
+
+  	$('#cbtn').click(function(){
+  		if($(this).hasClass('disabled')){
+			return false;
+		}
+		var form = $('#config').serialize();
+		$(this).addClass('disabled');
+  		$.post('{:url("admin/shoper/payconfig")}',form,function(data){
+  			$('#myDialog .dialog-box').text(data.info);
+  			$('#myDialog #dialogSta').val(0);
+  			$('#myDialog').modal();
+  			$('#cbtn').removeClass('disabled');
+  		});
+  	});
+
+</script>

@@ -1,0 +1,92 @@
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<a class="btn btn-warning" href="{:url('admin/system/addrule')}" style="margin:15px 0;">添加规则</a>
+			<a class="btn btn-info" href="{:url('admin/system/admingroup')}" style="margin:15px 0;">查看分组</a>
+			<div class="box">
+	            <div class="box-header">
+	              <h3 class="box-title">权限规则列表</h3>
+
+	              <div class="box-tools">
+	              	<form method="get">
+		                <div class="input-group input-group-sm" style="width:250px;">
+		                  <input type="text" name="search_key" class="form-control pull-right" placeholder="搜索规则名称">
+		                  <div class="input-group-btn">
+		                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+		                    <a class="btn btn-default btn-xs" href="{:url('admin/system/power')}"><i class="fa fa-refresh"></i>&nbsp;清除搜索</a>
+		                  </div>
+		                </div>
+		            </form>
+	              </div>
+	            </div>
+	            <!-- /.box-header -->
+	            <div class="box-body table-responsive no-padding">
+	              <table class="table table-hover">
+	                <tr>
+	                  <th>ID</th>
+	                  <th>规则名称</th>
+	                  <th>规则标识</th>
+	                  <th>标识类型</th>
+	                  <th>操作</th>
+	                </tr>
+	                {foreach name="list" item="vo"}
+		                <tr>
+		                  <td>{$vo.id}</td>
+		                  <td>{$vo.title}</td>
+		                  <td>{$vo.name}</td>
+		                  <td>
+		                  	{eq name="vo.type" value="1"}
+		                  		条件通过才通过
+		                  	{else/}
+		                  		存在规则就通过
+		                  	{/eq}
+		                  </td>
+		                  <td>
+		                  	<div class="btn-group">
+				                <a class="btn btn-default btn-xs" href="{:url('admin/system/editrule',array('id'=>$vo['id']))}"><i class="fa fa-edit"></i>&nbsp;编辑</a>
+				                <button type="button" class="btn btn-default btn-xs" onclick="delItem('{$vo.id}');"><i class="fa fa-trash-o"></i>&nbsp;删除</button>
+			                </div>
+		                  </td>
+		                </tr>
+		            {/foreach}
+	              </table>
+	            </div>
+	            <!-- /.box-body -->
+	            <div class="box-footer clearfix">
+	              {$list->render()}
+	            </div>
+          </div>
+          <!-- /.box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+{include file="public/modal" /}
+<script>
+    $('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.reload();
+	    }
+  	});
+
+  	function delItem(id){
+  		if(!id){
+  			return false;
+  		}
+  		$('#myModal .modal-box').text('确定删除该项?');
+  		$('#myModal').modal();
+  		$('#myModal #modalId').val(id);
+  	}
+
+  	$('#myModal #modalConfirm').click(function(){
+  		$('#myModal').modal('hide');
+  		var gid = $('#myModal #modalId').val();
+  		$.post("{:url('admin/system/delrule')}",{del:gid},function(data){
+  			$('#myDialog .dialog-box').text(data.info);
+  			$('#myDialog #dialogSta').val(data.status);
+  			$('#myDialog').modal();
+  		});
+  	});
+</script>

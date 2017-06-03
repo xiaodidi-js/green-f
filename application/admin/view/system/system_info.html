@@ -1,0 +1,145 @@
+<style>
+	.headimg{border:#fff solid 2px;cursor:pointer;}
+	.headimg.chosen{border:#3c8dbc solid 2px;}
+</style>
+<!-- Main content -->
+<section class="content" style="margin-top:30px;">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- general form elements -->
+		      <div class="box box-primary">
+		        <div class="box-header with-border">
+		          <h3 class="box-title">编辑系统信息</h3>
+		        </div>
+		        <!-- /.box-header -->
+		        <!-- form start -->
+		        <form id="form" role="form">
+		          <div class="box-body">
+		          	<div class="col-md-8">
+			            <div class="form-group">
+			              <label>网站名称</label>
+			              <input type="text" name="sitename" class="form-control" placeholder="网站的标题名称" value="{$info.sitename}">
+			            </div>
+			            <div class="form-group">
+			              <label>网站副标题</label>
+			              <input type="text" name="seoname" class="form-control" placeholder="网站的副标题名称" value="{$info.seoname}">
+			            </div>
+			            <div class="form-group">
+			              <label>网站关键词</label>
+			              <input type="text" name="keywords" class="form-control" placeholder="网站的关键词" value="{$info.keywords}">
+			            </div>
+			            <div class="form-group">
+			              <label>网站描述</label>
+			              <textarea name="description" class="form-control" placeholder="网站的描述" rows="8">{$info.description}</textarea>
+			            </div>
+			            <div class="form-group">
+			              <label>站长邮箱</label>
+			              <input type="text" name="masteremail" class="form-control" placeholder="站长邮箱" value="{$info.masteremail}">
+			            </div>
+					    {if condition="is_array($auth)"}
+					    	<div class="form-group">
+				              	<label>版权信息</label>
+				              	<input type="text" name="copyright" class="form-control" placeholder="网站的版权信息" value="{$info.copyright}">
+				            </div>
+				            <div class="form-group">
+				            	<label>跨域配置</label>
+				            	<div>
+				            		{if condition="$info['cross'] eq 1"}
+					                  	是否开启:&nbsp;&nbsp;<input type="checkbox" class="minimal" name="cross" value="1" checked>
+					                  	<input type="text" name="crossdomain" class="form-control" placeholder="跨域访问域名,如:http://xxx.aaa.cc" value="{$info.crossdomain}" style="margin-top:10px;">
+				                  	{else/}
+				                  		是否开启:&nbsp;&nbsp;<input type="checkbox" class="minimal" name="cross" value="1">
+					                  	<input type="text" name="crossdomain" class="form-control" placeholder="跨域访问域名,如:http://xxx.aaa.cc" value="" style="margin-top:10px;display:none;" disabled="true">
+				                  	{/if}
+				                </div>
+				            </div>
+				            <div class="form-group">
+				            	<label style="display:block;">域名授权信息</label>
+				            </div>
+				            <div class="table-responsive">
+				            	<table class="table">
+				            		<tr>
+				            			<th>客户名称</th>
+				            			<td>{$auth.uname}</td>
+				            		</tr>
+				            		<tr>
+				            			<th>授权域名</th>
+				            			<td>{$auth.domain}</td>
+				            		</tr>
+				            		<tr>
+				            			<th>创建时间</th>
+				            			<td>{$auth.createtime|date="Y-m-d H:i:s",###}</td>
+				            		</tr>
+				            		<tr>
+				            			<th>更新时间</th>
+				            			<td>{$auth.updatetime|date="Y-m-d H:i:s",###}</td>
+				            		</tr>
+				            	</table>
+				            </div>
+			            {else/}
+			            	<div class="form-group">
+				            	<label>版权信息</label>
+			              		<input type="text" name="copyright" class="form-control" placeholder="网站的版权信息" value="{$info.default_copyright}" disabled>
+					        </div>
+					        <div class="form-group">
+				            	<label>跨域配置</label>
+				            	<div>
+				            		{if condition="$info['cross'] eq 1"}
+					                  	是否开启:&nbsp;&nbsp;<input type="checkbox" class="minimal" name="cross" value="1" checked>
+					                  	<input type="text" name="crossdomain" class="form-control" placeholder="跨域访问域名,如:http://xxx.aaa.cc" value="{$info.crossdomain}" style="margin-top:10px;">
+				                  	{else/}
+				                  		是否开启:&nbsp;&nbsp;<input type="checkbox" class="minimal" name="cross" value="1">
+					                  	<input type="text" name="crossdomain" class="form-control" placeholder="跨域访问域名,如:http://xxx.aaa.cc" value="" style="margin-top:10px;display:none;" disabled="true">
+				                  	{/if}
+				                </div>
+				            </div>
+			            {/if}
+					</div>
+		          </div>
+		          <!-- /.box-body -->
+
+		          <div class="box-footer">
+		            <button type="button" id="submit" class="btn btn-primary">提交保存</button>
+		          </div>
+		        </form>
+		      </div>
+		    <!-- /.box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+<script>
+	$('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+      	checkboxClass: 'icheckbox_minimal-blue',
+      	radioClass: 'iradio_minimal-blue'
+    });
+
+    $('#submit').click(function(){
+		if($(this).hasClass('disabled')){
+			return false;
+		}
+		$(this).addClass('disabled');
+		var form = $('#form').serialize();
+		$.post('{:url("admin/system/systeminfo")}',form,function(data){
+			$('#myDialog .dialog-box').text(data.info);
+			$('#myDialog').modal();
+			$('#myDialog #dialogSta').val(data.status);
+			$('#submit').removeClass('disabled');
+		});
+    });
+
+    $('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.reload();
+	    }
+  	});
+
+  	$('input[name="cross"].minimal').on('ifChecked',function(){
+  		$('input[name="crossdomain"]').prop('disabled',false).show();
+  	});
+
+  	$('input[name="cross"].minimal').on('ifUnchecked',function(){
+  		$('input[name="crossdomain"]').prop('disabled',true).hide();
+  	});
+</script>

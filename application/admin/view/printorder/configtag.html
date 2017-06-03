@@ -1,0 +1,104 @@
+{css href="__STATIC__/lvyangtian/app.css"}
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"} 
+<section class="content">
+    <div class="row" id="app">
+    	<div class="col-xs-12">
+            <div class="form-group">
+                 <label>标签管理</label>
+             </div>
+		</div>
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">分类选择</h3>
+                </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-hover" id="example1">
+                        <thead>
+                            <tr>
+                            	<th>#</th>
+                                <th>分类名称</th>
+                                <th>已属标签</th>
+                            </tr> 
+                        </thead>
+                        <tbody>
+                            {foreach name="list" item="vo" }
+                                <tr>
+                                    <td>
+                                    {if condition="$vo.tag != $id && !empty($vo.tag)"}  
+                                        <input type="checkbox" value="{$vo.id}" v-model="classid" disabled>
+                                    {else/}
+                                        <input type="checkbox" value="{$vo.id}" v-model="classid" >
+                                    {/if}
+                                    </td>
+                                    <td>{$vo.title}</td>
+                                    <td>{$vo.tagname}</td>
+                                </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>   
+                </div>
+            </div>
+        </div>
+        <div class="btn bg-olive btn-flat margin" style="width: 45%;float: left;" @click="postok">提交</div>
+        <div class="btn bg-maroon btn-flat margin" style="width: 45%;float: left;" onclick="javascript:history.back(-1);">返回</div>
+    </div>
+</section>
+{js href="//cdn.quguonet.com/bootstrap/dist/js/bootstrap.min.js"/}
+{js href="//cdn.quguonet.com/datatables/media/js/jquery.dataTables.min.js"/}
+{js href="//cdn.quguonet.com/datatables/media/js/dataTables.bootstrap.min.js"/}
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            classid:[{$morenid}],
+        },
+        methods:{
+            postok:function(){
+                var self = this
+                $.post('{:url("admin/printorder/configtag")}',{classid:self.classid,id:{$id}},function(data){
+                    self.$Message.config({
+                        top: 100,
+                        duration: 3
+                    });
+                    var data = JSON.parse(data)
+                    if(data.status == '0'){
+                        self.$Message.error(data.msg)
+                    }else{
+                        self.$Message.success(data.msg)
+                        location.href = '{:url("admin/printorder/taglist")}'
+                    }
+                })
+            }
+        },
+    })
+</script>
+<script type="text/javascript" class="init">
+    $(document).ready(function() {
+        $('#example1').dataTable({
+            "paging": false,
+            "sPaginationType" : "full_numbers",
+            "oLanguage" : {
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+                "sZeroRecords": "抱歉， 没有找到",
+                "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+                "sInfoEmpty": "没有数据",
+                "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                "sZeroRecords": "没有检索到数据",
+                "sSearch": "名称:",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "前一页",
+                    "sNext": "后一页",
+                    "sLast": "尾页"
+                }        
+            }
+        });
+    });
+    
+</script>

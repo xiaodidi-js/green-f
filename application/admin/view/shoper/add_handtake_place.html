@@ -1,0 +1,101 @@
+<!-- Main content -->
+<section class="content" style="margin-top:30px;">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- general form elements -->
+		      <div class="box box-primary">
+		        <div class="box-header with-border">
+		          <h3 class="box-title">添加系统栏目</h3>
+		        </div>
+		        <!-- /.box-header -->
+		        <!-- form start -->
+		        <form id="form" role="form">
+		          <div class="box-body">
+		          	<div class="col-md-8">
+			          	<div class="form-group">
+			                <label style="display:block;">父级栏目</label>
+			                <select name="pid" class="form-control select2" style="width:50%;">
+			                  <option value="0" selected="selected">顶级栏目</option>
+			                  {foreach name="list" item="vo"}
+			                  	<option value="{$vo.id}">{$vo.name}</option>
+			                  {/foreach}
+			                </select>
+			            </div>
+			            <div class="form-group">
+			              <label>栏目名称</label>
+			              <input type="text" name="name" class="form-control" placeholder="栏目的名称标识" value="">
+			            </div>
+			            <div class="form-group">
+			              <label>模型</label>
+			              <input type="text" name="module" class="form-control" placeholder="模型名称">
+			            </div>
+			            <div class="form-group">
+			              <label>控制器</label>
+			              <input type="text" name="controller" class="form-control" placeholder="控制器名称">
+			              <span style="color:#ff0000;font-size:12px;">(必须填写，用于栏目显示样式.)</span>
+			            </div>
+			            <div class="form-group">
+			              <label>方法</label>
+			              <input type="text" name="action" class="form-control" placeholder="方法名称">
+			            </div>
+			            <div class="form-group">
+			              <label>栏目图标</label>
+			              <input type="text" name="icon" class="form-control" placeholder="栏目图标样式">
+			              <span style="color:#ff0000;font-size:12px;">(不填写则使用默认样式.)</span>
+			            </div>
+			            <div class="form-group">
+			            	<label style="display:block;">栏目状态</label>
+			                <label>
+			                  <input type="radio" name="status" class="minimal" value="1" checked>
+			                  启用
+			                </label>
+			                &nbsp;&nbsp;
+			                <label>
+			                  <input type="radio" name="status" class="minimal" value="0">
+			                  禁用
+			                </label>
+			            </div>
+					</div>
+		          </div>
+		          <!-- /.box-body -->
+
+		          <div class="box-footer">
+		            <button type="button" id="submit" class="btn btn-primary">提交保存</button>
+		          </div>
+		        </form>
+		      </div>
+		    <!-- /.box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+<script>
+	$('.select2').select2();
+
+	//iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+	      checkboxClass: 'icheckbox_minimal-blue',
+	      radioClass: 'iradio_minimal-blue'
+    });
+
+    $('#submit').click(function(){
+		if($(this).hasClass('disabled')){
+			return false;
+		}
+		$(this).addClass('disabled');
+		var form = $('#form').serialize();
+		$.post('{:url("admin/system/addcolumn")}',form,function(data){
+			$('#myDialog .dialog-box').text(data.info);
+			$('#myDialog').modal();
+			$('#myDialog #dialogSta').val(data.status);
+			$('#submit').removeClass('disabled');
+		});
+    });
+
+    $('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.href = "{:url('admin/system/column')}";
+	    }
+  	});
+</script>

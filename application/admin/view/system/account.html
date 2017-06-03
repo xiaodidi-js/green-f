@@ -1,0 +1,117 @@
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<a class="btn btn-warning" href="{:url('admin/system/addaccount')}" style="margin:15px 0;">添加账号</a>
+			<div class="box">
+	            <div class="box-header">
+	              <h3 class="box-title">系统账号列表</h3>
+
+	              <div class="box-tools">
+	              	<form method="get">
+		                <div class="input-group input-group-sm" style="width:250px;">
+		                  <input type="text" name="search_key" class="form-control pull-right" placeholder="搜索账号名称">
+		                  <div class="input-group-btn">
+		                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+		                    <a class="btn btn-default btn-xs" href="{:url('admin/system/account')}"><i class="fa fa-refresh"></i>&nbsp;清除搜索</a>
+		                  </div>
+		                </div>
+		            </form>
+	              </div>
+	            </div>
+	            <!-- /.box-header -->
+	            <div class="box-body table-responsive no-padding">
+	              <table class="table table-hover">
+	                <tr>
+	                  <th>ID</th>
+	                  <th>账号名称</th>
+	                  <th>手机号码</th>
+	                  <th>邮箱</th>
+	                  <th>所属用户组</th>
+	                  <th>状态</th>
+	                  <th>创建时间</th>
+	                  <th>操作</th>
+	                </tr>
+	                {foreach name="list" item="vo"}
+		                <tr>
+		                  <td>{$vo.id}</td>
+		                  <td>{$vo.name}</td>
+		                  <td>{$vo.tel}</td>
+		                  <td>{$vo.email}</td>
+		                  <td>{$vo.groups}</td>
+		                  <td>
+		                  	{eq name="vo.status" value="1"}
+		                  		<span class="label label-success">启用</span>
+		                  	{else/}
+		                  		<span class="label label-warning">禁用</span>
+		                  	{/eq}
+		                  </td>
+		                  <td>{$vo.createtime|date="Y-m-d H:i:s",###}</td>
+		                  <td>
+		                  	<div class="btn-group">
+				                <a class="btn btn-default btn-xs" href="{:url('admin/system/editaccount',array('id'=>$vo['id']))}"><i class="fa fa-edit"></i>&nbsp;编辑</a>
+				                {eq name="vo.status" value="1"}
+				                	<button type="button" class="btn btn-default btn-xs" onclick="changeItem('{$vo.id}','0');"><i class="fa fa-trash-o"></i>&nbsp;禁用</button>
+				                {else/}
+				                	<button type="button" class="btn btn-default btn-xs" onclick="changeItem('{$vo.id}','1');"><i class="fa fa-trash-o"></i>&nbsp;启用</button>
+				                {/eq}
+				                <button type="button" class="btn btn-default btn-xs" onclick="delItem('{$vo.id}');"><i class="fa fa-trash-o"></i>&nbsp;删除</button>
+			                </div>
+		                  </td>
+		                </tr>
+		            {/foreach}
+	              </table>
+	            </div>
+	            <!-- /.box-body -->
+	            <div class="box-footer clearfix">
+	              {$page}
+	            </div>
+          </div>
+          <!-- /.box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+{include file="public/modal" /}
+<script>
+    $('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.reload();
+	    }
+  	});
+
+  	function changeItem(aid,kind){
+  		if(!aid){
+  			return false;
+  		}
+  		$.post("{:url('admin/system/changeaccount')}",{id:aid,type:kind},function(data){
+  			if(data.status!=1){
+  				$('#myDialog .dialog-box').text(data.info);
+	  			$('#myDialog #dialogSta').val(data.status);
+	  			$('#myDialog').modal();
+  			}else{
+  				window.location.reload();
+  			}
+  		});
+  	}
+
+  	function delItem(id){
+  		if(!id){
+  			return false;
+  		}
+  		$('#myModal .modal-box').text('确定删除该项?');
+  		$('#myModal').modal();
+  		$('#myModal #modalId').val(id);
+  	}
+
+  	$('#myModal #modalConfirm').click(function(){
+  		$('#myModal').modal('hide');
+  		var gid = $('#myModal #modalId').val();
+  		$.post("{:url('admin/system/delaccount')}",{del:gid},function(data){
+  			$('#myDialog .dialog-box').text(data.info);
+  			$('#myDialog #dialogSta').val(data.status);
+  			$('#myDialog').modal();
+  		});
+  	});
+</script>

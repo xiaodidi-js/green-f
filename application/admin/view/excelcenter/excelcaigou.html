@@ -1,0 +1,224 @@
+{css href="__STATIC__/lvyangtian/app.css"}
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"}
+{css href="//cdn.quguonet.com/datatables/media/css/dataTables.bootstrap.min.css"/}
+<style>
+    .inputdiv{
+        float: left;
+        width: 200px;
+    }
+    .demo-spin-icon-load{
+        animation: ani-demo-spin 1s linear infinite;
+    }
+    @keyframes ani-demo-spin {
+        from { transform: rotate(0deg);}
+        50%  { transform: rotate(180deg);}
+        to   { transform: rotate(360deg);}
+    }
+    .demo-spin-col{
+        height: 100px;
+        position: relative;
+        border: 1px solid #eee;
+    }
+</style>
+<section class="content">
+    <div class="row" id="app">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">采购管理</h3>
+                    <div>
+                        <div class="inputdiv">
+                            <div>开始时间:</div>
+                            <Date-picker :value="stime" style="width: 200px;float: left;" type="datetime" @on-change="stimeonclick"></Date-picker>
+                        </div>
+                        <div class="inputdiv">
+                            <div>结束时间:</div>
+                            <Date-picker :value="etime" style="width: 200px;float: left;" type="datetime" @on-change="etimeonclick"></Date-picker>
+                        </div>
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <div class="ivu-btn ivu-btn-success" @click="selectlist">查询列表</div>
+                        <div class="ivu-btn ivu-btn-success" @click="daochu">导出采购表</div>
+                    </div>
+                </div>
+                <div class="box-header" style="padding-top: 0">
+                    <div>
+                        <div class="inputdiv">
+                            <div>选择时间:</div>
+                            <Date-picker :value="caigoutime" style="width: 200px;float: left;" type="date" @on-change="caigoutimeclick"></Date-picker>
+                        </div>
+                        <div class="inputdiv">
+                            <div>选择时段:</div>
+                            <i-select v-model="miao" style="width:200px;float: left;" @on-change="miaook">
+                                <i-option :value="0">10:30</i-option>
+                                <i-option :value="1">16:30</i-option>
+                            </i-select>
+                        </div>
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <template v-if="yescaigou == 0">
+                            <div class="ivu-btn ivu-btn-error" @click="caigouok">未完成采购</div>
+                        </template>
+                        <template v-else>
+                            <div class="ivu-btn ivu-btn-success" disabled>已完成采购</div>
+                        </template>
+                    </div>
+                </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-hover" id="example">
+                        <thead>
+                            <tr>
+                                <th>订单号</th>
+                                <th>商品名称</th>
+                                <th>自提点</th>
+                                <th>售价</th>
+                                <th>数量</th>
+                                <th>发货时间</th>
+                                <th>下单时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {foreach name="list" item="vo"}
+                                <tr>
+                                    <td>{$vo.orderid}</td>
+                                    <td>{$vo.name}</td>
+                                    <td>{$vo.address}</td>
+                                    <td>{$vo.sum}</td>
+                                    <td>{$vo.amount}</td>
+                                    <td>{$vo.stime | date="Y-m-d H:i:s",###}</td>
+                                    <td>{$vo.createtime | date="Y-m-d H:i:s",###}</td>
+                                </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <Modal
+            v-model="caigouokmodel"
+            title="是否确定"
+            @on-ok="caigou">
+            <p>是否确定完成当天采购?</p>
+        </Modal>
+    </div>
+</section>
+{js href="//cdn.quguonet.com/bootstrap/dist/js/bootstrap.min.js"/}
+{js href="//cdn.quguonet.com/datatables/media/js/jquery.dataTables.min.js"/}
+{js href="//cdn.quguonet.com/datatables/media/js/dataTables.bootstrap.min.js"/}
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            stime:"{$stime}",
+            etime:"{$etime}",
+            caigoutime:"{$cgtime}",
+            caigouokmodel:false,
+            yescaigou:null,
+            spinShow: true,
+            miao:0,
+        },
+        created:function(){
+            this.ready()
+        },
+        methods:{
+            ready:function(){
+                var self = this
+                $.get('{:url("admin/Excelcenter/querycaigouook")}',{stime: self.caigoutime,miao:self.miao},function(data) {
+                    var data = JSON.parse(data)
+                    if(data.status == 0){
+                        self.yescaigou = 0;
+                    }else{
+                        self.yescaigou = 1;
+                    }
+                })
+            },
+            stimeonclick:function(date){
+                this.stime = date;
+            },
+            etimeonclick:function(date){
+                this.etime = date;
+            },
+            daochu:function () {
+                window.location.href = '{:url("admin/Excelcenter/caigoudaochu")}'+'?stime='+this.stime+'&etime='+this.etime;
+            },
+            selectlist:function(){
+                window.location.href = "{:url('admin/excelcenter/ExcelCaiGou')}"+'?stime='+this.stime+'&etime='+this.etime;
+            },
+            caigoutimeclick:function(date){
+                var self = this
+                self.$Message.config({
+                    top: 100,
+                    duration: 3
+                });
+                self.caigoutime = date;
+                $.get('{:url("admin/Excelcenter/querycaigouook")}',{stime: self.caigoutime,miao:self.miao},function(data) {
+                    var data = JSON.parse(data)
+                    if(data.status == '0'){
+                        self.$Message.info(data.msg)
+                        self.yescaigou = 0;
+                    }else{
+                        self.$Message.success(data.msg)
+                        self.yescaigou = 1;
+                    }
+                })
+            },
+            caigouok:function(){
+                this.caigouokmodel = true
+            },
+            caigou:function(){
+                var self = this
+                $.post('{:url("admin/Excelcenter/caigouok")}', {stime: self.caigoutime,miao:self.miao}, function (data) {
+                    self.$Message.config({
+                        top: 100,
+                        duration: 3
+                    });
+                    var data = JSON.parse(data)
+                    if(data.status == '0'){
+                        self.$Message.error(data.msg)
+                    }else{
+                        self.$Message.success(data.msg)
+                        self.yescaigou = 1;
+                    }
+                })
+            },
+            miaook:function(){
+                var self = this
+                $.get('{:url("admin/Excelcenter/querycaigouook")}',{stime: self.caigoutime,miao:self.miao},function(data) {
+                    var data = JSON.parse(data)
+                    if(data.status == 0){
+                        self.yescaigou = 0;
+                    }else{
+                        self.yescaigou = 1;
+                    }
+                })
+            }
+        }
+    })
+</script>
+<script type="text/javascript" class="init">
+    $(document).ready(function() {
+        var ii = $('#example').dataTable({
+            "sPaginationType" : "full_numbers",
+            "oLanguage" : {
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+                "sZeroRecords": "抱歉， 没有找到",
+                "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+                "sInfoEmpty": "没有数据",
+                "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                "sZeroRecords": "没有检索到数据",
+                "sSearch": "名称:",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "前一页",
+                    "sNext": "后一页",
+                    "sLast": "尾页"
+                }
+            },
+        });
+    });
+</script>

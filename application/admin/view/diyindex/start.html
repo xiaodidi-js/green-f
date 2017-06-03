@@ -1,0 +1,622 @@
+{css href="__STATIC__/lvyangtian/app.css"}
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"} 
+<style type="text/css">
+    .imgred{
+       border: 1px solid red;
+       height: 85px;
+       clear:both;
+    }
+    .imgbai{
+       border: 1px solid #FFF;
+       height: 85px;
+       clear:both;
+    }
+    .imghei{
+       border: 1px solid #9F5F9F;
+       height: 85px;
+       clear:both;
+    }
+    .imgblue{
+       border: 1px solid blue;
+       height: 85px;
+       clear:both;
+    }
+</style>
+<section class="content-header">
+  	<div class="bigk">
+		<div id="app">
+		  	<div class="diyleft">
+                <div style="text-align: center;color: red">紫色是自定义图片,蓝色框是滚动图,红色框是选中</div>
+				<div class="diydome">
+                    <div v-for="(item, index) in uploadList">
+                        <span v-if="index == inboxIndex">
+                        <div v-if="uploadList[index].type == '0'" @click="inbox(index,0)" class="imgred">
+                            <div class="demo-upload-list" v-for="(itemimg,nub) in uploadList[index].arr">
+                                <img :src="itemimg.url">
+                                <div class="demo-upload-list-cover">
+                                    <Icon type="ios-eye-outline" @click.native="handleView(itemimg.name)"></Icon>
+                                    <Icon type="ios-trash-outline" @click.native="handleRemove(itemimg,index,nub)"></Icon>
+                                    <i class="ivu-icon ivu-icon-arrow-swap" @click="handleAddurl(index,nub)"></i>
+                                </div>
+                            </div>
+                            <span v-if="index == inboxIndex">
+                                <span v-if="showupload == 1">
+                                    <Upload
+                                        ref="upload"
+                                        :show-upload-list="false"
+                                        :on-success="handleSuccess"
+                                        :format="['jpg','jpeg','png']"
+                                        :max-size="2048"
+                                        :on-format-error="handleFormatError"
+                                        :on-exceeded-size="handleMaxSize"
+                                        :before-upload="handleBeforeUpload"
+                                        type="drag"
+                                        action='{:url("admin/Diyindex/img")}'
+                                        style="display: inline-block;width:75px;" :id="'upload'+index">
+                                        <div style="width: 75px;height:75px;line-height: 75px;" @click="Uploadnub(index)">
+                                            <Icon type="camera" size="20"></Icon>
+                                        </div>
+                                    </Upload>
+                                </span>
+                            </span>
+                            <!--<Modal title="查看图片" v-model="visible">
+                                <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
+                            </Modal>-->
+                        </div>
+                        </span>
+                        <span v-else>
+                        <div v-if="uploadList[index].type == '0'" @click="inbox(index,0)" class="imghei">
+                            <div class="demo-upload-list" v-for="(itemimg,nub) in uploadList[index].arr">
+                                <img :src="itemimg.url">
+                                <div class="demo-upload-list-cover">
+                                    <Icon type="ios-eye-outline" @click.native="handleView(itemimg.name)"></Icon>
+                                    <Icon type="ios-trash-outline" @click.native="handleRemove(itemimg,index,nub)"></Icon>
+                                    <i class="ivu-icon ivu-icon-arrow-swap" @click="handleAddurl(index,nub)"></i>
+                                </div>
+                            </div>
+                            <span v-if="index == inboxIndex">
+                                <span v-if="showupload == 1">
+                                    <Upload
+                                        ref="upload"
+                                        :show-upload-list="false"
+                                        :on-success="handleSuccess"
+                                        :format="['jpg','jpeg','png']"
+                                        :max-size="2048"
+                                        :on-format-error="handleFormatError"
+                                        :on-exceeded-size="handleMaxSize"
+                                        :before-upload="handleBeforeUpload"
+                                        type="drag"
+                                        action='{:url("admin/Diyindex/img")}'
+                                        style="display: inline-block;width:77px;" :id="'upload'+index">
+                                        <div style="width: 77px;height:77px;line-height: 77px;" @click="Uploadnub(index)">
+                                            <Icon type="camera" size="20"></Icon>
+                                        </div>
+                                    </Upload>
+                                </span>
+                            </span>
+                            <!--<Modal title="查看图片" v-model="visible">
+                                <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
+                            </Modal>-->
+                        </div> 
+                        </span>
+                        <div v-if="uploadList[index].type == '1'" @click="inbox(index,1)" style="clear:both">
+                            <span v-if="index == inboxIndex">
+                                <div style="border: 1px dotted red; height: 108px;clear:both">
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                </div>
+                            </span>
+                            <span v-else>
+                                <div style="border: 1px dotted #FFF; height: 108px;clear:both">
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                </div>
+                            </span>
+                            
+                        </div>
+                        <div v-if="uploadList[index].type == '2'" @click="inbox(index,2)" style="clear:both">
+                            <span v-if="index == inboxIndex">
+                                <div style="border: 1px dotted red; height: 214px;clear:both">
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                </div>
+                            </span>
+                            <span v-else>
+                                <div style="border: 1px dotted #FFF; height: 214px;clear:both">
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                </div>
+                            </span>
+                        </div>
+                        <div v-if="uploadList[index].type == '3'" @click="inbox(index,3)" style="clear:both">
+                        <span v-if="index == inboxIndex">
+                                <div style="border: 1px dotted red; height: 320px;clear:both">
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                    <div class="fangered"></div>
+                                </div>
+                            </span>
+                            <span v-else>
+                                <div style="border: 1px dotted #FFF; height: 320px;clear:both">
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                    <div class="fange"></div>
+                                </div>
+                            </span>
+                            
+                        </div>
+                        <span v-if="index == inboxIndex">
+                        <div v-if="uploadList[index].type == '4'" @click="inbox(index,4)" class="imgred">
+                            <div class="demo-upload-list" v-for="(itemimg,nub) in uploadList[index].arr">
+                                <img :src="itemimg.url">
+                                <div class="demo-upload-list-cover">
+                                    <Icon type="ios-eye-outline" @click.native="handleView(itemimg.name)"></Icon>
+                                    <Icon type="ios-trash-outline" @click.native="handleRemove(itemimg,index,nub)"></Icon>
+                                    <i class="ivu-icon ivu-icon-arrow-swap" @click="handleAddurl(index,nub)"></i>
+                                </div>
+                            </div>
+                            <span v-if="index == inboxIndex">
+                                <span v-if="showupload == 1">
+                                    <Upload
+                                        ref="upload"
+                                        :show-upload-list="false"
+                                        :on-success="handleSuccess"
+                                        :format="['jpg','jpeg','png']"
+                                        :max-size="2048"
+                                        :on-format-error="handleFormatError"
+                                        :on-exceeded-size="handleMaxSize"
+                                        :before-upload="handleBeforeUpload"
+                                        type="drag"
+                                        action='{:url("admin/Diyindex/img")}'
+                                        style="display: inline-block;width:75px;" :id="'upload'+index">
+                                        <div style="width: 75px;height:75px;line-height: 75px;" @click="Uploadnub(index)">
+                                            <Icon type="camera" size="20"></Icon>
+                                        </div>
+                                    </Upload>      
+                                </span>          
+                            </span>
+                            <!--<Modal title="查看图片" v-model="visible">
+                                <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
+                            </Modal>-->
+                        </div>
+                        </span>
+                        <span v-else>
+                        <div v-if="uploadList[index].type == '4'" @click="inbox(index,4)" class="imgblue">
+                            <div class="demo-upload-list" v-for="(itemimg,nub) in uploadList[index].arr">
+                                <img :src="itemimg.url">
+                                <div class="demo-upload-list-cover">
+                                    <Icon type="ios-eye-outline" @click.native="handleView(itemimg.name)"></Icon>
+                                    <Icon type="ios-trash-outline" @click.native="handleRemove(itemimg,index,nub)"></Icon>
+                                    <i class="ivu-icon ivu-icon-arrow-swap" @click="handleAddurl(index,nub)"></i>
+                                </div>
+                            </div>
+                            <span v-if="index == inboxIndex">
+                                <span v-if="showupload == 1">
+                                    <Upload
+                                        ref="upload"
+                                        :show-upload-list="false"
+                                        :on-success="handleSuccess"
+                                        :format="['jpg','jpeg','png']"
+                                        :max-size="2048"
+                                        :on-format-error="handleFormatError"
+                                        :on-exceeded-size="handleMaxSize"
+                                        :before-upload="handleBeforeUpload"
+                                        type="drag"
+                                        action='{:url("admin/Diyindex/img")}'
+                                        style="display: inline-block;width:77px;" :id="'upload'+index">
+                                        <div style="width: 77px;height:77px;line-height: 77px;" @click="Uploadnub(index)">
+                                            <Icon type="camera" size="20"></Icon>
+                                        </div>
+                                    </Upload>      
+                                </span>          
+                            </span>
+                            <!--<Modal title="查看图片" v-model="visible">
+                                <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
+                            </Modal>-->
+                        </div>
+                        </span>
+                    </div>
+				</div>
+		  	</div>
+		  	<div class="diyright">
+                 <div>
+                    <div style="font-size: 16px;">新增组件</div>
+    				<select v-model="select" style="width: 150px;height: 32px;">
+    					<option value="0">自定义图片</option>
+    					<option value="1">1*3分类商品</option>
+    					<option value="2">2*3分类商品</option>
+                        <option value="3">3*3分类商品</option>
+    					<option value="4">滚动图</option>
+    				</select>
+                    <input type="number" placeholder="序号" style="width: 150px;height: 32px; " v-model="num">
+    				<i-button type="success" @click="add">插入</i-button>
+                </div>
+                 <div style="margin-top: 20px;">
+                    <div style="font-size: 16px;">操作</div>
+                    <i-button type="success" @click="move(1)">上</i-button>
+                    <i-button type="success" @click="move(2)">下</i-button>
+                    <i-button type="error" @click="inboxRemove">删除</i-button>
+                </div>
+                <div v-if="inboxType > '0'" style="margin-top: 20px;">
+                    <div v-if="inboxType < '4'">
+                        <div style="float: left; margin:0 10px 10px 0;">
+                            <div style="font-size: 16px;">请选择商品分类</div>
+                            <select style="width: 150px;height: 32px;" v-model="inboxSelect" @click="selectnull(1)">
+                                {foreach name="list" item="vo"}
+                                    <option value="{$vo.id}">{$vo.cname}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                        <div style="float: left;">
+                            <div style="font-size: 16px;">请选择商品推荐</div>
+                            <select style="width: 150px;height: 32px;" v-model="inboxtuijianSelect" @click="selectnull(2)">
+                                {foreach name="cxtuijian" item="vo"}
+                                    <option value="{$vo.id}">{$vo.title}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                        <i-button type="success" style="margin-top: 23px; margin-left: 15px;" @click="classOk">确认</i-button>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <i-button type="success" long @click="postok">提交布局</i-button>
+                </div>
+		  	</div>
+		  	<Modal
+		        v-model="modal1"
+		        title="请输入地址"
+		        @on-ok="ok()">
+		        <div>链接地址</div>
+		        <i-input v-model="inputURL">
+			    </i-input>
+		    </Modal>
+            <Modal
+                v-model="modal2"
+                title="是否确认发布"
+                @on-ok="ok()">
+                <div>是否确认发布</div>
+                <div>请认真核对,错误将会影响客户端首页!</div>
+            </Modal>
+		</div>
+  	</div>
+    <div style="clear:both"></div>
+</section>
+<script type="text/javascript">
+	new Vue({
+		el: '#app',
+		data:function () {
+            return {
+                imgName: '',
+                visible: false,
+                // 关键数组
+                uploadList:{},
+                // 编辑自定义图片地址填写框
+                modal1: false,
+                // 提交布局提示框
+                modal2: false,
+                inputURL:null,
+                inputimgname:null,
+                select:null,
+                choose:0,
+                name:null,
+                num:null,
+                uploadnub:null,
+                // 一级键值
+                inboxIndex:null,
+                // 一级键值框的类别
+                inboxType:null,
+                // 商品分类选择
+                inboxSelect:null,
+                // 商品推荐选择
+                inboxtuijianSelect:null,
+                Addurlindex:null,
+                Addurlnub:null,
+                showupload:0,
+            }
+        },
+        created:function(){
+            this.ready()
+        },
+        methods: {
+            ready:function(){
+                var self = this
+                $.get('{:url("admin/diyindex/uploadList")}',function(data){
+                    var data = JSON.parse(data).msg
+                    self.uploadList = data.list
+                });
+            },
+            // 组件删除
+            inboxRemove:function(){
+                var index = this.inboxIndex
+                this.$Message.config({
+                    top: 100,
+                    duration: 3
+                });
+                if(index == null){
+                    this.$Message.error('请选择一个组件！');
+                }else{
+                    this.uploadList.splice(index, 1); 
+                    this.$Message.success('删除组件成功！');
+                }
+            },
+            // 点击组件大框得出键值
+            inbox:function(index,type){
+                this.inboxIndex = index;
+                this.inboxType = type;
+                // 点击时候查询回数组里面的类型
+                // 判断他之前选择了商品类型还是商品分类
+                this.inboxSelect = undefined;
+                this.inboxtuijianSelect = undefined;
+                if(this.uploadList[index]['leibie'] == 1){
+                    this.inboxSelect = this.uploadList[index]['class'];
+                }else if(this.uploadList[index]['leibie'] == undefined){
+                    // 这个判断是暂时性，因为作出了修改数组结构 没有保存
+                    this.inboxSelect = this.uploadList[index]['class'];
+                }else{
+                    this.inboxtuijianSelect = this.uploadList[index]['class'];
+                }
+                if(this.uploadList[index]['type'] == '0' || this.uploadList[index]['type'] == '4'){
+                    if(this.uploadList[index].arr == null){
+                        this.showupload = 1;
+                    }else{
+                        const checkimg = this.uploadList[index].arr.length < 4;
+                        if (!checkimg) {
+                            this.showupload = 0;
+                        }else{
+                            this.showupload = 1;
+                        }
+                    }
+                }
+            },
+            // 组件上下移动排序
+            move:function(index){
+            // 把初始值设为点击的键值
+            var choose = this.inboxIndex
+            switch(index){
+                case 1:
+                    // 如果键值等于0就等于到顶了，不更新
+                    if(choose > 0){
+                        // chooes2是作为如果键值减一的数
+                        var choose2 = choose - 1
+                        break
+                    }else{
+                        return
+                    }
+                case 2:
+                    // 如果键值到底了，不更新
+                    if(choose < this.uploadList.length-1){
+                        // chooes2是作为如果键值加一的数
+                        var choose2 = choose + 1
+                        break
+                    }else{
+                        return
+                    }
+                }
+                // 找出点击初始值的内容
+                var temp1 = this.uploadList[choose]
+                // 经过上和下的判断得出另一个内容
+                var temp2 = this.uploadList[choose2]
+                // 替换
+                this.uploadList.splice(choose,1,temp2)
+                this.uploadList.splice(choose2,1,temp1)
+                // 留住初始值，这样就不会变成替换其他内容了
+                this.choose = choose2
+                this.inboxIndex = choose2
+            },
+            // 添加组件
+            add:function(){
+                // 判断添加什么类型的组件
+                if(this.select == '0'){
+                    var name = {
+                        type:'0',
+                        arr:[],
+                    }
+                }else if(this.select == '1'){
+                    var name = {
+                        type:'1',
+                        arr:[],
+                    }
+                }else if(this.select == '2'){
+                    var name = {
+                        type:'2',
+                        arr:[],
+                    }
+                }else if(this.select == '3'){
+                    var name = {
+                        type:'3',
+                        arr:[],
+                    }
+                }else if(this.select == '4'){
+                    var name = {
+                        type:'4',
+                        arr:[],
+                    }
+                }
+                var num = this.num - 1
+                if(name != null && num >= 0){
+                    this.uploadList.splice(num,0,name)
+                }
+            },
+            // 上传图片查看
+            handleView:function (name) {
+                /*this.imgName = name;
+                this.visible = true;*/
+            },
+            // 上传删除
+            handleRemove:function (file,index,nub) {
+                // 从 upload 实例删除数据
+                this.uploadList[index].arr.splice(this.uploadList.indexOf(file), 1);
+                // 检测是不是小过3张就显示上传按钮
+                var checkimg = this.uploadList[index].arr.length < 3;
+                if (!checkimg) {
+                	$('#upload'+index).show()
+                }
+            },
+            // 点击上传的某一个位置得出键值
+            Uploadnub:function(item){
+                this.uploadnub = item
+            },
+            // 上传数量检测
+            handleBeforeUpload:function () {
+                var self = this
+                var nub = self.uploadnub
+                const check = self.uploadList[nub].arr.length < 4;
+                self.$Notice.config({
+                    top: 100,
+                    duration: 3
+                });
+                if (!check) {
+                    this.$Notice.warning({
+                        title: '最多只能上传 4 张图片。'
+                    });
+                }
+                // 检测是不是大过3张就隐藏上传按钮
+                const checkimg = self.uploadList[nub].arr.length < 3;
+                if (!checkimg) {
+                    $('#upload'+nub).hide()
+                }
+                return check;
+            },
+            // 上传成功后方法
+            handleSuccess:function (res, file,fileList) {
+                // 因为上传过程为实例，这里模拟添加 url
+                url = res.msg.img.url;
+                name = res.msg.img.name;
+                var nub = this.uploadnub
+                // 把返回的数组添加到数组
+                this.uploadList[nub].arr.push({ name: name, url: url, htmlurl:null})
+            },
+            // 上传判断格式
+            handleFormatError:function (file) {
+                this.$Notice.config({
+                    top: 100,
+                    duration: 3
+                });
+                this.$Notice.warning({
+                    title: '文件格式不正确',
+                    desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
+                });
+            },
+            // 上传判断大小
+            handleMaxSize:function (file) {
+                this.$Notice.config({
+                    top: 100,
+                    duration: 3
+                });
+                this.$Notice.warning({
+                    title: '超出文件大小限制',
+                    desc: '文件 ' + file.name + ' 太大，不能超过 2M。'
+                });
+            },
+            // 自定义组件记录http地址
+            ok:function () {
+                var inputURL = this.inputURL
+                var index = this.Addurlindex
+                var nub = this.Addurlnub
+                this.uploadList[index].arr[nub]['htmlurl'] = inputURL
+            },
+            // 自定义组件记录点击键值
+            handleAddurl:function(index,nub){
+                this.inputURL = this.uploadList[index].arr[nub]['htmlurl']
+                // 打开提示框
+            	this.modal1 = true
+                // 保存键值
+                this.Addurlindex = index
+                // 保存键值里的键值
+                this.Addurlnub = nub
+            },
+            selectnull:function(stu){
+                if(stu == 1){
+                    this.inboxtuijianSelect = 0;
+                }else{
+                    this.inboxSelect = 0;
+                }
+            },
+            // 选择商品分类
+            classOk:function(){
+                var index = this.inboxIndex
+                this.$Message.config({
+                    top: 100,
+                    duration: 3
+                });
+                // 商品推荐和分类不能同选，作出警告
+                if(this.inboxSelect && this.inboxtuijianSelect){
+                    this.$Message.error('商品推荐和商品分类不能同选!');
+                    return;
+                }
+                if(this.uploadList[index]){
+                    // 开始判断商品推荐还是商品分类
+                    if(this.inboxSelect){
+                        this.uploadList[index]['leibie'] = 1;
+                        this.uploadList[index]['class'] = this.inboxSelect;
+                        this.$Message.success('选择分类商品,成功!');
+
+                    }else{
+                        this.uploadList[index]['leibie'] = 2;
+                        this.uploadList[index]['class'] = this.inboxtuijianSelect;
+                        this.$Message.success('选择推荐商品,成功!');
+                    }
+                }else{
+                    this.$Message.error('这个组件不存在,可能已删除!');
+                }
+            },
+            // 提交布局
+            postok:function(){
+                var self = this
+                self.$Message.config({
+                    top: 100,
+                    duration: 3
+                });
+                for(var i = 0; i < self.uploadList.length; i++){
+                    if(self.uploadList[i].type == 0 || self.uploadList[i].type == 4 ){
+                        if(self.uploadList[i].arr.length == 0){
+                            self.$Message.error('自定义图片和滚动图请上传图片');
+                            return
+                        }
+                    }
+                    if(self.uploadList[i].type == 1 || self.uploadList[i].type == 2 || self.uploadList[i].type == 3 ){
+                        if(self.uploadList[i].class == null){
+                            self.$Message.error('分类商品请选择分类');
+                            return
+                        }
+                    }
+                }
+                $.post('{:url("admin/diyindex/layoutok")}',{data:self.uploadList},function(data){
+                    var data = JSON.parse(data)
+                    if(data.status == 1){
+                        self.$Message.success('编辑成功!');
+                    }else{
+                        self.$Message.error('编辑失败!');
+                    }
+                });
+            }
+        },
+	})
+</script>

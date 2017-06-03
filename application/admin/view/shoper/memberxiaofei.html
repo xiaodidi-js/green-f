@@ -1,0 +1,124 @@
+{js href="__STATIC__/datetime/bootstrap-datetimepicker.min.js"/}
+{css href="__STATIC__/datetime/bootstrap-datetimepicker.min.css"/}
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">用户消费记录</h3>
+                  <div class="box-tools">
+                  	<form method="get" action="{:url("admin/Shoper/memberxiaofei")}">
+                        <input type="hidden" name="id" value="{$id}">
+                        <div class="input-group input-group-sm" style="width:250px;">
+                            <div class="input-group date form_date col-md-5" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd" >
+                                <input class="form-control" size="16" type="text" readonly style="width: 150px;" name="time"{notempty name="shijian"}  value="{$stime}"{/notempty}>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                <div class="input-group-btn">
+
+                            		<button type="submit" class="btn btn-default"><i class="fa fa-search"></i>&nbsp;查询</button>
+                          		</div>
+                          		<div class="input-group-btn">
+                            		<!-- <a href="{:url("admin/Wxshop/ycshyonghufenxiexcel")}" class="btn btn-default"><i class="fa fa-search"></i>&nbsp;导出表格</a> -->
+                          		</div>
+                            </div>
+                            <input type="hidden" id="dtp_input2" value="" /><br/>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+                <!-- /.box-header -->	        
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover" id="example">
+                    <thead>
+                      <tr>
+                        <th>订单号</th>
+                        <th>手机</th>
+                        <th>自提点/快递地址</th>
+                        <th>下单时间</th>
+                        <th>支付时间</th>
+                        <th>配送时间</th>
+                        <th>商品金额</th>
+                        <th>实际消费金额</th>
+                        <th>订单状态</th>
+                      </tr>
+                     </thead>
+                     <tbody>
+                      {foreach name="list" item="vo"}
+                      <tr>
+                        <td>{$vo.orderid}</td>
+                        <td>{$vo.tel}</td>
+                        <td>{$vo.address}</td>
+                        <td>{$vo.createtime|date="Y-m-d H:i:s",###}</td>
+                        <td>{$vo.paytime|date="Y-m-d H:i:s",###}</td>
+                        <td>{$vo.stime|date="Y-m-d H:i:s",###}</td>
+                        <td>{$vo.sum}</td>
+                        <td>{$vo.money}</td>
+                        <td>{switch name="vo.pay"}
+                                {case value="0"}<span style="color: red">待支付</span>/{/case}
+                                {case value="1"}<span style="color: green">已支付</span>/{/case}
+                            {/switch}
+                            {switch name="vo.send"}
+                                {case value="0"}<span style="color: red">未发货</span>/{/case}
+                                {case value="1"}<span style="color: green">已发货</span>/{/case}
+                            {/switch}
+                            {switch name="vo.receive"}
+                                {case value="0"}<span style="color: red">未收货</span>{/case}
+                                {case value="1"}<span style="color: green">已收货</span>{/case}
+                            {/switch}
+                            {switch name="vo.reject"}
+                                {case value="1"}<span style="color: green">已退货</span>{/case}
+                            {/switch}
+                        </td>
+                      </tr>
+                      {/foreach}
+                     
+                    </tbody>
+                    </table>   
+                </div>
+                <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+    </div>
+</section>
+<script src="//cdn.quguonet.com/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="//cdn.quguonet.com/datatables/media/css/dataTables.bootstrap.min.css">
+<script  src="//cdn.quguonet.com/datatables/media/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.quguonet.com/datatables/media/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" class="init">
+    $(document).ready(function() {
+        $('#example').DataTable();
+    });
+</script>
+{include file="public/dialog" /}
+{include file="public/modal" /}
+<script>
+    $('.form_date').datetimepicker({
+        format: "yyyy-mm-dd", //选择日期后，文本框显示的日期格式 
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1, //选择日期后自动关闭
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+    });
+    $('#myDialog').on('hidden.bs.modal',function(){
+        var sta = $(this).find('#dialogSta').val();
+        if(sta==1){
+            window.location.reload();
+        }
+  	});
+  	$('#myModal #modalConfirm').click(function(){
+  		$('#myModal').modal('hide');
+  		var gid = $('#myModal #modalId').val();
+  		$.post("{:url('admin/system/delcolumn')}",{del:gid},function(data){
+  			$('#myDialog .dialog-box').text(data.info);
+  			$('#myDialog #dialogSta').val(data.status);
+  			$('#myDialog').modal();
+  		});
+  	});
+</script>

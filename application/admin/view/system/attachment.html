@@ -1,0 +1,95 @@
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+	            <div class="box-header">
+	              <h3 class="box-title">附件管理列表</h3>
+	            </div>
+	            <!-- /.box-header -->
+	            <div class="box-body table-responsive no-padding">
+	              <table class="table table-hover">
+	                <tr>
+	                  <th>ID</th>
+	                  <th>附件标识</th>
+	                  <th>上传渠道</th>
+	                  <th>用户ID</th>
+	                  <th>类型</th>
+	                  <th>文件大小</th>
+	                  <th>又拍云url</th>
+	                  <th>操作类型</th>
+	                  <th>上传时间</th>
+	                  <th>状态</th>
+	                  <th>操作</th>
+	                </tr>
+	                {foreach name="list" item="vo"}
+		                <tr>
+		                  <td>{$vo.id}</td>
+		                  <td>{$vo.title}</td>
+		                  <td>
+		                  	{eq name="vo.channel" value="1"}
+		                  		前台上传
+		                  	{else/}
+		                  		后台上传
+		                  	{/eq}
+		                  </td>
+		                  <td>{$vo.uid}</td>
+		                  <td>{$vo.type}</td>
+		                  <td>{$vo.size}</td>
+		                  <td>{$vo.url}</td>
+		                  <td>{$vo.action}</td>
+		                  <td>{$vo.createtime|date="Y-m-d H:i:s",###}</td>
+		                  <td>
+		                  	{eq name="vo.status" value="1"}
+		                  		使用中
+		                  	{else/}
+		                  		未使用
+		                  	{/eq}
+		                  </td>
+		                  <td>
+		                  	<div class="btn-group">
+				                <button type="button" class="btn btn-default btn-xs" onclick="delItem('{$vo.id}');"><i class="fa fa-trash-o"></i>&nbsp;删除</button>
+			                </div>
+		                  </td>
+		                </tr>
+		            {/foreach}
+	              </table>
+	            </div>
+	            <!-- /.box-body -->
+	            <div class="box-footer clearfix">
+	              {$list->render()}
+	            </div>
+          </div>
+          <!-- /.box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+{include file="public/modal" /}
+<script>
+    $('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.reload();
+	    }
+  	});
+
+  	function delItem(id){
+  		if(!id){
+  			return false;
+  		}
+  		$('#myModal .modal-box').text('删除附件有可能影响前后台的附件显示,确定删除?');
+  		$('#myModal').modal();
+  		$('#myModal #modalId').val(id);
+  	}
+
+  	$('#myModal #modalConfirm').click(function(){
+  		$('#myModal').modal('hide');
+  		var gid = $('#myModal #modalId').val();
+  		$.post("{:url('admin/system/delattachment')}",{del:gid},function(data){
+  			$('#myDialog .dialog-box').text(data.info);
+  			$('#myDialog #dialogSta').val(data.status);
+  			$('#myDialog').modal();
+  		});
+  	});
+</script>

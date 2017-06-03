@@ -1,0 +1,88 @@
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+		<a class="btn btn-warning" href="{:url('admin/shoper/addshoptuijian')}" style="margin:15px 0;">添加商品推荐</a>
+		  	<div class="box box-primary">
+				<div class="box-header with-border">
+				  	<h3 class="box-title">推荐商品列表</h3>
+				  	<div class="box-tools pull-right"></div>
+				</div>
+				<div class="box-body no-padding">
+				  	<div class="table-responsive mailbox-messages">
+						<table class="table table-hover table-striped">
+					  		<tbody>
+								<tr>
+								  	<th>分类名称</th>
+								  	<th>排序</th>
+								  	<th>状态</th>
+									<th>分类地址</th>
+								  	<th>创建时间</th>
+								  	<th>操作</th>
+								</tr>
+							 	{foreach name="list" item="vo"}
+									<tr>
+										<td class="mailbox-name">{$vo.title}</td>
+										<td class="mailbox-subject">{$vo.sort}</td>
+										<td class="mailbox-name">
+										  	{eq name="vo.status" value="1"}
+												<span class="label label-success">启用</span>
+										  	{else /}
+												<span class="label label-warning">禁用</span>
+										  	{/eq}
+										</td>
+										<td>green-f.cn/vue/index_prod.html#!/classify/list/{$vo.id}?tuijian=1</td>
+										<td class="mailbox-name">{$vo.createtime|date="Y-m-d H:i:s",###}</td>
+										<td class="mailbox-name">
+										  	<div class="btn-group">
+												<a class="btn btn-default btn-xs" href="{:url('admin/shoper/editshoptuijian',array('id'=>$vo['id']))}"><i class="fa fa-edit"></i>&nbsp;编辑</a>
+												<a class="btn btn-default btn-xs" href="{:url('admin/shoper/addtuijian',array('id'=>$vo['id']))}"><i class="fa fa-edit"></i>&nbsp;编辑推荐商品</a>
+												<button type="button" class="btn btn-default btn-xs" onclick="delItem('{$vo.id}');"><i class="fa fa-trash-o"></i>&nbsp;删除</button>
+										  	</div>
+										</td>
+									</tr>
+								{/foreach}
+					  		</tbody>
+						</table>
+				  	</div>
+				  	<div class="box-footer clearfix">
+	                    {$list->render()}
+	                </div>
+				</div>
+		 	</div>
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+{include file="public/modal" /}
+<script>
+	$('#myDialog').on('hidden.bs.modal',function(){
+		var sta = $(this).find('#dialogSta').val();
+		if(sta==1){
+			window.location.reload();
+		}
+	});
+
+	function delItem(id){
+	if(!id){
+	  return false;
+	}
+	$('#myModal .modal-box').text('确定删除该项?');
+	$('#myModal').modal();
+	$('#myModal #modalId').val(id);
+	}
+
+  $('#myModal #modalConfirm').click(function(){
+	  $('#myModal').modal('hide');
+	  var id = $('#myModal #modalId').val();
+	  $.post('{:url("admin/shoper/deltuijain")}',{did:id},function(data){
+		  if(data.status==1){
+			window.location.reload();
+		  }else{
+			$('#myDialog .dialog-box').text(data.info);
+			$('#myDialog #dialogSta').val(data.status);
+			$('#myDialog').modal();
+		  }
+	  },'json');
+	});
+</script>

@@ -1,0 +1,268 @@
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+{css href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css"}
+{js href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"}
+<style>
+	.my-text-danger{
+		color:#ef523f;
+	}
+
+	.my-text-common{
+		color:#00c0ef;
+	}
+	
+	.my-store{
+		width: 50px;
+	}
+
+	.my-text-notice{
+		color:#ffc51c;
+	}
+
+	.my-text-success{
+		color:#00a65a;
+	}
+
+	.select2-container .select2-selection--single {
+	    box-sizing: border-box;
+	    cursor: pointer;
+	    display: block;
+	    height: 30px;
+	    user-select: none;
+	    -webkit-user-select: none;
+	}
+	.fenleibox{
+		float: left; 
+		border:1px solid #CCC;
+		border-radius: 10px; 
+		padding: 8px;
+	}
+	.bianjibox{
+		float: left; 
+		margin: 0 10px 0 0;
+		border: 1px solid #CCC;
+		border-radius: 10px;
+		padding: 9px 9px 0 0;
+	}
+	.gntitle{
+		color: #000; 
+		text-align: center;
+	}
+</style>
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="col-md-12" style="margin:15px 0;">
+				<a class="btn bg-maroon" href="{:url('admin/shoper/product')}">返回列表页</a>
+				<a class="btn btn-warning" href="{:url('admin/shoper/addproduct')}">添加产品</a>
+				<a class="btn btn-info" href="{:url('admin/shoper/classify')}">查看产品分类</a>
+				<a class="btn btn-success" href="{:url('admin/shoper/productrepertory')}">查看产品仓库</a>
+				<a class="btn btn-primary" href="{:url('admin/shoper/format')}">查看产品规格</a>
+				<a class="btn bg-purple" href="{:url('admin/shoper/productgift')}">查看赠品商品</a>
+			</div>
+			<!-- /.col -->
+
+			<div class="col-md-12" id="app">
+				<!-- PRODUCT LIST -->
+				  <div class="box box-primary">
+				  	<div class="box-header">
+					  	<h3 class="box-title">功能列表</h3>
+					</div>
+					<div style="float: left;">
+						<div class="gntitle">功能按钮</div>
+						<div class="bianjibox">
+							<span class="btn btn-app" v-on:click="del"><i class="fa fa-bitbucket"></i>批量删除</span>
+							<span class="btn btn-app" v-on:click="downup"><i class="fa fa-arrows-v"></i>下架/上架</span>
+						</div>
+					</div>
+					<div style="float: left;">
+						<div class="gntitle">产品筛选</div>
+						<div class="fenleibox">
+
+							<div style="margin-bottom: 5px;">
+								<span>产品分类筛选</span>
+								<select class="js-example-basic-single" onchange="window.location=this.value" style="width:150px;"> 
+									<option value="{$cid}">当前选择:{$classname}</option>
+								{volist name="classify" id="vo"}
+									{if condition="$Request.param.cid eq $vo['id']"}
+										<option class="active" value="{:url('admin/shoper/product',array('cid'=>$vo['id'],'search_key'=>$Request.param.search_key,'is_top'=>$Request.param.is_top,'is_hot'=>$Request.param.is_hot,'is_new'=>$Request.param.is_new))}"><i class="fa fa-circle-o"></i>{$vo.title}</option>
+									{else /}
+										<option value="{:url('admin/shoper/product',array('cid'=>$vo['id'],'search_key'=>$Request.param.search_key,'is_top'=>$Request.param.is_top,'is_hot'=>$Request.param.is_hot,'is_new'=>$Request.param.is_new))}"><i class="fa fa-circle-o"></i>{$vo.title}</option>
+									{/if}
+								{/volist}
+							  	</select>
+						  	</div>
+						  	<div>
+							  	<span>产品类型筛选</span>
+							  	<select class="js-example-basic-single" onchange="window.location=this.value" style="width:150px;"> 
+							  		<option value="{:url('admin/shoper/product',array('cid'=>$Request.param.cid,'search_key'=>$Request.param.search_key))}"><i class="fa fa-circle-o"></i>全部</option>
+									<option value="{:url('admin/shoper/product',array('cid'=>$Request.param.cid,'search_key'=>$Request.param.search_key,'is_top'=>1))}"><i class="fa fa-circle-o text-light-blue"></i>置顶</option>
+									<option value="{:url('admin/shoper/product',array('cid'=>$Request.param.cid,'search_key'=>$Request.param.search_key,'is_hot'=>1))}"><i class="fa fa-circle-o text-red"></i>热销</option>
+									<option value="{:url('admin/shoper/product',array('cid'=>$Request.param.cid,'search_key'=>$Request.param.search_key,'is_new'=>1))}"><i class="fa fa-circle-o text-yellow"></i>新品</option>
+							  	</select>
+							</div>
+						</div>
+					</div>
+					<div style="clear:both"></div>
+					<div class="box-header">
+					  <h3 class="box-title">商城产品列表</h3>
+					
+					  <div class="box-tools">
+						<form method="get" action="{:url('admin/shoper/product',array('cid'=>$Request.param.cid,'is_top'=>$Request.param.is_top,'is_hot'=>$Request.param.is_hot,'is_new'=>$Request.param.is_new))}">
+							<div class="input-group input-group-sm" style="width:250px;">
+							  <input type="text" name="search_key" class="form-control pull-right" placeholder="搜索栏目名称">
+							  <div class="input-group-btn">
+								<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+								<a class="btn btn-default btn-xs" href="{:url('admin/shoper/product')}"><i class="fa fa-refresh"></i>&nbsp;清除搜索</a>
+							  </div>
+							</div>
+						</form>
+					  </div>
+					</div>
+					<!-- /.box-header -->
+					<div class="box-body table-responsive no-padding" >
+
+					  <table class="table table-hover">
+						<tr>
+						  <th>#</th>
+						  <th>产品名称</th>
+						  <th>分类</th>
+						  <th>价格</th>
+						  <th>库存</th>
+						  <th>排序</th>
+						  <th>地址</th>
+						  <th>修改时间</th>
+						  <th>操作</th>
+						</tr>
+						{volist name="list" id="vo"}
+							{if condition="($vo['warn_num']>0) AND ($vo['warn_num']>=$vo['store'])"}
+								<tr style="color:#f00 !important;" id="shuju{$vo.id}">
+								  <td><input type="checkbox" value="{$vo.id}" v-model="checkedNames"></td>
+								  <td>{$vo.name}</td>
+								  <td>{$vo.title}</td>
+								  <td>{$vo.price}</td>
+								  <td><input type="text" name="store" value="{$vo.store}" class="my-store" id="store" onchange="editstore({$vo.id},this)"></td>
+								  <td>{$vo.sort}</td>
+									<td>green-f.cn/vue/index_prod.html#!/detail/{$vo.id}</td>
+								  <td>{$vo.updatetime|date="Y-m-d H:i:s",###}</td>
+								  <td>
+									<div class="btn-group">
+										<a class="btn btn-default btn-xs" href="{:url('admin/shoper/editproduct',array('id'=>$vo['id']))}"><i class="fa fa-edit"></i>&nbsp;编辑</a>
+										<button type="button" class="btn btn-default btn-xs" onclick="delItem('{$vo.id}');"><i class="fa fa-trash-o"></i>&nbsp;删除</button>
+									</div>
+								  </td>
+								</tr>
+							{else/}
+								<tr id="shuju{$vo.id}">
+								  <td><input type="checkbox" value="{$vo.id}" v-model="checkedNames"></td>
+								  <td>{$vo.name}</td>
+								  <td>{$vo.title}</td>
+								  <td>{$vo.price}</td>
+								  <td class="my-text-common"><input type="text" name="store" value="{$vo.store}" class="my-store" id="store" onchange="editstore({$vo.id},this)"></td>
+								  <td>{$vo.sort}</td>
+								  <td>green-f.cn/vue/index_prod.html#!/detail/{$vo.id}</td>
+								  <td>{$vo.updatetime|date="Y-m-d H:i:s",###}</td>
+								  <td>
+									<div class="btn-group">
+										<a class="btn btn-default btn-xs" href="{:url('admin/shoper/editproduct',array('id'=>$vo['id']))}"><i class="fa fa-edit"></i>&nbsp;编辑</a>
+										<button type="button" class="btn btn-default btn-xs" onclick="delItem('{$vo.id}');"><i class="fa fa-trash-o"></i>&nbsp;删除</button>
+									</div>
+								  </td>
+								</tr>
+							{/if}
+						{/volist}
+					  </table>
+					</div>
+					<!-- /.box-body -->
+					<div class="box-footer clearfix">
+					  {$list->render()}
+					</div>
+				  </div>
+				<!-- /.box -->
+			</div>
+
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+{include file="public/modal" /}
+<script type="text/javascript">
+$(document).ready(function() {
+  $(".js-example-basic-single").select2();
+});
+</script>
+<script type="text/javascript">
+	new Vue({
+		el: '#app',
+  		data: {
+    		checkedNames: [],
+  		},
+  		methods:{
+  			del:function(){
+  				var self = this
+  				$.post("{:url('admin/Shoper/alldel')}",{id:self.checkedNames},function(data){
+					var data = JSON.parse(data).msg
+					$('#myDialog .dialog-box').text(data);
+					$('#myDialog').modal();
+					for (var i = 0; i < self.checkedNames.length; i++) {
+						console.log(self.checkedNames[i])
+						$("#shuju"+self.checkedNames[i]).hide()
+					}
+				})
+  			},
+  			downup:function(){
+  				var self = this
+  				$.post("{:url('admin/Shoper/alldownup')}",{id:self.checkedNames},function(data){
+					var data = JSON.parse(data).msg
+					$('#myDialog .dialog-box').text(data);
+					$('#myDialog').modal();
+					for (var i = 0; i < self.checkedNames.length; i++) {
+						console.log(self.checkedNames[i])
+						$("#shuju"+self.checkedNames[i]).hide()
+					}
+				})
+  			}
+  		}
+	})
+</script>
+<script>
+	$('#myDialog').on('hidden.bs.modal',function(){
+		var sta = $(this).find('#dialogSta').val();
+		if(sta==1){
+			window.location.reload();
+		}
+	});
+
+	function delItem(id){
+		if(!id){
+			return false;
+		}
+		$('#myModal .modal-box').text('确定删除该项?');
+		$('#myModal').modal();
+		$('#myModal #modalId').val(id);
+	}
+
+	$('#myModal #modalConfirm').click(function(){
+		$('#myModal').modal('hide');
+		var gid = $('#myModal #modalId').val();
+		$.post("{:url('admin/shoper/delproduct')}",{del:gid},function(data){
+			$('#myDialog .dialog-box').text(data.info);
+			$('#myDialog #dialogSta').val(data.status);
+			$('#myDialog').modal();
+		});
+	});
+
+	//编辑库存
+	function editstore(id,store){
+		var kucun = store.value
+		$.post("{:url('admin/shoper/editstore')}",{id:id,store:kucun},function(data){
+			var data = JSON.parse(data).msg
+			console.log(kucun)
+			if(kucun == 0){
+				$("#shuju"+id).hide()
+			}
+			$('#myDialog .dialog-box').text(data);
+			$('#myDialog').modal();
+		});
+	}
+</script>

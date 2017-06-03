@@ -1,0 +1,83 @@
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"}
+<style type="text/css">
+    .inputdiv{
+        float: left;
+        margin-right: 10px;
+    }
+</style>
+<section class="content">
+    <div class="row" id="app">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">菜品消费清单</h3>
+                    <div style="float: right; width: 500px;">
+                        <div class="inputdiv">
+                            <div>开始时间:</div>
+                            <Date-picker :value="stime" style="width: 200px;float: left;" type="datetime" @on-change="stimeonclick"></Date-picker>
+                        </div>
+                        <div class="inputdiv">
+                            <div>结束时间:</div>
+                            <Date-picker :value="etime" style="width: 200px;float: left;" type="datetime" @on-change="etimeonclick"></Date-picker>
+                        </div>
+                        <div class="ivu-btn ivu-btn-success" @click="selectlist" style="float: left; margin-top: 17px;">查询</div>
+                    </div>
+                </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-hover" id="example">
+                        <thead>
+                            <tr>
+                                <th>订单号</th>
+                                <th>联系电话</th>
+                                <th>下单时间</th>
+                                <th>数量</th>
+                                <th>总金额</th>
+                                <th>实际支付</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {foreach name="list" item="vo"}
+                                <tr>
+                                    <td>{$vo.orderid}</td>
+                                    <td>{$vo.tel}</td>
+                                    <td>{$vo.createtime|date="Y-m-d H:i:s",###}</td>
+                                    <td>{$vo.amount}</td>
+                                    <td>{$vo.sum}</td>
+                                    <td>{$vo.money}</td>
+                                </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>   
+                </div>
+                <div class="box-footer clearfix">
+                    {$list->render()}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            stime:"{$stime}",
+            etime:"{$etime}",
+        },
+        methods:{
+            stimeonclick:function(date){
+                this.stime = date;
+            },
+            etimeonclick:function(date){
+                this.etime = date;
+            },
+            selectlist:function(){
+                window.location.href = "{:url('admin/Shouhou/shoppayinfo')}" + '?stime=' + this.stime + '&etime=' + this.etime + '&id={$id}';
+            }
+        }
+    })
+</script>

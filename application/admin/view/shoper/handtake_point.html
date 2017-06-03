@@ -1,0 +1,190 @@
+{css href="__STATIC__/lvyangtian/app.css"}
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"} 
+<!-- Main content -->
+<section class="content">
+	<div class="row" id="app">
+		<div class="col-xs-12">
+			<div>选择日期</div>
+			<div style="width: 100%;height: 50px;">
+				<Date-picker :value="time" style="width: 200px;float: left;" type="date" @on-change="handleChange"></Date-picker>
+				<i-select v-model="miao" style="width:200px;float: left;">
+					<i-option :value="0">10:30</i-option>
+					<i-option :value="1">16:30</i-option>
+				</i-select>
+			</div>
+			<a class="btn btn-info" href="{:url('admin/shoper/handtakeplace')}" style="margin:15px 0;">返回地区/区域列表</a>
+			<div class="ivu-btn ivu-btn-success" style="margin:15px 0;" @click="shouhuook">确认已发货</div>
+			<form action="{:url('admin/shoper/sinceExcel')}" method="post" style="display: inline-block; ">
+				<input type="hidden" name="time" v-model="time">
+				<input type="hidden" name="miao" v-model="miao">
+				<input type="hidden" name="id" v-model="checkall">
+				<input type="submit" class="ivu-btn ivu-btn-warning" style="margin:15px 0;" value="批量下载清单">
+			</form>
+			<div class="box">
+				<div class="box-header">
+				  	<h3 class="box-title">系统栏目列表</h3>
+				  	<div class="box-tools"></div>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body table-responsive no-padding">
+				  	<table class="table table-hover">
+						<tr>
+							<th><input type="checkbox" @click="checkboxall"></th>
+						  	<th>#</th>
+						  	<th>站点名称</th>
+						  	<th>状态</th>
+						  	<th>排序</th>
+						  	<th>操作</th>
+						</tr>
+						{foreach name="list" item="vo"}
+							<tr>
+								<td style="width: 50px;"><input type="checkbox" value="{$vo.id}" v-model="checkall"></td>
+							  	<td>{$key+1}</td>
+							  	<td>{$vo.name}</td>
+							  	<td>
+									{eq name="vo.status" value="1"}
+										启用
+									{else/}
+										禁用
+									{/eq}
+							  	</td>
+							  	<td>{$vo.sort}</td>
+							  	<td>
+									<div class="btn-group">
+										<form action="{:url('admin/shoper/sinceExcel')}" method="post" style="float: left;margin-right: 5px;">
+											<input type="hidden" name="time" v-model="time">
+											<input type="hidden" name="miao" v-model="miao">
+											<input type="hidden" name="id" value="{$vo.id}">
+											<input type="submit" class="ivu-btn ivu-btn-info" value="下载清单">
+										</form>
+										<a class="ivu-btn ivu-btn-success" href="{:url('admin/shoper/edithandtakepoint',array('pid'=>$vo['pid'],'id'=>$vo['id']))}">编辑</a>
+										<i-button type="error" onclick="delItem('{$vo.id}');">删除</i-button>
+									</div>
+							  	</td>
+							</tr>
+						{/foreach}
+				  	</table>
+				</div>
+				<div class="box-footer clearfix">
+					{$list->render()}
+				</div>
+		  	</div>
+		</div>
+		<Modal
+	        v-model="shouhuomodel"
+	        title="是否确认"
+	        @on-ok="shouhuo">
+	        <p>是否您已勾选的自提点确定发货</p>
+	        <p style="color: red;">您选择时间:{{ time }}&nbsp;<template v-if="miao == 0">10:30</template><template v-else>16:30</template></p>
+	    </Modal>
+	</div>
+</section>
+{include file="public/dialog" /}
+{include file="public/modal" /}
+<script>
+	$('#myDialog').on('hidden.bs.modal',function(){
+		var sta = $(this).find('#dialogSta').val();
+		if(sta==1){
+			window.location.reload();
+		}
+	});
+
+	function delItem(id){
+		if(!id){
+			return false;
+		}
+		$('#myModal .modal-box').text('确定删除该项?');
+		$('#myModal').modal();
+		$('#myModal #modalId').val(id);
+	}
+
+	$('#myModal #modalConfirm').click(function(){
+		$('#myModal').modal('hide');
+		var gid = $('#myModal #modalId').val();
+		$.post("{:url('admin/shoper/delhandtake')}",{del:gid},function(data){
+			$('#myDialog .dialog-box').text(data.info);
+			$('#myDialog #dialogSta').val(data.status);
+			$('#myDialog').modal();
+		});
+	});
+</script>
+<script type="text/javascript">
+    $(function() {
+       $("#checkAll").click(function() {
+            $('input[name="subBox"]').attr("checked",this.checked); 
+        });
+        var $subBox = $("input[name='subBox']");
+        $subBox.click(function(){
+            $("#checkAll").attr("checked",$subBox.length == $("input[name='subBox']:checked").length ? true : false);
+        });
+    });
+</script>
+<script type="text/javascript">
+	new Vue({
+		el: '#app',
+		data:function () {
+			return {
+				time: null,
+				miao: 0,
+				qingdanmodel:false,
+				open: false,
+				checkall:[],
+				checkstu:0,
+				shouhuomodel:false,
+			}
+		},
+		created:function(){
+			this.ready()
+		},
+		methods: {
+			handleChange :function(date) {
+				console.log(date)
+				this.time = date;
+			},
+			ready:function(){
+				var date = new Date()
+				this.time = date.toLocaleDateString();
+			},
+			qingdanok:function(clickid){
+				/*$.post('{:url("admin/shoper/sinceExcel")}',{id:clickid,time:this.time,miao:this.miao},function(data){
+
+				})*/
+			},
+			checkboxall:function(){
+				if(this.checkstu == 0){
+					this.checkall = {$allid};
+					this.checkstu = 1;
+				}else{
+					this.checkall = [];
+					this.checkstu = 0;
+				}
+			},
+			shouhuook:function(){
+				this.shouhuomodel = true
+			},
+			shouhuo:function(){
+				var self = this
+				self.$Message.config({
+                    top: 100,
+                    duration: 3
+                });
+				$.post('{:url("admin/shoper/fahuook")}',{id:self.checkall,time:self.time,miao:self.miao},function(data){
+					var data = JSON.parse(data)
+                    if(data.status == '0'){
+                        self.$Message.error(data.msg)
+                    }else{
+                        self.$Message.success(data.msg)
+                    }
+				})
+			},
+			qingdanall:function(){
+				location.href='{:url("admin/shoper/fahuook")}'+'?id=';
+			}
+		},
+	})
+</script>

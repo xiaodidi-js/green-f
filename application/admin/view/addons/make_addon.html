@@ -1,0 +1,252 @@
+{css href="__STATIC__/codemirror/codemirror.css"}
+{css href="__STATIC__/codemirror/theme/<?php echo config('codemirror_theme');?>.css"}
+<style>
+	.CodeMirror,#preview_window{
+		width:700px;
+		height:500px;
+	}
+	#preview_window.loading{
+		background: url('__STATIC__/js/thinkbox/skin/default/tips_loading.gif') no-repeat center;
+	}
+	#preview_window textarea{
+		display: none;
+	}
+	.CodeMirror-scroll{
+		-webkit-box-sizing:content-box;
+		box-sizing:content-box;
+	}
+</style>
+<!-- Main content -->
+<section class="content" style="margin-top:30px;">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- general form elements -->
+		      <div class="box box-primary">
+		        <div class="box-header with-border">
+		          <h3 class="box-title">添加系统钩子</h3>
+		        </div>
+		        <!-- /.box-header -->
+		        <!-- form start -->
+		        <form id="form" role="form">
+		          <div class="box-body">
+		          	<div class="col-md-8">
+			            <div class="form-group">
+			              <label>插件标识</label><span>（插件的标识,英文字母、数字和下划线）</span>
+			              <input type="text" name="name" class="form-control" placeholder="插件的英文标识" value="">
+			            </div>
+			            <div class="form-group">
+			              <label>插件名称</label><span>（插件的中文名称标识）</span>
+			              <input type="text" name="title" class="form-control" placeholder="插件的中文名称标识" value="">
+			            </div>
+			            <div class="form-group">
+			              <label>作者</label><span>（插件的作者名称）</span>
+			              <input type="text" name="author" class="form-control" placeholder="插件的作者名称" value="">
+			            </div>
+			            <div class="form-group">
+			              <label>版本</label><span>（插件的版本号）</span>
+			              <input type="text" name="version" class="form-control" placeholder="插件的版本号" value="">
+			            </div>
+			            <div class="form-group">
+			              <label>描述</label><span>（插件的描述信息）</span>
+			              <textarea name="description" class="form-control" placeholder="插件的描述信息" rows="6"></textarea>
+			            </div>
+			            <div class="form-group">
+			              <label style="display:block;">安装后是否启用</label>
+			              <label>
+			                  <input type="radio" name="status" class="minimal" value="1" checked>
+			                  启用
+			               </label>
+			               &nbsp;&nbsp;
+			               <label>
+			                  <input type="radio" name="status" class="minimal" value="0">
+			                  禁用
+			               </label>
+			            </div>
+			            <div class="form-group">
+			              <label style="display:block;">是否需要配置</label>
+			              <label>
+			                <input type="radio" name="has_config" class="minimal" value="1">
+			                需要
+			              </label>
+			              &nbsp;&nbsp;
+			              <label>
+			                <input type="radio" name="has_config" class="minimal" value="0" checked>
+			                不需要
+			              </label>
+			            </div>
+			            <div id="config-box" class="form-group" style="display:none;">
+			            	<textarea name="config" class="form-control" rows="8" placeholder="插件配置信息（PHP数组）">
+		            		&lt;?php
+								return array(
+									'random'=>array(//配置在表单中的键名 ,这个会是config[random]
+										'title'=>'是否开启随机:',//表单的文字
+										'type'=>'radio',		 //表单的类型：text、textarea、checkbox、radio、select等
+										'options'=>array(		 //select 和radion、checkbox的子选项
+											'1'=>'开启',		 //值=>文字
+											'0'=>'关闭',
+										),
+										'value'=>'1',			 //表单的默认值
+									),
+								);
+			            	</textarea>
+			            	<div style="margin-top:10px;font-size:14px;padding:5px 0px;color:#666;">插件配置模板名称(例子:'config.html')</div>
+			            	<input type="text" name="custom_config" value="" class="form-control">
+			            </div>
+			            <div class="form-group">
+			              <label style="display:block;">是否需要外部访问</label>
+			              <label>
+			                <input type="radio" name="has_outurl" class="minimal" value="1">
+			                需要
+			              </label>
+			              &nbsp;&nbsp;
+			              <label>
+			                <input type="radio" name="has_outurl" class="minimal" value="0" checked>
+			                不需要
+			              </label>
+			            </div>
+			            <div class="form-group">
+			              <label>是否需要后台列表</label><span>（勾选后扩展里已装插件后台列表会出现插件名的列表菜单）</span><br />
+			              <label>
+			                <input type="radio" name="has_adminlist" class="minimal" value="1">
+			                需要
+			              </label>
+			              &nbsp;&nbsp;
+			              <label>
+			                <input type="radio" name="has_adminlist" class="minimal" value="0" checked>
+			                不需要
+			              </label>
+			            </div>
+			            <div id="list-box" class="form-group" style="display:none;">
+			            	<textarea name="admin_list" class="form-control" rows="8" placeholder="后台列表配置信息">
+'table'=>'example',		//要查的表
+			'fields'=>'*',			//要查的字段
+			'map'=>'',				//查询条件, 如需要可在插件类的构造方法里动态重置这个属性
+			'order'=>'id desc',		//排序,
+			'listKey'=>array( 		//这里定义的是除了id序号外的表格里字段显示的字段名
+				'字段名'=>'表头显示名'
+			),
+			'searchKey'=>array(		//这里定义的是后台列表搜索的字段名
+				'字段名'
+			)
+			            	</textarea>
+			            	<div style="margin-top:10px;font-size:14px;padding:5px 0px;color:#666;">后台列表模板名称(例子:'adminlist.html')</div>
+			            	<input type="text" name="custom_adminlist" value="" class="form-control">
+			            </div>
+			            {notempty name="hooks"}
+				            <div class="form-group">
+				              <label>系统钩子</label><span>（选择需要挂载的钩子方法）</span><br />
+				              <select name="hook[]" multiple class="form-control" style="width:35%;">
+				              	{volist name="hooks" id="vo"}
+				                    <option value="{$vo.name}">{$vo.name}</option>
+				              	{/volist}
+			                  </select>
+			                  <label class="text-red" style="font-size:12px;">注意:按住Ctrl键进行多选.</label>
+				            </div>
+				        {/notempty}
+					</div>
+		          </div>
+		          <!-- /.box-body -->
+
+		          <div class="box-footer">
+		          	<button type="button" id="preview" class="btn btn-warning">预览插件</button>&nbsp;&nbsp;
+		            <button type="button" id="submit" class="btn btn-primary">提交保存</button>
+		          </div>
+		        </form>
+		      </div>
+		    <!-- /.box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+
+<!-- 预览插件功能引入 -->
+
+{js href="__STATIC__/codemirror/codemirror.js" /}
+{js href="__STATIC__/codemirror/xml.js" /}
+{js href="__STATIC__/codemirror/javascript.js" /}
+{js href="__STATIC__/codemirror/clike.js" /}
+{js href="__STATIC__/codemirror/php.js" /}
+{js href="__STATIC__/js/thinkbox/jquery.thinkbox.js" /}
+
+<!-- 预览插件功能引入 -->
+<script>
+	//iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+	      checkboxClass: 'icheckbox_minimal-blue',
+	      radioClass: 'iradio_minimal-blue'
+    });
+
+    $('input[name="has_config"].minimal').on('ifChecked',function(){
+    	if($(this).val()==1){
+    		$('#config-box').show();
+    	}else{
+    		$('#config-box').hide();
+    	}
+    });
+
+    $('input[name="has_adminlist"].minimal').on('ifChecked',function(){
+    	if($(this).val()==1){
+    		$('#list-box').show();
+    	}else{
+    		$('#list-box').hide();
+    	}
+    });
+
+    $('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.href = "{:url('admin/addons/index')}";
+	    }
+  	});
+
+  	//插件预览
+  	$('#preview').click(function(){
+		var preview_url = '{:url("preview")}';
+		$.post(preview_url,$('#form').serialize(),function(data){
+			$.thinkbox('<div id="preview_window" class="loading"><textarea></textarea></div>',{
+				afterShow:function(){
+					var codemirror_option = {
+						lineNumbers   :true,
+						matchBrackets :true,
+						mode          :"application/x-httpd-php",
+						indentUnit    :4,
+						gutter        :true,
+						fixedGutter   :true,
+						indentWithTabs:true,
+						readOnly	  :true,
+						lineWrapping  :true,
+						height		  :500,
+						enterMode     :"keep",
+						tabMode       :"shift",
+						theme: "{:config('codemirror_theme')}"
+					};
+					var preview_window = $("#preview_window").removeClass(".loading").find("textarea");
+					var editor = CodeMirror.fromTextArea(preview_window[0], codemirror_option);
+					editor.setValue(data);
+					$(window).resize();
+				},
+
+				title:'预览插件主文件',
+				unload: true,
+				actions:['close'],
+				drag:true
+			});
+		});
+		return false;
+	});
+
+  	//生成插件
+	$('#submit').click(function(){
+		if($(this).hasClass('disabled')){
+			return false;
+		}
+		$(this).addClass('disabled');
+        $.post('{:url("admin/addons/build")}',$('#form').serialize(),function(data){
+        	$('#myDialog .dialog-box').text(data.info);
+			$('#myDialog').modal();
+			$('#myDialog #dialogSta').val(data.status);
+			$('#submit').removeClass('disabled');
+        },'json');
+        return false;
+    });
+</script>

@@ -1,0 +1,114 @@
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">评价列表</h3>
+
+              <div class="box-tools">
+                  <form method="get">
+                    <div class="input-group input-group-sm" style="width:350px;">
+                      <input type="text" name="search_key" class="form-control pull-right" placeholder="产品名称|用户账号|注册手机">
+                      <div class="input-group-btn">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        <a class="btn btn-default btn-xs" href="{:url('admin/shoper/comment')}"><i class="fa fa-refresh"></i>&nbsp;清除搜索</a>
+                      </div>
+                    </div>
+                  </form>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <div class="table-responsive mailbox-messages">
+                <table class="table table-hover table-striped">
+                  <tbody>
+                  		<tr>
+                      <th>订单号</th>
+                      <th>评价产品</th>
+                      <th>规格型号</th>
+		                  <th>下单时间</th>
+		                  <th>评分星级</th>
+                      <th>评价内容</th>
+                      <th>显示状态</th>
+		                  <th>提交时间</th>
+		                  <th>操作</th>
+		                </tr>
+	                  	 {foreach name="list" item="vo"}
+			                <tr>
+			               		<td class="mailbox-name">{$vo.orderid}</td>
+                        <td class="mailbox-name">{$vo.name}</td>
+                        <td class="mailbox-name">{$vo.fname}</td>
+                        <td class="mailbox-name">{$vo.cjtime|date="Y-m-d H:i:s",###}</td>
+                        <td class="mailbox-name">
+                            {if condition="$vo['stars'] > 0"}
+                                {php}for($i=1;$i<=$vo['stars'];$i++){{/php}
+                                    <i class="fa fa-star text-yellow"></i>
+                                {php}}{/php}
+                            {else/}
+                                <i class="fa fa-star text-gray"></i>
+                            {/if}
+                        </td>
+                        <td class="mailbox-name">
+                          {$vo.content}
+                        </td>
+                        <td class="mailbox-name">
+                          {eq name="vo.status" value="1"}
+                            显示
+                          {else/}
+                            屏蔽
+                          {/eq}
+                        </td>
+				                <td class="mailbox-name">{$vo.createtime|date="Y-m-d H:i:s",###}</td>
+				                <td class="mailbox-name">
+                          <div class="btn-group">
+				                  	<a class="btn btn-default btn-xs" href="{:url('admin/shoper/replycomment',array('id'=>$vo['id']))}"><i class="fa fa-list"></i>&nbsp;回复评价</a>
+                            {eq name="vo.status" value="1"}
+                                <button type="button" class="btn btn-default btn-xs" onclick="delItem('{$vo.id}',0);"><i class="fa fa-eye-slash"></i>&nbsp;屏蔽</button>
+                            {else/}
+                                <button type="button" class="btn btn-default btn-xs" onclick="delItem('{$vo.id}',1);"><i class="fa fa-eye"></i>&nbsp;显示</button>
+                            {/eq}
+                          </div>
+				                </td>
+			                </tr>
+			            {/foreach}
+                  </tbody>
+                </table>
+                <!-- /.table -->
+              </div>
+              <!-- /.mail-box-messages -->
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+            	{$list->render()}
+            </div>
+          </div>
+          <!-- /. box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+<script>
+	$('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.reload();
+	    }
+  	});
+
+	function delItem(id,type=0){
+    if(!id){
+      return false;
+    }
+    $.post('{:url("admin/shoper/delcomment")}',{did:id,tp:type},function(data){
+          if(data.status==1){
+            window.location.reload();
+          }else{
+            $('#myDialog .dialog-box').text(data.info);
+            $('#myDialog #dialogSta').val(data.status);
+            $('#myDialog').modal();
+          }
+    },'json');
+	}
+</script>

@@ -1,0 +1,126 @@
+{js href="__STATIC__/js/jQuery/jquery.dragsort-0.5.2.min.js" /}
+<style>
+	.select2-search__field{
+		display:none;
+	}
+	.sort-box{margin:0px 0px 10px 0px;padding:10px;width:35%;border:#e4e4e4 solid 1px;background-color:#efefef;overflow-x:hidden;box-shadow:0px 0px 8px #d8d8d8 inset;}
+	.dragsort{list-style-type:none;margin:0;padding:0;width:100%;}
+	.dragsort li{padding:0px 15px 0px 5px;margin-bottom:5px;background-color:#fff;border:#eaeaea solid 1px;height:30px;line-height:30px;}
+	.dragsort li:last-child{margin-bottom:0px;}
+	.dragsort li>div{max-width:100%;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-style:italic;}
+	.dragsort li b{float:right;margin-right:-11px;color:#e2e2e2;}
+	.dragsort li b:hover{color:#000;}
+</style>
+<!-- Main content -->
+<section class="content" style="margin-top:30px;">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- general form elements -->
+		      <div class="box box-primary">
+		        <div class="box-header with-border">
+		          <h3 class="box-title">编辑系统钩子</h3>
+		        </div>
+		        <!-- /.box-header -->
+		        <!-- form start -->
+		        <form id="form" role="form">
+		          <div class="box-body">
+		          	<div class="col-md-8">
+			            <div class="form-group">
+			              <label>钩子名称</label><span>（需要在程序中先添加钩子，否则无效）</span>
+			              <input type="text" name="name" class="form-control" placeholder="钩子的名称标识" value="{$info.name}">
+			            </div>
+			            <div class="form-group">
+			              <label>描述</label><span>（钩子的描述信息）</span>
+			              <textarea name="description" class="form-control" placeholder="钩子的描述信息" rows="8">{$info.description}</textarea>
+			            </div>
+			            <div class="form-group">
+			                <label>钩子类型</label><span>（区分钩子的主要用途）</span><br />
+			                <select name="type" class="form-control select2" style="width:35%;">
+			                	{empty name="type"}
+			                		<option value="0" selected>暂无分类</option>
+			                	{else /}
+			                		{volist name="type" id="vo"}
+			                			<option value="{$key}" {if condition="$info['type'] eq $key"}selected{/if}>{$vo}</option>
+			                		{/volist}
+			                	{/empty}
+			                </select>
+			            </div>
+			            {notempty name="info.addons"}
+				            <div class="form-group">
+				            	<label>挂载的插件排序</label><span>（拖动后保存顺序，影响同一个钩子挂载的插件执行先后顺序）</span>
+				            	<div class="sort-box">
+				            		<input type="hidden" name="addons" value="{$info.addons}" readonly />
+									<ul id="sortUl" class="dragsort">
+										{volist name=":explode(',',$info['addons'])" id="addons_vo"}
+											<li class="getSort">
+												<b>&times;</b><div>{$addons_vo}</div>
+											</li>
+										{/volist}
+									</ul>
+									<script type="text/javascript">
+										$(function(){
+											$("#sortUl").dragsort({
+					                            dragSelector:'li',
+					                            placeHolderTemplate: '<li class="getSort">&nbsp;</li>',
+					                            dragEnd:function(){
+					                            	updateVal();
+					                            }
+					                        });
+
+											$('#sortUl li b').click(function(){
+				                            	$(this).parent().remove();
+				                            	updateVal();
+				                            });
+
+											// 更新排序后的隐藏域的值
+					                        function updateVal() {
+					                        	var sortVal = [];
+				                            	$('#sortUl li').each(function(){
+				                            		sortVal.push($('div',this).text());
+				                            	});
+				                                $("input[name='addons']").val(sortVal.join(','));
+					                        }
+										})
+									</script>
+				            	</div>
+				            </div>
+				        {/notempty}
+					</div>
+		          </div>
+		          <!-- /.box-body -->
+
+		          <div class="box-footer">
+		          	<input type="hidden" name="id" value="{$Request.param.id}" />
+		            <button type="button" id="submit" class="btn btn-primary">提交保存</button>
+		          </div>
+		        </form>
+		      </div>
+		    <!-- /.box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+<script>
+	$('.select2').select2();
+
+    $('#submit').click(function(){
+		if($(this).hasClass('disabled')){
+			return false;
+		}
+		$(this).addClass('disabled');
+		var form = $('#form').serialize();
+		$.post('{:url("admin/addons/edithooks")}',form,function(data){
+			$('#myDialog .dialog-box').text(data.info);
+			$('#myDialog').modal();
+			$('#myDialog #dialogSta').val(data.status);
+			$('#submit').removeClass('disabled');
+		});
+    });
+
+    $('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.href = "{:url('admin/addons/hooks')}";
+	    }
+  	});
+</script>

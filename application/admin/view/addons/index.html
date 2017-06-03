@@ -1,0 +1,294 @@
+<style>
+	a{cursor:pointer;}
+
+	#tutorial .modal-body{
+		max-height:800px;
+		overflow-y:scroll;
+	}
+
+	#tutorial .modal-body p{
+		word-break:break-all;
+		word-wrap:break-word;
+	}
+
+	#tutorial .modal-body p img{
+		width:100%;
+		max-width:100%;
+		height:auto;
+	}
+
+	#tutorial .modal-body p.img{
+		text-align:center;
+	}
+
+	.blue{
+		color:#3c8dbc;
+	}
+</style>
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			
+		<a class="btn btn-success" href="{:url('admin/addons/makeaddon')}" style="margin:15px 0;">快速创建</a>
+		&nbsp;&nbsp;<a data-toggle="modal" data-target="#tutorial">添加说明&nbsp;<i class="fa fa-lightbulb-o"></i></a>
+
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">系统插件列表</h3>
+
+              <div class="box-tools pull-right"></div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <div class="table-responsive mailbox-messages">
+                <table class="table table-hover table-striped">
+                  <tbody>
+                  		<tr>
+		                  <th>##</th>
+		                  <th>插件名称</th>
+		                  <th>标识</th>
+		                  <th>描述</th>
+		                  <th>状态</th>
+		                  <th>作者</th>
+		                  <th>版本</th>
+		                  <th>操作</th>
+		                </tr>
+	                  	 {foreach name="list" item="vo"}
+			                <tr>
+			               		<td class="mailbox-star">
+			               			{present name="vo.status"}
+			               				{eq name="vo.status" value="1"}
+			               					<i class="fa fa-star text-yellow"></i>
+				               			{else /}
+				               				<i class="fa fa-star-o text-yellow"></i>
+				               			{/eq}
+			               			{else /}
+			               				<i class="fa fa-star-o text-yellow"></i>
+			               			{/present}
+			               		</td>
+				                <td class="mailbox-name">{$vo.title}</td>
+				                <td class="mailbox-name">{$vo.name}</td>
+				                <td class="mailbox-subject">{$vo.description}</td>
+				                <td class="mailbox-name">
+				                  {present name="vo.status_text"}
+				                  	{$vo.status_text}
+				                  {else /}
+				                  	未安装
+				                  {/present}
+				                </td>
+				                <td class="mailbox-name">{$vo.author}</td>
+				                <td class="mailbox-name">{$vo.version}</td>
+				                <td class="mailbox-name">
+				                  	{present name="vo.status"}
+				                  		{switch name="vo.status"}
+				                  			{case value="0"}
+				                  				{notempty name="vo.config"}<a href="{:url('admin/addons/configaddon',array('id'=>$vo['id']))}">配置</a>{/notempty}
+				                  				<a onclick="javascript:enableAddon('{$vo.id}');">启用</a>
+				                  			{/case}
+				                  			{case value="1"}
+				                  				{notempty name="vo.config"}<a href="{:url('admin/addons/configaddon',array('id'=>$vo['id']))}">配置</a>{/notempty}
+				                  				<a onclick="javascript:disableAddon('{$vo.id}');">禁用</a>
+				                  			{/case}
+				                  		{/switch}
+				                  		<a onclick="javascript:uninstallAddon('{$vo.id}');">卸载</a>
+				                  	{else /}
+				                  		<a onclick="javascript:installAddon('{$vo.name}');">安装</a>
+				                  	{/present}
+				                </td>
+			                </tr>
+			            {/foreach}
+                  </tbody>
+                </table>
+                <!-- /.table -->
+              </div>
+              <!-- /.mail-box-messages -->
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+            	{$page}
+            </div>
+          </div>
+          <!-- /. box -->
+		</div>
+	</div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="tutorial" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">插件模块说明文档</h4>
+      </div>
+      <div class="modal-body">
+      	<h4>1.开发前准备</h4>
+      	<p>
+      		&nbsp;&nbsp;&nbsp;&nbsp;插件开发基于tp5框架的钩子与标签位实现(可从tp5文档查看)，请先了解相关基础后再进行后续流程。
+      	</p>
+      	<br />
+        <h4>2.插件创建方式：</h4>
+        <p>
+        	&nbsp;&nbsp;&nbsp;&nbsp;分别有手动创建和快速创建两种。手动创建需要自行编写文件并放到根目录addons文件夹中;快速创建则通过后台的插件模块->插件管理->快速创建进行操作，配置相关生成参数后，系统会为您生成插件的主要结构文件。
+        </p>
+        <br />
+        <h4>3.插件生成参数:</h4>
+        <p>
+        	&nbsp;&nbsp;&nbsp;&nbsp;插件的生成参数将会以class的property形式保存到根目录addons文件夹插件目录下，以“插件名.php”的形式保存（注意：该文件继承“app\common\controller\Addons”类）。
+        </p>
+        <p>
+        	&nbsp;&nbsp;&nbsp;&nbsp;具体参数如下(以Member插件为例):
+        </p>
+        <p class="img">
+        	<img src="__STATIC__/images/tutorial/info.png" />
+        	<small>图1-1</small>
+        </p>
+        <p>
+        	&nbsp;&nbsp;&nbsp;&nbsp;如图1-1。“info”属性用于保存插件的基本属性，类型是数组。其中各个元素的意义分别是：
+        </p>
+        <ul>
+        	<li>name(<label class="blue">String</label>)：插件的唯一标识,允许填写英文大/小写字母,数字和下划线；</li>
+        	<li>title(<label class="blue">String</label>)：插件的名字标识,允许填写中文,英文大/小写字母,数字和下划线；</li>
+        	<li>description(<label class="blue">String</label>)：插件的简短描述；</li>
+        	<li>status(<label class="blue">Number</label>)：插件安装后是否启用,0-不启用,1-启用；</li>
+        	<li>author(<label class="blue">String</label>)：插件的作者名称；</li>
+        	<li>version(<label class="blue">String</label>)：插件的版本号。</li>
+        </ul>
+        <p class="img">
+        	<img src="__STATIC__/images/tutorial/hooks.png" />
+        	<small>图1-2</small>
+        </p>
+        <p>
+        	&nbsp;&nbsp;&nbsp;&nbsp;如图1-2。“hooks”属性用于保存插件挂载的钩子，类型是数组。其中各个元素分别是要挂载的钩子名称。注意：钩子和标签位需要自行在系统添加，并在后台钩子管理添加相应的记录。
+        </p>
+        <p class="img">
+        	<img src="__STATIC__/images/tutorial/adminlist.png" />
+        	<small>图1-3</small>
+        </p>
+        <p>
+        	&nbsp;&nbsp;&nbsp;&nbsp;如图1-3。“admin_list”属性用于保存插件后台列表的相关属性，类型是数组(该属性为可选属性，不用后台列表时可不添加)。其中各个元素的意义分别是：
+        </p>
+        <ul>
+        	<li>table(<label class="blue">String</label>)：后台列表数据要查询的表名(表前缀请与系统表前缀保持一致，此处不填写前缀)；</li>
+        	<li>fields(<label class="blue">String</label>)：后台列表数据需要查询的字段，可填写“*”或字段名(以“,”连接,如：“字段一,字段二...”)；</li>
+        	<li>map(<label class="blue">Array</label>)：后台列表数据查询条件, 如需要可在插件类的构造方法里动态重置这个属性；</li>
+        	<li>order(<label class="blue">String</label>)：后台列表数据的显示顺序；</li>
+        	<li>listKey(<label class="blue">Array</label>)：后台列表需要显示的字段名及对应中文标识，采用键值对形式，键名为字段名，键值为中文标识；</li>
+        	<li>searchKey(<label class="blue">Array</label>)：后台列表搜索字段,元素为字段名(以“,”连接,如：“字段一,字段二...”)。</li>
+        </ul>
+        <p class="img">
+        	<img src="__STATIC__/images/tutorial/custom_adminlist.png" />
+        	<small>图1-4</small>
+        </p>
+        <p>
+        	&nbsp;&nbsp;&nbsp;&nbsp;如图1-4。“custom_adminlist”属性用于保存插件后台列表的模板路径名称，类型是字符串(该属性为可选属性，不用后台列表时可不添加)。
+        </p>
+        <p class="img">
+        	<img src="__STATIC__/images/tutorial/function.png" />
+        	<small>图1-5</small>
+        </p>
+        <p>
+        	&nbsp;&nbsp;&nbsp;&nbsp;如图1-5。“install”和“uninstall”方法为必须实现的方法，分别定义了安装插件和卸载插件时的操作，例如插件要用到新的数据表，则安装插件时需要添加新的数据表，卸载时也需要删除相关的数据表。操作完成后需要返回“true”，用于判断插件安装是否成功。
+        </p>
+        <p class="img">
+        	<img src="__STATIC__/images/tutorial/hook_functions.png" />
+        	<small>图1-6</small>
+        </p>
+        <p>
+        	&nbsp;&nbsp;&nbsp;&nbsp;如图1-6。实现钩子的方法，当挂载的钩子被勾起时执行的方法，可以定义多个，方法名为钩子的名称。
+        </p>
+        <br />
+        <h4>4.插件目录</h4>
+        <p class="img">
+        	<img src="__STATIC__/images/tutorial/direction.png" />
+        	<small>图1-7</small>
+        </p>
+        <p>
+        	&nbsp;&nbsp;&nbsp;&nbsp;如图1-7。插件目录下可以添加“controller”、“model”和“view”目录,各个目录的意义分别如下：
+        </p>
+        <ul>
+        	<li>“controller”目录：存放插件的controller类，用于执行插件的逻辑操作，需继承“app\index\controller\Addons”；</li>
+        	<li>“model”目录：存放插件的model类，用于执行插件的数据库相关操作，需继承“think\model”；</li>
+        	<li>“view”目录：存放插件的视图模板，用于显示插件的相关页面；</li>
+        </ul>
+        <br />
+        <h4>5.其他事项</h4>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;插件的后台列表会根据相关配置自动在后台显示，而插件的其他页面，如详情页等，则需要通过调用后台方法的方式进行显示和其他操作。</p>
+        <p class="img">
+        	<img src="__STATIC__/images/tutorial/detail_page.png" />
+        	<small>图1-8</small>
+        </p>
+        <p>
+        	&nbsp;&nbsp;&nbsp;&nbsp;如图1-8。方法位于“app/admin/controller/Addons”中，参数以URL参数传入，用于显示插件除后台列表的其他页面。其中各个参数意义分别如下：
+        </p>
+        <ul>
+        	<li>id(<label class="blue">Number</label>)：插件的id值；</li>
+        	<li>controller(<label class="blue">String</label>)：插件的controller类名称，位于插件目录的controller目录下；</li>
+        	<li>action(<label class="blue">String</label>)：插件的controller类方法名，要执行的controller类的方法；</li>
+        	<li>template(<label class="blue">String</label>)：插件的页面模板名称，位于插件目录的view目录下；</li>
+        	<li>params(<label class="blue">String</label>)：要传入的参数，格式为：“参数一=值一,参数二=值二...”；</li>
+        </ul>
+        <p class="img">
+        	<img src="__STATIC__/images/tutorial/execute.png" />
+        	<small>图1-9</small>
+        </p>
+        <p>
+        	&nbsp;&nbsp;&nbsp;&nbsp;如图1-9。方法位于“app/admin/controller/Addons”和“app/index/controller/Addons”中，参数以URL参数传入，用于执行插件的一些操作。其中各个参数意义分别如下：
+        </p>
+        <ul>
+        	<li>addons(<label class="blue">String</label>)：插件的唯一标识；</li>
+        	<li>controller(<label class="blue">String</label>)：插件的controller类名称，位于插件目录的controller目录下；</li>
+        	<li>action(<label class="blue">String</label>)：插件的controller类方法名，要执行的controller类的方法；</li>
+        	<li>params(<label class="blue">String</label>)：要传入的参数，格式为：“参数一=值一,参数二=值二...”；</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+{include file="public/dialog" /}
+{include file="public/modal" /}
+<script>
+	$('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.reload();
+	    }
+  	});
+
+	function installAddon(nm){
+		$.get('{:url("admin/addons/installaddon")}',{name:nm},function(data){
+			$('#myDialog .dialog-box').text(data.info);
+  			$('#myDialog #dialogSta').val(data.status);
+  			$('#myDialog').modal();
+		},'json');
+	}
+
+	function uninstallAddon(aid){
+		$.get('{:url("admin/addons/uninstalladdon")}',{id:aid},function(data){
+			$('#myDialog .dialog-box').text(data.info);
+  			$('#myDialog #dialogSta').val(data.status);
+  			$('#myDialog').modal();
+		},'json');
+	}
+
+	function enableAddon(aid){
+		$.get('{:url("admin/addons/enable")}',{id:aid},function(data){
+			$('#myDialog .dialog-box').text(data.info);
+  			$('#myDialog #dialogSta').val(data.status);
+  			$('#myDialog').modal();
+		},'json');
+	}
+
+	function disableAddon(aid){
+		$.get('{:url("admin/addons/disable")}',{id:aid},function(data){
+			$('#myDialog .dialog-box').text(data.info);
+  			$('#myDialog #dialogSta').val(data.status);
+  			$('#myDialog').modal();
+		},'json');
+	}
+</script>

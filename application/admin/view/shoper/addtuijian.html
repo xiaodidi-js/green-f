@@ -1,0 +1,211 @@
+{css href="__STATIC__/lvyangtian/app.css"}
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"} 
+<style>
+[v-cloak] {
+  display: none;
+}
+</style>
+<section class="content">
+    <div class="row" id="app" v-cloak>
+        <div class="col-xs-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">{$name}</h3>
+                </div>
+                <div class="box-body table-responsive">
+                查询
+                <input type="text"  v-model="search">
+                    <table class="table table-hover" id="example">
+                        <thead>
+                            <tr>
+                                <th>图片</th>
+                                <th>商品名称</th>
+                                <th>分类</th>
+                                <th>价格</th>
+                                <th>编辑</th>
+                            </tr> 
+                        </thead>
+                        <tbody id="one">
+                            <tr v-for="(item,index) in list">
+                                <td><img :src="item.shotcut" width="100" height="100"></td>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.class}}</td>
+                                <td>{{ item.price}}</td>
+                                <td>
+                                    <div class="btn btn-default" @click="addshop(index,item.id)"><i class="fa fa-edit"></i>添加</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>   
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">已添加商品推荐</h3>
+                </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-hover" id="example1">
+                        <thead>
+                            <tr>
+                                <th>商品名称</th>
+                                <th>图片</th>
+                                <th>排序</th>
+                                <th>点击量</th>
+                                <th>销量</th>
+                                <th>价格</th>
+                                <th>编辑</th>
+                            </tr> 
+                        </thead>
+                        <tbody v-for="(item,index) in addinfo">
+                            <tr id="{{ item.id }}">
+                                <td>{{ item.name }}</td>
+                                <td><img :src="item.shotcut" width="100" height="100"></td>
+                                <td><input type="text" v-model="addinput[index].sort" style="width: 60px;"></td>
+                                <td>{{ addinput[index].rate }}</td>
+                                <td>{{ addinput[index].pay }}</td>
+                                <td>{{ item.price }}</td>
+                                <td>
+                                    <a class="btn btn-default" @click="delok(index,item.id)"><i class="fa fa-edit"></i>移除</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>   
+                    <div>
+                    </div>
+                </div>
+            </div>
+            <div>
+            <div class="btn bg-olive btn-flat margin" style="width: 45%;float: left;" @click="postok">提交</div>
+            <div class="btn bg-maroon btn-flat margin" style="width: 45%;float: left;" onclick="javascript:history.back(-1);">返回</div>
+            </div>
+        </div>
+        <Modal
+            v-model="delmodal"
+            title="是否确认"
+            @on-ok="delshop">
+            <p>是否确认删除商品？删除后不能恢复记录</p>
+        </Modal>
+    </div>
+</section>
+{js href="//cdn.quguonet.com/bootstrap/dist/js/bootstrap.min.js"/}
+{js href="//cdn.quguonet.com/datatables/media/js/jquery.dataTables.min.js"/}
+{js href="//cdn.quguonet.com/datatables/media/js/dataTables.bootstrap.min.js"/}
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            addinfo:[],
+            list1:{$list},
+            search:'',
+            addinput:[],
+            jianzhi:null,
+            shujuid:null,
+            delmodal:false,
+        },
+        created:function(){
+            this.ready()
+        },
+        methods:{
+            ready:function(){
+                var self = this
+                $.post('{:url("admin/shoper/tuijianmoren")}',{id:{$id}},function(data) {
+                    var data = JSON.parse(data).msg.info
+                    for(i = 0; i < data.length; i++){
+                        self.addinfo.push(data[i])
+                        if(self.addinput == ''){
+                            self.addinput = [];
+                        }
+                        self.addinput.push({id:data[i]['id'],sort:data[i]['sort'],rate:data[i]['rate'],pay:data[i]['pay'],price:data[i]['price'],createtime:data[i]['createtime']})
+                    }
+                })
+            },
+            addshop:function(index,id){
+                var self = this
+                for(var i = 0; i < self.list1.length; i++){
+                    if(self.list1[i]['id'] == id){
+                        self.list1.splice(i, 1);
+                    }
+                }
+                $.get('{:url("admin/Gift/shopinfo")}',{id:id},function(data) {
+                    var data = JSON.parse(data).msg.info
+                    self.addinfo.push(data)
+                    if(self.addinput == ""){
+                        self.addinput = [];
+                    }
+                    self.addinput.push({id:data['id'],sort:0,rate:0,pay:0,price:data['price'],createtime:data['createtime']})
+                })
+            },
+            delok:function(index,id){
+                this.delmodal = true;
+                this.jianzhi = index;
+                this.shujuid = id;
+            },
+            delshop:function(){
+                var self = this
+                // 删除选中id的选项
+                self.addinfo.splice(self.jianzhi, 1)
+                self.addinput.splice(self.jianzhi, 1)
+                $.get('{:url("admin/Gift/shopinfo")}',{id:this.shujuid},function(data) {
+                    var data = JSON.parse(data).msg.info
+                    self.list.push(data)
+                    self.list1.push(data)
+                })
+            },
+            postok:function(){
+                var self = this
+                $.post('{:url("admin/shoper/edittuijian")}',{tianjia:self.addinput,id:{$id}},function(data) {
+                    self.$Message.config({
+                        top: 100,
+                        duration: 3
+                    });
+                    var data = JSON.parse(data)
+                    if(data.status == '0'){
+                        self.$Message.error(data.msg)
+                    }else{
+                        self.$Message.success(data.msg)
+                        location.href = '{:url("admin/shoper/shoptuijian")}'
+                    }
+                })
+            }
+        },
+        computed:{
+            list:function(){
+                var self = this
+                return self.list1.filter(function (item) {
+                    return item.name.indexOf(self.search) !== -1
+                })
+            }
+        }
+    })
+</script>
+<script type="text/javascript" class="init">
+   /* $(document).ready(function() {
+        $('#example').dataTable({
+            "paging": false,
+            "sPaginationType" : "full_numbers",
+            "oLanguage" : {
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+                "sZeroRecords": "抱歉， 没有找到",
+                "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+                "sInfoEmpty": "没有数据",
+                "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                "sZeroRecords": "没有检索到数据",
+                "sSearch": "名称:",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "前一页",
+                    "sNext": "后一页",
+                    "sLast": "尾页"
+                }        
+            }
+        });
+    });
+    */
+</script>

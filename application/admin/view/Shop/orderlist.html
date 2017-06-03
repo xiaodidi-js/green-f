@@ -1,0 +1,424 @@
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"} 
+{css href="__STATIC__/lvyangtian/app.css"}
+{js href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"}
+<!-- Main content -->
+<section class="content">
+	<div class="row" id="app">
+		<div class="col-xs-12">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">订单列表</h3>
+					<div class="box-tools">
+						<form method="get">
+							<div class="input-group input-group-sm" style="width:350px;">
+								<input type="text" name="search_key" class="form-control pull-right" placeholder="订单号|联系电话">
+								<div class="input-group-btn">
+									<button type="submit" class="btn btn-default">
+										<i class="fa fa-search"></i>
+									</button>
+									<a class="btn btn-default btn-xs" href="{:url('admin/Shop/orderlist')}">
+										<i class="fa fa-refresh"></i>
+										&nbsp;清除搜索
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+					<!-- /.box-tools -->
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body no-padding">
+					<div class="table-responsive mailbox-messages">
+						<table class="table table-hover table-striped">
+							<tbody>
+								<tr>
+									<th>订单号</th>
+									<th>总金额</th>
+									<th>支付方式</th>
+									<th>配送方式</th>
+									<th>配送时间</th>
+									<th>配送状态</th>
+									<th>订单状态</th>
+									<th>操作</th>
+								</tr>
+								{foreach name="list" item="vo"}
+								<tr id="tr{$vo.id}">
+									<td class="mailbox-name">{$vo.orderid}</td>
+									<td class="mailbox-name">{$vo.sum}</td>
+									<td class="mailbox-name">
+										{switch name="vo.pay"}
+											{case value="0"}未支付{/case}
+										    {case value="1"}已支付{/case}
+										    {default /}请联系趣果客服
+										{/switch}
+									</td>
+									<td class="mailbox-name">
+										{switch name="vo.stype"}
+											{case value="0"}自提{/case}
+										    {case value="1"}快递{/case}
+										    {default /}请联系趣果客服
+										{/switch}
+									</td>
+									<td class="mailbox-name">{$vo.stime|date="Y-m-d H:i:s",###}</td>
+									<td class="mailbox-name">
+									{switch name="vo.send"}
+										{case value="0"}未发货{/case}
+									    {case value="1"}已发货{/case}
+									    {case value="2"}已收货{/case}
+									    {case value="3"}已退货{/case}
+									    {default /}请联系趣果客服
+									{/switch}
+									</td>
+									<td class="mailbox-name">
+									{switch name="vo.stu"}
+										{case value="0"}等待支付{/case}
+									    {case value="1"}等待发货{/case}
+									    {case value="2"}等待评价{/case}
+									    {case value="3"}等待收货{/case}
+									    {case value="4"}申请售后{/case}
+									    {default /}请联系趣果客服
+									{/switch}
+									</td>
+									<td class="mailbox-name">
+										<div class="btn-group">
+											<Button class="btn btn-default btn-xs" @click="edit({$vo.id})"><i class="fa fa-edit"></i>快捷修改</Button >
+											<Button class="btn btn-default btn-xs" @click="ckxx({$vo.id})">查看详情</Button>
+											<Button class="btn btn-default btn-xs" @click="del({$vo.id})"><i class="fa fa-trash-o"></i>删除</Button >
+										</div>
+									</td>
+								</tr>
+								{/foreach}
+							</tbody>
+						</table>
+						<!-- /.table -->
+					</div>
+					<!-- /.mail-box-messages -->
+				</div>
+				<!-- /.box-body -->
+				<div class="box-footer clearfix">{$list->render()}</div>
+			</div>
+			<!-- /. box -->
+		</div>
+		<Modal v-model="modal1" title="订单详情"> 
+			<div style="font-size: 14px;">
+				<div>
+					<div style="width: 20%;float: left;">订 单 号:</div>
+					<div style="width: 80%;float: left;">{{ orderid }}</div>
+				</div>
+				<div>
+					<div style="width: 20%;float: left;">提交时间:</div>
+					<div style="width: 80%;float: left;">{{ createtime }}</div>
+				</div>
+				<div>
+					<div style="width: 20%;float: left;">手机号码:</div>
+					<div style="width: 80%;float: left;">{{ tel }}</div>
+				</div>
+				<div>
+					<div style="width: 20%;float: left;">配送方式:</div>
+					<div style="width: 80%;float: left;">{{ stype }}</div>
+				</div>
+				<div style="text-align: center; width: 100%;">-------------------------------------------------------------------------------------------------</div>
+				<div v-if="stype == '快递'">
+					<div>
+						<div style="width: 20%;float: left;">收货人:</div>
+						<div style="width: 80%;float: left;">{{ kddname }}</div>
+					</div>
+					<div>
+						<div style="width: 20%;float: left;">收货地址:</div>
+						<div style="width: 80%;float: left;">{{ kdaddress }}</div>
+					</div>
+					<div>
+						<div style="width: 20%;float: left;">快递运费:</div>
+						<div style="width: 80%;float: left;">{{ kddyf }}</div>
+					</div>
+				</div>
+				<div v-else>
+					<div>
+						<div style="width: 20%;float: left;">自提点名称:</div>
+						<div style="width: 80%;float: left;">{{ ztdname }}</div>
+					</div>
+					<div>
+						<div style="width: 20%;float: left;">自提点地址:</div>
+						<div style="width: 80%;float: left;">{{ ztdaddress }}</div>
+					</div>
+					<div>
+						<div style="width: 20%;float: left;">自提点电话:</div>
+						<div style="width: 80%;float: left;">{{ ztdphone }}</div>
+					</div>
+				</div>
+				<div style="text-align: center; width: 100%;">-------------------------------------------------------------------------------------------------</div>
+				<div>
+					<div style="width: 20%;float: left;">备注信息:</div>
+					<div style="width: 80%;float: left;">{{ tips }}</div>
+				</div>
+				<div>
+					<div style="width: 20%;float: left;">商品总额:</div>
+					<div style="width: 80%;float: left;">{{ sum }}</div>
+				</div>
+				<div>
+					<div style="width: 20%;float: left;">积分抵扣:</div>
+					<div style="width: 80%;float: left;">{{ jfdk }}</div>
+				</div>
+				<div>
+					<div style="width: 20%;float: left;">优惠券抵扣:</div>
+					<div style="width: 80%;float: left;">{{ yhdk }}</div>
+				</div>
+				<div>
+					<div style="width: 20%;float: left;">支付金额:</div>
+					<div style="width: 80%;float: left;">{{ money }}</div>
+				</div>
+				<div>
+					<div style="width: 20%;float: left;">支付状态:</div>
+					<div style="width: 80%;float: left;">{{ pay }}</div>
+				</div>
+				<div>
+					<div style="width: 20%;float: left;">支付类型:</div>
+					<div style="width: 80%;float: left;">{{ paytype }}</div>
+				</div>
+				<div>
+					<div style="width: 20%;float: left;">订单状态:</div>
+					<div style="width: 80%;float: left;">{{ stu }}</div>
+				</div>
+				<div>
+					<div style="width: 20%;float: left;">发货状态:</div>
+					<div style="width: 80%;float: left;">{{ send }}</div>
+				</div>
+				<div class="qc"></div>
+	        </div>
+	    </Modal>
+	    <Modal v-model="modal2" width="360">
+	        <p slot="header" style="color:#f60;text-align:center">
+	            <Icon type="information-circled"></Icon>
+	            <span>删除确认</span>
+	        </p>
+	        <div style="text-align:center">
+	            <p>是否继续删除？</p>
+	        </div>
+	        <div slot="footer">
+	            <Button class="btn btn-block btn-danger btn-flat" @click="delok">删除</Button>
+	        </div>
+    	</Modal>
+    	<Modal v-model="modal3" width="500">
+	        <p slot="header" style="color:#f60;text-align:center">
+	            <span>快捷编辑</span>
+	        </p>
+	        <div>
+		        <form id="kjedit">
+					<label>发货状态</label>
+		            <div class="form-group">
+						<label>未发货</label>
+						<span v-if="send == '0'">
+							<input type="radio" name="send" class="minimal" value="0" checked>
+						</span>
+						<span v-else>
+							<input type="radio" name="send" class="minimal" value="0" >
+						</span>
+						<label>已发货</label>
+						<span v-if="send == '1'">
+							<input type="radio" name="send" class="minimal" value="1" checked>
+						</span>
+						<span v-else>
+							<input type="radio" name="send" class="minimal" value="1" >
+						</span>
+					</div>
+					<!-- <label>支付状态</label>
+		            <div class="form-group">
+						<label>未支付</label>
+						<span v-if="pay == '0'">
+							<input type="radio" name="pay" class="minimal" value="0" checked>
+						</span>
+						<span v-else>
+							<input type="radio" name="pay" class="minimal" value="0" >
+						</span>
+						<label>已支付</label>
+						<span v-if="pay == '1'">
+							<input type="radio" name="pay" class="minimal" value="1" checked>
+						</span>
+						<span v-else>
+							<input type="radio" name="pay" class="minimal" value="1" >
+						</span>
+						<input type="hidden" name="id" v-model="id">
+					</div> -->
+					<div class="form-group" v-if="stype == '1'">
+						<div><label>快递公司</label></div>
+						<select class="form-control" name="kdgs">
+							<option value="韵达快递">韵达快递</option>
+						</select>
+						<div><label>订单编号</label></div>
+						<input type="text" name="snum" value="" class="form-control">
+					</div>
+					<div class="form-group" v-else>
+						<div><label>自提点</label></div>
+						<select class="js-example-basic-single" name="supplier" style="width: 200px;" >
+		            		<option :value="addressid">默认:{{ ztdaddress }}</option>
+							<option v-for="item in ztd" :value="item.id">{{ item.address }}</option>
+			  			</select>
+					</div>
+				</form>
+	        </div>
+	        <div slot="footer">
+	            <Button class="btn btn-block btn-danger btn-flat" @click="editok">提交</Button>
+	        </div>
+    	</Modal>
+	</div>
+</section>
+<script type="text/javascript">
+	new Vue({
+		el: '#app',
+  		data: {
+    		modal1: false,
+    		modal2: false,
+    		modal3: false,
+    		id:null,
+    		orderid:null,
+    		createtime:null,
+    		tel:null,
+    		stype:null,
+    		ztdname:null,
+    		ztdphone:null,
+    		ztdaddress:null,
+    		kddname:null,
+			kddaddress:null,
+			kddyf:null,
+			tips:null,
+			sum:null,
+			yhdk:null,
+			jfdk:null,
+			money:null,
+			pay:null,
+			paytype:null,
+			stu:null,
+			send:null,
+			delid:null,
+			addressid:null,
+			ztd:[],
+  		},
+  		methods:{
+  			ckxx(id){
+  				var self = this
+  				self.modal1 = true
+  				console.log(self.modal1)
+  				$.get('{:url("admin/shop/orderxx")}',{id:id},function(data) {
+  					var data = JSON.parse(data).msg.info
+  					self.orderid = data.orderid
+  					self.createtime = data.createtime
+  					self.tel = data.tel
+  					if(data.stype == '0'){
+  						stypeclass = '自提点'
+  						self.ztdname = data.ztdname
+  						self.ztdaddress = data.ztdaddress
+  						self.ztdphone = data.ztdphone
+  					}else{
+  						stypeclass = '快递'
+  						self.kddname = data.kddname
+						self.kddaddress = data.kddaddress
+						self.kddyf = data.kddyf
+  					}
+  					self.stype = stypeclass
+  					self.tips = data.tips
+  					self.yhdk = data.yhdk
+  					self.jfdk = data.jfdk
+  					self.money = data.money
+  					self.sum = data.sum
+  					if(data.pay == '0'){
+  						payzt = '未支付'
+  					}else{
+  						payzt = '已支付'
+  					}
+  					self.pay = payzt
+  					if(data.paytype == '0'){
+  						payclass = '微信支付'
+  					}else{
+  						payclass = '其他支付'
+  					}
+  					self.paytype = payclass
+  					if(data.stu == '0'){
+  						stuclass = '待支付'
+  					}else if(data.stu == '1'){
+  						stuclass = '待发货'
+  					}else if(data.stu == '2'){
+  						stuclass = '待评价'
+  					}else if(data.stu == '3'){
+  						stuclass = '待收货'
+  					}else if(data.stu == '4'){
+  						stuclass = '申请售后'
+  					}
+  					self.stu = stuclass
+  					if(data.send == '0'){
+  						sendclass = '未发货'
+  					}else if(data.send == '1'){
+  						sendclass = '已发货'
+  					}else if(data.send == '2'){
+  						sendclass = '已收货'
+  					}else if(data.send == '3'){
+  						sendclass = '已退货'
+  					}
+  					
+  					self.send = sendclass
+				})
+  			},
+  			del(id){
+  				var self = this
+  				self.modal2 = true
+  				self.delid = id
+  			},
+  			delok(){
+  				var self = this
+				var id = self.delid
+  				$.get('{:url("admin/shop/delorder")}',{id:id},function(data) {
+  					$('#tr'+id).hide()
+  					var data = JSON.parse(data)
+	                // setTimeout(() => {
+                    self.modal2 = false;
+                    self.$Message.config({
+					    top: 80,
+					});
+					if(data.status == 0){
+						self.$Message.error(data.msg);
+					}else{
+                    	self.$Message.success(data.msg);
+					}
+	                // }, 500);
+  				})
+  			},
+  			edit(id){
+  				var self = this
+  				self.modal3 = true
+  				self.id = id
+  				$.get('{:url("admin/shop/getedit")}',{id:id},function(data) {
+  					var data = JSON.parse(data).msg.info
+  					self.send = data.send
+  					self.pay = data.pay
+  					self.addressid = data.addressid
+				})
+				$.get('{:url("admin/shop/selectztd")}',function(data) {
+					var data = JSON.parse(data).msg.list
+					self.ztd = data
+				})
+  			},
+  			editok(){
+  				var self = this
+  				var form = $('#kjedit').serialize()
+  				$.post('{:url("admin/shop/getedit")}',form,function(data) {
+  					var data = JSON.parse(data)
+  					self.$Message.config({
+					    top: 80,
+					});
+					if(data.status == 0){
+						self.$Message.error(data.msg);
+					}else{
+                    	self.$Message.success(data.msg);
+					}
+				})
+  			},
+  		}
+  	})
+</script>
+<script type="text/javascript">
+	$(".js-example-basic-single").select2();
+</script>

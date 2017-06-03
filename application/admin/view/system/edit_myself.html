@@ -1,0 +1,160 @@
+<style>
+	.headimg{border:#fff solid 2px;cursor:pointer;}
+	.headimg.chosen{border:#3c8dbc solid 2px;}
+</style>
+<!-- Main content -->
+<section class="content" style="margin-top:30px;">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- general form elements -->
+		      <div class="box box-primary">
+		        <div class="box-header with-border">
+		          <h3 class="box-title">编辑账号资料</h3>
+		        </div>
+		        <!-- /.box-header -->
+		        <!-- form start -->
+		        <form id="form" role="form">
+		          <div class="box-body">
+		          	<div class="col-md-8">
+		          		{if condition="session('atype') neq 1"}
+				          	<div class="form-group">
+				                <label style="display:block;">所属分组</label>
+				                <select name="group_id" class="form-control select2" style="width:50%;">
+				                  {foreach name="list" item="vo"}
+				                  	<option value="{$vo.id}" {if condition="$group_id eq $vo['id']"}selected{/if}>{$vo.title}</option>
+				                  {/foreach}
+				                </select>
+				            </div>
+			            {/if}
+			            <div class="form-group">
+			              <label>账号名称</label>
+			              <input type="text" name="name" class="form-control" placeholder="账号的名称标识" value="{$info.name}">
+			            </div>
+			            <div class="form-group">
+			              <label>手机号码</label>
+			              <input type="text" name="tel" class="form-control" placeholder="手机号码" value="{$info.tel}">
+			            </div>
+			            <div class="form-group">
+			              <label>邮箱</label>
+			              <input type="text" name="email" class="form-control" placeholder="邮箱地址" value="{$info.email}">
+			            </div>
+			            <div class="form-group">
+			              <label>登录密码</label>
+			              <input type="password" name="pwd" class="form-control" placeholder="登录密码">
+			            </div>
+			            <div class="form-group">
+			              <label>确认密码</label>
+			              <input type="password" name="repwd" class="form-control" placeholder="再输入一次密码">
+			            </div>
+			            <div class="form-group">
+			            	<label style="display:block;">选择头像</label>
+					      <!-- USERS LIST -->
+					        <div class="box box-danger" style="border-top:1px solid #d2d6de;">
+					          <!-- /.box-header -->
+					          <div class="box-body no-padding">
+					            <ul class="users-list clearfix">
+					            	{for start="1" end="16"}
+						              <li>
+						                <img src="__STATIC__/images/aheads/{$i}.png" width="80" height="80" alt="User Image" class="headimg {if condition='$info["headimg"] eq $i'}chosen{/if}">
+						                <input type="radio" name="headimg" value="{$i}" style="display:none;">
+						              </li>
+						            {/for}
+					            </ul>
+					            <!-- /.users-list -->
+					          </div>
+					          <!-- /.box-body -->
+					        </div>
+					      <!--/.box -->
+					    </div>
+					    {if condition="session('atype') neq 1"}
+				            <div class="form-group">
+				            	<label style="display:block;">账号状态</label>
+				            	{eq name="info.status" value="1"}
+					                <label>
+					                  <input type="radio" name="status" class="minimal" value="1" checked>
+					                  启用
+					                </label>
+					                &nbsp;&nbsp;
+					                <label>
+					                  <input type="radio" name="status" class="minimal" value="0">
+					                  禁用
+					                </label>
+				                {else/}
+				                	<label>
+					                  <input type="radio" name="status" class="minimal" value="1">
+					                  启用
+					                </label>
+					                &nbsp;&nbsp;
+					                <label>
+					                  <input type="radio" name="status" class="minimal" value="0" checked>
+					                  禁用
+					                </label>
+				                {/eq}
+				            </div>
+			            {else/}
+			            	<div class="form-group">
+				            	<label style="display:block;">账号状态</label>
+					            <label>
+					               <input type="radio" name="status" class="minimal" value="1" checked>
+					               启用
+					            </label>
+					            &nbsp;&nbsp;
+					            <label style="color:#cdcdcd;">
+					                <input type="radio" name="status" class="minimal" value="0" disabled>
+					                禁用
+					            </label>
+					        </div>
+			            {/if}
+					</div>
+		          </div>
+		          <!-- /.box-body -->
+
+		          <div class="box-footer">
+		            <button type="button" id="submit" class="btn btn-primary">提交保存</button>
+		          </div>
+		        </form>
+		      </div>
+		    <!-- /.box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+<script>
+	$('.select2').select2();
+
+	//iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+	      checkboxClass: 'icheckbox_minimal-blue',
+	      radioClass: 'iradio_minimal-blue'
+    });
+
+    $('img.headimg').click(function(){
+    	if($(this).hasClass('chosen')){
+    		return false;
+    	}
+    	$(this).addClass('chosen');
+    	$(this).next('input[type="radio"]').prop('checked',true);
+    	$(this).parent('li').siblings().find('img').removeClass('chosen');
+    });
+
+    $('#submit').click(function(){
+		if($(this).hasClass('disabled')){
+			return false;
+		}
+		$(this).addClass('disabled');
+		var form = $('#form').serialize();
+		$.post('{:url("admin/system/editmyself")}',form,function(data){
+			$('#myDialog .dialog-box').text(data.info);
+			$('#myDialog').modal();
+			$('#myDialog #dialogSta').val(data.status);
+			$('#submit').removeClass('disabled');
+		});
+    });
+
+    $('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.href = "{:url('admin/system/editmyself')}";
+	    }
+  	});
+</script>

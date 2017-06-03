@@ -1,0 +1,10 @@
+<footer class="main-footer">
+  <div class="pull-right hidden-xs">
+    <b>Version</b> {:config('app_version')}
+  </div>
+  {if condition="is_array($auth) AND !empty($copyright)"}
+  	<strong>{$copyright}</strong>
+  {else /}
+  	<strong>Copyright &copy; 2014-2015 <a href="http://www.quguonet.com">Quguo Co.Ltd</a>.</strong> All rights reserved.
+  {/if}
+</footer>

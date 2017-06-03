@@ -1,0 +1,57 @@
+<!-- Modal -->
+<div class="modal fade" id="myOrder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">修改订单信息</h4>
+      </div>
+      <div class="modal-body modal-box">
+        <form id="quickOrder">
+            <p>发货状态:</p>
+            <label style="font-weight:normal;">
+              <input type="radio" name="send" class="minimal" value="1">
+              已发货
+            </label>
+            &nbsp;&nbsp;
+            <label style="font-weight:normal;">
+              <input type="radio" name="send" class="minimal" value="0" checked>
+              未发货
+            </label>
+            <p>快递公司:</p>
+            <select name="scid" class="form-control select2" style="width:100%;">
+                <option value="huitongkuaidi,百世汇通">百世汇通</option>
+                <option value="rufengda,如风达快递">如风达快递</option>
+                <option value="shentong,申通">申通</option>
+                <option value="shunfeng,顺丰">顺丰</option>
+                <option value="yuantong,圆通速递">圆通速递</option>
+                <option value="yunda,韵达快运">韵达快运</option>
+                <option value="tiantian,天天快递">天天快递</option>
+                <option value="ems,EMS">EMS</option>
+            </select>
+            <p>快递单号:</p>
+            <input type="text" name="snum" value="" class="form-control">
+            <p>订单状态</p>
+            <select name="status" class="form-control select2" style="width:100%;">
+                <option value="0">交易进行中</option>
+                <option value="1">交易结束</option>
+                <option value="-1">用户取消</option>
+                <option value="-2">申请售后</option>
+                <option value="-3">交易关闭</option>
+            </select>
+            <input type="hidden" id="myoid" name="myoid" value="0">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="orderConfirm" class="btn btn-primary">确定</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $('#myOrder input[type="radio"].minimal').iCheck({
+        radioClass: 'iradio_minimal-blue'
+  });
+  $('#myOrder .select2').select2({minimumResultsForSearch:-1});
+</script>

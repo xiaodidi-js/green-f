@@ -1,0 +1,170 @@
+{css href="__STATIC__/kindeditor/themes/default/default.css"}
+{js href="__STATIC__/kindeditor/kindeditor-min.js"}
+{js href="__STATIC__/kindeditor/lang/zh_CN.js"}
+{css href="__STATIC__/lvyangtian/app.css"}
+<style>
+	.img-box{width:100px;height:100px;border:#cfcfcf dashed 1px;margin:10px 0px;background-color:#f3f3f3;background-size:cover;background-position:center;position:relative;}
+	.cross{width:20px;height:20px;border-radius:10px;line-height:18px;text-align:center;font-size:14px;color:#fff;background-color:rgba(207,207,207,0.8);position:absolute;top:-10px;right:-10px;cursor:pointer;display:none;}
+</style>
+<!-- Main content -->
+<section class="content" style="margin-top:30px;">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- general form elements -->
+		      <div class="box box-primary">
+		        <div class="box-header with-border">
+		          <h3 class="box-title">编辑商品商品推荐</h3>
+		        </div>
+		        <!-- /.box-header -->
+		        <!-- form start -->
+		        <form id="form" role="form">
+		          <div class="box-body">
+		          	<div class="col-md-8">
+			            <div class="form-group">
+			              	<label>商品推荐名称</label>
+			              	<input type="text" name="title" class="form-control" placeholder="商品推荐的名称标识" value="{$info.title}">
+			            </div>
+			            <div class="form-group">
+			              	<label>栏目背景图颜色</label>
+			              	<div>
+				              	<input type="color" class="form-control" value="{$info.background}" id="color" style="width: 50px;float: left;">
+				              	<input type="text" name="background" class="form-control" placeholder="商品推荐的栏目背景图颜色" value="{$info.background}" id="colortext" style="float: left;width: 350px;">
+			              	</div>
+			            </div>
+			            <div class="qc"></div>
+			            <div class="form-group" style="margin-bottom:5px;">
+		                	<label>商品推荐图片</label>
+		                </div>
+		                <div class="form-group">
+		                	{notempty name="info.shotcut"}
+			                	<div id="ibox" class="img-box" style="background-image:url('{$info.shotcut}');">
+			                		<div id="icross" class="cross" style="display:block;">x</div>
+			                		<input type="hidden" id="imgurl" name="shotcut" value="{$info.shotcut}">
+			                	</div>
+			                	<button type="button" id="getImage" class="btn btn-success" disabled>上传图片</button>
+			                {else /}
+			                	<div id="ibox" class="img-box">
+			                		<div id="icross" class="cross">x</div>
+			                		<input type="hidden" id="imgurl" name="shotcut" value="">
+			                	</div>
+			                	<button type="button" id="getImage" class="btn btn-success">上传图片</button>
+		                	{/notempty}
+		                	<div class="text-red" style="font-size:10px;margin-top:5px;">(注意:请上传400*400的图片以获得最佳效果.)</div>
+		                </div>
+		                <div ></div>
+			            <div class="form-group">
+			              <label>排序</label>
+			              <input type="text" name="sort" class="form-control" placeholder="商品推荐的显示顺序" value="{$info.sort}">
+			              <span style="color:#ff0000;font-size:12px;">(正整数,越大越靠前,最小为0.)</span>
+			            </div>
+			            <div class="form-group">
+			            	<label style="display:block;">商品推荐状态</label>
+			            	{eq name="info.status" value="1"}
+				                <label>
+				                  <input type="radio" name="status" class="minimal" value="1" checked>
+				                  启用
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="status" class="minimal" value="0">
+				                  禁用
+				                </label>
+			                {else /}
+			                	<label>
+				                  <input type="radio" name="status" class="minimal" value="1">
+				                  启用
+				                </label>
+				                &nbsp;&nbsp;
+				                <label>
+				                  <input type="radio" name="status" class="minimal" value="0" checked>
+				                  禁用
+				                </label>
+			                {/eq}
+			            </div>
+					</div>
+		          </div>
+		          <!-- /.box-body -->
+
+		          <div class="box-footer">
+		          	<input type="hidden" name="id" value="{$Request.param.id}">
+		            <button type="button" id="submit" class="btn btn-primary">提交保存</button>
+		          </div>
+		        </form>
+		      </div>
+		    <!-- /.box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+<script>
+	KindEditor.ready(function(K) {
+		var editor = K.editor({
+	       allowFileManager : true
+	    });
+        K('#getImage').click(function(){
+	        editor.loadPlugin('image', function() {
+	          	editor.plugin.imageDialog({
+	            	fileUrl : K('#imgurl').val(),
+	            	clickFn : function(url, title){
+	              		K('#imgurl').val(url);
+	              		K('#ibox').css({'backgroundImage':'url('+url+')'});
+	              		K('#icross').css({'display':'block'});
+	              		editor.hideDialog();
+	              		K('#getImage').attr('disabled',true);
+	            	}
+	          	});
+	        });
+	    });
+    });
+
+	$('.select2').select2();
+
+	//iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+	      checkboxClass: 'icheckbox_minimal-blue',
+	      radioClass: 'iradio_minimal-blue'
+    });
+
+    $('.cross').click(function(){
+  		var val = $(this).next('input').val();
+  		if(!val){
+  			return false;
+  		}
+  		$.post('{:url("admin/shoper/delclassifyimg")}',{durl:val},function(data){
+  			if(data.status==1){
+				$('#icross').hide();
+				$('#ibox').css({'backgroundImage':'none'});
+				$('#getImage').prop('disabled',false);
+				$('#imgurl').val('');
+  			}else{
+  				$('#myDialog .dialog-box').text(data.info);
+  				$('#myDialog #dialogSta').val(data.status);
+  				$('#myDialog').modal();
+  			}
+  		});
+  	});
+
+    $('#submit').click(function(){
+		if($(this).hasClass('disabled')){
+			return false;
+		}
+		$(this).addClass('disabled');
+		var form = $('#form').serialize();
+		$.post('{:url("admin/shoper/editshoptuijian")}',form,function(data){
+			$('#myDialog .dialog-box').text(data.info);
+			$('#myDialog').modal();
+			$('#myDialog #dialogSta').val(data.status);
+			$('#submit').removeClass('disabled');
+		});
+    });
+
+    $('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.href = "{:url('admin/shoper/shoptuijian')}";
+	    }
+  	});
+  	document.getElementById('color').onchange = function(){
+  		$('#colortext').val(this.value);
+	};
+</script>

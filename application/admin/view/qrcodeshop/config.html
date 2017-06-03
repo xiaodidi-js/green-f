@@ -1,0 +1,215 @@
+{css href="__STATIC__/lvyangtian/app.css"}
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"} 
+<style>
+[v-cloak] {
+  display: none;
+}
+</style>
+<section class="content">
+    <div class="row" id="app" v-cloak>
+        <div class="col-xs-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">分享购买商品管理</h3>
+                </div>
+                <div class="box-body table-responsive">
+                查询
+                <input type="text"  v-model="search">
+                    <table class="table table-hover" >
+                        <thead>
+                            <tr>
+                                <th>图片</th>
+                                <th>商品名称</th>
+                                <th>分类</th>
+                                <th>价格</th>
+                                <th>编辑</th>
+                            </tr> 
+                        </thead>
+                        <tbody id="one">
+                            <tr v-for="(item,index) in list">
+                                <td><img :src="item.shotcut" width="100" height="100"></td>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.class}}</td>
+                                <td>{{ item.price}}</td>
+                                <td>
+                                    <div class="btn btn-default" @click="addshop(index,item.id)"><i class="fa fa-edit"></i>添加</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>   
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">已添加赠品</h3>
+                </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>商品名称</th>
+                                <th>图片</th>
+                                <th>分类</th>
+                                <th>原价格</th>
+                                <th>原库存</th>
+                                <th>二维码价格</th>
+                                <th>二维码库存</th>
+                                <th>编辑</th>
+                            </tr> 
+                        </thead>
+                        <tbody v-for="(item,index) in addinfo">
+                            <tr id="{{ item.id }}">
+                                <td>{{ item.name }}</td>
+                                <td><img :src="item.shotcut" width="100" height="100"></td>
+                                <td>{{ item.class }}</td>
+                                <td>{{ item.price }}</td>
+                                <td>{{ item.store }}</td>
+                                <td><input type="number" v-model="addinput[index].qrcodeprice" style="width: 80px;"></td>
+                                <template v-if="addinput[index].qrcodestore <= item.store">
+                                    <td><input type="number" v-model="addinput[index].qrcodestore" style="width: 80px;"></td>
+                                </template>
+                                <template v-else>
+                                    <td><input type="number" v-model="addinput[index].qrcodestore = item.store" style="width: 80px;"></td>
+                                </template>
+                                <td>
+                                    <a class="btn btn-default" @click="delshop(index,item.id)"><i class="fa fa-edit"></i>移除</a>
+                                <template v-if="addinput[index].qrcodeimg">
+                                    <a class="btn btn-default" @click="lookqrcode(index,item.id)"><i class="fa fa-edit"></i>查看二维码</a>
+                                </template>
+                                <template v-else>
+                                    <a class="btn btn-default" @click="addqrcode(index,item.id)"><i class="fa fa-edit"></i>生成二维码</a>
+                                </template>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>   
+                    <div>
+                    </div>
+                </div>
+            </div>
+            <div>
+            <div class="btn bg-olive btn-flat margin" style="width: 45%;float: left;" @click="postok">提交</div>
+            <div class="btn bg-maroon btn-flat margin" style="width: 45%;float: left;" onclick="javascript:history.back(-1);">返回</div>
+            </div>
+        </div>
+        <Modal
+            v-model="look"
+            title="商品二维码">
+            <center><img :src="qrcodeimg"></center>
+        </Modal>
+    </div>
+</section>
+{js href="//cdn.quguonet.com/bootstrap/dist/js/bootstrap.min.js"/}
+{js href="//cdn.quguonet.com/datatables/media/js/jquery.dataTables.min.js"/}
+{js href="//cdn.quguonet.com/datatables/media/js/dataTables.bootstrap.min.js"/}
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            addinfo:[],
+            list1:{$list},
+            search:'',
+            addinput:[],
+            look:false,
+            qrcodeimg:null,
+        },
+        created:function(){
+            this.ready()
+        },
+        methods:{
+            ready:function(){
+                var self = this
+                $.post('{:url("admin/Qrcodeshop/morenshop")}',{id:{$id}},function(data) {
+                    var data = JSON.parse(data).msg.info
+                    if(data){
+                        for(i = 0; i < data.length; i++){
+                            self.addinfo.push(data[i])
+                            if(self.addinput == ''){
+                                self.addinput = [];
+                            }
+                            self.addinput.push({id:data[i]['id'],qrcodeprice:data[i]['qrcodeprice'],qrcodestore:data[i]['qrcodestore'],qrcodeimg:data[i]['qrcodeimg']})
+                        }
+                    }
+                })
+            },
+            addshop:function(index,id){
+                var self = this
+                for(var i = 0; i < self.list1.length; i++){
+                    if(self.list1[i]['id'] == id){
+                        self.list1.splice(i, 1);
+                    }
+                }
+                $.get('{:url("admin/Gift/shopinfo")}',{id:id},function(data) {
+                    var data = JSON.parse(data).msg.info
+                    self.addinfo.push(data)
+                    if(self.addinput == ''){
+                        self.addinput = [];
+                    }
+                    self.addinput.push({id:data['id'],qrcodeprice:0,qrcodestore:0,qrcodeimg:null})
+                })
+            },
+            delshop:function(index,id){
+                var self = this
+                // 删除选中id的选项
+                self.addinfo.splice(index, 1)
+                self.addinput.splice(index, 1)
+                $.get('{:url("admin/Gift/shopinfo")}',{id:id},function(data) {
+                    var data = JSON.parse(data).msg.info
+                    self.list.push(data)
+                    self.list1.push(data)
+                })
+            },
+            addqrcode:function(index,id){
+                var self = this
+                $.post('{:url("admin/Qrcodeshop/addqrcode")}',{shopid:id,qrcodeid:{$id}},function(data) {
+                    var data = JSON.parse(data).msg
+                    self.addinput[index].qrcodeimg = data.qrcodeimg;
+                    self.$Message.config({
+                        top: 100,
+                        duration: 3
+                    });
+                    if(data.status == '0'){
+                        self.$Message.error(data.msg)
+                    }else{
+                        self.$Message.success('生成二维码成功')
+                    }
+                })
+            },
+            lookqrcode:function(index,id){
+                this.look = true;
+                this.qrcodeimg = this.addinput[index].qrcodeimg;
+            },
+            postok:function(){
+                var self = this
+                $.post('{:url("admin/Qrcodeshop/configok")}',{data:self.addinput,id:{$id}},function(data) {
+                    self.$Message.config({
+                        top: 100,
+                        duration: 3
+                    });
+                    var data = JSON.parse(data)
+                    if(data.status == '0'){
+                        self.$Message.error(data.msg)
+                    }else{
+                        self.$Message.success(data.msg)
+                        location.href = '{:url("admin/Qrcodeshop/qrcodelist")}'
+                    }
+                })
+            }
+        },
+        computed:{
+            list:function(){
+                var self = this
+                return self.list1.filter(function (item) {
+                    return item.name.indexOf(self.search) !== -1
+                })
+            }
+        }
+    })
+</script>

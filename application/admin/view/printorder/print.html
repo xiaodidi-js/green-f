@@ -1,0 +1,189 @@
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"}
+{js href="//cdn.quguonet.com/Lodop6.217/LodopFuncs.js"}
+<style type="text/css">
+    .boxkleft{
+        width: 400px;
+        background-color: #FFF;
+        height: 500px;
+        float: left;
+        margin-left: 18px;
+        overflow-y:scroll;
+    }
+    .boxkright{
+        float: left;
+        margin-left: 50px;
+        font-size: 16px;
+        width: 550px;
+    }
+    .inputdiv{
+        float: left;
+        width: 200px;
+        margin-right: 5px;
+    }
+</style>
+<section class="content">
+    <div class="row" id="app">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">{$sincename} 自提点</h3>
+                </div>
+                <div class="boxkleft">
+                    <?php $i = 0 ?>
+                    <div id="bigdiv" style="font-size:14px;">
+                        {foreach name="list" item="vo"}
+                            <div id="div{$i}">
+                                <table style="width:100%" >
+                                    <tbody>
+                                        <tr style="height: 50px;">
+                                            <td style="border: 2px solid #000">
+                                                <div style="float: left; font-size: 16px;">绿秧田商城<br>客服热线:020-39007485<br>取货号:{$vo.orderid|substr=14,6}</div>
+                                                <div style="float: right;"><img src="__STATIC__/lvyangtian/logo.jpg" width="65" height="65"></div>
+                                            </td>
+                                        </tr>
+                                        <tr><td>客户电话:{$vo.tel}</td></tr>
+                                        <tr><td>订单编号:{$vo.orderid}</td></tr>
+                                        <tr><td>订单总价:{$vo.sum}</td></tr>
+                                        <tr><td>配送时间:{$vo.stime|date="Y-m-d H:i:s",###}</td></tr>
+                                        <tr><td>配送地址:{$vo.address}</td></tr>
+                                        <tr><td>留言:{$vo.tips}</td></tr>
+                                        <tr><td>
+                                            赠品:
+                                            {foreach name="vo.gift_data" item="fo"}
+                                                {$fo.activity}<br>
+                                                {$fo.amount}份口{$fo.name}<br>
+                                            {/foreach}
+                                        </td></tr>
+                                        <tr><td style="border-bottom:1px solid #000;"></td></tr>
+                                        {foreach name="vo.shop_data" item="io"}
+                                            <tr><td>{$io.amount}份口{$io.name}</td></tr>
+                                        {/foreach}
+                                        <tfoot style="">
+                                            <tr>
+                                                <td align="right" style="font-size: 12px;">订单编号后4位:{$vo.orderid|substr=16,4}的页码
+                                                <b tdata="pageNO" format="#" align="right">#/</b>
+                                                <b tdata="pageCount" format="#" align="right">##</b>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </tbody>
+                                </table>
+                            <?php $i++ ?>
+                            </div>
+                        {/foreach}
+                    </div>
+                </div>
+                <div class="boxkright">
+                    <div style="margin-top: 20px; ">
+                        <a href="//cdn.quguonet.com/printdrive/qudong.zip">下载打票机驱动</a>
+                        <div>重新选择日期</div>
+                        <div>
+                            <div class="inputdiv">
+                                <div>开始时间:</div>
+                                <Date-picker :value="stime" style="width: 200px;float: left;" type="datetime" @on-change="stimeonclick"></Date-picker>
+                            </div>
+                            <div class="inputdiv">
+                                <div>结束时间:</div>
+                                <Date-picker :value="etime" style="width: 200px;float: left;" type="datetime" @on-change="etimeonclick"></Date-picker>
+                            </div>
+                        </div>
+                        <div>查看类型:</div>
+                        <select v-model="printifok" class="form-control" style="width: 100px;">
+                            <option value="0">未打印</option>
+                            <option value="1">已打印</option>
+                            <option value="2">全部</option>
+                        </select>
+                        <div>分类类型:</div>
+                        <select v-model="tag" class="form-control" style="width: 100px;">
+                            <option value="0">全部</option>
+                            {foreach name="tagclass" item="vo"}
+                                <option value="{$vo.id}">{$vo.name}</option>
+                            {/foreach}
+                        </select>
+                        <div style="clear: both;"></div>
+                        <div class="ivu-btn ivu-btn-success" style="margin-top: 15px;" @click="querylist">提交</div>
+                    </div>
+                    <div style="clear: both;"></div>
+                    <div style="margin-top: 20px;">打印</div>
+                    <div class="ivu-btn ivu-btn-success" @click="PreviewMytable">打印预览</div>
+                    <div class="ivu-btn ivu-btn-error" @click="printok">确认已打印</div>
+                </div>
+                <form id="form">
+                    {foreach name="orderidAll" item="po"}
+                        <input type="hidden" name="orderid[]" value="{$po}">
+                    {/foreach}
+                </form>
+                <div style="clear: both;"></div>
+            </div>
+        </div>
+        <Modal
+            v-model="printokmodel"
+            title="确认已打印"
+            @on-ok="ok"
+            >
+            <p>是否确认已打印订单</p>
+        </Modal>
+    </div>
+</section>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            stime:'{$istime}',
+            etime:'{$iftime}',
+            printokmodel: false,
+            printifok:'{$printifok}',
+            tag:'{$tag}',
+        },
+        methods:{
+            stimeonclick:function(date){
+                this.stime = date;
+            },
+            etimeonclick:function(date){
+                this.etime = date;
+            },
+            querylist:function(){
+                var address = "{$sincename}";
+                window.location.href = "{:url('admin/printorder/print')}"+'?id='+address+'&stime='+this.stime+'&etime='+this.etime+'&stu='+this.printifok+'&tag='+this.tag;
+            },
+            PreviewMytable:function(){
+                var nub = {$nub};
+                var LODOP=getLodop();
+                LODOP.PRINT_INIT("趣果科技公司-打单系统");
+                var strStyle="<style> table,td,th {word-break: break-all; font-size:14px; font-family:Microsoft YaHei;}</style>"
+                for (i = 0; i < nub; i++) {
+                    LODOP.ADD_PRINT_TABLE("2%","1mm","98%","98%",strStyle+document.getElementById("div"+i).innerHTML);
+                    LODOP.NewPageA();
+                }
+                LODOP.SET_PRINT_PAGESIZE(1, 750, 1000, "");
+                LODOP.PREVIEW();
+            },
+            printok:function(){
+                this.printokmodel = true
+            },
+            ok:function(){
+                var self = this
+                self.$Message.config({
+                    top: 100,
+                    duration: 3
+                });
+                var form = $("#form").serialize();
+                $.post('{:url("admin/printorder/printok")}',form,function(data) {
+                    var data = JSON.parse(data)
+                    if(data.status == 1){
+                        self.$Message.success(data.msg);
+                        history.back(-1);
+                    }else{
+                        self.$Message.error(data.msg);
+                        history.back(-1);
+                    }
+                })
+            }
+        }
+    })
+</script>

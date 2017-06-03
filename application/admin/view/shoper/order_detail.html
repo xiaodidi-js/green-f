@@ -1,0 +1,247 @@
+<style>
+	.border{width:100%;padding:5px;border:#efefef solid 1px;background-color:#fff;}
+	table.table-sku-stock{width:100%;background-color:#fff;text-align:left;}
+	table.table-sku-stock thead tr,.sku-container table.table-sku-stock thead td{border:none;}
+	table.table-sku-stock tbody td{border:#e5e5e5 solid 1px;padding:8px;}
+	table.table-sku-stock tbody td:first-of-type{border-left:none;}
+	table.table-sku-stock tbody td:last-of-type{border-right:none;}
+	table.table-sku-stock tbody tr:nth-child(even){background-color:#efefef;}
+</style>
+<!-- Main content -->
+<section class="content" style="margin-top:30px;">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- general form elements -->
+		      <div class="box box-primary">
+		        <div class="box-header with-border">
+		          <h3 class="box-title">订单详情</h3>
+		        </div>
+		        <!-- /.box-header -->
+		        <!-- form start -->
+		        <form id="form" role="form">
+		          <div class="box-body">
+		          	<div class="col-md-8">
+			            <div class="form-group">
+			              <label>订单编号</label>
+			              {$info.orderid}
+			            </div>
+			            <div class="form-group">
+			              <label>提交时间</label>
+			              {$info.createtime|date="Y-m-d H:i:s",###}
+			            </div>
+			            <div class="form-group">
+		                	<label>用户账号</label>
+		                	{$info.uid}
+		                </div>
+		                <div class="form-group">
+		                	<label>配送方式</label>
+		                	{eq name="info.stype" value="express"}
+		                		快递配送
+		                	{else/}
+		                		到店自提
+		                	{/eq}
+		                </div>
+		                <div class="form-group">
+		                	<label>收货人</label>
+		                	{$info.person}
+		                </div>
+		                <div class="form-group">
+		                	<label>收货地址</label>
+		                	{$info.address}
+		                </div>
+		                <div class="form-group">
+		                	<label>备注信息</label>
+		                	{$info.tips}
+		                </div>
+		                <div class="form-group">
+		                	<label>商品总额</label>
+		                	{$info.sum}
+		                </div>
+		                <div class="form-group">
+		                	<label>积分抵扣</label>
+		                	{$info.score}
+		                </div>
+		                <div class="form-group">
+		                	<label>优惠券抵扣</label>
+		                	{$info.coupon}
+		                </div>
+		                <div class="form-group">
+		                	<label>快递运费</label>
+		                	{$info.freight}
+		                </div>
+		                <div class="form-group">
+		                	<label>支付金额</label>
+		                	{$info.money}
+		                </div>
+		                {eq name="info.pay" value="1"}
+			                <div class="form-group">
+			                	<label>支付状态</label>
+			                	已支付
+			                </div>
+			                <div class="form-group">
+			                	<label>支付时间</label>
+			                	{$info.paytime|date="Y-m-d H:i:s",###}
+			                </div>
+		                {else/}
+		                	<div class="form-group">
+			                	<label>支付状态</label>
+			                	待支付
+			                </div>
+		                {/eq}
+		                <div class="form-group">
+		                	<label>发货状态</label>
+		                	{eq name="info.send" value="1"}
+				                <label>
+				                  已发货
+				                </label>
+			                {else/}
+			                	<label>
+				                  未发货
+				                </label>
+			                {/eq}
+		                </div>
+		                {eq name="info.send" value="1"}
+			                <div class="form-group express">
+			                	<label>快递公司</label>
+			                	<select name="scid" class="form-control select2" style="width:100%;">
+					                <option value="huitongkuaidi,百世汇通" {eq name="info.scid" value="huitongkuaidi,百世汇通"}selected{/eq}>百世汇通</option>
+					                <option value="rufengda,如风达快递" {eq name="info.scid" value="rufengda,如风达快递"}selected{/eq}>如风达快递</option>
+					                <option value="shentong,申通" {eq name="info.scid" value="shentong,申通"}selected{/eq}>申通</option>
+					                <option value="shunfeng,顺丰" {eq name="info.scid" value="shunfeng,顺丰"}selected{/eq}>顺丰</option>
+					                <option value="yuantong,圆通速递" {eq name="info.scid" value="yuantong,圆通速递"}selected{/eq}>圆通速递</option>
+					                <option value="yunda,韵达快运" {eq name="info.scid" value="yunda,韵达快运"}selected{/eq}>韵达快运</option>
+					                <option value="tiantian,天天快递" {eq name="info.scid" value="tiantian,天天快递"}selected{/eq}>天天快递</option>
+					                <option value="ems,EMS" {eq name="info.scid" value="ems,EMS"}selected{/eq}>EMS</option>
+					            </select>
+			                </div>
+			                <div class="form-group express">
+			                	<label>快递单号</label>
+			                	<input type="text" name="snum" class="form-control" placeholder="快递运单号" value="{$info.snum}">
+			                </div>
+		                {else/}
+		                	<div class="form-group express" style="display:none;">
+			                	<label>快递公司</label>
+			                	<select name="scid" class="form-control select2" style="width:100%;">
+					                <option value="huitongkuaidi,百世汇通">百世汇通</option>
+					                <option value="rufengda,如风达快递">如风达快递</option>
+					                <option value="shentong,申通">申通</option>
+					                <option value="shunfeng,顺丰">顺丰</option>
+					                <option value="yuantong,圆通速递">圆通速递</option>
+					                <option value="yunda,韵达快运">韵达快运</option>
+					                <option value="tiantian,天天快递">天天快递</option>
+					                <option value="ems,EMS">EMS</option>
+					            </select>
+			                </div>
+			                <div class="form-group express" style="display:none;">
+			                	<label>快递单号</label>
+			                	<input type="text" name="snum" class="form-control" placeholder="快递运单号" value="{$info.snum}">
+			                </div>
+		                {/eq}
+		                {eq name="info.reject" value="1"}
+		                	<div class="form-group">
+			                	<label>退货状态</label>
+			                	退货成功
+			                </div>
+			                <div class="form-group">
+			                	<label>退货时间</label>
+			                	{$info.rtime|date="Y-m-d H:i:s",###}
+			                </div>
+		                {/eq}
+		                <div class="form-group">
+		                	<label>购买商品</label>
+		               	</div>
+		               	<div class="form-group border">
+		               		<table class="table-sku-stock">
+		               			<thead>
+		               				<tr>
+		               					<th>#</th><th>产品名称</th><th>规格</th><th>单价(元)</th><th>数量</th>
+		               				</tr>
+		               			</thead>
+		               			<tbody>
+		               				{volist name="info.products" id="vo" key="pk"}
+			               				<tr>
+			               					<td>{$pk}</td>
+			               					<td>{$vo.pid}</td>
+			               					<td>{$vo.fname}</td>
+			               					<td>{$vo.price}</td>
+			               					<td>{$vo.amount}</td>
+			               				</tr>
+		               				{/volist}
+		               			</tbody>
+		               		</table>
+		               	</div>
+					</div>
+		          </div>
+		          <!-- /.box-body -->
+
+		          <div class="box-footer">
+		          	<input type="hidden" name="id" value="{$info.id}">
+		            {if condition="($info['pay']==1) AND ($info['reject']!=1)"}
+		            	<button type="button" id="reject" class="btn btn-danger">确认退货</button>
+		            {/if}
+		          </div>
+		        </form>
+		      </div>
+		    <!-- /.box -->
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+{include file="public/modal" /}
+<script>
+	//iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+	      checkboxClass: 'icheckbox_minimal-blue',
+	      radioClass: 'iradio_minimal-blue'
+    });
+
+    $('input[name="send"].minimal').on('ifChecked',function(){
+  		if($(this).val()==1){
+  			$('.express').show();
+  		}else{
+  			$('.express').hide();
+  		}
+  	});
+
+    $('#submit').click(function(){
+		if($(this).hasClass('disabled')){
+			return false;
+		}
+		$(this).addClass('disabled');
+		var form = $('#form').serialize();
+		$.post('{:url("admin/shoper/orderdetail")}',form,function(data){
+			$('#myDialog .dialog-box').text(data.info);
+			$('#myDialog').modal();
+			$('#myDialog #dialogSta').val(data.status);
+			$('#submit').removeClass('disabled');
+		});
+    });
+
+    $('#reject').click(function(){
+		if($(this).hasClass('disabled')){
+			return false;
+		}
+	    $('#myModal .modal-box').text('确定进行退货操作?');
+	    $('#myModal').modal();
+	    $('#myModal #modalId').val(id);
+    });
+
+    $('#myModal #modalConfirm').click(function(){
+    	$('#myModal').modal('hide');
+		$('#reject').addClass('disabled');
+		var id = $('input[name=id]').val();
+		$.post('{:url("admin/shoper/rejectorder")}',{rid:id},function(data){
+			$('#myDialog .dialog-box').text(data.info);
+			$('#myDialog').modal();
+			$('#myDialog #dialogSta').val(data.status);
+			$('#reject').removeClass('disabled');
+		});
+    });
+
+    $('#myDialog').on('hidden.bs.modal',function(){
+	    var sta = $(this).find('#dialogSta').val();
+	    if(sta==1){
+	        window.location.href = "{:url('admin/shoper/orders')}";
+	    }
+  	});
+</script>

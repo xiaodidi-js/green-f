@@ -1,0 +1,110 @@
+{css href="__STATIC__/lvyangtian/app.css"}
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"} 
+{css href="//cdn.quguonet.com/datatables/media/css/dataTables.bootstrap.min.css"/}
+<section class="content">
+    <div class="row" id="app">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">限时抢购管理</h3>
+                </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-hover" id="example">
+                        <thead>
+                            <tr>
+                                <th>活动名称</th>
+                                <th>开始时间</th>
+                                <th>结束时间</th>
+                                <th>状态</th>
+                                <th>编辑</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {foreach name="list" item="vo" }
+                            <tr id="tr{$vo.id}">
+                                <td>{$vo.name}</td>
+                                <td>{$vo.stime|date="Y-m-d H:i:s",###}</td>
+                                <td>{$vo.etime|date="Y-m-d H:i:s",###}</td>
+                                {switch name="vo.stu"}
+                                    {case value="0"}<td>未开启</td>{/case}
+                                    {case value="1"}<td>开启</td>{/case}
+                                    {default /}default
+                                {/switch}
+                                <td>
+                                    <a class="ivu-btn ivu-btn-info" href="{:url('admin/Sale/AddOrEditSale',array('id'=>$vo.id))}">修改活动</a>
+                                    <a class="ivu-btn ivu-btn-info" href="{:url('admin/Sale/ConfigSale',array('id'=>$vo.id))}">配置商品</a>
+                                    <i-button type="error" @click="del({$vo.id})">删除</i-button>
+                                </td>
+                            </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>   
+                </div>
+            </div>
+        </div>
+        <Modal
+            v-model="delmodel"
+            title="是否删除"
+            @on-ok="delok">
+            <p>是否确定删除</p>
+        </Modal>
+    </div>
+    <a href="{:url('admin/Sale/AddOrEditSale')}" class="btn btn-block btn-primary btn-lg" >添加限时抢购活动</a>
+</section>
+{js href="//cdn.quguonet.com/bootstrap/dist/js/bootstrap.min.js"/}
+{js href="//cdn.quguonet.com/datatables/media/js/jquery.dataTables.min.js"/}
+{js href="//cdn.quguonet.com/datatables/media/js/dataTables.bootstrap.min.js"/}
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            delmodel:false,
+            id:null,
+        },
+        methods:{
+            del:function(id){
+                this.delmodel = true
+                this.id = id
+            },
+            delok:function(){
+                var self = this
+                $.post('{:url("admin/Sale/DelSale")}',{id:self.id},function(data) {
+                    var data = JSON.parse(data)
+                    if(data.status == '0'){
+                        self.$Message.error(data.msg)
+                    }else{
+                        $('#tr'+self.id).hide()
+                        self.$Message.success(data.msg)
+                    }
+                })
+            }
+        }
+    })
+</script>
+<script type="text/javascript" class="init">
+    $(document).ready(function() {
+        var ii = $('#example').dataTable({
+            "sPaginationType" : "full_numbers",
+            "oLanguage" : {
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+                "sZeroRecords": "抱歉， 没有找到",
+                "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+                "sInfoEmpty": "没有数据",
+                "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                "sZeroRecords": "没有检索到数据",
+                "sSearch": "名称:",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "前一页",
+                    "sNext": "后一页",
+                    "sLast": "尾页"
+                }        
+            },
+        });
+    });
+</script>

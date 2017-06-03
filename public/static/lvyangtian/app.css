@@ -1,0 +1,123 @@
+.bigk{
+	width: 100%;
+	height: 100%;
+}
+.qc{
+	clear:both;
+}
+.diyleft{
+	width: 50%;
+	height: 100%;
+	float: left;
+}
+.diyright{
+	width: 50%;
+	height: 100%;
+	float: left;
+}
+.diydome{
+	background-color: #FFF;
+	width: 337px;
+	height: 450px;
+	overflow-y:scroll;
+	margin: 0 auto;
+}
+.onebox{
+	width: 100%;
+	height: 50px;
+}
+.ob-box{
+	width: 76px;
+	margin: 0 2px 0 2px;
+	height: 76px;
+	float: left;
+	background-color: #DDDDDB;
+}
+.taocanbig{
+	width: 500px;
+	border: 1px dashed #CCC;
+	padding: 5px;
+	height: 100px;
+}
+.taocank{
+	border: 1px dashed #CCC;
+	border-radius: 8px;
+	float: left;
+	padding: 5px;
+	margin:5px;
+}
+.taocank .wz{
+	font-size: 16px;
+	float: left;
+	color: red;
+}
+.taocank .input{
+	float: left;
+	width: 50px;
+	background: none;
+	border: 1px dashed #456;
+	margin-left: 5px;
+}
+.divbig{
+	width: 98%;
+	margin: 0 auto;
+	padding-bottom: 20px;
+}
+.divbig input{
+	width: 500px;
+}
+.demo-upload-list{
+    display: inline-block;
+    width: 75px;
+    height: 75px;
+    text-align: center;
+    line-height: 75px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0,0,0,.2);
+    margin: 1px;
+}
+.demo-upload-list img{
+    width: 100%;
+    height: 100%;
+}
+.demo-upload-list-cover{
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,.6);
+}
+.demo-upload-list:hover .demo-upload-list-cover{
+    display: block;
+}
+.demo-upload-list-cover i{
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 2px;
+}
+.fange{
+    background-color: #CCC;
+    width: 104px;
+    height: 104px;
+    margin: 1px;
+    float: left;
+}
+.fangered{
+    background-color: #CCC;
+    width: 104px;
+    height: 104px;
+    margin: 1px;
+    float: left;
+}
+.inputdiv{
+	width: 300px;
+	height: 50px;
+	margin:10px;
+}

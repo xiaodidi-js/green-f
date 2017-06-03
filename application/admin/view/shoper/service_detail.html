@@ -1,0 +1,264 @@
+<style>
+  .direct-chat-img{
+    background-color:#dadada;
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:cover;
+  }
+
+  .direct-chat-messages{
+    height:500px;
+  }
+
+  .my-imgs{
+    box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    padding:10px 0px 0px 50px;
+    width:100%;
+    height:auto;
+    text-align:left;
+    font-size:0;
+  }
+
+  .my-imgs div.imgbox{
+    display:inline-block;
+    vertical-align:middle;
+    width:10%;
+    padding-top:10%;
+    margin:0% 0.6%;
+    background-color:#efefef;
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    border:#ccc solid 1px;
+  }
+
+  .modal-body .show-img{
+    width:100%;
+    max-width:100%;
+    height:auto;
+    display:none;
+  }
+
+  .modal-body .show-img:first-child{
+    display:block;
+  }
+
+  .btn-box{
+    width:100%;
+    text-align:center;
+    padding:15px 0px 0px 0px;
+  }
+</style>
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-8">
+          <!-- DIRECT CHAT PRIMARY -->
+          <div class="box box-primary direct-chat direct-chat-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">回复评价</h3>
+
+              <div class="box-tools pull-right">
+                <span data-toggle="tooltip" class="badge bg-light-blue">{$info.nums}</span>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <!-- Conversations are loaded here -->
+              <div class="direct-chat-messages">
+                <!-- Message. Default to the left -->
+                <div class="direct-chat-msg">
+                  <div class="direct-chat-info clearfix">
+                    <span class="direct-chat-name pull-left">{$info.uname}</span>
+                    <span class="direct-chat-timestamp pull-right">{$info.createtime|date="Y-m-d H:i:s",###}</span>
+                  </div>
+                  <!-- /.direct-chat-info -->
+                  <div class="direct-chat-img" style="background-image:url('{$info.shotcut}');"></div><!-- /.direct-chat-img -->
+                  <div class="direct-chat-text">
+                    {$info.content}
+                  </div>
+                  <!-- /.direct-chat-text -->
+                  <!-- 晒图 -->
+                  {notempty name="info.imgs"}
+                    <div class="my-imgs">
+                      {foreach name="info.imgs" item="ivo"}
+                          <div class="imgbox" style="background-image:url('{$ivo.src}');"></div>
+                      {/foreach}
+                    </div>
+                  {/notempty}
+                  <!-- /.晒图 -->
+                </div>
+                <!-- /.direct-chat-msg -->
+
+                <!-- Message to the right -->
+                {notempty name="info.reply"}
+                  {foreach name="info.reply" item="vo"}
+                    {if condition="$vo['uid'] gt 0"}
+                      <div class="direct-chat-msg right">
+                        <div class="direct-chat-info clearfix">
+                          <span class="direct-chat-name pull-right">{$vo.name}</span>
+                          <span class="direct-chat-timestamp pull-left">{$vo.createtime|date="Y-m-d H:i:s",###}</span>
+                        </div>
+                        <!-- /.direct-chat-info -->
+                        <div class="direct-chat-img" style="background-image:url('__STATIC__{$vo.headimg}');"></div><!-- /.direct-chat-img -->
+                        <div class="direct-chat-text">
+                          {$vo.content}
+                        </div>
+                        <!-- /.direct-chat-text -->
+                      </div>
+                    {else /}
+                      <div class="direct-chat-msg">
+                        <div class="direct-chat-info clearfix">
+                          <span class="direct-chat-name pull-left">{$info.uname}</span>
+                          <span class="direct-chat-timestamp pull-right">{$vo.createtime|date="Y-m-d H:i:s",###}</span>
+                        </div>
+                        <!-- /.direct-chat-info -->
+                        <div class="direct-chat-img" style="background-image:url('{$info.shotcut}');"></div><!-- /.direct-chat-img -->
+                        <div class="direct-chat-text">
+                          {$vo.content}
+                        </div>
+                        <!-- /.direct-chat-text -->
+                      </div>
+                    {/if}
+                  {/foreach}
+                {/notempty}
+                <!-- /.direct-chat-msg -->
+              </div>
+              <!--/.direct-chat-messages-->
+
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+              <form id="form">
+                <div class="input-group">
+                    <input type="text" name="content" placeholder="输入回复内容..." class="form-control">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-primary" id="replyBtn">回复</button>
+                      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li id="close"><a style="cursor:pointer;">处理完毕</a></li>
+                      </ul>
+                    </span>
+                </div>
+                <input type="hidden" name="top" value="{$info.id}">
+              </form>
+            </div>
+            <!-- /.box-footer-->
+          </div>
+          <!--/.direct-chat -->
+		</div>
+	</div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="showImgs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">用户上传图片</h4>
+      </div>
+      <div class="modal-body">
+        {foreach name="info.imgs" item="ivo"}
+            <img class="show-img" src="{$ivo.src}" />
+        {/foreach}
+        <div class="btn-box">
+          <button type="button" id="prev" class="btn btn-default disabled">上一张</button>
+          <button type="button" id="next" class="btn btn-default{if condition='count($info["imgs"])<=1'} disabled{/if}">下一张</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{include file="public/dialog" /}
+<script>
+  $('.direct-chat-messages').scrollTop($('.direct-chat-messages')[0].scrollHeight);
+
+  $('#replyBtn').click(function(){
+      if($(this).hasClass('disabled')){
+          return true;
+      }
+      var form = $('#form').serialize();
+      $(this).addClass('disabled');
+      $.post('{:url("admin/shoper/servicedetail")}',form,function(data){
+          if(data.status==1){
+            location.reload();
+          }else{
+              $('#replyBtn').removeClass('disabled');
+              $('#myDialog .dialog-box').text(data.info);
+              $('#myDialog #dialogSta').val(data.status);
+              $('#myDialog').modal();
+          }
+      });
+  });
+
+  $('#close').click(function(){
+      $.post('{:url("admin/shoper/closeservice")}',{id:'{$info.id}'},function(data){
+        $('#myDialog .dialog-box').text(data.info);
+        $('#myDialog #dialogSta').val(data.status);
+        $('#myDialog').modal();
+      });
+  });
+
+  $('#showImgs').on('hidden.bs.modal',function(){
+      $('.modal-body .show-img').removeClass('active').hide();
+  });
+
+  $('.my-imgs .imgbox').click(function(){
+      var index = $(this).index();
+      $('.modal-body .show-img').eq(index).siblings('.show-img').removeClass('active').hide();
+      $('.modal-body .show-img').eq(index).addClass('active').show();
+      changeBtn(index);
+      $('#showImgs').modal();
+  });
+
+  $('.btn-box #prev').click(function(){
+    if($(this).hasClass('disabled')){
+      return true;
+    }
+    var ind = $('.modal-body .show-img.active').index();
+    $('.modal-body .show-img').eq(ind-1).siblings('.show-img').removeClass('active').hide();
+    $('.modal-body .show-img').eq(ind-1).addClass('active').fadeIn();
+    changeBtn(ind-1);
+  });
+
+  $('.btn-box #next').click(function(){
+    if($(this).hasClass('disabled')){
+      return true;
+    }
+    var ind = $('.modal-body .show-img.active').index();
+    $('.modal-body .show-img').eq(ind+1).siblings('.show-img').removeClass('active').hide();
+    $('.modal-body .show-img').eq(ind+1).addClass('active').fadeIn();
+    changeBtn(ind+1);
+  });
+
+  function changeBtn(ind){
+    var len = $('.modal-body .show-img').length;
+    console.log(len);
+    console.log(ind);
+    if(len<=1){
+        $('.btn-box #prev').addClass('disabled');
+        $('.btn-box #next').addClass('disabled');
+    }else{
+        if(ind>=len-1){
+          $('.btn-box #prev').removeClass('disabled');
+          $('.btn-box #next').addClass('disabled');
+        }else if(ind<=0){
+          $('.btn-box #prev').addClass('disabled');
+          $('.btn-box #next').removeClass('disabled');
+        }else{
+          $('.btn-box #prev').removeClass('disabled');
+          $('.btn-box #next').removeClass('disabled');
+        }
+    }
+  }
+</script>

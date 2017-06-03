@@ -1,0 +1,85 @@
+<!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu">
+        <li class="header">主导航栏</li>
+        {if condition="(strtolower($Request.controller) eq 'index') AND ($Request.action eq 'index')"}
+          <li class="active">
+        {else/}
+          <li>
+        {/if}
+            <a href="{:url('admin/index/index')}">
+              <i class="glyphicon glyphicon-home"></i><span>首页</span>
+            </a>
+        </li>
+        {volist name="$col_tree" id="vo"}
+          {if condition="!$vo['sub']"}
+            {if condition="strtolower($Request.controller) eq $vo.controller"}
+              <li class="active">
+            {else/}
+              <li>
+            {/if}
+              <a href="{:url($vo['link'])}">
+                <i class="{$vo.icon}"></i>
+                <span>{$vo.name}</span>
+              </a>
+          {else/}
+            {if condition="strtolower($Request.controller) eq $vo.controller"}
+              <li class="active treeview">
+                <a href="{:url($vo['link'])}">
+                  <i class="{$vo.icon}"></i>
+                  <span>{$vo.name}</span>
+                  <i class="fa fa-angle-left fa-pull-right"></i>
+                </a>
+                <ul class="treeview-menu menu-open">
+            {else/}
+              <li class="treeview">
+                <a href="{:url($vo['link'])}">
+                  <i class="{$vo.icon}"></i>
+                  <span>{$vo.name}</span>
+                  <i class="fa fa-angle-left fa-pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+            {/if}
+                {volist name="vo.sub" id="vv"}
+                  {if condition="(strtolower($Request.controller) eq $vv.controller) AND (strtolower($Request.action) eq $vv.action)"}
+                    <li class="active">
+                  {else/}
+                    <li>
+                  {/if}
+                    <a href="{:url($vv['link'])}">
+                      <i class="fa fa-circle-o"></i>
+                      {$vv.name}
+                    </a>
+                  </li>
+                {/volist}
+              </ul>
+          {/if}
+          </li>
+        {/volist}
+        <li class="header">通知公告</li>
+      </ul>
+      <div style="width:100%;padding:10px 5px;background-color:#2c3b41;font-size:14px;color:#fff;word-break:break-all;overflow:visible;text-overflow:visibility;">
+          {empty name="notice"}
+            <font color="#4b646f">暂时没有公告消息.</font>
+          {else/}
+            {switch name="notice.level"}
+              {case value="3"}
+                <i class="glyphicon glyphicon-fire text-red"></i>&nbsp;&nbsp;&nbsp;&nbsp;<font class="text-red">重要信息</font>
+              {/case}
+              {case value="2"}
+                <i class="glyphicon glyphicon-warning-sign text-yellow"></i>&nbsp;&nbsp;&nbsp;&nbsp;<font class="text-yellow">警告信息</font>
+              {/case}
+              {case value="1"}
+                <i class="glyphicon glyphicon-info-sign text-aqua"></i>&nbsp;&nbsp;&nbsp;&nbsp;<font class="text-aqua">通知信息</font>
+              {/case}
+            {/switch}
+            <br />
+            {$notice.content|htmlspecialchars_decode}
+          {/empty}
+      </div>
+    </section>
+    <!-- /.sidebar -->
+  </aside>

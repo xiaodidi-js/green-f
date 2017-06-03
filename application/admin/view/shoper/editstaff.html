@@ -1,0 +1,72 @@
+{css href="__STATIC__/lvyangtian/app.css"}
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"} 
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box" id="app">
+				<div class="box-header" style="border-bottom: 1px solid #F4F4F4">
+					<h3 class="box-title">新增人员</h3>
+				</div>
+				<form id="form">
+					<div class="divbig">
+					{if condition="$class != 4 "}
+						<div class="form-group">
+							<label>姓名</label>
+							<input type="text" name="name" class="form-control" placeholder="姓名" value="{$info.name}">
+						</div>
+						<div class="form-group">
+							<label>联系电话</label>
+							<input type="number" name="tel" class="form-control" placeholder="联系电话" value="{$info.tel}">
+						</div>
+					{else/}
+						<div class="form-group">
+							<label>类型</label>
+							<select class="form-control" style="width: 500px;" name="name">
+								<option value="QQ">已选择{$info.name}</option>
+								<option value="QQ">QQ</option>
+								<option value="tel">电话</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label>联系电话/账号</label>
+							<input type="number" name="tel" class="form-control" placeholder="联系电话" value="{$info.tel}">
+						</div>
+					{/if}
+						<input type="hidden" name="class" value="{$class}">
+						<input type="" class="btn btn-block btn-warning btn-lg" style="width: 500px;" v-on:click="tijiao" value="提交"></Button>
+					</div>
+				</form>
+			</div>	
+		</div>
+	</div>
+</section>
+<script>
+	new Vue({
+	el: '#app',
+		data: {
+		
+		},
+		methods:{
+			tijiao(){
+				var self = this
+				var form = $('#form').serialize()
+				console.log(form)
+				$.post("{:url('admin/shoper/addstaff',array('id'=>$id))}",form,function(data){
+					var data = JSON.parse(data)
+                    if(data.status == '0'){
+                        self.$Message.error(data.msg)
+                    }else{
+                        self.$Message.success(data.msg)
+                        history.go(-1)
+                    }
+				});
+			}
+		}
+	})
+</script>

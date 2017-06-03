@@ -1,0 +1,225 @@
+{css href="__STATIC__/lvyangtian/app.css"}
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"}
+<style>
+    [v-cloak] {
+        display: none;
+    }
+</style>
+<section class="content">
+    <div class="row" id="app" v-cloak>
+        <div class="col-xs-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">赠品管理</h3>
+                </div>
+                <div class="box-body table-responsive">
+                    查询
+                    <input type="text"  v-model="search">
+                    <table class="table table-hover" id="example">
+                        <thead>
+                        <tr>
+                            <th>图片</th>
+                            <th>商品名称</th>
+                            <th>分类</th>
+                            <th>库存</th>
+                            <th>编辑</th>
+                        </tr>
+                        </thead>
+                        <tbody id="one">
+                        <tr v-for="(item,index) in list">
+                            <td><img :src="item.shotcut" width="100" height="100"></td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.class}}</td>
+                            <td>{{ item.store}}</td>
+                            <td>
+                                <i-button type="primary" :loading="addloading" @click="addshop(index,item.id)">
+                                    <span v-if="!addloading">添加</span>
+                                    <span v-else>等待</span>
+                                </i-button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">已添加赠品</h3>
+                </div>
+               <!--1 {{addinfo}}1-->
+                <div class="box-body table-responsive">
+                    <table class="table table-hover" id="example1">
+                        <thead>
+                        <tr>
+                            <th>商品名称</th>
+                            <th>库存</th>
+                            <th>原价格</th>
+                            <th>抢购价</th>
+                            <th>抢购数量</th>
+                            <th>每人抢购数量</th>
+                            <th>编辑</th>
+                        </tr>
+                        </thead>
+                        <tbody v-for="(item,index) in addinfo">
+                            <tr id="{{ item.id }}">
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.store }}</td>
+                                <td>{{ item.price }}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <i-button type="error" :loading="loading" @click="delshop(index,item.id)">
+                                        <span v-if="!loading">移除</span>
+                                        <span v-else>等待</span>
+                                    </i-button>
+                                </td>
+                            </tr>
+                            <tr v-for="(itemone,index1) in item.formatAll">
+                                <td>{{ itemone.arr }}</td>
+                                <td>{{ itemone.store }}</td>
+                                <td>{{ itemone.price }}</td>
+                                <td><input type="text" v-model="addinfo[index]['formatAll'][index1].saledata.saleprice" style="width: 50px;"></td>
+                                <template v-if="itemone.store != null">
+                                    <template v-if="addinfo[index]['formatAll'][index1].saledata.salenub <= itemone.store">
+                                        <td><input type="text" v-model="addinfo[index]['formatAll'][index1].saledata.salenub" style="width: 50px;"></td>
+                                    </template>
+                                    <template v-else>
+                                        <td><input type="text" v-model="addinfo[index]['formatAll'][index1].saledata.salenub = itemone.store" style="width: 50px;"></td>
+                                    </template>
+                                </template>
+                                <template v-else>
+                                    <template v-if="addinfo[index]['formatAll'][index1].saledata.salenub <= item.store">
+                                        <td><input type="text" v-model="addinfo[index]['formatAll'][index1].saledata.salenub" style="width: 50px;"></td>
+                                    </template>
+                                    <template v-else>
+                                        <td><input type="text" v-model="addinfo[index]['formatAll'][index1].saledata.salenub = item.store" style="width: 50px;"></td>
+                                    </template>
+                                </template>
+
+                                <td><input type="text" v-model="addinfo[index]['formatAll'][index1].saledata.salepaynub" style="width: 50px;"></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="btn bg-olive btn-flat margin" style="width: 45%;float: left;" @click="postok">提交</div>
+                <div class="btn bg-maroon btn-flat margin" style="width: 45%;float: left;" onclick="javascript:history.back(-1);">返回</div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            addinfo:[],
+            search:'',
+            list1:[],
+            addinput:[],
+            is_noformat:null,
+            loading: false,
+            addloading : false,
+        },
+        created:function(){
+            this.ready()
+        },
+        methods:{
+            ready:function(){
+                var self = this
+                $.get('{:url("admin/Sale/ConfigSaleShop")}', {id: {$id}}, function (data) {
+//                    绑定已选商品
+                    var dataOriginal = JSON.parse(data).msg.OriginalShop_data
+                    if (dataOriginal) {
+                        for (var i = 0; i < dataOriginal.length; i++) {
+                            self.addinfo.push(dataOriginal[i])
+                            self.addinput.push(dataOriginal[i]['id'])
+                        }
+                    }
+                    //绑定全部商品
+                    var dataAll = JSON.parse(data).msg.AllShop_data
+                    if (dataAll) {
+                        for (var k = 0; k < dataAll.length; k++) {
+                            self.list1.push(dataAll[k])
+                        }
+                    }
+                });
+            },
+            addshop:function(index,id){
+                var self = this
+                self.addloading = true
+                for(var i = 0; i < self.list1.length; i++){
+                    if(self.list1[i]['id'] == id){
+                        self.list1.splice(i, 1);
+                    }
+                }
+                $.post('{:url("admin/Sale/ClickShopData")}',{shop_id:id},function(data) {
+                    var data = JSON.parse(data).msg.AddOrDeleteShop_data
+                        if(data.formatAll.length == 0){
+                            self.is_noformat = 1
+                            data.formatAll[0] = {}
+                            data.formatAll[0]['saledata'] = {saleprice: 0, salenub: 0, salepaynub: 0}
+                        }else{
+                            self.is_noformat = 0
+                            for(var k = 0; k < data.formatAll.length; k++) {
+                                data.formatAll[k]['saledata'] = {saleprice: 0, salenub: 0, salepaynub: 0}
+                            }
+                        }
+
+                    self.addinfo.push(data)
+                    self.addinput.push(data['id'])
+                    console.log(self.addinfo)
+                    self.addloading = false
+                })
+            },
+            delshop:function(index,id){
+                var self = this;
+                self.loading = true
+                self.addinfo.splice(index, 1);
+                self.addinput.splice(index, 1);
+                $.post('{:url("admin/Sale/ClickShopData")}',{shop_id:id},function(data) {
+                    var data = JSON.parse(data).msg.AddOrDeleteShop_data;
+                    self.list.push(data);
+                    self.list1.push(data)
+                    self.loading = false
+                })
+            },
+            postok:function(){
+                var self = this
+                console.log(self.addinfo)
+                $.post('{:url("admin/Sale/EditSaleConfigShop")}',{data:self.addinput,id:{$id},info:self.addinfo},function(data) {
+                    self.$Message.config({
+                        top: 100,
+                        duration: 3
+                    });
+                    var data = JSON.parse(data)
+                    if(data.status == '0'){
+                        self.$Message.error(data.msg)
+                    }else{
+                        self.$Message.success(data.msg)
+                        history.back(-1)
+                    }
+                })
+            }
+        },
+        computed:{
+            list:function(){
+                var self = this
+                return self.list1.filter(function (item) {
+                    return item.name.indexOf(self.search) !== -1
+                })
+            }
+        }
+    })
+</script>

@@ -1,0 +1,218 @@
+{css href="__STATIC__/lvyangtian/app.css"}
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"}
+<section class="content">
+    <div class="row" id="app">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label>满就送金额</label>
+                <input type="text" name="maxmoney" class="form-control" placeholder="满就送金额" v-model="maxmoney" style="width: 200px;">
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">自提点选择</h3>
+                </div>
+
+                <div class="box-body table-responsive">
+                    <table class="table table-hover" id="example1">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>自提点</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {foreach name="since" item="vo" }
+                        <tr>
+                            <td><input type="checkbox" value="{$vo.id}" v-model="since" ></td>
+                            <td>{$vo.name}</td>
+                        </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">选择赠品</h3>
+                </div>
+                <div class="box-body table-responsive">
+                    查询
+                    <input type="text"  v-model="search">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>图片</th>
+                            <th>商品名称</th>
+                            <th>分类</th>
+                            <th>价格</th>
+                            <th>编辑</th>
+                        </tr>
+                        </thead>
+                        <tbody id="one">
+                        <tr v-for="(item,index) in list">
+                            <td><img :src="item.shotcut" width="50" height="50"></td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.class }}</td>
+                            <td>{{ item.price }}</td>
+                            <td>
+                                <div class="btn btn-default" @click="addshop(index,item.id)"><i class="fa fa-edit"></i>添加</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">已添加赠品</h3>
+                </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-hover" >
+                        <thead>
+                        <tr>
+                            <th>商品名称</th>
+                            <th>图片</th>
+                            <th>分类</th>
+                            <th>价格</th>
+                            <th>编辑</th>
+                        </tr>
+                        </thead>
+                        <tbody v-for="(item,index) in addinfo">
+                        <tr id="{{ item.id }}">
+                            <td>{{ item.name }}</td>
+                            <td><img :src="item.shotcut" width="100" height="100"></td>
+                            <td>{{ item.class }}</td>
+                            <td>{{ item.price }}</td>
+                            <td>
+                                <a class="btn btn-default" @click="delshop(index,item.id)"><i class="fa fa-edit"></i>移除</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <div class="btn bg-olive btn-flat margin" style="width: 45%;float: left;" @click="postok">提交</div>
+                <div class="btn bg-maroon btn-flat margin" style="width: 45%;float: left;" onclick="javascript:history.back(-1);">返回</div>
+            </div>
+        </div>
+    </div>
+
+</section>
+{js href="//cdn.quguonet.com/bootstrap/dist/js/bootstrap.min.js"/}
+{js href="//cdn.quguonet.com/datatables/media/js/jquery.dataTables.min.js"/}
+{js href="//cdn.quguonet.com/datatables/media/js/dataTables.bootstrap.min.js"/}
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            addinfo:[],
+            since:[],
+            list1:{$list},
+            search:'',
+            maxmoney:null,
+            addinput:[],
+        },
+        created:function(){
+            this.ready()
+        },
+        methods:{
+            ready:function(){
+//                var self = this
+//                $.post('{:url("admin/Gift/morenmaxshop")}',{id:},function(data) {
+//                    var data = JSON.parse(data).msg.info
+//                    for(i = 0; i < data.length; i++){
+//                        self.addinfo.push(data[i])
+//                        self.addinput.push(data[i]['id'])
+//                    }
+//                })
+            },
+            addshop:function(index,id){
+                var self = this
+                for(var i = 0; i < self.list1.length; i++){
+                    if(self.list1[i]['id'] == id){
+                        self.list1.splice(i, 1);
+                    }
+                }
+                $.get('{:url("admin/Gift/shopinfo")}',{id:id},function(data) {
+                    var data = JSON.parse(data).msg.info
+                    self.addinfo.push(data)
+                    self.addinput.push(data['id'])
+                    console.log(self.addinput)
+                })
+            },
+            delshop:function(index,id){
+                console.log(id)
+                var self = this
+                // 删除选中id的选项
+                self.addinfo.splice(index, 1)
+                self.addinput.splice(index, 1)
+//                 console.log(self.addinput)
+                $.get('{:url("admin/Gift/shopinfo")}',{id:id},function(data) {
+                    var data = JSON.parse(data).msg.info
+                    self.list.push(data)
+                    self.list1.push(data)
+                })
+            },
+            postok:function(){
+                var self = this
+                $.post('{:url("admin/Gift/addmaxgift")}',{since:self.since,maxmoney:self.maxmoney,tianjia:self.addinput},function(data){
+                    self.$Message.config({
+                        top: 100,
+                        duration: 3
+                    });
+                    var data = JSON.parse(data)
+                    if(data.status == '0'){
+                        self.$Message.error(data.msg)
+                    }else{
+                        self.$Message.success(data.msg)
+                        location.href = '{:url("admin/Gift/maxgift")}'
+                    }
+                })
+            }
+        },
+        computed:{
+            list:function(){
+                var self = this
+                return self.list1.filter(function (item) {
+                    return item.name.indexOf(self.search) !== -1
+                })
+            }
+        }
+    })
+</script>
+<script type="text/javascript" class="init">
+    $(document).ready(function() {
+        $('#example1').dataTable({
+            "paging": false,
+            "sPaginationType" : "full_numbers",
+            "oLanguage" : {
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+                "sZeroRecords": "抱歉， 没有找到",
+                "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+                "sInfoEmpty": "没有数据",
+                "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                "sZeroRecords": "没有检索到数据",
+                "sSearch": "名称:",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "前一页",
+                    "sNext": "后一页",
+                    "sLast": "尾页"
+                }
+            }
+        });
+    });
+
+</script>
