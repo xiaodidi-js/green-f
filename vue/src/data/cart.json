@@ -1,0 +1,12 @@
+{
+	"list":[
+		{"id":1,"img":"http://vue.wogoule.com/photos/banners/mcol1.jpg","name":"爱上对方就撒了点1","money":"120.23","store":3,"active":0,"nums":1,"store":3},
+		{"id":1,"img":"http://vue.wogoule.com/photos/banners/mcol2.jpg","name":"爱上对方就撒了点2","money":"120.23","store":1,"active":0,"nums":2,"store":2},
+		{"id":1,"img":"http://vue.wogoule.com/photos/banners/mcol3.jpg","name":"爱上对方就撒了点3","money":"120.23","store":0,"active":0,"nums":1,"store":5},
+		{"id":1,"img":"http://vue.wogoule.com/photos/banners/mcol2.jpg","name":"爱上对方就撒了点4","money":"120.23","store":1,"active":0,"nums":2,"store":2},
+		{"id":1,"img":"http://vue.wogoule.com/photos/banners/mcol3.jpg","name":"爱上对方就撒了点5","money":"120.23","store":0,"active":0,"nums":1,"store":5},
+		{"id":1,"img":"http://vue.wogoule.com/photos/banners/mcol3.jpg","name":"爱上对方就撒了点5","money":"120.23","store":0,"active":0,"nums":1,"store":5}
+	]
+}
+
+

@@ -1,0 +1,20 @@
+{
+	"banners":[
+		{"url":"#","img":"http://vue.wogoule.com/photos/banners/banner.jpg","title":"金秋美食不用挑"},
+		{"url":"#","img":"http://vue.wogoule.com/photos/banners/banner.jpg","title":"新品集结，“食”在划算"},
+		{"url":"#","img":"http://vue.wogoule.com/photos/banners/banner.jpg","title":"精选劲爆美食，食力全开"},
+		{"url":"#","img":"http://vue.wogoule.com/photos/banners/banner.jpg","title":"量贩专享放肆购"},
+		{"url":"#","img":"http://vue.wogoule.com/photos/banners/banner.jpg","title":"微微一笑，味蕾high爆"}
+	],
+	"columns":[
+		{"id":1,"name":"栏目一","url":"#","tag":""},
+		{"id":2,"name":"栏目二","url":"#","tag":""},
+		{"id":3,"name":"栏目三","url":"#","tag":""},
+		{"id":4,"name":"栏目四","url":"#","tag":""},
+		{"id":5,"name":"栏目五","url":"#","tag":""},
+		{"id":6,"name":"栏目六","url":"#","tag":""},
+		{"id":7,"name":"栏目7","url":"#","tag":""},
+		{"id":8,"name":"栏目8","url":"#","tag":""},
+		{"id":9,"name":"栏目9","url":"#","tag":""}
+	]
+}

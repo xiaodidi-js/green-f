@@ -1,0 +1,61 @@
+{
+	"maincolumns":[
+		{"id":1,
+			"name":"限时抢购",
+			"type":1,
+			"moneys": 99.9,
+			"img":"http://vue.wogoule.com/photos/banners/mcol1.jpg",
+			"url":"#",
+			"desc":"车厘子水果色泽红艳光洁玲珑珑如玛",
+			"time":"65"
+		},
+		{"id":1,
+			"name":"新品推荐",
+			"type":0,
+			"moneys": 11.9,
+			"a":"a",
+			"img":"http://vue.wogoule.com/photos/banners/mcol2.jpg",
+			"url":"#",
+			"desc":"车厘子水果色泽红艳光洁玲珑珑如玛",
+			"time":""
+		},
+		{"id":2,
+			"name":"新品推荐",
+			"type":0,
+			"moneys": 11.9,
+			"a":"a",
+			"img":"http://vue.wogoule.com/photos/banners/mcol2.jpg",
+			"url":"#",
+			"desc":"车厘子水果色泽红艳光洁玲珑珑如玛",
+			"time":""
+		},
+		{"id":3,
+			"name":"热卖产品",
+			"type":0,
+			"moneys": 22.9,
+			"a":"a",
+			"img":"http://vue.wogoule.com/photos/banners/mcol3.jpg",
+			"url":"#",
+			"desc":"车厘子水果色泽红艳光洁玲珑珑如玛",
+			"time":""
+		}
+	],
+	"hotproducts":{
+		"title":"热销排行榜",
+		"list":[
+			{"id":1,"name":"嘻嘻嘻嘻大事发生发生的积分撒旦就发送快递放假萨克的房间爱思考的发生的及","desc":"非常好吃,快尝一下","money":"132.50","img":"http://vue.wogoule.com/photos/banners/hot1.jpg"},
+			{"id":2,"name":"嘻嘻嘻嘻大事发生发生的积分撒旦就发送快递放假萨克的房间爱思考的发生的及","desc":"快尝一下吧","money":"132.50","img":"http://vue.wogoule.com/photos/banners/hot2.jpg"},
+			{"id":3,"name":"嘻嘻嘻嘻大事发生发生的积分撒旦就发送快递放假萨克的房间爱思考的发生的及","desc":"非常好吃,快尝一下","money":"190.50","img":"http://vue.wogoule.com/photos/banners/hot1.jpg"}
+		]
+	},
+	"articles":{
+		"title":"精选编辑",
+		"list":[
+			{"id":1,"title":"话叫收到了","desc":"沙发斯蒂芬加萨科技发卡上就发生了放辣椒是","proname":"哈哈就分手大声道","proprice":"12.35","reading":"124590","img":"http://vue.wogoule.com/photos/banners/arts1.jpg"},
+			{"id":2,"title":"话叫收到了","desc":"沙发斯蒂芬加萨科技发卡上就发生了放辣椒是","proname":"哈哈就分手大声道","proprice":"123.35","reading":"124590","img":"http://vue.wogoule.com/photos/banners/arts2.jpg"},
+			{"id":3,"title":"话叫收到了","desc":"沙发斯蒂芬加萨科技发卡上就发生了放辣椒是","proname":"哈哈就分手大声道","proprice":"656.35","reading":"124590","img":"http://vue.wogoule.com/photos/banners/arts1.jpg"},
+			{"id":4,"title":"话叫收到了","desc":"沙发斯蒂芬加萨科技发卡上就发生了放辣椒是","proname":"哈哈就分手大声道","proprice":"68.00","reading":"124590","img":"http://vue.wogoule.com/photos/banners/arts2.jpg"},
+			{"id":5,"title":"话叫收到了","desc":"沙发斯蒂芬加萨科技发卡上就发生了放辣椒是","proname":"哈哈就分手大声道","proprice":"352.35","reading":"124590","img":"http://vue.wogoule.com/photos/banners/arts1.jpg"}
+		]
+	}
+}
