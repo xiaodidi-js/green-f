@@ -150,6 +150,10 @@
 			},
 			money: {
 			    type: String,
+			},
+            showPop: {
+			    type: Boolean,
+				default: false
 			}
 		},
 		data() {
@@ -183,6 +187,9 @@
                 }
             },
 			changeActive: function(evt){
+
+                this.showPop = true;
+
 			    this.ischonse = true;
 				evt.preventDefault();
 				evt.stopPropagation();

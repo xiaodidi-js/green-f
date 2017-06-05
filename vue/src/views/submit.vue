@@ -460,7 +460,7 @@
 		<!-- 首单列表 -->
 
 		<!-- 商品列表 -->
-		<balance-list :list="cartInfo"></balance-list>
+		<balance-list :list="cartInfo" :gift="listGift" ></balance-list>
 
 		<!-- 首单列表 -->
 		<div class="give-container" v-show="showGive">
@@ -474,7 +474,7 @@
 			</div>
 			<div class="give-order">
 				<ul>
-					<li @click="chosenGift(item.id,item.giftid)" v-for="item in listGift" class="notActive" :class="{'activeGift':dtype == item.id}">
+					<li @click="chosenGift(item.id)" v-for="item in listGift" class="notActive" :class="{'activeGift':dtype == item.id}">
 						<p class="shop-img">
 							<img :src="item.shotcut" alt="" style="width:100%;height:100%;" />
 						</p>
@@ -787,10 +787,10 @@
 					$(this).addClass("my-icon-chosen").siblings().removeClass("my-icon-chosen");
                 });
 			},
-            chosenGift: function (type = 0,type2 = 0) {
-				if (this.dtype == type) return true;
-				this.dtype = type;
-                this.shopid = type2;
+			chosenGift: function (type) {
+                if (this.dtype == type) return true;
+                this.dtype = type;
+                console.log(this.dtype);
                 document.getElementsByClassName("addCar")[0].style.background = '#81c429';
                 //清除禁用按钮
                 document.getElementsByClassName("addCar")[0].disabled = "";
@@ -889,7 +889,7 @@
                 this.popShow = true;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 this.oneGift(this.address,this.lastPaySum);
-                this.showGive = true;
+//                this.showGive = true;
             },
             showCou: function(){
                 this.couShow = true;
@@ -911,6 +911,9 @@
         },
         events: {
 			submitOrder: function() {
+
+			    console.log(this.dtype);
+
                 if(!this.deliverType) {
                     this.toastMessage = '未选择收货方式';
                     this.toastShow = true;
@@ -953,11 +956,10 @@
                         score:this.scoreSwitch,
                         paysum:this.lastPaySum,
                         tips:this.memo,
-                        openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"),
+                        openid: 123,//sessionStorage.getItem("openid"),
                         pshonse:this.shonse,
                         gift:{'shopid':this.dtype,'id':this.shopid,'giftstu':this.giftstu},
                     };
-                    console.log(pdata.products);
                     this.$http.post(localStorage.apiDomain + 'public/index/user/getSubmitOrder',pdata).then((response)=>{
                         if(response.data.status===1){
                             this.clearSel();

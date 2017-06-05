@@ -258,6 +258,68 @@
 		background-color:#dc990c;
 	}
 
+	.give-container {
+		width:100%;
+		background: #fff;
+		height: 100%;
+		margin: 0px 0px 10px;
+	}
+
+	.give-container .give-title {
+		height:45px;
+		line-height:4.5rem;
+		color:#808080;
+		font-size:1.4rem;
+	}
+
+	.give-container .give-title .icon-img1 {
+		background: url("../images/list.png") no-repeat;
+		width: 6%;
+		height: 43%;
+		display: block;
+		background-size: 95%;
+		float:left;
+		margin:13px 0px;
+	}
+
+	.give-container .give-title span {
+		padding-left: 10px;
+		width:100%;
+	}
+
+	.give-container .give-order {
+		clear:both;
+		height: 145px;
+	}
+
+	.give-container .give-order ul .notActive {
+		width: 29.4%;
+		float:left;
+		margin: 0px 5px;
+		transition:0.5s;
+		border:2px solid #fff;
+	}
+
+	.give-container .give-order ul .activeGift {
+		width: 29.4%;
+		float:left;
+		margin: 0px 5px;
+		border:2px solid #c40000;
+		transition:0.5s;
+	}
+
+	.give-container .give-order ul li .shop-img {
+		width: 100%;
+		height: 95px;
+	}
+
+	.give-container .give-order ul li p {
+		font-size:14px;
+		line-height: 30px;
+		text-align:center;
+	}
+
+
 </style>
 
 <template>
@@ -325,7 +387,8 @@
 		</div>
 
 		<!-- 商品列表 -->
-		<balance-list :list="data.products" :show-top="true" :show-btm="false"></balance-list>
+		<balance-two :list="data.products" :show-top="true" :show-btm="false"></balance-two>
+
 
 		<div class="comment" v-if="data.order.pay == 1 && data.order.receive == 1">
 			<a v-if="data.order.comment==1" v-link="{name:'comment-detail',params:{oid:this.$route.params.oid}}">查看评价</a>
@@ -362,7 +425,7 @@
 </template>
 
 <script>
-import BalanceList from 'components/balance-list'
+import BalanceTwo from 'components/balance-two'
 import BalancePrice from 'components/balance-price'
 import BottomConfirm from 'components/bottom-confirm'
 import Separator from 'components/separator'
@@ -397,11 +460,13 @@ export default{
 				products:[],
 				payment:{}
 			},
-            stime: ''
+            stime: '',
+            showGive: true,
+            listGift: []
 		}
 	},
 	components: {
-		BalanceList,
+        BalanceTwo,
 		BalancePrice,
 		BottomConfirm,
 		Separator,
@@ -589,7 +654,43 @@ export default{
 			this.clickType = 0;
 			this.confirmTitle = '';
 			this.confirmText = '';
-		}
+		},
+        //首单赠品
+        oneGift: function (oid,money) {
+            let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+            ustore = JSON.parse(ustore);
+            this.$http.get(localStorage.apiDomain + 'public/index/user/manjiusong/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + oid + '/money/' + money).then((response)=>{
+                if(response.data.status === 1) {
+                    this.showGive = true;
+                    this.listGift = response.data.maxmoney;
+                    console.log(response.data.maxmoney);
+                    this.giftstu = 1;
+                } else if(response.data.status=== -1) {
+                    this.toastMessage = response.data.info;
+                    this.toastShow = true;
+                    let context = this;
+                    setTimeout(function(){
+                        context.clearAll();
+                        sessionStorage.removeItem('userInfo');
+                        localStorage.removeItem('userInfo');
+                        context.$router.go({name:'login'});
+                    },800);
+                } else if(response.data.status === 0) {
+                    this.showGive = true;
+                    this.giftstu = 0;
+                    this.$http.get(localStorage.apiDomain + 'public/index/user/shoudan/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + oid + '/money/' + money).then((response)=>{
+                        this.listGift = response.data.shoudan_data;
+                        console.log(this.listGift);
+                    },(response)=>{
+                        this.toastMessage = '网络开小差了~';
+                        this.toastShow = true;
+                    });
+                }
+            },(response)=>{
+                this.toastMessage = '网络开小差了~';
+                this.toastShow = true;
+            });
+        },
 	},
     filters: {
         time: function (value) {

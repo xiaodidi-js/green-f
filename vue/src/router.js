@@ -576,6 +576,15 @@ const routers = {
             require(['./components/balance-price.vue'], resolve);
         }
     },
+    'balance-two': {
+        name:'balance-two',
+        header:false,
+        footer:false,
+        title:'产品',
+        component (resolve) {
+            require(['./components/balance-two.vue'], resolve);
+        }
+    },
     '/order-type': {
         name:'order-type',
         header:true,

@@ -260,7 +260,7 @@
         </div>
         <div class="con-box" id="content-box" v-on:touchmove="conMove">
             <div class="emline" v-show="showStatus">{{ showTips }}</div>
-            <freepop-list :money="money" v-for="item in tmp_address" :obj="item" :chose-id="chosen"></freepop-list>
+            <freepop-list :money="money" v-for="item in tmp_address" :obj="item" :chose-id="chosen" :showPop="showGive"></freepop-list>
         </div>
         <div class="btn" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</div>
     </div>
@@ -329,6 +329,7 @@
                 search: '',
                 tmp_address: [],
                 data: [],
+                showGive: false,
             }
         },
         ready() {

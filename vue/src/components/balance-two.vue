@@ -1,4 +1,4 @@
-<style scoped>
+<style type="text/css">
 	.bl-wrapper{
 		width:100%;
 		background-color:#fff;
@@ -184,6 +184,27 @@
 
 	/* getShop end */
 
+	.give-title {
+		height:45px;
+		line-height:4.5rem;
+		color:#808080;
+		font-size:1.4rem;
+	}
+
+	.give-title .icon-img1 {
+		background: url("../images/list.png") no-repeat;
+		width: 6%;
+		height: 43%;
+		display: block;
+		background-size: 95%;
+		float:left;
+		margin:13px 0px;
+	}
+
+	.give-title span {
+		padding-left: 10px;
+		width:100%;
+	}
 
 </style>
 
@@ -199,7 +220,7 @@
 				<label>（共{{ amount }}件商品）</label>
 			</div>
 		</div>
-		<div class="line" v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}">
+		<div class="line" v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}" v-if="item.activity == 0">
 			<div class="img"> <!--  v-lazy:background-image="item.shotcut" -->
 				<img :src="item.shotcut" style="width:100%;height:100%;" />
 			</div>
@@ -219,6 +240,34 @@
 		</div>
 	</div>
 
+	<div class="bl-wrapper">
+		<div style="margin:10px 0px;border-bottom: 1px solid #eee;height:46px;width:100%;">
+			<div style="margin:0px 10px;">
+				<p class="give-title">
+					<i class="icon-img1"></i>
+					<span>首单用户,就送如下商品,请选择赠品</span>
+				</p>
+			</div>
+		</div>
+		<div class="line" v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}" v-if="item.activity == -1 || item.activity > 0">
+			<div class="img"> <!--  v-lazy:background-image="item.shotcut" -->
+				<img :src="item.shotcut" style="width:100%;height:100%;" />
+			</div>
+			<div class="con">
+				<div class="left">
+					<div class="name">{{ item.name }}</div>
+					<div class="format">{{ item.formatName }}</div>
+				</div>
+				<div class="right">
+					<div class="price">¥{{ item.price }}</div>
+					<div class="num">x{{ item.nums }}</div>
+				</div>
+			</div>
+		</div>
+		<div class="line-bottom" v-if="showBtm">
+			<div style="display:block;float:right;">共{{ amount }}件商品合计：<label style="color:#f9ad0c;">¥{{ sum }}</label></div>
+		</div>
+	</div>
 
 </template>
 

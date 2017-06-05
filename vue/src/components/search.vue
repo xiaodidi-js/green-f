@@ -53,6 +53,7 @@
 
 	.wrapper .ui_box .mes{
 		padding:0.7rem 0.5rem;
+
 	}
 
 	.wrapper .ui_box .mes .name{
@@ -70,30 +71,47 @@
 		font-weight:600;
 	}
 
-	.mes .money{
+	.wrapper .ui_box .money{
 		font-size:1.6rem;
 		color:#F9AD0C;
+		width: 40%;
+		float: left;
 	}
 
 	.mes .money .unit{
 		font-size:1.2rem;
 		margin-right:0.2rem;
+		float:left;
 	}
+
+	.wrapper .ui_box .scar {
+		width: 2.5rem;
+		/* height: 3rem; */
+		float: right;
+	}
+
 </style>
 
 <template>
 	<div class="wrapper" style="padding:50px 0px 20px;">
 		<template v-for="item in arr">
-			<div class="ui_box" v-link="{name:'detail',params:{pid:item.id}}">
-				<div class="img"> <!--  v-lazy:background-image="item.src" -->
-					<img :src="item.shotcut" style="width:100%;height:100%;" />
-				</div>
-				<div class="mes">
-					<div class="name">
-						{{ item.name }}
+			<div class="ui_box">
+				<div v-link="{name:'detail',params:{pid:item.id}}">
+					<div class="img"> <!--  v-lazy:background-image="item.src" -->
+						<img :src="item.shotcut" style="width:100%;height:100%;" />
 					</div>
+					<div class="mes">
+						<div class="name">
+							{{ item.name }}
+					</div>
+					</div>
+				</div>
+				<div style="margin:0px 10px 10px;height: 20px;">
 					<div class="money">
 						<label class="unit">¥</label>{{ item.price }}
+				</div>
+					<div class="scar" @click="addCartShop(item.id)">
+						<img src="../images/shopcar_youlike.png" style="width:100%;height:100%;"/>
 					</div>
 				</div>
 			</div>
@@ -106,7 +124,8 @@
 <script>
 
     import Toast from 'vux/src/components/toast'
-    import { myActive } from 'vxpath/actions'
+    import { myActive,setCartStorage } from 'vxpath/actions'
+    import { cartNums } from 'vxpath/getters'
 
 	export default{
 		components: {
@@ -114,7 +133,8 @@
 		},
         vuex: {
             actions: {
-                myActive
+                myActive,
+                setCart:setCartStorage
             }
         },
         props: {
@@ -127,6 +147,9 @@
 				searchKey: '',
 				arr:this.$store.state.shopname,
 				listArr: [],
+                activestu:0,
+                buyNums:1,
+                proNums:1,
 			}
 		},
 		ready() {
@@ -139,6 +162,40 @@
 
 		},
 		methods: {
+            addCartShop (id){
+                //购物车缓存
+                var cart = JSON.parse(sessionStorage.getItem("myCart")) , obj = {} , _self = this;
+                if(cart != '') {
+                    console.log(1);
+                    for(var y in cart) {
+                        if (cart[y]["deliverytime"] != _self.arr[y].deliverytime) {
+                            if (_self.arr[y].deliverytime == 0) {
+                                alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                return false;
+                            } else if (_self.arr[y].deliverytime == 1) {
+                                alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                return false;
+                            }
+                        }
+                    }
+                }
+                for(var i in this.arr) {
+                    obj = {
+                        id:id,
+                        name:this.arr[i].name,
+                        price:this.arr[i].price,
+                        shotcut:this.arr[i].shotcut,
+                        deliverytime:this.arr[i].deliverytime,
+                        nums:this.buyNums,
+                        store:this.proNums,
+                        activestu:this.activestu,
+                        format:'',
+                        formatName:'',
+					}
+				}
+				this.setCart(obj);
+                alert("加入购物车成功!");
+			},
             keyCodefun: function (event) {
                 var _this = this;
                 var e = event || window.event;
