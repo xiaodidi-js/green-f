@@ -102,6 +102,7 @@
 		width:100%;
 		clear:both;
 		background: #fff;
+		padding-bottom: 35px;
 	}
 
 	.index-conten .content_main{
@@ -301,76 +302,76 @@
 
 <template>
 
-	<div id="shop-move-content">
-		<div class="index-conten">
-			<div class="content_main">
-				<template v-for='item in testarr'>
-					<template v-if="item.type == 0">
-						<div style="width: 100%;clear:both;">
-							<template v-for='item1 in item.arr'>
-								<template v-if="item.arr.length == 1">
-									<div style="width:100%;float:left;">
-										<a class="href-ui">
-											<img :src="item1.url" alt="" style="width:100%;" />
-										</a>
-									</div>
-								</template>
-								<template v-if="item.arr.length == 2">
-									<div style="width:50%;float:left;">
-										<a class="href-ui" :href="'//'+item1.htmlurl">
-											<img :src="item1.url" alt="" style="width:100%;" />
-										</a>
-									</div>
-								</template>
-								<template v-if="item.arr.length == 3">
-									<div style="width:33.3%;float:left;">
-										<a class="href-ui" :href="'//'+item1.htmlurl">
-											<img :src="item1.url" alt="" style="width:100%;" />
-										</a>
-									</div>
-								</template>
-								<template v-if="item.arr.length == 4">
-									<div style="width:25%;float:left;">
-										<a class="href-ui" :href="'//'+item1.htmlurl">
-											<img :src="item1.url" alt="" style="width:100%;" />
-										</a>
-									</div>
-								</template>
-							</template>
-						</div>
-					</template>
 
-					<template v-if="item.type == 1 || item.type == 2 || item.type == 3">
-						<div class="box-two" style="clear:both;">
-							<template v-for='item1 in item.arr'>
-								<div class="shop-item">
-									<div style="width:100%;">
-										<img :src="item1.shopshotcut" style="width: 100%;height:100%;"
-											 v-link="{name:'detail',params:{pid:item1.shopid}}" />
-									</div>
-									<p class="shop-name" style="">{{ item1.shopname }}</p>
-									<p class="box-money" style="float:left;">
-										<i style="font-size: 12px;">￥</i>
-										<span style="font-size: 18px;">{{ item1.shopprice }}</span>
-									</p>
-									<p class="add-cart"
-									   @click="gocart(
-									       item1.shopid,
-									       item1.shopname,
-									       item1.shopprice,
-									       item1.shopshotcut,
-									       item1.deliverytime,
-									       item1.peisongok,
-									       item1.activestu)" style="float:right;"></p>
+	<div class="index-conten">
+		<div class="content_main">
+			<template v-for='item in testarr'>
+				<template v-if="item.type == 0">
+					<div style="width: 100%;clear:both;">
+						<template v-for='item1 in item.arr'>
+							<template v-if="item.arr.length == 1">
+								<div style="width:100%;float:left;">
+									<a class="href-ui">
+										<img :src="item1.url" alt="" style="width:100%;" />
+									</a>
 								</div>
 							</template>
-						</div>
-					</template>
-					<template style="clear: both;"></template>
+							<template v-if="item.arr.length == 2">
+								<div style="width:50%;float:left;">
+									<a class="href-ui" :href="'//'+item1.htmlurl">
+										<img :src="item1.url" alt="" style="width:100%;" />
+									</a>
+								</div>
+							</template>
+							<template v-if="item.arr.length == 3">
+								<div style="width:33.3%;float:left;">
+									<a class="href-ui" :href="'//'+item1.htmlurl">
+										<img :src="item1.url" alt="" style="width:100%;" />
+									</a>
+								</div>
+							</template>
+							<template v-if="item.arr.length == 4">
+								<div style="width:25%;float:left;">
+									<a class="href-ui" :href="'//'+item1.htmlurl"> <!--   -->
+										<img :src="item1.url" alt="" style="width:100%;" />
+									</a>
+								</div>
+							</template>
+						</template>
+					</div>
 				</template>
-			</div>
+
+				<template v-if="item.type == 1 || item.type == 2 || item.type == 3">
+					<div class="box-two" style="clear:both;">
+						<template v-for='item1 in item.arr'>
+							<div class="shop-item">
+								<div style="width:100%;">
+									<img :src="item1.shopshotcut" style="width: 100%;height:100%;"
+										 v-link="{name:'detail',params:{pid:item1.shopid}}" />
+								</div>
+								<p class="shop-name" style="">{{ item1.shopname }}</p>
+								<p class="box-money" style="float:left;">
+									<i style="font-size: 12px;">￥</i>
+									<span style="font-size: 18px;">{{ item1.shopprice }}</span>
+								</p>
+								<p class="add-cart"
+								   @click="gocart(
+									   item1.shopid,
+									   item1.shopname,
+									   item1.shopprice,
+									   item1.shopshotcut,
+									   item1.deliverytime,
+									   item1.peisongok,
+									   item1.activestu)" style="float:right;"></p>
+							</div>
+						</template>
+					</div>
+				</template>
+				<template style="clear: both;"></template>
+			</template>
 		</div>
 	</div>
+
 
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>

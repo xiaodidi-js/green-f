@@ -53,33 +53,33 @@
 
 <template>
 	<div class="bl-wrapper">
-		<div class="line">
+		<div class="line" style="border:none;">
 			<div class="left">商品金额：</div>
 			<div class="right">
 				{{ sfee }}
 			</div>
 		</div>
-		<div class="line">
+		<div class="line" style="border:none;">
 			<div class="left">优惠券抵扣：</div>
 			<div class="right">
 				<label>-</label>
 				{{ cfee }}
 			</div>
 		</div>
-		<div class="line">
+		<div class="line" style="border:none;">
 			<div class="left">积分抵扣：</div>
 			<div class="right">
 				<label>-</label>
 				{{ scfee }}
 			</div>
 		</div>
-		<div class="line">
+		<div class="line" style="border:none;">
 			<div class="left">快递运费：</div>
 			<div class="right">
 				{{ ffee }}
 			</div>
 		</div>
-		<div class="line bottom" v-if="showSum">
+		<div class="line bottom" v-if="showSum" style="border:none;">
 			应付金额：<label>¥{{ lastSum }}</label>
 		</div>
 	</div>

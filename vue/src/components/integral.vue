@@ -34,14 +34,15 @@
     }
 
     .integral-head .sign {
-        margin:10px auto;
+        margin: 10px auto;
         display: block;
-        width: 10rem;
-        height: 3rem;
-        border:1px solid #81c429;
+        width: 12rem;
+        height: 3.5rem;
+        border: 1px solid #81c429;
         background: #81c429;
-        color:#fff;
-        border-radius:5px;
+        color: #fff;
+        border-radius: 5px;
+        font-size: 16px;
     }
 
     /* integral-head end */
@@ -142,60 +143,37 @@
             <p style="width:67px;margin:0px auto;">
                 <img src="../images/jifen.png" style="width:67px;height:67px;" />
             </p>
-            <i class="integral-number">{{ integral.amount }}</i>
+            <i class="integral-number">{{ number }}</i>
         </div>
-        <button class="sign" @click="singclick()">签到积分</button>
+        <button class="sign" @click="qiandaoFun()">点我签到</button>
         <p class="integral-h5">小积分大用途，通过每日签到和订单评价获取更多积分</p>
     </div>
     <div class="integral-tab">
         <ul id="card">
-            <li class="active">全部积分</li>
-            <li>签到积分</li>
-            <li>消费积分</li>
+            <li class="active" @click="Allmain()">全部积分</li>
+            <li @click="main()">签到积分</li>
+            <li @click="Allmain()">消费积分</li>
         </ul>
     </div>
 
     <div class="integral-body" id="content">
         <!-- 全部积分 -->
-        <div id="all" class="body-list">
-            <ul>
-                <li  v-for="item in integral">
-                    <div v-if="item.status == 1">
-                        <div class="all-date">
-                            <p>签到</p>
-                            <p>{{ item.createtime | time }}</p>
-                        </div>
-                        <div class="add-number">{{ item.amount }}</div>
-                    </div>
-                </li>
-            </ul>
-
-        </div>
-
-        <!-- 签到积分 -->
-        <template v-for="item in integral">
-            <div id="sign" class="body-list">
+        <template v-for="item in allList">
+            <div class="body-list">
                 <ul>
-                    <li v-if="item.type != 'order'">
+                    <li v-if="item.type == 'orders'">
                         <div class="all-date">
                             <p>签到</p>
                             <p>{{ item.createtime | time }}</p>
                         </div>
-                        <div class="add-number">{{ item.amount }}</div>
+                        <div class="add-number">+{{ item.amount }}</div>
                     </li>
-                </ul>
-            </div>
-        </template>
-        <!-- 消费积分 -->
-        <template v-for="item in integral">
-            <div id="consumption" class="body-list">
-                <ul>
-                    <li v-if="item.type == 'order'">
+                    <li v-if="item.type == 'qiandao'">
                         <div class="all-date">
                             <p>签到</p>
-                            <p>2014-01-29  15 : 38 : 04</p>
+                            <p>{{ item.createtime | time }}</p>
                         </div>
-                        <div class="add-number">+1</div>
+                        <div class="add-number">+{{ item.amount }}</div>
                     </li>
                 </ul>
             </div>
@@ -220,7 +198,12 @@
         },
         data() {
             return {
-                integral: []
+                integral: [],
+                list: [],
+                allList: [],
+                orderList: [],
+                qiandaoList: [],
+                number: 0,
             }
         },
         route: {
@@ -228,7 +211,8 @@
         },
         ready() {
             this.siblingsDom();
-            this.personalfun();
+            this.main();
+            this.Allmain();
         },
         filters: {
             time: function (value) {
@@ -243,27 +227,44 @@
             }
         },
         methods: {
-            singclick: function() {
-                alert("敬请期待~~");
-            },
-            personalfun: function() {
+            Allmain () {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                let _this = this;
                 this.$http.get(localStorage.apiDomain+'public/index/Usercenter/integral/uid/' + ustore.id + '/token/' + ustore.token).then((response)=>{
-                    _this.integral = response.data.list;
+                    this.allList = response.data.list;
+                },(response)=>{
+                    this.toastMessage = '网络开小差了~';
+                    this.toastShow = true;
+                });
+            },
+            main: function() {
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
+                this.$http.get(localStorage.apiDomain+'public/index/Usercenter/integral/uid/' + ustore.id + '/token/' + ustore.token).then((response)=>{
+                    this.allList = response.data.list;
+                    this.orderList = response.data.list;
+                    this.qiandaoList = response.data.list;
+                    this.number = response.data.zongfen;
                     console.log(response.data);
                 },(response)=>{
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                 });
-//                this.$http.get(localStorage.apiDomain+'public/index/user/userinfo/uid/'+ustore.id+'/token/'+ustore.token).then((response)=>{
-//                    _this.integral = response.data;
-//                    console.log(response.data);
-//                },(response)=>{
-//                    this.toastMessage = '网络开小差了~';
-//                    this.toastShow = true;
-//                });
+            },
+            qiandaoFun: function() {
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
+                this.$http.get(localStorage.apiDomain+'public/index/usercenter/qiandao/uid/' + ustore.id + '/token/' + ustore.token).then((response)=>{
+                    this.list = response.data.list;
+                    if(response.data.status == 0) {
+                        alert("今天已签到了哦!");
+                    } else if(response.data.status == 1) {
+                        alert("签到成功！");
+                    }
+                },(response)=>{
+                    this.toastMessage = '网络开小差了~';
+                    this.toastShow = true;
+                });
             },
             $id: function(id) {
                 return document.getElementById(id);
@@ -289,8 +290,18 @@
                         _this.siblings(this,function(){
                             this.className = "";
                         });
+
+                        //把对应的选项卡的内容显示出来
+                        var tabDom = document.getElementById("content").children[this.index];
+                        tabDom.style.display = "block";
+                        //拿它的父亲对象
+                        _this.siblings(tabDom,function(){
+                            this.style.display = "none";
+                        });
+
                     };
                 }
+
             }
         }
     }

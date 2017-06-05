@@ -4,7 +4,7 @@
         height: auto;
         box-sizing:border-box;
         padding:0px 1%;
-        padding-bottom: 60px;
+        padding-bottom: 25px;
     }
     .youlike_title{
         width: 100%;
@@ -241,8 +241,7 @@
                 }
                 this.setCart(obj);
                 obj = {};
-                this.toastMessage = "成功加入购物车!";
-                this.toastShow = true;
+                alert("成功加入购物车!");
                 this.$router.go({name : "cart"});
             }
         }

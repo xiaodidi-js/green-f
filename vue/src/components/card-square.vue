@@ -3,7 +3,8 @@
 		width:100%;
 		padding:0rem 0rem 1rem 0rem;
 		font-size:0;
-		margin-bottom:165px;
+		margin-bottom:25px;
+		overflow: hidden;
 	}
 
 	.wrapper.nopadding{
@@ -29,7 +30,8 @@
 		width: 47%;
 		height: auto;
 		background-color: #fff;
-		display: inline-block;
+		display: block;
+		float:left;
 		font-size: 1.6rem;
 		margin: 4px 5.5px;
 		color: #333;
@@ -77,7 +79,7 @@
 	}
 
 	.mes .money{
-		font-size:1.6rem;
+		font-size:1.8rem;
 		color:#F9AD0C;
 	}
 
@@ -88,40 +90,160 @@
 </style>
 
 <template>
-
-	<div class="wrapper" style="padding-bottom: 100px;" :class="{'nopadding':noPadding}" v-if="info.title">
-		<label class="title">{{ info.title }}</label>
-		<div class="parent">
-			<div class="ui-box" v-link="{name:'detail',params:{pid:item.id}}" v-for="item in info.list">
+	<template v-if="info.title">
+		<div class="wrapper" style="padding-bottom: 100px;" :class="{'nopadding':noPadding}" >
+			<label class="title">{{ info.title }}</label>
+			<div class="parent">
+				<div class="ui-box" v-link="{name:'detail',params:{pid:item.id}}" v-for="item in info.list">
+					<div class="img" v-if="item.src == ''"></div>
+					<div class="img" v-else>
+						<img :src="item.src" alt="" style="width:100%;height:100%;" />
+					</div>
+					<div class="mes">
+						<div class="name">{{ item.title }}</div>
+						<div class="money">
+							<label class="unit">¥</label>{{ item.price }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>
+	<template v-else>
+		<div class="wrapper" :class="{'nopadding':noPadding}" >
+			<div class="ui_box" v-link="{name:'detail',params:{pid:item.id}}" v-for="item in info.list">
 				<div class="img" v-if="item.src == ''"></div>
 				<div class="img" v-else>
 					<img :src="item.src" alt="" style="width:100%;height:100%;" />
 				</div>
 				<div class="mes">
-					<div class="name">{{ item.title }}</div>
+					<div class="name">
+						{{ item.title }}
+					</div>
 					<div class="money">
 						<label class="unit">¥</label>{{ item.price }}
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-		<div class="wrapper" style="padding-bottom: 70px;" :class="{'nopadding':noPadding}" v-else>
-		<div class="ui_box" v-link="{name:'detail',params:{pid:item.id}}" v-for="item in info.list">
-			<div class="img" v-if="item.src == ''"></div>
-			<div class="img" v-else>
-				<img :src="item.src" alt="" style="width:100%;height:100%;" />
-			</div>
-			<div class="mes">
-				<div class="name">
-					{{ item.title }}
-				</div>
-				<div class="money">
-					<label class="unit">¥</label>{{ item.price }}
-				</div>
-			</div>
-		</div>
-	</div>
+	</template>
+
+	<!--<div class="wrapper" style="padding-bottom: 70px;" :class="{'nopadding':noPadding}">-->
+
+		<!--<div class="ui_box">-->
+			<!--<div class="img">-->
+				<!--<img src="http://file.green-f.cn/2017/06/04/09/02/13/upload_ee6be3b84e9a1cb157db3f56b9c2cfc8.jpg" alt="" style="width:100%;height:100%;" />-->
+			<!--</div>-->
+			<!--<div class="mes">-->
+				<!--<div class="name">-->
+					<!--本地四季豆 500g/份-->
+				<!--</div>-->
+				<!--<div class="money">-->
+					<!--<label class="unit">¥</label>99-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<!--<div class="ui_box">-->
+			<!--<div class="img">-->
+				<!--<img src="http://file.green-f.cn/2017/06/04/09/02/13/upload_ee6be3b84e9a1cb157db3f56b9c2cfc8.jpg" alt="" style="width:100%;height:100%;" />-->
+			<!--</div>-->
+			<!--<div class="mes">-->
+				<!--<div class="name">-->
+					<!--黑茄子 约500g/份 皮薄美味-->
+				<!--</div>-->
+				<!--<div class="money">-->
+					<!--<label class="unit">¥</label>99-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<!--<div class="ui_box">-->
+			<!--<div class="img">-->
+				<!--<img src="http://file.green-f.cn/2017/06/04/09/02/13/upload_ee6be3b84e9a1cb157db3f56b9c2cfc8.jpg" alt="" style="width:100%;height:100%;" />-->
+			<!--</div>-->
+			<!--<div class="mes">-->
+				<!--<div class="name">-->
+					<!--本地四季豆 500g/份-->
+				<!--</div>-->
+				<!--<div class="money">-->
+					<!--<label class="unit">¥</label>99-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<!--<div class="ui_box">-->
+			<!--<div class="img">-->
+				<!--<img src="http://file.green-f.cn/2017/06/04/09/02/13/upload_ee6be3b84e9a1cb157db3f56b9c2cfc8.jpg" alt="" style="width:100%;height:100%;" />-->
+			<!--</div>-->
+			<!--<div class="mes">-->
+				<!--<div class="name">-->
+					<!--黑茄子 约500g/份 皮薄美味-->
+				<!--</div>-->
+				<!--<div class="money">-->
+					<!--<label class="unit">¥</label>99-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<!--<div class="ui_box">-->
+			<!--<div class="img">-->
+				<!--<img src="http://file.green-f.cn/2017/06/04/09/02/13/upload_ee6be3b84e9a1cb157db3f56b9c2cfc8.jpg" alt="" style="width:100%;height:100%;" />-->
+			<!--</div>-->
+			<!--<div class="mes">-->
+				<!--<div class="name">-->
+					<!--本地四季豆 500g/份-->
+				<!--</div>-->
+				<!--<div class="money">-->
+					<!--<label class="unit">¥</label>99-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<!--<div class="ui_box">-->
+			<!--<div class="img">-->
+				<!--<img src="http://file.green-f.cn/2017/06/04/09/02/13/upload_ee6be3b84e9a1cb157db3f56b9c2cfc8.jpg" alt="" style="width:100%;height:100%;" />-->
+			<!--</div>-->
+			<!--<div class="mes">-->
+				<!--<div class="name">-->
+					<!--黑茄子 约500g/份 皮薄美味-->
+				<!--</div>-->
+				<!--<div class="money">-->
+					<!--<label class="unit">¥</label>99-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+
+			<!--<div class="ui_box">-->
+				<!--<div class="img">-->
+					<!--<img src="http://file.green-f.cn/2017/06/04/09/02/13/upload_ee6be3b84e9a1cb157db3f56b9c2cfc8.jpg" alt="" style="width:100%;height:100%;" />-->
+			<!--</div>-->
+			<!--<div class="mes">-->
+				<!--<div class="name">-->
+					<!--黑茄子 约500g/份 皮薄美味-->
+				<!--</div>-->
+				<!--<div class="money">-->
+					<!--<label class="unit">¥</label>99-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+
+		<!--<div class="ui_box">-->
+			<!--<div class="img">-->
+				<!--<img src="http://file.green-f.cn/2017/06/04/09/02/13/upload_ee6be3b84e9a1cb157db3f56b9c2cfc8.jpg" alt="" style="width:100%;height:100%;" />-->
+			<!--</div>-->
+			<!--<div class="mes">-->
+				<!--<div class="name">-->
+					<!--本地四季豆 500g/份-->
+				<!--</div>-->
+				<!--<div class="money">-->
+					<!--<label class="unit">¥</label>99-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+
+	<!--</div>-->
+
 
 </template>
 

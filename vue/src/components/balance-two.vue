@@ -220,21 +220,25 @@
 				<label>（共{{ amount }}件商品）</label>
 			</div>
 		</div>
-		<div class="line" v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}" v-if="item.activity == 0">
-			<div class="img"> <!--  v-lazy:background-image="item.shotcut" -->
-				<img :src="item.shotcut" style="width:100%;height:100%;" />
-			</div>
-			<div class="con">
-				<div class="left">
-					<div class="name">{{ item.name }}</div>
-					<div class="format">{{ item.formatName }}</div>
+		<template v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}">
+			<template  v-if="item.activity == 0">
+				<div class="line">
+					<div class="img"> <!--  v-lazy:background-image="item.shotcut" -->
+						<img :src="item.shotcut" style="width:100%;height:100%;" />
+					</div>
+					<div class="con">
+						<div class="left">
+							<div class="name">{{ item.name }}</div>
+							<div class="format">{{ item.formatName }}</div>
+						</div>
+						<div class="right">
+							<div class="price">¥{{ item.price }}</div>
+							<div class="num">x{{ item.nums }}</div>
+						</div>
+					</div>
 				</div>
-				<div class="right">
-					<div class="price">¥{{ item.price }}</div>
-					<div class="num">x{{ item.nums }}</div>
-				</div>
-			</div>
-		</div>
+			</template>
+		</template>
 		<div class="line-bottom" v-if="showBtm">
 			<div style="display:block;float:right;">共{{ amount }}件商品合计：<label style="color:#f9ad0c;">¥{{ sum }}</label></div>
 		</div>
@@ -249,21 +253,21 @@
 				</p>
 			</div>
 		</div>
-		<div class="line" v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}" v-if="item.activity == -1 || item.activity > 0">
-			<div class="img"> <!--  v-lazy:background-image="item.shotcut" -->
-				<img :src="item.shotcut" style="width:100%;height:100%;" />
-			</div>
-			<div class="con">
-				<div class="left">
-					<div class="name">{{ item.name }}</div>
-					<div class="format">{{ item.formatName }}</div>
+		<template v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}">
+			<template v-if="item.activity == -1 || item.activity > 0" >
+				<div class="line">
+					<div class="img"> <!--  v-lazy:background-image="item.shotcut" -->
+						<img :src="item.shotcut" style="width:100%;height:100%;" />
+					</div>
+					<div class="con">
+						<div class="left">
+							<div class="name">{{ item.name }}</div>
+							<div class="format">{{ item.formatName }}</div>
+						</div>
+					</div>
 				</div>
-				<div class="right">
-					<div class="price">¥{{ item.price }}</div>
-					<div class="num">x{{ item.nums }}</div>
-				</div>
-			</div>
-		</div>
+			</template>
+		</template>
 		<div class="line-bottom" v-if="showBtm">
 			<div style="display:block;float:right;">共{{ amount }}件商品合计：<label style="color:#f9ad0c;">¥{{ sum }}</label></div>
 		</div>
@@ -315,19 +319,6 @@
 		},
 		ready() {
 
-		    for(let i in this.list) {
-				if(this.list[i].activity != -1 && this.list[i].activity != 0) {
-					this.vieible = true;
-				}
-
-                if(this.list[i].activity == 0) {
-                    this.vieible = true;
-                } else {
-				    this.vieible = false;
-				}
-
-			}
-
 			$(function() {
 			    $(".todaybtn").mouseover(function() {
 			        $(this).css({
@@ -341,12 +332,16 @@
                     });
 				});
 			});
+
 		},
         components: {
             Scroller,
             Icon
 		},
 		computed: {
+            activity: function () {
+
+            },
 			amount: function(){
 				return this.list.length;
 			},

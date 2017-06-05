@@ -438,7 +438,9 @@
             this.dtype = localStorage.getItem('number');
 
             if(this.dtype == null) {
+                this.chooseSort(26);
                 this.getChonse(26);
+                this.$router.go({name:'classify'});
 			} else {
                 this.chooseSort(this.dtype);
                 this.getChonse(this.dtype);
