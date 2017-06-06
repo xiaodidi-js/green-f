@@ -25,7 +25,7 @@ class Sale extends Model{
                     $newvalue[$key]['saledata'][$key1]['saleprice'] = $value1['saledata']['saleprice'];
                     $newvalue[$key]['saledata'][$key1]['salenub'] = $value1['saledata']['salenub'];
                     $newvalue[$key]['saledata'][$key1]['salepaynub'] = $value1['saledata']['salepaynub'];
-                    $newvalue[$key]['saledata'][$key1]['salekucunnub'] = $value1['saledata']['salepaynub'];
+                    $newvalue[$key]['saledata'][$key1]['salekucunnub'] = $value1['saledata']['salenub'];
                 }
                 $newvalue[$key]['shopid'] = $post['data'][$key];
             }

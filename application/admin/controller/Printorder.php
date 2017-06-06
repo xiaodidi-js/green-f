@@ -77,7 +77,7 @@ class Printorder extends Base{
         $where['o.receive'] = 0;
         // $where['o.send'] = 0;
         // $where['o.stype'] = 'parcel';
-        $where['o.createtime'] = array('between',[$get['stime'],$get['etime']]);
+        $where['o.stime'] = array('between',[$get['stime'],$get['etime']]);
         if($get['stu'] == 0){
         	$where['o.print'] = 0;
         }elseif($get['stu'] == 1){

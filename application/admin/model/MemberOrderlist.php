@@ -11,7 +11,7 @@ use think\Model;
 class MemberOrderlist extends Model{
 //  查询订单购买的商品
     public function queryshop($order){
-        $list = $this->where('oid','in',$order)->field('pid,amount,oid')->select();
+        $list = $this->where('oid','in',$order)->field('pid,amount,oid,share,qrcode')->select();
         return $list;
     }
 }

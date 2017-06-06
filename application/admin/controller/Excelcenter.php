@@ -59,9 +59,23 @@ class Excelcenter extends Base{
                 if(empty($allok[$value2['pid']]['amount'])){
                     $allok[$value2['pid']]['amount'] = 0;
                 }
+                if(empty($allok[$value2['pid']]['share'])){
+                    $allok[$value2['pid']]['share'] = 0;
+                }
+                if(empty($allok[$value2['pid']]['qrcode'])){
+                    $allok[$value2['pid']]['qrcode'] = 0;
+                }
                 $allok[$value2['pid']]['amount'] = $allok[$value2['pid']]['amount'] + $value2['amount'];
                 $allok[$value2['pid']]['taocan_amount'] = 0;
                 $allok[$value2['pid']]['taocan_weight'] = 0;
+                if($value2['share'] != 0){
+                    $value2['share'] = 1;
+                }
+                if($value2['qrcode'] != 0){
+                    $value2['qrcode'] = 1;
+                }
+                $allok[$value2['pid']]['qrcode'] = $allok[$value2['pid']]['qrcode'] + $value2['qrcode'];
+                $allok[$value2['pid']]['share'] = $allok[$value2['pid']]['share'] + $value2['share'];
             }
             foreach  ($allok as $key3 => $value3){
                 $allid[] = $key3;
@@ -87,6 +101,7 @@ class Excelcenter extends Base{
                             }else{
                                 $allok[$playok[0]]['taocan_weight'] = $allok[$playok[0]]['taocan_weight'] + $playok[1];
                             }
+
                             if(empty($allok[$playok[0]]['amount'])){
                                 $allok[$playok[0]]['amount'] = 0;
                             }
@@ -113,8 +128,10 @@ class Excelcenter extends Base{
                         $go1['fenjianzu'] = $ok['name'];
                     }elseif($ok['class'] == 2){
                         $go1['caigouyuan'] = $ok['name'];
+                        $go1['caigouyuantel'] = $ok['tel'];
                     }elseif($ok['class'] == 3){
                         $go1['supplier'] = $ok['name'];
+                        $go1['suppliertel'] = $ok['tel'];
                     }
                 }
                 if($go1['fenjianzu'] == '0'){
@@ -122,9 +139,11 @@ class Excelcenter extends Base{
                 }
                 if($go1['caigouyuan'] == '0'){
                     $go1['caigouyuan'] = '无';
+                    $go1['caigouyuantel'] = '无信息';
                 }
                 if($go1['supplier'] == '0'){
                     $go1['supplier'] = '无';
+                    $go1['suppliertel'] = '无信息';
                 }
             }
             $excel = new Excel();

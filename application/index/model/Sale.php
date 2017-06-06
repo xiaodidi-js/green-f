@@ -92,5 +92,20 @@ class Sale extends Model{
         $edit = $this->where($where)->update($data);
         return $edit;
     }
+
+
+    // 查询限时抢购
+    public function queryshop($nowtime){
+        $newtime = time();
+        $where['etime'] = array('>=',$nowtime);
+        $where['stime'] = array('<=',$nowtime);
+        $where['stu'] = 1;
+        $where['is_del'] = 0;
+        $list = $this->where($where)->order('stime asc')->field('stime,etime,data,id')->find();
+        if($list){
+            $list['datashop'] = unserialize($list['data']);
+        }
+        return $list;
+    }
     
 }

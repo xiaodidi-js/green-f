@@ -128,7 +128,7 @@ class Excel extends Controller
 
     }
 
-//   采购表导出
+    // 采购表导出
     public function caigouexcel($data){
         $obj = new \PHPExcel();
         $obj->getProperties()->setCreator("JAMES")
@@ -153,13 +153,13 @@ class Excel extends Controller
         //相关列宽
         $actSheet->getColumnDimension('A')->setWidth(10);
         $actSheet->getColumnDimension('B')->setWidth(20);
-        $actSheet->getColumnDimension('C')->setWidth(15);
+        $actSheet->getColumnDimension('C')->setWidth(20);
         $actSheet->getColumnDimension('D')->setWidth(15);
-        $actSheet->getColumnDimension('E')->setWidth(10);
+        $actSheet->getColumnDimension('E')->setWidth(15);
         $actSheet->getColumnDimension('F')->setWidth(18);
         $actSheet->getColumnDimension('G')->setWidth(15);
         $actSheet->getColumnDimension('H')->setWidth(35);
-        $actSheet->getColumnDimension('I')->setWidth(15);
+        $actSheet->getColumnDimension('I')->setWidth(35);
         $actSheet->getColumnDimension('J')->setWidth(15);
         $actSheet->getColumnDimension('K')->setWidth(10);
         $actSheet->getColumnDimension('L')->setWidth(10);
@@ -167,33 +167,49 @@ class Excel extends Controller
         $actSheet->getColumnDimension('N')->setWidth(10);
         $actSheet->getColumnDimension('O')->setWidth(15);
         $actSheet->getColumnDimension('P')->setWidth(15);
+        $actSheet->getColumnDimension('Q')->setWidth(15);
+        $actSheet->getColumnDimension('R')->setWidth(15);
+        $actSheet->getColumnDimension('S')->setWidth(20);
+        $actSheet->getColumnDimension('T')->setWidth(20);
         //标题
-        $actSheet->mergeCells('A1:P1');
+        $actSheet->mergeCells('A1:T1');
         //设置标题格式
         $actSheet->getStyle('A1')->getFont()->setSize(12);
         $actSheet->getStyle('A1')->getFont()->setBold(true);
 
         $actSheet->setCellValue("A1", "每日采购清单");
-        $actSheet->setCellValue("A2", "截单时间");
-        $actSheet->setCellValue("B2", date("Y-m-d H:i:s"));
-        $actSheet->getStyle('A2:B2')->getFont()->setSize(12);
-        $actSheet->getStyle('A2:B2')->getFont()->setBold(true);
+        $actSheet->setCellValue("B2", "截单时间");
+        $actSheet->mergeCells('C2:D2');
+        $actSheet->setCellValue("C2", date("Y-m-d H:i:s"));
+        $actSheet->getStyle('A2:C2')->getFont()->setSize(12);
+        $actSheet->getStyle('A2:C2')->getFont()->setBold(true);
 
-        $actSheet->getStyle('A3')->getFont()->setBold(true);
-        $actSheet->setCellValue("A3", "入库时间");
+        $actSheet->getStyle('B3')->getFont()->setBold(true);
+        $actSheet->setCellValue("B3", "入库时间");
+        $actSheet->setCellValue("D3", "签收:");
 
-        $actSheet->getStyle('J3:P3')->getFont()->setSize(12);
-        $actSheet->getStyle('J3:P3')->getFont()->setBold(true);
-        $title1 = array('当日订单量', '套餐', '供应商订货', '供应商订货', '供应商订货','供应商订货');
+        $actSheet->getStyle('J3:T3')->getFont()->setSize(12);
+        $actSheet->getStyle('J3:T3')->getFont()->setBold(true);
+        $title1 = array();
         $this->excel_foreach('J', 3, $title1, $actSheet);
-        $actSheet->getStyle('A4:P4')->getFont()->setSize(12);
-        $actSheet->getStyle('A4:P4')->getFont()->setBold(true);
-        $title2 = array('序号', '配菜组', '小分类', '采购员', '供应商', '类别', '商品编码', '编号及品名', '规格（克）','份数', '克数', '克数(不含套餐数)', '总克数', '总份数', '单位总数', '供货单位');
+        $actSheet->getStyle('A4:T4')->getFont()->setSize(12);
+        $actSheet->getStyle('A4:T4')->getFont()->setBold(true);
+        $title2 = array('序号', '供应商', '供应商联系方式', '采购员', '联系方式', '配菜组', '类别', '商品编号', '名称','规格', '单位', '订单数', '非套餐(g)', '套餐(g)', '总重量(g)', '总(份数)','单位总数','单位','分享购买份数','二维码商品份数');
 
         $this->excel_foreach('A', 4, $title2, $actSheet);
         $len = 5;
         $key = 1;
-        foreach ($data as $k => $vo) {
+        foreach ($data as $k => &$vo) {
+            if(empty($vo['amount']['share'])){
+                $share = 0;
+            }else{
+                $share = $vo['amount']['share'];
+            }
+            if(empty($vo['amount']['qrcode'])){
+                $qrcode = 0;
+            }else{
+                $qrcode = $vo['amount']['qrcode'];
+            }
             $taocanWeight = $vo['amount']['taocan_weight'];
             $weight = $vo['amount']['amount'] * $vo['weight'];
             $allweight = $taocanWeight + $weight;
@@ -203,29 +219,34 @@ class Excel extends Controller
             }else{
                 $arrWeight = $allweight;
             }
-            $title3 = array($key,
-                $vo['fenjianzu'],
-                null,
-                $vo['caigouyuan'],
+            $title3 = array(
+                $key,
                 $vo['supplier'],
+                $vo['suppliertel'],
+                $vo['caigouyuan'],
+                $vo['caigouyuantel'],
+                $vo['fenjianzu'],
                 $vo['class'],
                 $vo['sn_code'],
                 $vo['name'],
                 $vo['weight'],
+                $vo['unit'],
                 $vo['amount']['amount'],
+                $allweight,
                 $taocanWeight,
                 $weight,
-                $allweight,
                 $allnub,
                 $arrWeight,
-                $vo['unit']);
+                $vo['unit'],
+                $share,
+                $qrcode);
             $this->excel_foreach('A', $len, $title3, $actSheet);
             $actSheet->getRowDimension($len)->setRowHeight(25);
             $len++;
             $key++;
         }
         Vendor("phpexcel.PHPExcel.IOFactory");
-        $actSheet->getStyle('A2:P' . $len)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+        $actSheet->getStyle('A2:T' . $len)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
         $name = '采购清单-' . time();
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $name . '.xls"');

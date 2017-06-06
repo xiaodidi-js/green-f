@@ -105,6 +105,29 @@
 								<label>单位</label>
 								<input type="text" name="unit" class="form-control" placeholder="产品的单位" value="{$info.unit}">
 							</div>
+							<div class="form-group">
+				            	<label style="display:block;">开启二维码</label>
+				            	{if condition="$info['qrcode'] == '0'"}
+					                <label>
+					                  <input type="radio" name="qrcode" class="minimal" value="0" checked>
+					                  关闭
+					                </label>
+					                <label>
+					                  <input type="radio" name="qrcode" class="minimal" value="1" >
+					                  开启
+					                </label>
+				                {else/}
+				                	<div><img src="{$info.qrcode}"></div>
+				                	<label>
+					                  <input type="radio" name="qrcode" class="minimal" value="0" >
+					                  关闭
+					                </label>
+					                <label>
+					                  <input type="radio" name="qrcode" class="minimal" value="1" checked>
+					                  开启
+					                </label>
+				                {/if}
+				            </div>
 							<!-- lzc-暂时不需要此功能 -->
 				            <!-- <div class="form-group">
 				            	<label style="display:block;">优惠活动</label>

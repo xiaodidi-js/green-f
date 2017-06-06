@@ -364,6 +364,12 @@ class Shoper extends Base{
 			}else{
 				//产品轮播图处理
 				$data['gallery'] = count($data['gallery'])>0 ? json_encode($data['gallery']) : null;
+				if($data['qrcode'] == 1){
+					$qrcode = new PHPqrcode;
+					$content = 'http://m.green-f.cn/index_prod.html#!/detail/'.$id;
+					$path = $qrcode->qrcodeshop($content);
+					$data['qrcode'] = $path;
+				}
 				//优惠活动处理
 				//lzc-不需要这个功能
 				/*$data['is_promote'] = intval($data['is_promote']);
@@ -512,7 +518,7 @@ class Shoper extends Base{
 			}
 			unset($data['id']);
 			//产品编码检测
-			$sncheck = db('product')->where('id','neq',$id)->where('sn_code',$data['sn_code'])->find();
+			$sncheck = db('product')->where('id','neq',$id)->where('sn_code',$data['sn_code'])->field('id')->find();
 			if($sncheck){
 				$result['status'] = 0;
 				$result['info'] = '产品编码已存在';
@@ -577,6 +583,20 @@ class Shoper extends Base{
 				}else{
 					$data['format'] = null;
 				}
+
+				// 二维码商品
+				if($data['qrcode'] != 0){
+					$queryqrcode = db('product')->where('id',$id)->value('qrcode');
+					if($queryqrcode == '0'){
+						$qrcode = new PHPqrcode;
+						$content = 'http://m.green-f.cn/index_prod.html#!/detail/'.$id;
+						$path = $qrcode->qrcodeshop($content);
+						$data['qrcode'] = $path;
+					}else{
+						unset($data['qrcode']);
+					}
+				}
+
 				// lzc套餐组合
 				if($data['taocan'] == 0){
 					unset($data['pinzhong']);
@@ -676,8 +696,9 @@ class Shoper extends Base{
 		$info = db('product')->alias('p')
 						->where('p.id',$id)
 						->join('product_content c','p.id = c.pid','LEFT')
-						->field('p.id,p.name,p.cid,p.sn_code,p.description,p.price,p.is_promote,p.promote_price,p.promote_start,p.promote_end,p.format,p.store,p.virtual_sale,p.supplier,p.sold_out,p.warn_num,p.shotcut,p.gallery,p.is_top,p.is_hot,p.is_new,p.sort,p.is_sell,p.starprice,p.taocan,c.content,p.gift,p.deliverytime,p.weight,p.unit,p.caigouyuan,p.fenjianzu')
+						->field('p.id,p.name,p.cid,p.sn_code,p.description,p.price,p.is_promote,p.promote_price,p.promote_start,p.promote_end,p.format,p.store,p.virtual_sale,p.supplier,p.sold_out,p.warn_num,p.shotcut,p.gallery,p.is_top,p.is_hot,p.is_new,p.sort,p.is_sell,p.starprice,p.taocan,c.content,p.gift,p.deliverytime,p.weight,p.unit,p.caigouyuan,p.fenjianzu,p.qrcode')
 							->find();
+
 		// lzc-人员配对
 		$staff[] = $info['caigouyuan'];
 		$staff[] = $info['fenjianzu'];
@@ -1070,7 +1091,7 @@ class Shoper extends Base{
 				$result['info'] = '站点添加失败';
 			}else{
 				$qrcode = new PHPqrcode;
-				$content = 'https://'.$_SERVER['HTTP_HOST'].'/vue/index_prod.html?sinceid='.$up;
+				$content = 'https://m.green-f.cn/index_prod.html?sinceid='.$up;
 				$path = $qrcode->sinceqrcode($content);
 				$update['qrcode'] = $path;
 				$editqrcode = $handtake->where('id',$up)->update($update);
@@ -1136,7 +1157,7 @@ class Shoper extends Base{
 		$info = $handtake->where('id',$id)->find();
 		if(empty($info['qrcode'])){
 			$qrcode = new PHPqrcode;
-			$content = 'https://'.$_SERVER['HTTP_HOST'].'/vue/index_prod.html?sinceid='.$id;
+			$content = 'http://m.green-f.cn/index_prod.html?sinceid='.$id;
 			$path = $qrcode->sinceqrcode($content);
 			$update['qrcode'] = $path;
 			$edit = $handtake->where('id',$id)->update($update);
@@ -2743,9 +2764,27 @@ class Shoper extends Base{
 		if(!empty($key)){
 			$where = '(uname like "%'.$key.'%" OR utel like "%'.$key.'%") AND is_del = 0';
 		}else{
-			$where = 'is_del = 0';
+			$where['is_del'] = 0;
 		}
-		$list = db('member')->where($where)->field('id,uname,utel,sex,birthday,score,createtime,money')->order('createtime desc')->paginate();
+		$list = db('member')->where($where)->field('id,uname,utel,sex,birthday,score,createtime')->order('createtime desc')->paginate();
+		// 查询累计消费记录
+		foreach ($list as $key => &$value) {
+			$whereorder['is_del'] = 0;
+			$whereorder['uid'] = $value['id'];
+			$whereorder['pay'] = 1;
+			$queryorder = db('member_orders')->where($whereorder)->field('money')->select();
+			$data = $list->all();
+			foreach ($data as $key1 => &$value1) {
+				if(empty($value1['money'])){
+					$value1['money'] = 0;
+				}
+				foreach ($queryorder as $key2 => $value2) {
+					
+					$value1['money'] = $value1['money'] + $value2['money'];
+				}
+			}
+			$list[$key] = $data[$key];
+		}
 		$this->assign('list',$list);
 		return $this->fetch('member');
 	}

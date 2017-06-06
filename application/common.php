@@ -288,3 +288,62 @@ function make_json($status, $data , $url = ''){
     echo json_encode($arr);
     die;
 }
+
+// 判断是否可以配送和活动
+function CommonProduct($data){
+    $nowtime = time();
+    // lzc-配送时间
+    if($data['deliverytime'] == 0){
+        $stimedate = date('Y-m-d',$nowtime).'00:00';
+        $etimedate = date('Y-m-d',$nowtime).'23:59';
+        $stime = strtotime($stimedate);
+        $etime = strtotime($etimedate);
+        if($nowtime >= $stime && $nowtime <= $etime){
+            $ciri = 1;
+        }else{
+            $ciri = 0;
+        }
+        $fanhui['peisongok'] = $ciri;
+    }else{
+        $stimedate = date('Y-m-d',$nowtime).'00:00';
+        $stime = strtotime($stimedate);
+        $etimedate = date('Y-m-d',$nowtime).'13:00';
+        $etime = strtotime($etimedate);
+        if($nowtime >= $stime && $nowtime <= $etime){
+            $dangtian = 1;
+        }else{
+            $dangtian = 0;
+        }
+        $fanhui['peisongok'] = $dangtian;
+    }
+    // lzc-限时抢购
+    $querysale = Model('Sale')->query($nowtime,$data['id']);
+    if($querysale){
+        $fanhui['activestu'] = 1;
+        $fanhui['activepay'] = $querysale['saledata'][0]['salepaynub'];
+        $fanhui['activeid'] = $querysale['saleid'];
+        $fanhui['price'] = $querysale['saledata'][0]['saleprice'];
+    }
+
+    // lzc-分享购买商品
+    $queryshare = Model('ProductShare')->query($nowtime,$data['id']);
+    if($queryshare){
+        $fanhui['activestu'] = 2;
+        $fanhui['activepay'] = 1;
+        $fanhui['activeid'] = $queryshare['shareid'];
+        $fanhui['price'] = $queryshare['shareprice'];
+    }
+
+    // 二维码商品
+    if($data['qrcode'] != 0){
+        $fanhui['activestu'] = 3;
+    }
+
+    if(empty($fanhui['activestu']) && empty($fanhui['activeid'])){
+        $fanhui['activestu'] = 0;
+        $fanhui['activeid'] = 0;
+        $fanhui['activepay'] = 0;
+    }
+    return $fanhui;
+}
+

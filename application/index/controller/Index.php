@@ -108,7 +108,7 @@ class Index extends RestBase
 					['id'=>3,'name'=>'热卖产品','type'=>0,'img'=>'http://vue.wogoule.com/photos/banners/mcol3.jpg','url'=>'#','desc'=>'Pepperidge Farm 非凡农庄棋人形曲奇饼','time'=>'']
 				];
 				$hotproducts = db('product')->where('is_del',0)->where('is_sell',1)->where('store','gt',0)->field('id,name,description as sdesc,price as money,shotcut as img')->order('sale desc,createtime desc')->limit(5)->select();
-				$articles = db('product_article')->where('status',1)->field('id,title,short_desc as sdesc,product as proname,price as proprice,visitor as reading,shotcut as img')->order('top desc,createtime desc')->select();
+				$articles = db('product_article')->where('status',1)->field('id,title,short_desc as sdesc,product as proname,price as proprice,visitor as reading,shotcut as img,createtime,updatetime')->order('top desc,createtime desc')->select();
 				$data = [];
 				if($maincolumns) $data['maincolumns'] = $maincolumns;
 				if($hotproducts){
@@ -193,41 +193,19 @@ class Index extends RestBase
 						$order = 'is_hot desc,sort desc,createtime desc';
 						break;
 				}
-				$list = db('product')->where('(cid = :id AND is_sell = 1 AND is_del = 0 AND store > 0'.$sql.') OR (cid = :id2 AND is_sell = 1 AND is_del = 0 AND store <= 0 AND sold_out = 1'.$sql.')',['id'=>$id,'id2'=>$id])->field('id,name as title,shotcut as src,price,store,deliverytime')->order($order)->select();
+				$list = db('product')->where('(cid = :id AND is_sell = 1 AND is_del = 0 AND store > 0'.$sql.') OR (cid = :id2 AND is_sell = 1 AND is_del = 0 AND store <= 0 AND sold_out = 1'.$sql.')',['id'=>$id,'id2'=>$id])->where('qrcode',0)->field('id,name as title,shotcut as src,price,store,deliverytime,qrcode')->order($order)->select();
 				$nowtime = time();
 				foreach ($list as $key => &$value) {
-					// lzc-限时抢购
-					$querysale = Model('Sale')->query($nowtime,$value['id']);
-					$value['sale'] = $saledata;
-
-					// lzc-分享购买商品
-					$queryshare = Model('ProductShare')->query($nowtime,$value['id']);
-					$value['share'] = $queryshare;
-
-					// lzc-配送时间
-					if($value['deliverytime'] == 0){
-						$stimedate = date('Y-m-d',$nowtime).'00:00';
-						$etimedate = date('Y-m-d',$nowtime).'22:00';
-						$stime = strtotime($stimedate);
-						$etime = strtotime($etimedate);
-						if($nowtime >= $stime && $nowtime <= $etime){
-							$ciri = 1;
-						}else{
-							$ciri = 0;
+					$peizhidata = CommonProduct($value);
+		        	if($peizhidata){
+		        		$value['activestu'] = $peizhidata['activestu'];
+						$value['activepay'] = $peizhidata['activepay'];
+						$value['activeid'] = $peizhidata['activeid'];
+						if(!empty($peizhidata['price'])){
+							$value['price'] = $peizhidata['price'];
 						}
-						$value['peisongok'] = $ciri;
-					}else{
-						$stimedate = date('Y-m-d',$nowtime).'00:00';
-						$stime = strtotime($stimedate);
-						$etimedate = date('Y-m-d',$nowtime).'13:00';
-						$etime = strtotime($etimedate);
-						if($nowtime >= $stime && $nowtime <= $etime){
-							$dangtian = 1;
-						}else{
-							$dangtian = 0;
-						}
-						$value['peisongok'] = $dangtian;
-					}
+		        		$value['peisongok'] = $peizhidata['peisongok'];
+		        	}
 				}
 				$result = makeResult(1,['list' => $list,'img'=>$queryclass['shotcut'],'background' => null]);
 				return $this->response($result,'json',200);
@@ -276,7 +254,7 @@ class Index extends RestBase
 				}
 				
 				$product = db('product');
-				$info = $product->alias('p')->join('product_content c','p.id = c.pid','LEFT')->join('product_addition a','p.id = a.pid','LEFT')->where('p.id',$id)->field('p.id,name,description,price,store,shotcut,is_promote,promote_price,promote_start,promote_end,format,gallery,is_sell,content,notice,commend,sale,virtual_sale,deliverytime,starprice')->find();
+				$info = $product->alias('p')->join('product_content c','p.id = c.pid','LEFT')->join('product_addition a','p.id = a.pid','LEFT')->where('p.id',$id)->field('p.id,name,description,price,store,shotcut,is_promote,promote_price,promote_start,promote_end,format,gallery,is_sell,content,notice,commend,sale,virtual_sale,deliverytime,starprice,qrcode')->find();
 				if(!empty($info['content'])) $info['content'] = htmlspecialchars_decode($info['content']);
 				if(!empty($info['gallery'])){
 					$info['gallery'] = json_decode($info['gallery'],true);
@@ -332,40 +310,16 @@ class Index extends RestBase
 				$now = date('Y-m-d');
 				$nowstime = strtotime($now);
 				$nowetime = $nowstime + 86399;
-				$nowtime = time();
-
-				// lzc-限时抢购
-				$querysale = Model('Sale')->query($nowtime,$id);
-				$info['sale'] = $querysale;
-
-				// lzc-分享购买商品
-				$queryshare = Model('ProductShare')->query($nowtime,$id);
-				$info['share'] = $queryshare;
-
-				// lzc-配送时间
-				if($info['deliverytime'] == 0){
-					$stimedate = date('Y-m-d',$nowtime).'00:00';
-					$etimedate = date('Y-m-d',$nowtime).'23:59';
-					$stime = strtotime($stimedate);
-					$etime = strtotime($etimedate);
-					if($nowtime >= $stime && $nowtime <= $etime){
-						$ciri = 1;
-					}else{
-						$ciri = 0;
+				$peizhidata = CommonProduct($info);
+	        	if($peizhidata){
+	        		$info['activestu'] = $peizhidata['activestu'];
+					$info['activepay'] = $peizhidata['activepay'];
+					$info['activeid'] = $peizhidata['activeid'];
+					if(!empty($peizhidata['price'])){
+						$info['price'] = $peizhidata['price'];
 					}
-					$info['peisongok'] = $ciri;
-				}else{
-					$stimedate = date('Y-m-d',$nowtime).'00:00';
-					$stime = strtotime($stimedate);
-					$etimedate = date('Y-m-d',$nowtime).'13:00';
-					$etime = strtotime($etimedate);
-					if($nowtime >= $stime && $nowtime <= $etime){
-						$dangtian = 1;
-					}else{
-						$dangtian = 0;
-					}
-					$info['peisongok'] = $dangtian;
-				}
+	        		$info['peisongok'] = $peizhidata['peisongok'];
+	        	}
 
 				// lzc-商品推荐记录点击量
 				if(!empty($request->param('tuijianid'))){
@@ -502,7 +456,7 @@ class Index extends RestBase
 								$newmoren[] = $value1['id'];
 				 			}
 				 			$where['id'] = array('in',$newmoren);
-				 			$data = db('product')->where($where)->field('id,name,price,starprice,shotcut,sort')->limit($nub)->select();
+				 			$data = db('product')->where($where)->field('id,name,price,starprice,shotcut,sort,deliverytime,qrcode')->limit($nub)->select();
 				 			// 排序
 				 			$number = array();
 							foreach($data as $key=>$val){
@@ -516,14 +470,27 @@ class Index extends RestBase
 						}
 					}else{
 						$where['cid'] = $value['class'];
-						$data = db('product')->where($where)->order('sort desc')->field('id,name,price,starprice,shotcut')->limit($nub)->select();
+						$data = db('product')->where($where)->order('sort desc')->field('id,name,price,starprice,shotcut,deliverytime,qrcode')->limit($nub)->select();
 					}
 				}else{
 					$where['cid'] = $value['class'];
-					$data = db('product')->where($where)->order('sort desc')->field('id,name,price,starprice,shotcut')->limit($nub)->select();
+					$data = db('product')->where($where)->order('sort desc')->field('id,name,price,starprice,shotcut,deliverytime,qrcode')->limit($nub)->select();
 				}
 				if($data){
+					$nowtime = time();
                     foreach ($data as $key1 => $value1){
+                    	$peizhidata = CommonProduct($value1);
+			        	if($peizhidata){
+			        		$value1['activestu'] = $peizhidata['activestu'];
+							$value1['activepay'] = $peizhidata['activepay'];
+							$value1['activeid'] = $peizhidata['activeid'];
+							if(!empty($peizhidata['price'])){
+								$value1['price'] = $peizhidata['price'];
+							}
+			        		$value1['peisongok'] = $peizhidata['peisongok'];
+			        	}
+						$tmp['deliverytime'] = $value1['deliverytime'];
+						$tmp['peisongok'] = $peizhidata['peisongok'];
                         $tmp['shopid'] = $value1['id'];
                         $tmp['shopname'] = $value1['name'];
                         $tmp['shopprice'] = $value1['price'];
@@ -602,8 +569,22 @@ class Index extends RestBase
         $where['is_del'] = 0;
         $where['gift'] = 0;
         $where['is_sell'] = 1;
-        $field = 'id,name,price,starprice,shotcut,deliverytime';
+        // 二维码商品
+        $where['qrcode'] = 0;
+        $field = 'id,name,price,starprice,shotcut,deliverytime,qrcode';
         $queryshop = db('product')->where($where)->field($field)->select();
+        foreach ($queryshop as $key => &$value) {
+        	$data = CommonProduct($value);
+        	if($data){
+        		$value['activestu'] = $data['activestu'];
+				$value['activepay'] = $data['activepay'];
+				$value['activeid'] = $data['activeid'];
+				if(!empty($data['price'])){
+					$value['price'] = $data['price'];
+				}
+        		$value['peisongok'] = $data['peisongok'];
+        	}
+        }
         if($queryshop){
 			$result = makeResult(1,['data'=>$queryshop]);
         }else{
@@ -688,15 +669,17 @@ class Index extends RestBase
     public function addshare(){
     	$request = Request::instance();
         $get = $request->param();
-        $where['uid'] = $get['uid'];
-        $where['pid'] = $get['pid'];
-        if($get['uid'] || $get['pid']){
+        if(empty($get['uid']) || empty($get['pid'])){
         	return make_json(0, '用户id或商品id不存在');
         }
+        $where['uid'] = $get['uid'];
+        $where['pid'] = $get['pid'];
+        $where['aid'] = $get['activeid'];
         $edit = db('product_sharelist')->where($where)->field('id')->count();
-        if($edit){
+        if($edit == 0){
         	$data['uid'] = $get['uid'];
         	$data['pid'] = $get['pid'];
+        	$data['aid'] = $get['activeid'];
         	$data['time'] = time();
         	$add = db('product_sharelist')->insert($data);
         	if($add){
@@ -796,6 +779,12 @@ class Index extends RestBase
         $url="https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".$access_token;
         $res=curlPost(urldecode($json_template),$url);
         return $res;
+    }
+
+    // 协议
+    public function xieyi(){
+    	$profile = db('profile')->where('id',1)->value('detail');
+    	return $profile;
     }
 
 }

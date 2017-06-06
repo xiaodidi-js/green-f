@@ -49,9 +49,10 @@ class Usercenter extends RestBase
         }
         $request = Request::instance();
 		$id = intval($request->param('uid'));
+        $stu = $request->param('stu');
     	// $id = 14;
     	$where['uid'] = $id;
-    	$cxscore = db('score_lists')->where($where)->select();
+    	$cxscore = db('score_lists')->where($where)->field('id,type,amount,createtime')->select();
     	if($cxscore){
             foreach ($cxscore as $key => $value) {
                 $fenshu[] = $value['amount'];
@@ -61,6 +62,38 @@ class Usercenter extends RestBase
     	}else{
     		$result = makeResult(0,'暂时没有积分信息');
     	}
+        return $this->response($result,'json',200);
+    }
+
+    // 每日签到
+    public function qiandao(){
+        $res = $this->checklogin();
+        if($res){
+            return $res;
+        }
+        $request = Request::instance();
+        $id = intval($request->param('uid'));
+        $stime= strtotime(date('Y-m-d',time()));
+        $etime = $stime + 86399;
+        $where['uid'] = $id;
+        $where['type'] = 'qiandao';
+        $where['createtime'] = array('between',[$stime,$etime]);
+        $query = db('score_lists')->where($where)->field('id')->count();
+        if($query == 0){
+            $QueryJifenAddNub = db('jifen')->where('id',1)->find();
+            $data['type'] = 'qiandao';
+            $data['createtime'] = time();
+            $data['uid'] = $id;
+            $data['amount'] = $QueryJifenAddNub['qiandao'];
+            $add = db('score_lists')->insert($data);
+            if($add){
+                $result = makeResult(1,'签到成功!');
+            }else{
+                $result = makeResult(0,'签到失败!');
+            }
+        }else{
+            $result = makeResult(0,'今天已签到了哦!');
+        }
         return $this->response($result,'json',200);
     }
 

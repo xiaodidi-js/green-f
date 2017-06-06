@@ -88,6 +88,7 @@ class Product extends Model{
                     $FormatAll[$key]['saledata']['saleprice'] = $data['saledata'][$key]['saleprice'];
                     $FormatAll[$key]['saledata']["salenub"] = $data['saledata'][$key]['salenub'];
                     $FormatAll[$key]['saledata']["salepaynub"] = $data['saledata'][$key]['salepaynub'];
+                    $FormatAll[$key]['saledata']["salekucunnub"] = $data['saledata'][$key]['salekucunnub'];
                     $find['formatAll'] = $FormatAll;
                 }
             }else{
@@ -95,6 +96,7 @@ class Product extends Model{
                 $FormatAll[0]['saledata']['saleprice'] = $data['saledata'][0]['saleprice'];
                 $FormatAll[0]['saledata']["salenub"] = $data['saledata'][0]['salenub'];
                 $FormatAll[0]['saledata']["salepaynub"] = $data['saledata'][0]['salepaynub'];
+                $FormatAll[0]['saledata']["salekucunnub"] = $data['saledata'][0]['salekucunnub'];
                 $find['formatAll'] = $FormatAll;
             }
 

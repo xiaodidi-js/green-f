@@ -16,7 +16,7 @@ class MemberOrders extends Model{
     public function QueryNowOrderShop($get){
         $where['pay'] = 1;
         $where['is_del'] = 0;
-        $list = $this->where($where)->whereTime('createtime', 'between', [$get['stime'], $get['etime']])->field('id,sum,orderid')->select();
+        $list = $this->where($where)->whereTime('stime', 'between', [$get['stime'], $get['etime']])->field('id,sum,orderid')->select();
         return $list;
     }
 
@@ -91,7 +91,7 @@ class MemberOrders extends Model{
         $where['receive'] = 0;
         $where['send'] = 0;
         $where['stype'] = 'parcel';
-        $where['createtime'] = array('between',[$get['stime'],$get['etime']]);
+        $where['stime'] = array('between',[$get['stime'],$get['etime']]);
         $where['print'] = 0;
         if($class == 0){
             $list = $this->where($where)->count();

@@ -60,7 +60,7 @@
                         <tr>
                             <th>商品名称</th>
                             <th>库存</th>
-                            <th>原价格</th>
+                            <th>抢购库存</th>
                             <th>抢购价</th>
                             <th>抢购数量</th>
                             <th>每人抢购数量</th>
@@ -71,7 +71,7 @@
                             <tr id="{{ item.id }}">
                                 <td>{{ item.name }}</td>
                                 <td>{{ item.store }}</td>
-                                <td>{{ item.price }}</td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -85,7 +85,7 @@
                             <tr v-for="(itemone,index1) in item.formatAll">
                                 <td>{{ itemone.arr }}</td>
                                 <td>{{ itemone.store }}</td>
-                                <td>{{ itemone.price }}</td>
+                                <td>{{ addinfo[index]['formatAll'][index1].saledata.salekucunnub }}</td>
                                 <td><input type="text" v-model="addinfo[index]['formatAll'][index1].saledata.saleprice" style="width: 50px;"></td>
                                 <template v-if="itemone.store != null">
                                     <template v-if="addinfo[index]['formatAll'][index1].saledata.salenub <= itemone.store">

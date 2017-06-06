@@ -23,4 +23,7 @@ class ProductShare extends Model{
 		$edit = $this->where('id', $id)->update($update);
 		return $edit;
 	}
+	
+
+	
 }
