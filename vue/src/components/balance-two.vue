@@ -249,7 +249,7 @@
 			<div style="margin:0px 10px;">
 				<p class="give-title">
 					<i class="icon-img1"></i>
-					<span>首单用户,就送如下商品,请选择赠品</span>
+					<span>请选择<i style="color:#c40000;">首单赠品</i></span>
 				</p>
 			</div>
 		</div>

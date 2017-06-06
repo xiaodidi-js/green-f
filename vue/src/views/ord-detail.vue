@@ -358,12 +358,10 @@
 			</div>
 		</div>
 
-
-		<div class="changePay">
+		<div class="changePay" v-show="showTime">
 			<div class="prompt">请在15分钟内完成付款,晚了就给人抢了</div>
-			<div class="countdown">剩余支付时间 {{ minute }}:{{ second }}</div>
+			<div class="countdown">剩余支付时间{{ minute }} : {{ second }} </div>
 		</div>
-
 
 		<!-- 订单状态 -->
 		<div class="bl-info-box status">
@@ -499,8 +497,13 @@ export default{
             listGift: [],
             minute: 0,
             second: 0,
+            sTime: '',
+            eTime: '',
             vieible: false,
-		}
+            stop: false,
+            interval: '',
+            showTime: false,
+        }
 	},
 	components: {
         BalanceTwo,
@@ -526,10 +529,19 @@ export default{
 		var self = this;
 		this.$http.get(localStorage.apiDomain+'public/index/user/getsubmitorder/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + this.$route.params.oid).then((response)=>{
 			if(response.data.status === 1) {
+			    //获取数据
 				this.data.pindex = response.data.pindex;
 				this.data.process = response.data.process;
 				this.data.order = response.data.order;
 				this.data.products = response.data.products;
+
+				//获取创建订单时间
+                this.sTime = this.data.process[0].time;
+                this.eTime = this.data.process[0].endtime;
+                this.minute = this.eTime.substring(10,13);
+                this.second = this.eTime.substring(14,16);
+
+                //判断是否有赠品
 				for(var i in this.data.products) {
                     if(self.data.products[i].activity == -1) {
                         self.vieible = true
@@ -560,6 +572,10 @@ export default{
 			this.toastMessage = '网络开小差了~';
 			this.toastShow = true;
 		});
+
+		this.update_timer();
+		this.startTimer();
+
 	},
 	methods: {
 		update_timer () {
@@ -581,8 +597,10 @@ export default{
 		},
         startTimer () {
             if (this.stop === false) {
+                this.showTime = true;
                 this.Interval = setInterval(this.update_timer, 1000)
             } else {
+                this.showTime = false;
                 clearInterval(this.Interval)
             }
             this.stop = !this.stop
@@ -775,6 +793,11 @@ export default{
             return years + "-" + month + "-" + days + " " + (hours > 9 ? hours : '0' + hours) + ':' + (minutes > 9 ? minutes : '0' + minutes);
         }
     },
+	watch: {
+        payment: function () {
+            this.startTimer();
+        }  
+	},
 	events: {
 		payOrder: function(){
             this.$router.go({name: 'order-detail'});

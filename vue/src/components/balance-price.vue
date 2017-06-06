@@ -149,7 +149,7 @@
 			lastSum: function(){
 				let getSum = (this.sum + this.freight) - (this.coupon + this.score);
 				if(getSum <= 0) {
-					getSum = 0.02;
+					getSum = 0.01;
 				}
 				return getSum.toFixed(2);
 			}

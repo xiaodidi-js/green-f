@@ -578,18 +578,21 @@
 					}
 					var toDate = new Date() , h = toDate.getHours(), m = toDate.getMinutes();
 					var cart = JSON.parse(sessionStorage.getItem("myCart"));
-                    if(this.pdata[i].peisongok == 0) {
-                        alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                    if(_self.pdata[i].peisongok == 0 && _self.pdata[i].deliverytime == 0) {
+                        console.log("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                        return false;
+                    } else if(_self.pdata[i].peisongok == 0 && _self.pdata[i].deliverytime == 1) {
+                        console.log("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
                         return false;
                     }
                     if(sessionStorage.getItem("myCart") != '') {
                         for(var y in cart) {
                             if (cart[y]["deliverytime"] != _self.pdata[i].deliverytime) {
                                 if (_self.pdata[i].deliverytime == 0) {
-                                    alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                    console.log("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
                                     return false;
                                 } else if (_self.pdata[i].deliverytime == 1) {
-                                    alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                    console.log("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
                                     return false;
                                 }
                             }
