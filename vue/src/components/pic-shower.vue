@@ -11,7 +11,6 @@
 		display:inline-block;
 		vertical-align:middle;
 		width:22%;
-		padding-top:22%;
 		margin-right:3%;
 		border:#D6D5D5 solid 0.1rem;
 		background-color:#EFEFEF;
@@ -41,7 +40,8 @@
 
 <template>
 	<div class="img-area">
-		<div class="image" class="uploaded" v-for="img in imgs" v-lazy:background-image="img.src" @click="$refs.previewer.show($index)">
+		<div class="image" class="uploaded" v-for="img in imgs" @click="$refs.previewer.show($index)">
+			<img :src="img.src" style="width:100%;height:100%;" alt="">
 		</div>
 	</div>
 	<previewer :list="imgs" v-ref:previewer :options="options"></previewer>

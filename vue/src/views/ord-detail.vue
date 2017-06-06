@@ -320,6 +320,29 @@
 	}
 
 
+	.bal-wrapper .changePay {
+		width: 100%;
+		height: 8rem;
+		background: #fff;
+		margin: 10px 0px;
+		text-align: center;
+	}
+
+	.bal-wrapper .changePay .prompt {
+		color: #333;
+		width: 100%;
+		height: 48px;
+		line-height: 60px;
+		text-align: center;
+		font-size: 14px;
+	}
+
+	.bal-wrapper .changePay .countdown {
+		color: #81c429;
+		font-size:14px;
+	}
+
+
 </style>
 
 <template>
@@ -334,6 +357,13 @@
 				<div class="btm" v-else></div>
 			</div>
 		</div>
+
+
+		<div class="changePay">
+			<div class="prompt">请在15分钟内完成付款,晚了就给人抢了</div>
+			<div class="countdown">剩余支付时间 {{ minute }}:{{ second }}</div>
+		</div>
+
 
 		<!-- 订单状态 -->
 		<div class="bl-info-box status">
@@ -387,8 +417,7 @@
 		</div>
 
 		<!-- 商品列表 -->
-		<balance-two :list="data.products" :show-top="true" :show-btm="false"></balance-two>
-
+		<balance-two :list="data.products" :show-top="true" :show-btm="false" :visi="vieible"></balance-two>
 
 		<div class="comment" v-if="data.order.pay == 1 && data.order.receive == 1">
 			<a v-if="data.order.comment==1" v-link="{name:'comment-detail',params:{oid:this.$route.params.oid}}">查看评价</a>
@@ -396,7 +425,12 @@
 		</div>
 
 		<!-- 价格详情 -->
-		<balance-price :sum="data.order.sum" :coupon="data.order.coupon" :score="data.order.score" :freight="data.order.freight" :show-sum="true"></balance-price>
+		<balance-price
+				:sum="data.order.sum"
+				:coupon="data.order.coupon"
+				:score="data.order.score"
+				:freight="data.order.freight"
+				:show-sum="true"></balance-price>
 	</div>
 
 	<separator :set-height="4.5" v-show="data.order.status!=-1"></separator>
@@ -462,7 +496,10 @@ export default{
 			},
             stime: '',
             showGive: true,
-            listGift: []
+            listGift: [],
+            minute: 0,
+            second: 0,
+            vieible: false,
 		}
 	},
 	components: {
@@ -486,13 +523,22 @@ export default{
 	ready() {
 		let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 		ustore = JSON.parse(ustore);
+		var self = this;
 		this.$http.get(localStorage.apiDomain+'public/index/user/getsubmitorder/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + this.$route.params.oid).then((response)=>{
 			if(response.data.status === 1) {
 				this.data.pindex = response.data.pindex;
 				this.data.process = response.data.process;
 				this.data.order = response.data.order;
 				this.data.products = response.data.products;
-                console.log(this.data.products);
+				for(var i in this.data.products) {
+                    if(self.data.products[i].activity == -1) {
+                        self.vieible = true
+						console.log(this.vieible);
+					} else if(self.data.products[i].activity > 0) {
+                        self.vieible = false;
+                        console.log(this.vieible);
+					}
+				}
 				for(let i in this.data.products) {
                     this.stime = this.data.products[i].stime;
 				}
@@ -516,6 +562,31 @@ export default{
 		});
 	},
 	methods: {
+		update_timer () {
+			if (this.second === 0) {
+				if (this.minute < 0) {
+					clearInterval(this.Interval)
+					if(this.payInfo){
+						this.$store.commit('showToast', {type:'cancel',msg:'订单超时！'})
+					}
+					this.minute = 0
+					this.second = 0
+				} else {
+					this.second = 59
+					this.minute--
+				}
+			} else {
+				this.second--
+			}
+		},
+        startTimer () {
+            if (this.stop === false) {
+                this.Interval = setInterval(this.update_timer, 1000)
+            } else {
+                clearInterval(this.Interval)
+            }
+            this.stop = !this.stop
+        },
 		jumpExpress: function() {
 			if(this.data.order.pay !=1 || this.data.order.send !=1 || !this.data.order.snum) {
 				return false;

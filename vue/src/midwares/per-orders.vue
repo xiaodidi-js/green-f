@@ -318,7 +318,7 @@
 					<!--</a>-->
 					<a href="javascript:void(0);" style="display: block;padding-top: 7px;"  @click="visiblepro()">
 						<i class="little-icon qq-ui-icon"></i>
-						<span class="service-txt">客服QQ</span>
+						<span class="service-txt">微信客服</span>
 						<img src="../images/arrow.png" class="service-allow" alt="" />
 					</a>
 				</li>

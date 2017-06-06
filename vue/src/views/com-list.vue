@@ -264,11 +264,11 @@
 				this.getData();
 			},
 			getData: function(){
-				this.$http.get(localStorage.apiDomain+'public/index/index/commentlist/pid/'+this.$route.params.pid+'/type/'+this.column).then((response)=>{
-					if(response.data.status===1){
+				this.$http.get(localStorage.apiDomain+'public/index/index/commentlist/pid/' + this.$route.params.pid + '/type/' + this.column).then((response)=>{
+					if(response.data.status === 1) {
 						this.data = response.data;
 						console.log(this.data.list);
-					}else if(response.data.status===-1){
+					}else if(response.data.status === -1) {
 						this.toastMessage = response.data.info;
 						this.toastShow = true;
 						let context = this;

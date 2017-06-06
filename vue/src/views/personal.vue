@@ -164,7 +164,7 @@
 			<div class="nickname">{{ headerIcon.nickname }}</div>
 			<div class="score" v-link="{name:'integral'}">
 				<span>签到积分:</span>
-				<span>{{ uscore }}</span>
+				<span>{{ number }}</span>
 			</div>
 			<input type="file" id="himg" @click="fileClick" @change="getImage" accept="image/jpeg,image/png,image/gif" style="display:none;" />
 		</div>
@@ -216,9 +216,11 @@
 				uname:'',
 				uscore:0,
 				headerIcon: '',
+				number: 0,
 			}
 		},
 		ready() {
+		    this.main();
             this.weixinHeader();
 		    //记录索引
             this.myActive(1);
@@ -251,6 +253,17 @@
 			});
 		},
 		methods: {
+			main: function() {
+				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+				ustore = JSON.parse(ustore);
+				this.$http.get(localStorage.apiDomain+'public/index/Usercenter/integral/uid/' + ustore.id + '/token/' + ustore.token).then((response)=>{
+                    this.number = response.data.zongfen;
+					console.log(response.data.list);
+				},(response)=>{
+					this.toastMessage = '网络开小差了~';
+					this.toastShow = true;
+				});
+			},
 		    weixinHeader: function () {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);

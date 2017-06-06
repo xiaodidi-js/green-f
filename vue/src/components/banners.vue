@@ -14,6 +14,8 @@
             auto dots-class="dots-my"
             style="width: 100%;margin-top:50px;">
     </swiper>
+
+
 </template>
 
 <script>

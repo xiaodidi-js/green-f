@@ -50,7 +50,6 @@
 
 	.card-box .pro-mes .shotcut{
 		width:22%;
-		padding-top:22%;
 		margin-right:3%;
 		background-color:#DDD;
 		background-size:cover;
@@ -186,10 +185,9 @@
 				<div class="com-box my-com">
 					<div class="boxes left nowrap">
 						<rater :value="item.stars" :font-size="18" :margin="1" :disabled="true"></rater>
-						&nbsp;
-						<label v-if="item.stars>4">好评</label>
-						<label v-if="item.stars>1&&item.stars<=4">中评</label>
-						<label v-if="item.stars<2">差评</label>
+						<label v-if="item.stars > 4">好评</label>
+						<label v-if="item.stars > 1 && item.stars <= 4">中评</label>
+						<label v-if="item.stars < 2">差评</label>
 					</div>
 					<div class="boxes nowrap right">[{{ item.createtime }}]</div>
 					<div class="my-content">
@@ -242,11 +240,11 @@ export default{
 		let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 		ustore = JSON.parse(ustore);
 		this.$http.get(localStorage.apiDomain+'public/index/user/commentdetail/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+this.$route.params.oid).then((response)=>{
-			if(response.data.status===1){
+			if(response.data.status === 1) {
 				this.data.createtime = response.data.createtime;
 				this.data.list = response.data.list;
 				console.log(this.data.createtime);
-                console.log(response.data);
+                console.log(response.data.list);
 			}else if(response.data.status===-1){
 				this.toastMessage = response.data.info;
 				this.toastShow = true;
