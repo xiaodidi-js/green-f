@@ -34,15 +34,14 @@
     }
 
     .integral-head .sign {
-        margin: 10px auto;
+        margin:10px auto;
         display: block;
-        width: 12rem;
-        height: 3.5rem;
-        border: 1px solid #81c429;
+        width: 10rem;
+        height: 3rem;
+        border:1px solid #81c429;
         background: #81c429;
-        color: #fff;
-        border-radius: 5px;
-        font-size: 16px;
+        color:#fff;
+        border-radius:5px;
     }
 
     /* integral-head end */
@@ -161,14 +160,7 @@
         <template v-for="item in allList">
             <div class="body-list">
                 <ul>
-                    <li v-if="item.type == 'orders'">
-                        <div class="all-date">
-                            <p>签到</p>
-                            <p>{{ item.createtime | time }}</p>
-                        </div>
-                        <div class="add-number">+{{ item.amount }}</div>
-                    </li>
-                    <li v-if="item.type == 'qiandao'">
+                    <li>
                         <div class="all-date">
                             <p>签到</p>
                             <p>{{ item.createtime | time }}</p>
@@ -243,7 +235,6 @@
                 this.$http.get(localStorage.apiDomain+'public/index/Usercenter/integral/uid/' + ustore.id + '/token/' + ustore.token).then((response)=>{
                     this.allList = response.data.list;
                     this.orderList = response.data.list;
-                    this.qiandaoList = response.data.list;
                     this.number = response.data.zongfen;
                     console.log(response.data);
                 },(response)=>{

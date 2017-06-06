@@ -51,7 +51,7 @@
 <template>
     <div class="activity-body">
         <div style="margin:0px 10px 10px;">
-            <template v-for="item in data">
+            <template v-for="item in list">
                 <a href="javascript:void(0);" class="activity-text" style="border:none;">
                     <div class="lyt-logo">
                         <img src="../images/logo_lv.png" alt="" style="width:40px;height:40px;float:left;" />
@@ -81,11 +81,12 @@
         },
         data() {
             return {
-                data: this.$store.state.message
+                data: this.$store.state.message,
+                list: JSON.parse(sessionStorage.getItem("messgae")),
             }
         },
         ready () {
-            console.log(this.data);
+
         },
         filters: {
             time: function (value) {

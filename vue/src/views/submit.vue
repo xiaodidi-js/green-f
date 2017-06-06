@@ -956,7 +956,7 @@
                         score:this.scoreSwitch,
                         paysum:this.lastPaySum,
                         tips:this.memo,
-                        openid: 123,//sessionStorage.getItem("openid"),
+                        openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"),
                         pshonse:this.shonse,
                         gift:{'shopid':this.dtype,'id':this.shopid,'giftstu':this.giftstu},
                     };

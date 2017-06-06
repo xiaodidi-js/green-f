@@ -1,15 +1,17 @@
 <style>
 
-	.wrapper{
+	.wrapper-search{
 		width:100%;
 		font-size:0;
+		margin-bottom:25px;
+		overflow: hidden;
 	}
 
-	.wrapper.nopadding{
+	.wrapper-search.nopadding{
 		padding-bottom: 0;
 	}
 
-	.wrapper .title{
+	.wrapper-search .title{
 		display:block;
 		margin:0.5rem 0rem 1rem 0rem;
 		font-size:1.4rem;
@@ -20,22 +22,23 @@
 		padding-left:0.8rem;
 	}
 
-	.wrapper .ui_box {
+	.wrapper-search .ui_box {
 		width: 48%;
 		height: auto;
 		background-color: #fff;
-		display: inline-block;
+		display: block;
+		float:left;
 		font-size: 1.6rem;
 		margin: 4px 2.9px;
 		color: #333;
 		box-shadow: 1px 1px 2px #e2e2e2;
 	}
 
-	.wrapper .ui_box:nth-child(even){
+	.wrapper-search .ui_box:nth-child(even){
 		margin-right:0%;
 	}
 
-	.wrapper .ui_box:nth-last-child(2),.wrapper .ui_box:last-child{
+	.wrapper-search .ui_box:nth-last-child(2),.wrapper-search .ui_box:last-child{
 		/*margin-bottom:3%;*/
 	}
 
@@ -51,12 +54,12 @@
 		height:16rem;
 	}
 
-	.wrapper .ui_box .mes{
+	.wrapper-search .ui_box .mes{
 		padding:0.7rem 0.5rem;
 
 	}
 
-	.wrapper .ui_box .mes .name{
+	.wrapper-search .ui_box .mes .name{
 		font-size:1.4rem;
 		color:#333;
 		line-height:1.8rem;
@@ -71,7 +74,7 @@
 		font-weight:600;
 	}
 
-	.wrapper .ui_box .money{
+	.wrapper-search .ui_box .money{
 		font-size:1.6rem;
 		color:#F9AD0C;
 		width: 40%;
@@ -84,17 +87,16 @@
 		float:left;
 	}
 
-	.wrapper .ui_box .scar {
+	.wrapper-search .ui_box .scar {
 		width: 2.5rem;
-		/* height: 3rem; */
 		float: right;
 	}
 
 </style>
 
 <template>
-	<div class="wrapper" style="padding:50px 0px 20px;">
-		<template v-for="item in arr">
+	<div class="wrapper-search" style="padding:50px 0px 20px;">
+		<template v-for="item in list">
 			<div class="ui_box">
 				<div v-link="{name:'detail',params:{pid:item.id}}">
 					<div class="img"> <!--  v-lazy:background-image="item.src" -->
@@ -109,7 +111,7 @@
 				<div style="margin:0px 10px 10px;height: 20px;">
 					<div class="money">
 						<label class="unit">¥</label>{{ item.price }}
-				</div>
+					</div>
 					<div class="scar" @click="addCartShop(item.id)">
 						<img src="../images/shopcar_youlike.png" style="width:100%;height:100%;"/>
 					</div>
@@ -146,7 +148,7 @@
                 toastShow:false,
 				searchKey: '',
 				arr:this.$store.state.shopname,
-				listArr: [],
+				list: JSON.parse(sessionStorage.getItem("serach")),
                 activestu:0,
                 buyNums:1,
                 proNums:1,
@@ -154,9 +156,6 @@
 		},
 		ready() {
 			this.keyCodefun();
-			sessionStorage.setItem("arr",this.arr);
-			console.log(sessionStorage.getItem("arr"));
-			console.log(this.listArr);
 		},
 		computed: {
 
@@ -165,30 +164,36 @@
             addCartShop (id){
                 //购物车缓存
                 var cart = JSON.parse(sessionStorage.getItem("myCart")) , obj = {} , _self = this;
-                if(cart != '') {
-                    console.log(1);
-                    for(var y in cart) {
-                        if (cart[y]["deliverytime"] != _self.arr[y].deliverytime) {
-                            if (_self.arr[y].deliverytime == 0) {
-                                alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                return false;
-                            } else if (_self.arr[y].deliverytime == 1) {
-                                alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                return false;
+
+                for(var i in this.list) {
+                    this.list[i].index = i;
+                    if(this.list[i].peisongok == 0) {
+                        alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                        return false;
+                    }
+                    if(cart != '') {
+                        for(var y in cart) {
+                            if (cart[y]["deliverytime"] != _self.list[y].deliverytime) {
+                                if (_self.list[y].deliverytime == 0) {
+                                    alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                    return false;
+                                } else if (_self.list[y].deliverytime == 1) {
+                                    alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                    return false;
+                                }
                             }
                         }
                     }
-                }
-                for(var i in this.arr) {
                     obj = {
                         id:id,
-                        name:this.arr[i].name,
-                        price:this.arr[i].price,
-                        shotcut:this.arr[i].shotcut,
-                        deliverytime:this.arr[i].deliverytime,
+                        name:this.list[i].name,
+                        price:this.list[i].price,
+                        shotcut:this.list[i].shotcut,
+                        deliverytime:this.list[i].deliverytime,
+                        peisongok:this.list[i].peisongok,
+                        activestu:this.list[i].activestu,
                         nums:this.buyNums,
                         store:this.proNums,
-                        activestu:this.activestu,
                         format:'',
                         formatName:'',
 					}

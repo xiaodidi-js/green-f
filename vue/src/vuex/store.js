@@ -20,9 +20,11 @@ const mutations = {
     },
     myVipMessage (state,message) {
         state.message = message;
+        sessionStorage.setItem("messgae",JSON.stringify(state.message));
     },
 	mySearch (state,shopName) {
        state.shopname = shopName;
+       sessionStorage.setItem("serach",JSON.stringify(state.shopname));
 	},
 	myActive (state, index) {
        state.dtype = index

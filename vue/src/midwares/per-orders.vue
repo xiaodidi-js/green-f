@@ -394,8 +394,6 @@
 
 		},
 		ready() {
-
-
             this.getData(1);
             this.kefu();
 		    if(this.$store.state.dtype == 5) {

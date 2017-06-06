@@ -298,6 +298,7 @@
 		width: 22px;
 		height: 20px;
 	}
+
 </style>
 
 <template>
@@ -332,7 +333,7 @@
 							</template>
 							<template v-if="item.arr.length == 4">
 								<div style="width:25%;float:left;">
-									<a class="href-ui" :href="'//'+item1.htmlurl"> <!--   -->
+									<a class="href-ui" :href="'//'+item1.htmlurl" > <!-- :href="'//'+item1.htmlurl"  -->
 										<img :src="item1.url" alt="" style="width:100%;" />
 									</a>
 								</div>
@@ -371,7 +372,6 @@
 			</template>
 		</div>
 	</div>
-
 
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>

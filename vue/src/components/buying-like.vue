@@ -212,6 +212,8 @@
                             price:this.likedata[i].price,
                             shotcut:this.likedata[i].shotcut,
                             deliverytime:this.likedata[i].deliverytime,
+                            peisongok:this.likedata[i].peisongok,
+                            activestu:this.likedata[i].activestu,
                             nums:this.buyNums,
                             store:this.proNums,
                             format:'',
