@@ -799,7 +799,13 @@
             oneGift: function (oid,money) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                this.$http.get(localStorage.apiDomain + 'public/index/user/manjiusong/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + oid + '/money/' + money).then((response)=>{
+                var obj = {
+                    uid:ustore.id,
+                    token:ustore.token,
+                    sinceid:oid,
+                    money:money
+                }
+                this.$http.post(localStorage.apiDomain + 'public/index/user/manjiusong' , obj).then((response)=>{
                     if(response.data.status === 1) {
                         this.showGive = true;
                         this.listGift = response.data.maxmoney;
@@ -818,7 +824,7 @@
                     } else if(response.data.status === 0) {
                         this.showGive = true;
                         this.giftstu = 0;
-                        this.$http.get(localStorage.apiDomain + 'public/index/user/shoudan/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + oid + '/money/' + money).then((response)=>{
+                        this.$http.post(localStorage.apiDomain + 'public/index/user/shoudan' ,	 obj).then((response)=>{
                             this.listGift = response.data.shoudan_data;
                             console.log(this.listGift);
 						},(response)=>{
@@ -911,9 +917,6 @@
         },
         events: {
 			submitOrder: function() {
-
-			    console.log(this.dtype);
-
                 if(!this.deliverType) {
                     this.toastMessage = '未选择收货方式';
                     this.toastShow = true;
@@ -956,7 +959,7 @@
                         score:this.scoreSwitch,
                         paysum:this.lastPaySum,
                         tips:this.memo,
-                        openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"),
+                        openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                         pshonse:this.shonse,
                         gift:{'shopid':this.dtype,'id':this.shopid,'giftstu':this.giftstu},
                     };

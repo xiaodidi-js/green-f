@@ -112,7 +112,7 @@
 					<div class="money">
 						<label class="unit">¥</label>{{ item.price }}
 					</div>
-					<div class="scar" @click="addCartShop(item.id)">
+					<div class="scar" @click="addCartShop(item)">
 						<img src="../images/shopcar_youlike.png" style="width:100%;height:100%;"/>
 					</div>
 				</div>
@@ -155,69 +155,50 @@
 			}
 		},
 		ready() {
-			this.keyCodefun();
+
 		},
 		computed: {
 
 		},
 		methods: {
-            addCartShop (id){
+            addCartShop (data){
                 //购物车缓存
                 var cart = JSON.parse(sessionStorage.getItem("myCart")) , obj = {} , _self = this;
-
-                for(var i in this.list) {
-                    this.list[i].index = i;
-                    if(this.list[i].peisongok == 0) {
-                        alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
-                        return false;
-                    }
-                    if(cart != '') {
-                        for(var y in cart) {
-                            if (cart[y]["deliverytime"] != _self.list[y].deliverytime) {
-                                if (_self.list[y].deliverytime == 0) {
-                                    alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                    return false;
-                                } else if (_self.list[y].deliverytime == 1) {
-                                    alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                    return false;
-                                }
+                if(data.peisongok == 0 && data.deliverytime == 0) {
+                    alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
+                    return false;
+                } else if(data.peisongok == 0 && data.deliverytime == 1) {
+                    alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                    return false;
+                }
+                if(cart != '') {
+                    for(var y in cart) {
+                        if (cart[y]["deliverytime"] != data.deliverytime) {
+                            if (_self.list[y].deliverytime == 0) {
+                                alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                return false;
+                            } else if (data.deliverytime == 1) {
+                                alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                return false;
                             }
                         }
                     }
-                    obj = {
-                        id:id,
-                        name:this.list[i].name,
-                        price:this.list[i].price,
-                        shotcut:this.list[i].shotcut,
-                        deliverytime:this.list[i].deliverytime,
-                        peisongok:this.list[i].peisongok,
-                        activestu:this.list[i].activestu,
-                        nums:this.buyNums,
-                        store:this.proNums,
-                        format:'',
-                        formatName:'',
-					}
-				}
+                }
+                obj = {
+                    id:data.id,
+                    name:data.name,
+                    price:data.price,
+                    shotcut:data.shotcut,
+                    deliverytime:data.deliverytime,
+                    peisongok:data.peisongok,
+                    activestu:data.activestu,
+                    nums:this.buyNums,
+                    store:this.proNums,
+                    format:'',
+                    formatName:'',
+                }
 				this.setCart(obj);
                 alert("加入购物车成功!");
-			},
-            keyCodefun: function (event) {
-                var _this = this;
-                var e = event || window.event;
-                if(e && e.keyCode == 13) {
-                    _this.goSearch();
-                }
-            },
-            goSearch: function() {
-				this.searchKey = this.searchKey.replace(/(^\s*)|(\s*$)/g,'');
-				if(this.searchKey === "") {
-                    this.toastMessage = "请输入关键字...";
-                    this.toastShow = true;
-				}
-				if(this.searchKey.length <= 0) {
-					return false;
-				}
-				this.$dispatch('goSearch',this.searchKey);
 			}
 		}
 	}

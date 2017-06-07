@@ -358,10 +358,13 @@
 			</div>
 		</div>
 
-		<div class="changePay" v-show="showTime">
-			<div class="prompt">请在15分钟内完成付款,晚了就给人抢了</div>
-			<div class="countdown">剩余支付时间{{ minute }} : {{ second }} </div>
-		</div>
+		<!--倒计时-->
+		<surplus :showele="showTime" :time="data.process[0].endtime - data.process[0].stime"></surplus>
+
+		<!--<div class="changePay" v-show="showTime">-->
+			<!--<div class="prompt">请在15分钟内完成付款,晚了就给人抢了</div>-->
+			<!--<div class="countdown">剩余支付时间{{ minute }} : {{ second }} </div>-->
+		<!--</div>-->
 
 		<!-- 订单状态 -->
 		<div class="bl-info-box status">
@@ -466,6 +469,8 @@ import Loading from 'vux/src/components/loading'
 import Confirm from 'vux/src/components/confirm'
 import Scroller from 'vux/src/components/scroller'
 import { setCartAgain,clearAll } from 'vxpath/actions'
+import Surplus from 'components/surplus'
+
 
 export default{
 	vuex: {
@@ -497,8 +502,7 @@ export default{
             listGift: [],
             minute: 0,
             second: 0,
-            sTime: '',
-            eTime: '',
+            TimeText: '',
             vieible: false,
             stop: false,
             interval: '',
@@ -513,7 +517,8 @@ export default{
 		Toast,
 		Loading,
 		Confirm,
-        Scroller
+        Scroller,
+        Surplus
 	},
 	route: {
 		data(transition) {
@@ -535,11 +540,21 @@ export default{
 				this.data.order = response.data.order;
 				this.data.products = response.data.products;
 
-				//获取创建订单时间
-                this.sTime = this.data.process[0].time;
-                this.eTime = this.data.process[0].endtime;
-                this.minute = this.eTime.substring(10,13);
-                this.second = this.eTime.substring(14,16);
+                this.TimeText = this.data.process[0].endtime - this.data.process[0].stime;
+                console.log(this.TimeText);
+
+                if(this.data.order.statext == '用户取消'){
+                    this.showTime = false;
+                } else if(this.data.order.statext == '待支付') {
+                    this.showTime = true;
+                } else if(this.data.order.statext == '确认收货') {
+                    this.showTime = false;
+				} else if (this.minute == '0' && this.second == "0") {
+                    //取消订单
+                    this.clickType = 1;
+                    this.$router({name: 'ord-detail'});
+                    this.showTime = false;
+                }
 
                 //判断是否有赠品
 				for(var i in this.data.products) {
@@ -577,7 +592,15 @@ export default{
 		this.startTimer();
 
 	},
+    watch: {
+        payment: function () {
+            this.startTimer();
+        }
+    },
 	methods: {
+	    runTime() {
+
+        },
 		update_timer () {
 			if (this.second === 0) {
 				if (this.minute < 0) {
@@ -793,11 +816,6 @@ export default{
             return years + "-" + month + "-" + days + " " + (hours > 9 ? hours : '0' + hours) + ':' + (minutes > 9 ? minutes : '0' + minutes);
         }
     },
-	watch: {
-        payment: function () {
-            this.startTimer();
-        }  
-	},
 	events: {
 		payOrder: function(){
             this.$router.go({name: 'order-detail'});

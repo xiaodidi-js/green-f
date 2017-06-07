@@ -1,8 +1,9 @@
 <style scoped>
 	.col-wrapper,.card-wrapper{
-		width:100%;
-		height:auto;
-		margin-top: 15px;
+		width: 100%;
+		height: auto;
+		margin-top: 10px;
+		margin-bottom: 30px;
 	}
 
 	.notify-box{

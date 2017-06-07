@@ -4,7 +4,7 @@
         height: auto;
         box-sizing:border-box;
         padding:0px 1%;
-        padding-bottom: 25px;
+        padding-bottom: 65px;
     }
     .youlike_title{
         width: 100%;
@@ -41,10 +41,27 @@
     .youlike_list ul li:nth-of-type(2){
         margin-right:0.39rem;
     }
+    .list_pirture {
+        position:relative;
+    }
     .list_pirture img{
         width: 100%;
         height: 8.556rem;
     }
+
+    .list_pirture .qing {
+        position:absolute;
+        top:0px;
+        left:0px;
+        width:100%;
+        height:100%;
+        background: rgba(0,0,0,0.5);
+        text-align:center;
+        font-size:24px;
+        line-height: 89px;
+        color:#fff;
+    }
+
     .list_value{
         width: 100%;
         height: 30px;
@@ -107,6 +124,7 @@
                 <li v-for="item in likedata">
                     <div v-link="{name:'detail',params:{pid:item.id}}">
                         <div class="list_pirture">
+                            <div class="qing" v-show="showQiag">已售罄</div>
                             <img :src="item.shotcut"/>
                         </div>
                         <div class="list_value">{{ item.name }}</div>
@@ -114,7 +132,7 @@
                             <div class="footer_money">￥{{ item.price }}</div>
                         </div>
                     </div>
-                    <div class="footer_shopcar" @click="addCarts(item.id)">
+                    <div class="footer_shopcar" @click="addCarts(item)">
                         <img src="../images/shopcar_youlike.png"/>
                     </div>
                 </li>
@@ -166,6 +184,7 @@
             return {
                 toastMessage: '',
                 toastShow: false,
+                showQiag: false,
                 proNums:1,
                 buyNums:1,
                 activestu:0
@@ -187,56 +206,37 @@
                     this.toastShow = true;
                 });
             },
-            addCarts: function (id) {
-                var obj = {};
-                var _self = this;
-                if(this.proNums <= 0) {
-                    this.toastMessage = '商品暂时缺货';
-                    this.toastShow = true;
+            addCarts: function (data) {
+                var obj = {} , cart = JSON.parse(sessionStorage.getItem("myCart")) , _self = this;
+                obj = {
+                    id:data.id,
+                    name:data.name,
+                    price:data.price,
+                    shotcut:data.shotcut,
+                    deliverytime:data.deliverytime,
+                    peisongok:data.peisongok,
+                    activestu:data.activestu,
+                    nums:this.buyNums,
+                    store:this.proNums,
+                    format:'',
+                    formatName:'',
+                };
+                if(data.peisongok == 0 && data.deliverytime == 0) {
+                    alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
                     return false;
-                }else if(this.buyNums < 1) {
-                    this.toastMessage = '购买数量不能小于1';
-                    this.toastShow = true;
-                    return false;
-                }else if(this.buyNums > this.proNums) {
-                    this.toastMessage = '购买数量超过库存数量';
-                    this.toastShow = true;
+                } else if(data.peisongok == 0 && data.deliverytime == 1) {
+                    alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                     return false;
                 }
-                for(let i in this.likedata) {
-                    this.likedata[i].index = i;
-                    if (id == this.likedata[i].id) {
-                        obj = {
-                            id:id,
-                            name:this.likedata[i].name,
-                            price:this.likedata[i].price,
-                            shotcut:this.likedata[i].shotcut,
-                            deliverytime:this.likedata[i].deliverytime,
-                            peisongok:this.likedata[i].peisongok,
-                            activestu:this.likedata[i].activestu,
-                            nums:this.buyNums,
-                            store:this.proNums,
-                            format:'',
-                            formatName:'',
-                        };
-                    }
-                    var cart = JSON.parse(sessionStorage.getItem("myCart"));
-                    if(this.likedata[i].peisongok == 0) {
-                        alert("抱歉，菜品已截单，请到首页选购菜品，谢谢合作！");
-                        _self.toastMessage = "";
-                        _self.toastShow = false;
-                        return false;
-                    }
-                    if(cart != '') {
-                        for(var y in cart) {
-                            if (cart[y]["deliverytime"] != this.likedata[i].deliverytime) {
-                                if (this.likedata[i].deliverytime == 0) {
-                                    alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                    return false;
-                                } else if (this.likedata[i].deliverytime == 1) {
-                                    alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！！");
-                                    return false;
-                                }
+                if(cart != '') {
+                    for(var y in cart) {
+                        if (cart[y]["deliverytime"] != data.deliverytime) {
+                            if (data.deliverytime == 0) {
+                                alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                return false;
+                            } else if (data.deliverytime == 1) {
+                                alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！！");
+                                return false;
                             }
                         }
                     }

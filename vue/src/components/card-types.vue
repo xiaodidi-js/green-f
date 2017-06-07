@@ -381,7 +381,7 @@
 									</p>
 								</div>
 							</div>
-							<div class="icon-card" @click="goCart(item.id)"></div>
+							<div class="icon-card" @click="goCart(item)"></div>
 						</div>
 					</template>
 				</div>
@@ -546,58 +546,46 @@
             comfirmFun: function (cid) {
 
             },
-            goCart: function(id) {
-                var obj = {};
-                var _self = this;
-                for(let i in this.pdata) {
-                    this.pdata[i].index = i;
-                    if (id == this.pdata[i].id) {
-                        obj = {
-                            id:id,
-                            name:this.pdata[i].title,
-                            price:this.pdata[i].price,
-                            shotcut:this.pdata[i].src,
-                            deliverytime:this.pdata[i].deliverytime,
-                            activestu:this.pdata[i].activestu,
-                            peisongok:this.pdata[i].peisongok,
-                            nums:this.buyNums,
-                            store:this.proNums,
-                            format:'',
-                            formatName:'',
-                        };
-					}
-                    if(this.pdata[i].share == null) {
-                        _self.activestu == 0;
-                    } else {
-                        _self.activestu == 2;
-                    }
-                    if(this.pdata[i].sale == null) {
-                        _self.activestu == 0;
-					} else {
-                        _self.activestu == 1;
-					}
-					var toDate = new Date() , h = toDate.getHours(), m = toDate.getMinutes();
-					var cart = JSON.parse(sessionStorage.getItem("myCart"));
-                    if(_self.pdata[i].peisongok == 0 && _self.pdata[i].deliverytime == 0) {
-                        console.log("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
-                        return false;
-                    } else if(_self.pdata[i].peisongok == 0 && _self.pdata[i].deliverytime == 1) {
-                        console.log("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
+            goCart: function(data) {
+                var obj = {} , _self = this, cart = JSON.parse(sessionStorage.getItem("myCart"));
+                obj = {
+                    id:data.id,
+                    name:data.title,
+                    price:data.price,
+                    shotcut:data.src,
+                    deliverytime:data.deliverytime,
+                    activestu:data.activestu,
+                    peisongok:data.peisongok,
+                    nums:this.buyNums,
+                    store:this.proNums,
+                    format:'',
+                    formatName:'',
+                };
+                //获取当前时间
+                var date = new Date(), hours = date.getHours(), minute = date.getMinutes(), seconds = date.getSeconds();
+                var minuteOfDay =  hours * 60  + minute; //从0:00分开是到目前为止的分钟数
+                var start = 0 * 60; //开始时间
+                var end = 20 * 60;  //结束时间
+                if(minuteOfDay <= start && minuteOfDay >= end) {
+					return true;
+                } else {
+                    if(data.peisongok == 0 && data.deliverytime == 1) {
+                        alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                         return false;
                     }
-                    if(sessionStorage.getItem("myCart") != '') {
-                        for(var y in cart) {
-                            if (cart[y]["deliverytime"] != _self.pdata[i].deliverytime) {
-                                if (_self.pdata[i].deliverytime == 0) {
-                                    console.log("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                    return false;
-                                } else if (_self.pdata[i].deliverytime == 1) {
-                                    console.log("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                    return false;
-                                }
+                }
+                if(sessionStorage.getItem("myCart") != '') {
+                    for(var y in cart) {
+                        if (cart[y]["deliverytime"] != data.deliverytime) {
+                            if (data.deliverytime == 0) {
+                                alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                return false;
+                            } else if (data.deliverytime == 1) {
+                                alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                return false;
                             }
                         }
-					}
+                    }
                 }
                 this.setCart(obj);
                 obj = {};

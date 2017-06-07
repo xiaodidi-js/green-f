@@ -37,6 +37,7 @@ export default{
 	ready() {
 		this.$http.get(localStorage.apiDomain+'public/index/index/columns').then((response)=>{
 			this.data = response.data.classify;
+			sessionStorage.setItem("classify",JSON.stringify(this.data));
 		},(response)=>{
 			this.toastMessage = "网络开小差啦~";
 			this.toastShow = true;

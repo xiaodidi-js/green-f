@@ -250,6 +250,7 @@
                     if(response.data.status == 0) {
                         alert("今天已签到了哦!");
                     } else if(response.data.status == 1) {
+                        this.$router.go({name: 'integral'});
                         alert("签到成功！");
                     }
                 },(response)=>{

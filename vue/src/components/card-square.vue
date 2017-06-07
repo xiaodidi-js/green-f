@@ -116,7 +116,7 @@
 						<div class="money">
 							<label class="unit">¥</label>{{ item.price }}
 						</div>
-						<div class="scar" @click="addCart(item.id)">
+						<div class="scar" @click="addCart(item)">
 							<img src="../images/shopcar_youlike.png" style="width:100%;height:100%;"/>
 						</div>
 					</div>
@@ -140,36 +140,13 @@
 					<div class="money">
 						<label class="unit">¥</label>{{ item.price }}
 					</div>
-					<div class="scar" @click="addCart(item.id)">
+					<div class="scar" @click="addCart(item)">
 						<img src="../images/shopcar_youlike.png" style="width:100%;height:100%;"/>
 					</div>
 				</div>
 			</div>
 		</div>
 	</template>
-
-	<!--<div class="wrapper" style="padding-bottom: 70px;" :class="{'nopadding':noPadding}">-->
-		<!--<div class="ui_box">-->
-			<!--<div class="img">-->
-				<!--<img src="http://file.green-f.cn/2017/06/04/09/02/13/upload_ee6be3b84e9a1cb157db3f56b9c2cfc8.jpg" alt="" style="width:100%;height:100%;" />-->
-			<!--</div>-->
-			<!--<div class="mes">-->
-				<!--<div class="name">-->
-					<!--本地四季豆 500g/份-->
-				<!--</div>-->
-			<!--</div>-->
-			<!--<div style="padding-bottom: 25px;margin: 0px 5px;">-->
-				<!--<div class="money">-->
-					<!--<label class="unit">¥</label>99-->
-					<!--</div>-->
-				<!--<div class="scar">-->
-					<!--<img src="../images/shopcar_youlike.png" style="width:100%;height:100%;"/>-->
-				<!--</div>-->
-			<!--</div>-->
-		<!--</div>-->
-	<!--</div>-->
-
-
 </template>
 
 <script>
@@ -200,43 +177,42 @@
 			}
 		},
 		methods: {
-            addCart (id) {
-                var obj = {};
-                //购物车缓存
-                var cart = JSON.parse(sessionStorage.getItem("myCart")), _self = this;
+            addCart (data) {
+                var obj = {} , cart = JSON.parse(sessionStorage.getItem("myCart")), _self = this;
                 for(var i in this.info.list) {
-                    if(this.info.list[i].peisongok == 0) {
+                    if(data.peisongok == 0 && data.deliverytime == 0) {
+                        alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
+                        return false;
+                    } else if(data.peisongok == 0 && data.deliverytime == 1) {
                         alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                         return false;
                     }
                     if(cart != '') {
                         for(var y in cart) {
-                            if (cart[y]["deliverytime"] != _self.info.list[i].deliverytime) {
-                                if (_self.info.list[i].deliverytime == 0) {
+                            if (cart[y]["deliverytime"] != data.deliverytime) {
+                                if (data.deliverytime == 0) {
                                     alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
                                     return false;
-                                } else if (_self.info.list[i].deliverytime == 1) {
+                                } else if (data.deliverytime == 1) {
                                     alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
                                     return false;
                                 }
                             }
                         }
                     }
-                    if (id == this.info.list[i].id) {
-                        obj = {
-                            id: id,
-                            name: this.info.list[i].title,
-                            price: this.info.list[i].price,
-                            shotcut: this.info.list[i].src,
-                            deliverytime: this.info.list[i].deliverytime,
-                            activestu: this.info.list[i].activestu,
-                            peisongok: this.info.list[i].peisongok,
-                            nums: this.buyNums,
-                            store: this.proNums,
-                            formatName: '',
-                            format: '',
-                        };
-                    }
+                    obj = {
+                        id: data.id,
+                        name: data.title,
+                        price: data.price,
+                        shotcut: data.src,
+                        deliverytime: data.deliverytime,
+                        activestu: data.activestu,
+                        peisongok: data.peisongok,
+                        nums: this.buyNums,
+                        store: this.proNums,
+                        formatName: '',
+                        format: '',
+                    };
 				}
 				this.setCart(obj);
                 alert("加入购物车成功！");

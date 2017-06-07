@@ -197,11 +197,11 @@
 			<p class="myp">限时抢购</p>
 			<div class="timer">
 				<p class="timer_p">距结束</p>
-				<div class="box"><span style="font-size: 1.4rem;">{{ timeRes.hour}}</span></div>
+				<div class="box"><span style="font-size: 1.4rem;">{{ timeRes.hour }}</span></div>
 				<p class="timer_dian">:</p>
-				<div class="box"><span style="font-size: 1.4rem;">{{ timeRes.minute}}</span></div>
+				<div class="box"><span style="font-size: 1.4rem;">{{ timeRes.minute }}</span></div>
 				<p class="timer_dian">:</p>
-				<div class="box"><span style="font-size: 1.4rem;">{{ timeRes.second}}</span></div>
+				<div class="box"><span style="font-size: 1.4rem;">{{ timeRes.second }}</span></div>
 				<div class="time">
 					<label class="dotted" v-if="status == 0">抢购进行中!</label>
 					<label class="none" v-if="status < 0">抢购已结束</label>
@@ -265,6 +265,7 @@
             this.$watch('columns',function(newVal) {
                 for(var i = 0;i < newVal.length; i++) {
                     var mytime = newVal[i].etime - newVal[i].servertime;
+                    console.log(mytime);
                     if(newVal[i].nowsale == 1 && newVal[i].etime > 0) {
                         this.showele = true;
                         _self.time = mytime;
@@ -279,7 +280,6 @@
                 this.timer = setInterval(function(){
                     _self.time--;
                     if(_self.time == 0) {
-                        console.log(_self.time);
                         _self.showele = false;
                         _self.$router.go({name:'index'});
 					}

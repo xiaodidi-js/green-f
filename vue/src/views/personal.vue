@@ -269,7 +269,7 @@
                 ustore = JSON.parse(ustore);
                 let openid = sessionStorage.getItem("openid");
                 this.$http.get(localStorage.apiDomain + 'public/index/index/get_weixin?openid=' + openid).then((response)=>{  /* 'os0CqxBBANhLuBLTsViL3C0zDlNs' */
-					this.headerIcon = response.data.msg.weixindata;
+					this.headerIcon = response.data.info.weixindata;
                     console.log(this.headerIcon);
                     var header = JSON.stringify(this.headerIcon);
                     localStorage.setItem("userHeader",header);

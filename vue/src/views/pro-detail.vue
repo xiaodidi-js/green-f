@@ -383,7 +383,7 @@
 		display:inline-block;
 		font-size:1.2rem;
 		vertical-align:middle;
-		width:25%;
+		width:33.3%;
 		white-space:nowrap;
 		text-overflow:ellipsis;
 		overflow:hidden;
@@ -969,7 +969,13 @@
 					this.proNums = this.data.store;
 				}
                 //判断是否活动商品
-//                this.data.sale == null ? this.seckillShow = false : this.seckillShow = true;
+                if(_self.data.activeid == 0) {
+                    _self.seckillShow = false
+					console.log(_self.seckillShow);
+				} else if(_self.data.activeid != 0) {
+                    console.log(_self.seckillShow);
+                    _self.seckillShow = true;
+				}
                 //判断是否分享商品
 //                this.data.share != null ? _self.activestu = 2 : _self.activestu = 0;
                 //微信分享
@@ -1097,6 +1103,8 @@
 				this.toastMessage = "网络开小差啦~";
 				this.toastShow = true;
 			});
+
+
 		},
 		computed: {
 			makeFreight: function(){
@@ -1282,10 +1290,25 @@
 				});
 			},
 			addNums: function(){
-				if(this.buyNums>=this.proNums){
-					return false;
+			    if(this.data.activeid == 0) {
+                    if(this.buyNums>=this.proNums){
+                        return false;
+                    }
+                    this.buyNums++;
+				} else if(this.data.activeid != 0) {
+                    if(this.buyNums >= this.proNums){
+                        return false;
+                    }
+                    console.log(parseInt(this.data.activepay));
+                    if(parseInt(this.data.activepay) >= this.buyNums) {
+                        this.buyNums++;
+                        if(this.buyNums == parseInt(this.data.activepay)) {
+							return;
+						}
+					}
+                    this.buyNums = parseInt(this.data.activepay);
+                    alert("超出限购范围");
 				}
-				this.buyNums++;
 			},
 			reduceNums: function() {
 				if(this.buyNums <= 1) {
@@ -1311,6 +1334,7 @@
 			buyNow: function() {
                 if(!this.formatPopShow == true) {
                     this.formatPopShow = true;
+                    console.log(this.data.activepay);
                     return false;
                 }
                 if(this.proNums <= 0) {
@@ -1342,6 +1366,8 @@
                     store:this.proNums,
                     activestu:this.data.activestu
                 };
+
+
                 var _self = this;
                 var shoping = JSON.parse(sessionStorage.getItem("myCart"));
                 if(this.data.peisongok == 0) {

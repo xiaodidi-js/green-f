@@ -602,6 +602,14 @@ const routers = {
         component (resolve) {
             require(['./components/order-payment.vue'], resolve);
         }
+    },
+    '/surplus' : {
+        name:'surplus',
+        header:false,
+        footer:false,
+        component (resolve) {
+            require(['./components/surplus.vue'], resolve);
+        }
     }
 };
 export default routers;
