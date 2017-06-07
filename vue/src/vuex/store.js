@@ -10,11 +10,15 @@ const state = {
     dtype: 1,
 	shopname: {},
     message: {},
-	text: ""
+	text: "",
+    number: 0,
 }
 
 //应用状态操作
 const mutations = {
+    myScrollTop (state,number) {
+        state.number = number;
+    },
     myActiveTwo (state,text) {
         state.text = text;
     },

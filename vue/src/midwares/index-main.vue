@@ -130,7 +130,7 @@
 	import CardImage from 'components/card-image'
 	import Toast from 'vux/src/components/toast'
     import Swiper from 'vux/src/components/swiper'
-    import { myActive,mySearch } from 'vxpath/actions'
+    import { myActive,mySearch,myScrollTop } from 'vxpath/actions'
     import axios from 'axios'
     import qs from 'qs'
 
@@ -146,7 +146,8 @@
         vuex: {
             actions: {
                 myActive,
-                mySearch
+                mySearch,
+                myScrollTop,
             }
         },
 		data() {
@@ -179,6 +180,7 @@
 		ready() {
 			this.indexMessage();
             this.timeline();
+
             $(window).scroll(function(){
                 if($(window).scrollTop() >= 350){
                     $(".goto_top").fadeIn(500);
@@ -198,7 +200,6 @@
             breakSearch: function (event) {
 				var e = window.event || event;
 				if(e && e.keyCode == 13) {
-					console.log(1);
 					this.goSearch();
 				}
             },
@@ -206,7 +207,6 @@
                 var _self = this;
                 this.$http.get(localStorage.apiDomain + 'public/index/index/searchshop?shopname=' + this.searchKey).then((response)=>{
                     if(response.data.status == 1) {
-                        console.log(response.data.info.data);
                         let arr = [];
                         arr = response.data.info;
                         this.$router.go({

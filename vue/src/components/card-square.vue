@@ -180,10 +180,7 @@
             addCart (data) {
                 var obj = {} , cart = JSON.parse(sessionStorage.getItem("myCart")), _self = this;
                 for(var i in this.info.list) {
-                    if(data.peisongok == 0 && data.deliverytime == 0) {
-                        alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
-                        return false;
-                    } else if(data.peisongok == 0 && data.deliverytime == 1) {
+                    if(data.peisongok == 0 && data.deliverytime == 1) {
                         alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                         return false;
                     }

@@ -574,7 +574,7 @@
 		box-sizing: border-box;
 		padding-left: 14%;
 		margin-top: 15px;
-		display:block;
+		display:none;
 	}
 	.product_share_button{
 		width: 83%;

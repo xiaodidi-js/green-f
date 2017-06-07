@@ -68,17 +68,9 @@
                 type: Number,
                 default: 0
             },
-            unith: {
-                type: String,
-                default: ':'
-            },
-            unitm: {
-                type: String,
-                default: ':'
-            },
-            units: {
-                type: String,
-                default: ''
+            clickType: {
+                type: Number,
+                default: 0
             }
         },
         data() {
@@ -91,11 +83,7 @@
 
         },
         ready() {
-            if(this.kind === 1) {
-                this.unith = "小时";
-                this.unitm = "分";
-                this.units = "秒";
-            }
+
             if(this.time){
                 this.setTime();
             }else{
@@ -109,7 +97,9 @@
                     _self.time--;
                     if(_self.time == 0) {
                         _self.showele = false;
-                        _self.$router.go({name:'order-detail'});
+                        _self.$dispatch('overtime');
+                        _self.$router.go({name:'index'});
+                        clearInterval(_self.timer);
                     }
                 },1000);
             }

@@ -62,7 +62,7 @@
                         <div class="activity-data" style="float:right;line-height:35px;margin-right:0px;">{{ item.createtime | time }}</div>
                     </div>
                     <div class="activity-img">
-                        <img :src="item.img" alt="" style="width:100%;" />
+                        <img :src="item.content" alt="" style="width:100%;" />
                     </div>
                     <p class="next-desc">{{ item.sdesc }}</p>
                 </a>

@@ -62,3 +62,8 @@ export const myVipMessage = function ({dispatch}, message) {
 export const myActiveTwo = function ({dispatch}, text) {
     dispatch('myActiveTwo', text);
 }
+
+//保存滚动条
+export const myScrollTop = function ({dispatch}, number) {
+    dispatch('myScrollTop', number);
+}

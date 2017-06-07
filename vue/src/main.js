@@ -33,12 +33,12 @@ localStorage.setItem('apiDomain','http://green-f.cn/'); /* http://newshop.com/ *
 let router = new VueRouter({
     // 是否开启History模式的路由,默认开发环境开启,生产环境不开启。如果生产环境的服务端没有进行相关配置,请慎用
     history: Env != 'production',
+    saveScrollPosition: true,
     scrollBehavior (to, from, savedPosition) {
         if (savedPosition) {
-        	console.log(savedPosition);
+        	alert(savedPosition);
             return savedPosition
         } else {
-            console.log(x + "-" + y);
             return { x: 0, y: 0 }
         }
     }
