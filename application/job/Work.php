@@ -1,15 +1,26 @@
 <?php
 namespace app\job;
-
+use app\index\model\MemberOrders;
 use think\queue\Job;
 class Work{
 	public function fire(Job $job, $data){
-		$time = time();
-		//....这里执行具体的任务 
-		echo "123";
-		if ($job->attempts() > 3) {
-			//通过这个方法可以检查这个任务已经重试了几次了
+		// 订单过期处理
+		if($data['stu'] == 'OrderExpire'){
+			$OrderExpire = $this->OrderExpire($data);
+			if($OrderExpire == 1){
+				$job->delete();
+			}else{
+				$job->release();
+			}
 		}
+		/*$time = time();
+		//....这里执行具体的任务
+		$fafa['text'] = $data[3]; 
+		$edit = db('test')->insert($fafa);
+		dump($edit);*/
+		/*if ($job->attempts() > 3) {
+			//通过这个方法可以检查这个任务已经重试了几次了
+		}*/
 		/*$obo = new xxxxmodle();
 		$resule = $obo->sendOrder($data);
 		if ($result['status']) {
@@ -25,6 +36,20 @@ class Work{
 	
 	public function failed($data){
 		// ...任务达到最大重试次数后，失败了
+	}
+
+	// 订单过期
+	public function OrderExpire($data){
+		$nowtime = time();
+		if($data['endtime'] <= $nowtime){
+			$update['status'] = '-1';
+			$MemberOrders = new MemberOrders;
+			$editorder = $MemberOrders->OrderExpire($data);
+			$stu = $editorder;
+		}else{
+			$stu = 0;
+		}
+		return $stu;
 	}
 
 }

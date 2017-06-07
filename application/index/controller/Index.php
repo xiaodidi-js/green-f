@@ -193,7 +193,9 @@ class Index extends RestBase
 						$order = 'is_hot desc,sort desc,createtime desc';
 						break;
 				}
-				$list = db('product')->where('(cid = :id AND is_sell = 1 AND is_del = 0 AND store > 0'.$sql.') OR (cid = :id2 AND is_sell = 1 AND is_del = 0 AND store <= 0 AND sold_out = 1'.$sql.')',['id'=>$id,'id2'=>$id])->where('qrcode',0)->field('id,name as title,shotcut as src,price,store,deliverytime,qrcode')->order($order)->select();
+				$where['qrcode'] = 0;
+				$where['gift'] = 0;
+				$list = db('product')->where('(cid = :id AND is_sell = 1 AND is_del = 0 AND store > 0'.$sql.') OR (cid = :id2 AND is_sell = 1 AND is_del = 0 AND store <= 0 AND sold_out = 1'.$sql.')',['id'=>$id,'id2'=>$id])->where($where)->field('id,name as title,shotcut as src,price,store,deliverytime,qrcode')->order($order)->select();
 				$nowtime = time();
 				foreach ($list as $key => &$value) {
 					$peizhidata = CommonProduct($value);
@@ -254,7 +256,11 @@ class Index extends RestBase
 				}
 				
 				$product = db('product');
-				$info = $product->alias('p')->join('product_content c','p.id = c.pid','LEFT')->join('product_addition a','p.id = a.pid','LEFT')->where('p.id',$id)->field('p.id,name,description,price,store,shotcut,is_promote,promote_price,promote_start,promote_end,format,gallery,is_sell,content,notice,commend,sale,virtual_sale,deliverytime,starprice,qrcode')->find();
+				$info = $product->alias('p')->join('product_content c','p.id = c.pid','LEFT')->join('product_addition a','p.id = a.pid','LEFT')->where('p.id',$id)->field('p.id,name,description,price,store,shotcut,is_promote,promote_price,promote_start,promote_end,format,gallery,is_sell,content,notice,commend,sale,virtual_sale,deliverytime,starprice,qrcode,gift')->find();
+				if($info['gift'] == '1'){
+					$data = makeResult(0,'这是赠品详情页，你太坏了，想干嘛？');
+					return $this->response($data,'json',200);
+				}
 				if(!empty($info['content'])) $info['content'] = htmlspecialchars_decode($info['content']);
 				if(!empty($info['gallery'])){
 					$info['gallery'] = json_decode($info['gallery'],true);

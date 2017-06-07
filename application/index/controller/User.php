@@ -1,11 +1,17 @@
 <?php
 namespace app\index\controller;
 use think\Request,think\Token,think\Loader;
+use think\Config;
 class User extends RestBase
 {
     public function __construct(){
         //继承父类构造方法
         parent::__construct();
+    }
+
+    public function _initialize(){
+        $this->reqdata = $this->request->param();
+        $this->postdata = $this->request->post();
     }
 
     //图片上传又拍云
@@ -821,7 +827,8 @@ class User extends RestBase
                 $active = 0;
                 //提交状态
                 if($order['createtime']){
-                    $status[] = ['status'=>1,'title'=>'提交订单','time'=>date('Y-m-d H:i:s',$order['createtime'])];
+
+                    $status[] = ['status'=>1,'title'=>'提交订单','time'=>date('Y-m-d H:i:s',$order['createtime']),'endtime'=>date('Y-m-d H:i:s',$order['createtime']+900)];
                     $active = 0;
                     $order['statext'] = '待支付';
                 }else{
@@ -892,9 +899,7 @@ class User extends RestBase
                 $data = $request->put();
                 $id = intval($data['uid']);
                 $gtoken = trim($data['token']);
-                // lzc-订单获取openid
                 $openid = trim($data['openid']);
-                // lzc-活动状态
                 // $openid = '123';
                 $data['paytype'] = intval($data['paytype']);
                 //token验证
@@ -1029,9 +1034,8 @@ class User extends RestBase
                     return $this->response($result,'json',200);
                 }
 
-                // lzc-时间规划局
+                // lzc-时间
                 $NowTimeStamp = time();
-                $NextDayTimeStamp = time()+86400;
                 
                 $productDb = db('product');
                 foreach($data['products'] as $pk=>$pv){
@@ -1039,16 +1043,23 @@ class User extends RestBase
                     unset($data['products'][$pk]['shotcut']);
                     unset($data['products'][$pk]['store']);
                     //获取商品库存、价格和运费等信息
-                    $getField = 'p.deliverytime,p.id,p.name,p.price,p.is_promote,p.promote_price,p.promote_start,p.promote_end,p.store,p.is_sell,p.is_del,form.format,form.price as fprice,form.store as fstore,freight.freight,form.id as formatid';
+                    $getField = 'p.deliverytime,p.id,p.name,p.price,p.is_promote,p.promote_price,p.promote_start,p.promote_end,p.store,p.is_sell,p.is_del,form.format,form.price as fprice,form.store as fstore,freight.freight,form.id as formatid,p.gift';
                     $productInfo = $productDb->alias('p')
                                             ->join('product_formlist as form','(p.id = form.pid) AND form.format = "'.$pv['format'].'"','LEFT')
                                             ->join('product_freight freight','(p.id = freight.pid) AND freight.aid = '.$aid,'LEFT')
                                             ->where('p.id',$pv['id'])
                                             ->field($getField)
                                             ->find();
-                    /*if(empty($pv['activestu'])){
+
+                    // 检测是否有赠品直接购买
+                    if($productInfo['gift'] == '1'){
+                        $result = makeResult(0,'不能单买赠品哦，你太坏了！');
+                        return $this->response($result,'json',200);
+                    }
+
+                    if(empty($pv['activestu'])){
                         $pv['activestu'] = 0;
-                    }else*/if($pv['activestu'] == '1'){
+                    }elseif($pv['activestu'] == '1'){
                         // 限时抢购活动
                         $Activedata = $this->SaleActive($productInfo,$pv['nums'],$user);
                         if(!empty($Activedata['error'])){
@@ -1086,7 +1097,7 @@ class User extends RestBase
 
                     // 配送时间
                     if($pv['deliverytime'] == 0){
-                        $intime = $NextDayTimeStamp;
+                        $intime = $NowTimeStamp+86400;
                     }else{
                         $intime = $NowTimeStamp;
                     }
@@ -1170,30 +1181,42 @@ class User extends RestBase
                     $orderData['coupon'] = 0;
                     $orderData['money'] = $orderData['sum'] + $orderData['freight'] - $orderData['score'];
                 }
+
                 //防止恶意提交订单
                 if($orderDb->where('createtime','>=',$now-5)->where('pay',0)->where('status',0)->where('is_del',0)->find()){
                     $result = makeResult(0,'请勿频繁提交订单');
                     return $this->response($result,'json',200);
                 }
+
                 //检查实际支付金额
                 $orderData['money'] = $orderData['money']<=0 ? 0.01 : floatval($orderData['money']);
+
+                // 生成过期队列
+                $Redis = $this->RedisOrderQueue($orderData);
+                if($Redis != 1){
+                    $result = makeResult(0,'订单排队失败');
+                    return $this->response($result,'json',200);
+                }
+
                 //插入订单数据
                 $add = $orderDb->insertGetId($orderData);
                 if(!$add){
                     $result = makeResult(0,'订单提交失败');
                     return $this->response($result,'json',200);
                 }
+
                 //添加优惠券使用数据
                 if(isset($couponInfo)){
                     $clistDb->insert(['uid'=>$id,'cid'=>$data['coupon'],'usetime'=>$now]);
                 }
+
                 //添加积分使用记录
                 if($orderData['score']>0){
                     db('score_lists')->insert(['uid'=>$id,'type'=>'orders','amount'=>'-'.$user['score'],'createtime'=>$now]);
                     db('member')->where('id',$id)->update(['score'=>0]);
                 }
 
-                // 单独处理赠品信息
+                // 处理赠品信息
                 if(!empty($data['gift']['shopid'])){
                     $querygift = Model('Product')->querygift($data['gift']['shopid']);
                     if($data['gift']['giftstu'] == 0){
@@ -1201,8 +1224,13 @@ class User extends RestBase
                     }else{
                         $stu = $data['gift']['id'];
                     }
-                    $productsData[] = ['uid'=>$id,'oid'=>$orderNum,'pid'=>$data['gift']['shopid'],'price'=>floatval($querygift['price']) ,'amount'=>'1','format'=>'','fname'=>'','sale'=>0,'share'=>0,'qrcode'=>0,'activity'=>$stu]; 
+                    if(empty($productsData)){
+                        $result = makeResult(0,'不能单买赠品哦，你太坏了！');
+                        return $this->response($result,'json',200);
+                    }
+                    $productsData[] = ['uid'=>$id,'oid'=>$orderNum,'pid'=>$data['gift']['shopid'],'price'=> '0' ,'amount'=>'1','format'=>'','fname'=>'','sale'=>0,'share'=>0,'qrcode'=>0,'activity'=>$stu]; 
                 }
+
                 //插入订单列表数据
                 $orderlist = db('member_orderlist')->insertAll($productsData);
                 if(empty($orderlist)){
@@ -1213,6 +1241,7 @@ class User extends RestBase
                 unset($orderData);
                 unset($data);
                 unset($user);
+
                 //库存扣减和销量记录
                 $formlistDb = db('product_formlist');
                 foreach($productsData as $k=>$v) {
@@ -1222,8 +1251,10 @@ class User extends RestBase
                         $formlistDb->where('pid',$v['pid'])->where('format',$v['format'])->setDec('store',$v['amount']);
                     }
                 }
+
                 unset($formlistDb);
                 unset($productsData);
+                
                 //返回信息
                 $result = makeResult(1,'订单提交成功',['oid'=>$add]);
                 return $this->response($result,'json',200);
@@ -1365,9 +1396,9 @@ class User extends RestBase
                             $sldata[] = $value;
                         }
                         $sldata = serialize($sldata);
-                        $update['data'] = $sldata;
-                        $edit = db('sale')->where('id',$v['sale'])->update($update);
-                        unset($update);
+                        $slupdate['data'] = $sldata;
+                        $edit = db('sale')->where('id',$v['sale'])->update($slupdate);
+                        unset($slupdate);
                     }
 
                     // 分享返回库存
@@ -1381,9 +1412,9 @@ class User extends RestBase
                             $shdata[] = $value1;
                         }
                         $shdata = serialize($shdata);
-                        $update['data'] = $shdata;
-                        $edit = db('product_share')->where('id',$v['share'])->update($update);
-                        unset($update);
+                        $shupdate['data'] = $shdata;
+                        $edit = db('product_share')->where('id',$v['share'])->update($shupdate);
+                        unset($shupdate);
                     }
                 }
                 $up = $orderDb->where('id',$order['id'])->update(['paytime'=>time(),'status'=>-1]);
@@ -1766,15 +1797,15 @@ class User extends RestBase
                 //查询商品评论信息
                 $commentsDb = db('product_comments');
                 $field = 'c.id,c.stars,c.content,c.imgs,c.createtime,c.fname,p.name,p.shotcut,p.price,f.price as fprice';
+                $where['c.uid'] = $id;
+                $where['c.oid'] = $oid;
+                $where['c.top'] = 0;
+                $where['c.parent'] = 0;
+                $where['c.status'] = 1;
                 $list = $commentsDb->alias('c')
                                 ->join('product p','c.pid = p.id')
                                 ->join('product_formlist f','c.pid = f.pid AND c.format = f.format','LEFT')
-                                ->where('c.uid',$id)
-                                ->where('c.oid',$oid)
-                                ->where('c.top',0)
-                                ->where('c.parent',0)
-                                ->where('c.status',1)
-                                ->order('c.id asc')
+                                ->where($where)
                                 ->field($field)
                                 ->select();
                 if(!$list){
@@ -1991,6 +2022,7 @@ class User extends RestBase
             $where['id'] = $value;
             $where['is_del'] = 0;
             $where['is_sell'] = 1;
+            $where['gift'] = 0;
             $datashop = db('product')->where($where)->field('id,name,price,starprice,shotcut,deliverytime,qrcode')->find();
             $peizhidata = CommonProduct($datashop);
             if($peizhidata){
@@ -2065,12 +2097,13 @@ class User extends RestBase
 
     // 满就送
     public function manjiusong(){
-        $request = Request::instance();
-        $since = intval($request->param('sinceid'));
-        $money = intval($request->param('moeny'));
-        $id = intval($request->param('uid'));
-        $gtoken = trim($request->param('token'));
-        if(!$id||!$gtoken){
+        $request = $this->postdata;
+        $since = intval($request['sinceid']);
+        $money = intval($request['moeny']);
+        $id = intval($request['uid']);
+        $gtoken = trim($request['token']);
+        dump($request);
+        if(!$id||!$gtoken||!$money||!$since){
             $result = makeResult(0,'参数错误');
             return $this->response($result,'json',200);
         }
@@ -2126,9 +2159,6 @@ class User extends RestBase
     public function test(){
         $redis = new \Redis();
         $redis->connect('127.0.0.1', 6379);
-        echo "Connection to server sucessfully";
-         //查看服务是否运行
-        echo "Server is running: " . $redis->ping();
         $work['job'] = 'Work';
         $time = time();
         $work['id'] = md5($time);
@@ -2272,5 +2302,21 @@ class User extends RestBase
             $Activedata['update'] = $datashop;
         }
         return $Activedata;
+    }
+
+    public function RedisOrderQueue($data){
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1', 6379);
+        $redis->auth(Config::get('queue.password'));
+        $work['job'] = 'Work';
+        $time = time();
+        $work['id'] = md5($time);
+        $work['attempts'] = $time;
+        $ids['stu'] = 'OrderExpire';
+        $ids['endtime'] = $data['createtime'] + (60 * 15);
+        $ids['orderid'] = $data['orderid'];
+        $work['data'] = $ids;
+        $work = json_encode($work);
+        return $redis->zAdd('queues:default:delayed', $time, $work);
     }
 }

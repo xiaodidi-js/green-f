@@ -1,9 +1,6 @@
 <?php 
 namespace app\admin\controller;
 use think\Controller;
-
-import('PHPExcel', EXTEND_PATH.'/PHPExcel/');
-
 class Excel extends Controller
 {
     function __construct(){
@@ -308,6 +305,106 @@ class Excel extends Controller
         dump($content);exit;
 
 
+    }
+
+    public function xiaoshou($orderdata){
+        $obj = new \PHPExcel();
+        $obj->getProperties()->setCreator("JAMES")
+            ->setLastModifiedBy("JAMES")
+            ->setTitle("zltrans")
+            ->setSubject("Dorder")
+            ->setDescription("Dorder List")
+            ->setKeywords("Dorder")
+            ->setCategory("Test result file");
+
+        $obj->getDefaultStyle()->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $obj->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        //相关行高
+        $obj->getActiveSheet()->getRowDimension('2')->setRowHeight(40);
+        $obj->getActiveSheet()->getRowDimension('3')->setRowHeight(23);
+        $obj->getActiveSheet()->getRowDimension('4')->setRowHeight(24);
+        $obj->getActiveSheet()->getColumnDimension('B')->setWidth(25);
+        $obj->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+        $obj->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+        $obj->getActiveSheet()->getColumnDimension('E')->setWidth(35);
+        $obj->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+        $obj->getActiveSheet()->getColumnDimension('I')->setWidth(20);
+        $obj->getActiveSheet()->getColumnDimension('J')->setWidth(20);
+        $obj->getActiveSheet()->getColumnDimension('K')->setWidth(20);
+
+        //标题
+        $obj->getActiveSheet()->mergeCells('A1:N1');
+        $obj->getActiveSheet()->mergeCells('A2:B2');
+
+        $obj->getActiveSheet()->mergeCells('G2:I2');
+        $obj->getActiveSheet()->mergeCells('G3:I3');
+        $obj->getActiveSheet()->mergeCells('G4:I4');
+        $obj->getActiveSheet()->getStyle('A2:A2')->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+        $obj->getActiveSheet()->getStyle('G2:K4')->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+
+        $obj->getActiveSheet()->mergeCells('J2:K2');
+        $obj->getActiveSheet()->mergeCells('J3:K3');
+        $obj->getActiveSheet()->mergeCells('J4:K4');
+
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setSize(14);
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+        $obj->getActiveSheet()->setCellValue("A1", "销售明细表");
+        $obj->getActiveSheet()->setCellValue("A2", "报表日期");
+/*        $obj->getActiveSheet()->setCellValue("A3", "日关注新客户数：人");
+        $obj->getActiveSheet()->setCellValue("A4", "日注册新客户数：人");*/
+        $obj->getActiveSheet()->setCellValue("C2", date('Y-m-d'));
+/*        $obj->getActiveSheet()->setCellValue("C3", $guanzhu);
+        $obj->getActiveSheet()->setCellValue("C4", $guanzhu);*/
+        $obj->getActiveSheet()->getStyle('A2:C2')->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+
+        $obj->getActiveSheet()->setCellValue("G2", "货总订单数：张");
+        $obj->getActiveSheet()->setCellValue("J2", $orderdata['ordernum']);
+        $obj->getActiveSheet()->setCellValue("G3", "货总金额：元");
+        $obj->getActiveSheet()->setCellValue("G4", "货订单均价：元");
+
+        $obj->getActiveSheet()->mergeCells('A6:A7');
+        $obj->getActiveSheet()->mergeCells('B6:B7');
+        $obj->getActiveSheet()->mergeCells('C6:C7');
+        $obj->getActiveSheet()->mergeCells('D6:D7');
+        $obj->getActiveSheet()->mergeCells('E6:E7');
+        $obj->getActiveSheet()->mergeCells('F6:I6');
+        $obj->getActiveSheet()->mergeCells('J6:K6');
+        $title1 = array('序号', '类别', '供应商', '商品编码', '商品名');
+        $this->excel_foreach('A', 6, $title1, $obj->getActiveSheet());
+        $obj->getActiveSheet()->setCellValue("F6", "销量");
+        $obj->getActiveSheet()->setCellValue("J6", "营业额");
+        $title2 = array('份数','单位', '规格', '总重量', '单价', '销售总金额');
+        $this->excel_foreach('F', 7, $title2, $obj->getActiveSheet());
+
+        $len = 8;
+        $key = 1;
+        $sum = 0;
+        foreach ($orderdata['data'] as $vo) {
+                $title3 = array($key, $vo['title'], 
+                $vo['supplier'], 
+                $vo['sn_code'], 
+                $vo['name'], 
+                $vo['amount'],
+                $vo['unit'],
+                $vo['weight'], 
+                $vo['weight'] * $vo['amount'], 
+                $vo['price'], 
+                $vo['price'] * $vo['amount']);
+            $this->excel_foreach('A', $len, $title3, $obj->getActiveSheet());
+            $obj->getActiveSheet()->getRowDimension($len)->setRowHeight(25);
+            // $sum += $vo['sum'];
+            $len++;
+            $key++;
+        }
+        $obj->getActiveSheet()->setCellValue("J3", $orderdata['money']);
+        $obj->getActiveSheet()->setCellValue("J4", $orderdata['zonghe']);
+        $obj->getActiveSheet()->getStyle('A6:K' . $len)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+        $name = time();
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $name . '.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter = \PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+        $objWriter->save('php://output');
     }
 
 }

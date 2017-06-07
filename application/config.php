@@ -258,7 +258,7 @@ return [
         'form_api'        => 'amFmx2v2/Giw8ZtUq6M+WERY5Hc=',
         'save_key'        => '/{year}/{mon}/{day}/{hour}/{min}/{sec}/upload_{filemd5}{.suffix}',
         'domain'          => 'https://file.green-f.cn',
-        'notify'          => 'http://'.$_SERVER['HTTP_HOST'].'/public/index/uynotify/getnotify'
+        'notify'          => 'http://green-f.cn/public/index/uynotify/getnotify'
     ],
 
     //短信支付
@@ -272,7 +272,7 @@ return [
 
     //支付异步通知地址
     'notify_url'            => [
-        'wechat'          => 'http://'.$_SERVER['HTTP_HOST'].'/public/index/wxnotify/getwxnotify',
+        'wechat'          => 'http://green-f.cn/public/index/wxnotify/getwxnotify',
         'alipay'          => ''
     ],
 
@@ -296,5 +296,16 @@ return [
     ],
 
     //系统版本
-    'app_version'           => '2.0.0'
+    'app_version'           => '2.0.0',
+    'queue' => [
+        'type'  => 'Redis',         // Redis 驱动
+        'expire'     => 60,             // 任务的过期时间，默认为60秒; 若要禁用，则设置为 null 
+        'default'    => 'default',      // 默认的队列名称
+        'host'       => '127.0.0.1',    // redis 主机ip
+        'port'       => 6379,           // redis 端口
+        'password'   => 'iFxjOaKyg5of53uN', // redis 密码
+        'select'     => 0,              // 使用哪一个 db，默认为 db0
+        'timeout'    => 0,              // redis连接的超时时间
+        'persistent' => false,          // 是否是长连接
+    ]
 ];

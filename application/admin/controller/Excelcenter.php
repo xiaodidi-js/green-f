@@ -180,7 +180,47 @@ class Excelcenter extends Base{
 
 //  导出销售Excel中心
     public function ExcelXiaoShou(){
+        $request = Request::instance();
+        $get = $request->get();
+        if(empty($get['stime']) && empty($get['etime'])){
+            $ymd = date('Y-m-d');
+            $ymd = strtotime($ymd);
+            $get['stime'] = $ymd;
+            $get['etime'] = $ymd+86399;
+        }else{
+            $get['stime'] = strtotime($get['stime']);
+            $get['etime'] = strtotime($get['etime']);
+        }
+        $this->assign('stime',date('Y-m-d H:i:s',$get['stime']));
+        $this->assign('etime',date('Y-m-d H:i:s',$get['etime']));
         return $this->fetch();
+    }
+
+    public function xiaoshoudaochu(){
+        $request = Request::instance();
+        $get = $request->get();
+        $queryorder = Model('MemberOrders')->tongjiorder($get);
+        $ordernum = count($queryorder);
+        $money = 0;
+        foreach ($queryorder as $key => &$value) {
+            $money = $money + $value['money'];
+            if(empty($allok[$value['pid']])){
+                $allok[$value['pid']] = $value;
+            }
+            $allok[$value['pid']]['amount'] = $allok[$value['pid']]['amount'] + $value['amount'];
+        }
+        if($ordernum != 0 || $money != 0){
+            $zonghe = $ordernum / $money;
+            $zonghe = round($zonghe,2);
+        }else{
+            $zonghe = 0;
+        }
+        $data['ordernum'] = $ordernum;
+        $data['money'] = $money;
+        $data['zonghe'] = $zonghe;
+        $data['data'] = $allok;
+        $excel = new Excel();
+        $result = $excel->xiaoshou($data);
     }
 
 
