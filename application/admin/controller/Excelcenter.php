@@ -203,10 +203,20 @@ class Excelcenter extends Base{
         $ordernum = count($queryorder);
         $money = 0;
         foreach ($queryorder as $key => &$value) {
-            $money = $money + $value['money'];
+            // 赠品处理
+            if($value['gift'] == 0){
+                $value['zprice'] = $value['listprice'];
+                $money = $money + $value['money'];
+            }else{
+                $value['zprice'] = 0;
+                $value['price'] = 0;
+            }
             if(empty($allok[$value['pid']])){
                 $allok[$value['pid']] = $value;
+                $allok[$value['pid']]['zprice'] = 0;
+                $allok[$value['pid']]['amount'] = 0;
             }
+            $allok[$value['pid']]['zprice'] = $allok[$value['pid']]['zprice'] + $value['zprice'];
             $allok[$value['pid']]['amount'] = $allok[$value['pid']]['amount'] + $value['amount'];
         }
         if($ordernum != 0 || $money != 0){

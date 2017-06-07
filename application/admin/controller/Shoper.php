@@ -2256,6 +2256,7 @@ class Shoper extends Base{
 		if(!empty($get['time'])){
             $and['stime'] = strtotime($get['time']);
         }
+        $and['o.status'] = array('neq','-1');
 		$field = 'o.id,o.person,o.tel,o.sum,o.money,o.paytype,o.pay,o.orderid,o.status,o.createtime,m.uname,o.send,o.receive,o.createtime,o.stime';
 		$list = db('member_orders')->alias('o')->join('member m','o.uid = m.id','LEFT')->where($and)->where($or)->order('o.createtime desc')->field($field)->paginate();
 		$this->assign('list',$list);
@@ -2766,7 +2767,7 @@ class Shoper extends Base{
 		}else{
 			$where['is_del'] = 0;
 		}
-		$list = db('member')->where($where)->field('id,uname,utel,sex,birthday,score,createtime')->order('createtime desc')->paginate();
+		$list = db('member')->where($where)->field('id,uname,utel,sex,birthday,score,createtime')->order('createtime desc')->paginate(10);
 		// 查询累计消费记录
 		foreach ($list as $key => &$value) {
 			$whereorder['is_del'] = 0;

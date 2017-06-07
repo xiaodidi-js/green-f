@@ -389,7 +389,7 @@ class Excel extends Controller
                 $vo['weight'], 
                 $vo['weight'] * $vo['amount'], 
                 $vo['price'], 
-                $vo['price'] * $vo['amount']);
+                $vo['zprice']);
             $this->excel_foreach('A', $len, $title3, $obj->getActiveSheet());
             $obj->getActiveSheet()->getRowDimension($len)->setRowHeight(25);
             // $sum += $vo['sum'];

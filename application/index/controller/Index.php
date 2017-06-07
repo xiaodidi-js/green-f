@@ -665,10 +665,11 @@ class Index extends RestBase
 	        		$access_token = $this->wx_get_token($weixinconfig['appid'],$weixinconfig['appsecret']);
 	        	}
 	        }
-	        make_json(1, ['weixindata'=>$result]);
+	        $result = makeResult(1,['weixindata'=>$result]);
         }else{
-        	make_json(0, '没有传入openid');
+        	$result = makeResult(0,'没有传入openid');
         }
+        return $this->response($result,'json',200);
     }
 
     // 分享购买

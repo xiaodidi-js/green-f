@@ -9,11 +9,6 @@ class User extends RestBase
         parent::__construct();
     }
 
-    public function _initialize(){
-        $this->reqdata = $this->request->param();
-        $this->postdata = $this->request->post();
-    }
-
     //图片上传又拍云
     public function makeInfoForUpyun(){
     	$form_api_secret = config('upyun_config.form_api');
@@ -828,7 +823,7 @@ class User extends RestBase
                 //提交状态
                 if($order['createtime']){
 
-                    $status[] = ['status'=>1,'title'=>'提交订单','time'=>date('Y-m-d H:i:s',$order['createtime']),'endtime'=>date('Y-m-d H:i:s',$order['createtime']+900)];
+                    $status[] = ['status'=>1,'title'=>'提交订单','time'=>date('Y-m-d H:i:s',$order['createtime']),'endtime'=>$order['createtime']+900,'stime'=>$order['createtime']];
                     $active = 0;
                     $order['statext'] = '待支付';
                 }else{
@@ -2084,7 +2079,7 @@ class User extends RestBase
                 $where2['is_del'] = 0;
                 foreach ($shoudanshop as $key => $value) {
                     $where2['id'] = $value;
-                    $cileckshop = db('product')->where($where2)->field('id,name,price,starprice,shotcut')->find();
+                    $cileckshop = db('product')->where($where2)->field('id,name,price,shotcut')->find();
                     $shoudanok[] = $cileckshop;
                 } 
                 $result = makeResult(1,'ok',['shoudan_data'=>$shoudanok]);
@@ -2097,12 +2092,12 @@ class User extends RestBase
 
     // 满就送
     public function manjiusong(){
-        $request = $this->postdata;
-        $since = intval($request['sinceid']);
-        $money = intval($request['moeny']);
-        $id = intval($request['uid']);
-        $gtoken = trim($request['token']);
-        dump($request);
+        $request = Request::instance();
+        $since = intval($request->post('sinceid'));
+        $money = intval($request->post('moeny'));
+        $id = intval($request->post('uid'));
+        $gtoken = trim($request->post('token'));
+        // dump($request);
         if(!$id||!$gtoken||!$money||!$since){
             $result = makeResult(0,'参数错误');
             return $this->response($result,'json',200);
@@ -2119,28 +2114,21 @@ class User extends RestBase
         }
         unset($gtoken);
         // 测试用
-        /*$since = 8;
-        $money = 0;
+        /*$since = 20;
+        $money = 5;
         $id = 14;*/
         // 满足价格排序 由高到低
-        $sincemax = db('since_maxgift')->where('maxmoney','<=',$money)->order('maxmoney asc')->select();
-        foreach ($sincemax as $key => $value) {
-            $ziti[] = unserialize($value['useshop']);
-        }
-        foreach ($ziti as $key1 => $value1) {
-            if(in_array($since, $value1)){
-                $product_id = unserialize($sincemax[$key1]['shopid']);
-                $giftid = $sincemax[$key1]['id'];
-            }
-        }
-        if(!empty($product_id)){
-            foreach ($product_id as $key => $value) {
+        $sincemax = db('since_maxgift')->where('maxmoney','<=',$money)->order('maxmoney desc')->find();
+        $sinceall = unserialize($sincemax['useshop']);
+        $click = in_array($since,$sinceall);
+        if($click == true){
+            foreach (unserialize($sincemax['shopid']) as $key => $value) {
                 $where['id'] = $value;
                 $where['is_sell'] = 1;
                 $where['gift'] = 1;
                 $where['is_del'] = 0;
-                $cxshop = db('product')->where($where)->field('id,name,price,starprice,shotcut,store')->find();
-                $cxshop['giftid'] = $giftid;
+                $cxshop = db('product')->where($where)->field('id,name,price,shotcut,store')->find();
+                $cxshop['giftid'] = $sincemax['id'];
                 $bigshop[] = $cxshop;
             }
         }else{

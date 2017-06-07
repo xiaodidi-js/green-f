@@ -144,7 +144,7 @@ class MemberOrders extends Model{
     public function tongjiorder($get){
         $stime = strtotime($get['stime']);
         $etime = strtotime($get['etime']);
-        $field = 'p.id,p.money,o.cid,o.name,o.sn_code,k.title,i.amount,i.pid,o.weight,o.unit,o.price,o.supplier';
+        $field = 'p.id,p.money,o.cid,o.name,o.sn_code,k.title,i.amount,i.pid,o.weight,o.unit,o.price,o.supplier,o.gift,i.price as listprice';
         $where['p.createtime'] = array('between',[$stime,$etime]);
         $where['p.pay'] = 1;
         $list = $this
