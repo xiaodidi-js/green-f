@@ -125,7 +125,7 @@
                     <div v-link="{name:'detail',params:{pid:item.id}}">
                         <div class="list_pirture" v-if="item.store == 0">
                             <div class="qing">已售罄</div>
-                            <img :src="item.shotcut"/>
+                            <img :src="item.shotcut" />
                         </div>
                         <div class="list_pirture" v-else>
                             <img :src="item.shotcut"/>
@@ -237,6 +237,9 @@
                         return false;
                     } else if(data.store == 0) {
                         alert("已售罄");
+                        return false;
+                    } else if (data.activeid > 0) {
+                        alert("这是限时抢购商品！");
                         return false;
                     }
                     if(cart != '') {

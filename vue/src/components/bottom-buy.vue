@@ -215,9 +215,19 @@
 				}
 				ustore = JSON.parse(ustore);
 				this.$http.put(localStorage.apiDomain+'public/index/user/usercollection',{uid:ustore.id,pid:this.$route.params.pid,token:ustore.token,action:this.collect}).then((response)=>{
-					if(response.data.status===1){
+					if(response.data.status === 1) {
 						this.collect = !this.collect;
-					}
+					} else if (response.data.status === -1) {
+                        this.toastMessage = response.data.info;
+                        this.toastShow = true;
+                        let context = this;
+                        setTimeout(function() {
+                            context.clearAll();
+                            sessionStorage.removeItem('userInfo');
+                            localStorage.removeItem('userInfo');
+                            context.$router.go({name:'login'});
+                        },800);
+                    }
 					this.$dispatch('showSonMes',response.data.info);
 				},(response)=>{
 					this.$dispatch('showSonMes','网络开小差了~');

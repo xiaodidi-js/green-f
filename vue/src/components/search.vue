@@ -176,6 +176,9 @@
                     if(data.peisongok == 0 && data.deliverytime == 1) {
                         alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                         return false;
+                    } else if (data.activeid > 0) {
+                        alert("这是限时抢购商品！");
+                        return false;
                     }
                     if(cart != '') {
                         for(var y in cart) {

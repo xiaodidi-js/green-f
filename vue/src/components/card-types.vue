@@ -114,13 +114,27 @@
 		position: relative;
 	}
 
-	.cla-message .main .shotcut{
+	.cla-message .main .shotcut {
 		width: 33%;
 		height: 76px;
 		background-color: #EFEFEF;
 		background-size: cover;
 		overflow: hidden;
+		position: relative;
 		float: left;
+	}
+
+	.cla-message .main .shotcut .qing {
+		text-align:center;
+		width:100%;
+		height:100%;
+		line-height: 76px;
+		color:#fff;
+		font-size:16px;
+		position: absolute;
+		top:0px;
+		left:0px;
+		background: rgba(0,0,0,0.5);
 	}
 
 	.cla-message .main .shotcut .shotcut-img {
@@ -370,9 +384,16 @@
 					<template v-for="item in pdata">
 						<div class="main">
 							<div v-link="{name:'detail',params:{pid:item.id}}">
-								<div class="shotcut">
+
+								<div class="shotcut" v-if="item.store == 0">
+									<div class="qing">已售罄</div>
 									<img :src="item.src" alt="{{ item.title }}" class="shotcut-img" style="width:100%;height:100%;" />
 								</div>
+
+								<div class="shotcut" v-else>
+									<img :src="item.src" alt="{{ item.title }}" class="shotcut-img" style="width:100%;height:100%;" />
+								</div>
+
 								<div class="shotcut-txt">
 									<p style="height:35px;width:100%;overflow: hidden;text-overflow: ellipsis;">{{ item.title }}</p>
 									<p class="relative">
@@ -574,7 +595,13 @@
                     if(data.peisongok == 0 && data.deliverytime == 1) {
                         alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                         return false;
-                    }
+                    } else if(data.store == 0) {
+                        alert("已售罄");
+                        return false;
+                    } else if (data.activeid > 0) {
+                        alert("这是限时抢购商品！");
+						return false;
+					}
                     if(sessionStorage.getItem("myCart") != '') {
                         for(var y in cart) {
                             if (cart[y]["deliverytime"] != data.deliverytime) {

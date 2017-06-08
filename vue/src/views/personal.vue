@@ -257,7 +257,11 @@
 				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 				ustore = JSON.parse(ustore);
 				this.$http.get(localStorage.apiDomain+'public/index/Usercenter/integral/uid/' + ustore.id + '/token/' + ustore.token).then((response)=>{
-                    this.number = response.data.zongfen;
+                    if(response.data.status == 0) {
+                        this.number = 0;
+					} else {
+                        this.number = response.data.zongfen;
+					}
 					console.log(response.data.list);
 				},(response)=>{
 					this.toastMessage = '网络开小差了~';

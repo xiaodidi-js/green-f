@@ -53,11 +53,25 @@
 		padding:0;
 	}
 
-	.img{
+	.wrapper .ui_box .img{
 		width:100%;
 		background-position:center;
 		background-size:cover;
 		background-repeat:no-repeat;
+		position: relative;
+	}
+
+	.wrapper .ui_box .img .qing {
+		position: absolute;
+		top: 0px;
+		left:0px;
+		width:100%;
+		height:100%;
+		font-size:16px;
+		line-height: 190px;
+		color:#fff;
+		text-align:center;
+		background: rgba(0,0,0,0.5);
 	}
 
 	.wrapper .ui_box .mes{
@@ -104,7 +118,10 @@
 			<div class="parent">
 				<div class="ui-box" v-for="item in info.list">
 					<div v-link="{name:'detail',params:{pid:item.id}}">
-						<div class="img" v-if="item.src == ''"></div>
+						<div class="img" v-if="item.store == 0">
+							<div class="qing"></div>
+							<img :src="item.src" alt="" style="width:100%;height:100%;" />
+						</div>
 						<div class="img" v-else>
 							<img :src="item.src" alt="" style="width:100%;height:100%;" />
 						</div>
@@ -128,7 +145,10 @@
 		<div class="wrapper" :class="{'nopadding':noPadding}" >
 			<div class="ui_box" v-for="item in info.list">
 				<div v-link="{name:'detail',params:{pid:item.id}}">
-					<div class="img" v-if="item.src == ''"></div>
+					<div class="img" v-if="item.store == 0">
+						<div class="qing"></div>
+						<img :src="item.src" alt="" style="width:100%;height:100%;" />
+					</div>
 					<div class="img" v-else>
 						<img :src="item.src" alt="" style="width:100%;height:100%;" />
 					</div>
@@ -189,6 +209,12 @@
                 }).then((response) => {
                     if(data.peisongok == 0 && data.deliverytime == 1) {
                         alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                        return false;
+                    } else if(data.store == 0) {
+                        alert("已售罄");
+                        return false;
+					} else if (data.activeid > 0) {
+                        alert("这是限时抢购商品！");
                         return false;
                     }
                     if(cart != '') {
