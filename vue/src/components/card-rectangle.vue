@@ -361,6 +361,7 @@
 									   item1.shopshotcut,
 									   item1.deliverytime,
 									   item1.peisongok,
+									   item1.activeid,
 									   item1.activestu)" style="float:right;"></p>
 							</div>
 						</template>
@@ -423,16 +424,19 @@
             Toast
         },
         methods: {
-            gocart: function (id,name,price,img,deliverytime,peisongok,activestu) {
+            gocart: function (oid,name,price,img,deliverytime,peisongok,activestu,activeid) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
                 var cart = JSON.parse(sessionStorage.getItem("myCart")), obj = {};
+
+                console.log(1);
+
                 axios({
                     method: 'get',
-                    url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + id,
+                    url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + oid,
                 }).then((response) => {
                     obj = {
-                        id: id,
+                        id: oid,
                         name: name,
                         price: price,
                         shotcut: img,
@@ -447,7 +451,7 @@
                     if(peisongok == 0 && deliverytime == 1) {
                         alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                         return false;
-                    } else if (data.activeid > 0) {
+                    } else if (activeid > 0) {
                         alert("这是限时抢购商品！");
                         return false;
                     }
