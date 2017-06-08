@@ -50,7 +50,7 @@ router.map(Routers);
 
 router.beforeEach((transition) => {
 
-	if(Env == 'production') {
+	// if(Env == 'production') {
 		//微信openid检测
 		if(!sessionStorage.getItem('openid')){
 			let query = transition.to.query;
@@ -61,7 +61,7 @@ router.beforeEach((transition) => {
 				return true;
 			}
 		}
-	}
+	// }
 
 	//登录检测
 	if(typeof(transition.to.login) !== 'undefined' && transition.to.login === true) {

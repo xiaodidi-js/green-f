@@ -214,52 +214,60 @@
             addCarts: function (data) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                var obj = {} , cart = JSON.parse(sessionStorage.getItem("myCart")) , _self = this;
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
-                }).then((response) => {
-                    obj = {
-                        id:data.id,
-                        name:data.name,
-                        price:data.price,
-                        shotcut:data.shotcut,
-                        deliverytime:data.deliverytime,
-                        peisongok:data.peisongok,
-                        activestu:data.activestu,
-                        nums:this.buyNums,
-                        store:this.proNums = response.data.store,
-                        format:'',
-                        formatName:'',
-                    };
-                    if(data.peisongok == 0 && data.deliverytime == 1) {
-                        alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
-                        return false;
-                    } else if(data.store == 0) {
-                        alert("已售罄");
-                        return false;
-                    } else if (data.activeid > 0) {
-                        alert("这是限时抢购商品！");
-                        return false;
-                    }
-                    if(cart != '') {
-                        for(var y in cart) {
-                            if (cart[y]["deliverytime"] != data.deliverytime) {
-                                if (data.deliverytime == 0) {
-                                    alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                    return false;
-                                } else if (data.deliverytime == 1) {
-                                    alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！！");
-                                    return false;
+                var obj = {} , cart = JSON.parse(sessionStorage.getItem("myCart")) , self = this;
+                if(ustore == null) {
+                    alert("没有登录，请先登录！");
+                    setTimeout(function () {
+                        self.$router.go({name: 'login'});
+                    }, 800);
+                    return false;
+                } else if(ustore != null) {
+                    axios({
+                        method: 'get',
+                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
+                    }).then((response) => {
+                        obj = {
+                            id:data.id,
+                            name:data.name,
+                            price:data.price,
+                            shotcut:data.shotcut,
+                            deliverytime:data.deliverytime,
+                            peisongok:data.peisongok,
+                            activestu:data.activestu,
+                            nums:this.buyNums,
+                            store:this.proNums = response.data.store,
+                            format:'',
+                            formatName:'',
+                        };
+                        if(data.peisongok == 0 && data.deliverytime == 1) {
+                            alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                            return false;
+                        } else if(data.store == 0) {
+                            alert("已售罄");
+                            return false;
+                        } else if (data.activeid > 0) {
+                            alert("这是限时抢购商品！");
+                            return false;
+                        }
+                        if(cart != '') {
+                            for(var y in cart) {
+                                if (cart[y]["deliverytime"] != data.deliverytime) {
+                                    if (data.deliverytime == 0) {
+                                        alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                        return false;
+                                    } else if (data.deliverytime == 1) {
+                                        alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！！");
+                                        return false;
+                                    }
                                 }
                             }
                         }
-                    }
-                    this.setCart(obj);
-                    obj = {};
-                    alert("成功加入购物车!");
-                    this.$router.go({name : "cart"});
-                });
+                        self.setCart(obj);
+                        obj = {};
+                        alert("成功加入购物车!");
+                        this.$router.go({name : "cart"});
+                    });
+                }
             }
         }
     }
