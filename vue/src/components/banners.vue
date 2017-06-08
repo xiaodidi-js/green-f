@@ -7,20 +7,13 @@
             <!--</swiper>-->
         <!--</template>-->
     <!--</template>-->
-    <swiper :list="banners"
-            :show-desc-mask="false"
-            :aspect-ratio="650/1242"
-            loop dots-position="center"
-            auto dots-class="dots-my"
-            style="width: 100%;margin-top:50px;">
-    </swiper>
-
-
+    <swiper :list="banners" :show-desc-mask="false" :aspect-ratio="650/1242" dots-position="center"
+            auto dots-class="dots-my" style="width: 100%;margin-top:50px;"></swiper>
 </template>
 
 <script>
 
-        import Swiper from 'vux/src/components/swiper'
+    import Swiper from 'vux/src/components/swiper'
     import Scroller from 'vux/src/components/scroller'
     import Toast from 'vux/src/components/toast'
 

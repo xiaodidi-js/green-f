@@ -46,7 +46,7 @@
     }
     .list_pirture img{
         width: 100%;
-        height: 8.556rem;
+        height: 10.556rem;
     }
 
     .list_pirture .qing {
@@ -58,7 +58,7 @@
         background: rgba(0,0,0,0.5);
         text-align:center;
         font-size:24px;
-        line-height: 89px;
+        line-height: 110px;
         color:#fff;
     }
 
@@ -123,8 +123,11 @@
             <ul>
                 <li v-for="item in likedata">
                     <div v-link="{name:'detail',params:{pid:item.id}}">
-                        <div class="list_pirture">
-                            <div class="qing" v-show="showQiag">已售罄</div>
+                        <div class="list_pirture" v-if="item.store == 0">
+                            <div class="qing">已售罄</div>
+                            <img :src="item.shotcut"/>
+                        </div>
+                        <div class="list_pirture" v-else>
                             <img :src="item.shotcut"/>
                         </div>
                         <div class="list_value">{{ item.name }}</div>
@@ -153,6 +156,8 @@
     import { setCartStorage } from 'vxpath/actions'
     import { cartNums } from 'vxpath/getters'
     import Toast from 'vux/src/components/toast'
+    import axios from 'axios'
+    import qs from 'qs'
 
     export default{
         vuex: {
@@ -174,7 +179,7 @@
                 type: Number,
                 default: 0
             },
-            likedata: []
+            likedata: [],
         },
         components: {
             Scroller,
@@ -187,7 +192,8 @@
                 showQiag: false,
                 proNums:1,
                 buyNums:1,
-                activestu:0
+                activestu:0,
+                ids: 0,
             }
         },
         ready() {
@@ -199,49 +205,58 @@
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
                 this.$http.get(localStorage.apiDomain + 'public/index/user/cainixihuan/uid/' + ustore.id + '/token/' + ustore.token).then((response)=>{
-                    _this.likedata = response.data.tuijian_shop;
-                    console.log(_this.likedata);
+                    this.likedata = response.data.tuijian_shop;
                 },(response)=>{
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                 });
             },
             addCarts: function (data) {
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
                 var obj = {} , cart = JSON.parse(sessionStorage.getItem("myCart")) , _self = this;
-                obj = {
-                    id:data.id,
-                    name:data.name,
-                    price:data.price,
-                    shotcut:data.shotcut,
-                    deliverytime:data.deliverytime,
-                    peisongok:data.peisongok,
-                    activestu:data.activestu,
-                    nums:this.buyNums,
-                    store:this.proNums,
-                    format:'',
-                    formatName:'',
-                };
-                if(data.peisongok == 0 && data.deliverytime == 1) {
-                    alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
-                    return false;
-                }
-                if(cart != '') {
-                    for(var y in cart) {
-                        if (cart[y]["deliverytime"] != data.deliverytime) {
-                            if (data.deliverytime == 0) {
-                                alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                return false;
-                            } else if (data.deliverytime == 1) {
-                                alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！！");
-                                return false;
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
+                }).then((response) => {
+                    obj = {
+                        id:data.id,
+                        name:data.name,
+                        price:data.price,
+                        shotcut:data.shotcut,
+                        deliverytime:data.deliverytime,
+                        peisongok:data.peisongok,
+                        activestu:data.activestu,
+                        nums:this.buyNums,
+                        store:this.proNums = response.data.store,
+                        format:'',
+                        formatName:'',
+                    };
+                    if(data.peisongok == 0 && data.deliverytime == 1) {
+                        alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                        return false;
+                    } else if(data.store == 0) {
+                        alert("已售罄");
+                        return false;
+                    }
+                    if(cart != '') {
+                        for(var y in cart) {
+                            if (cart[y]["deliverytime"] != data.deliverytime) {
+                                if (data.deliverytime == 0) {
+                                    alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                    return false;
+                                } else if (data.deliverytime == 1) {
+                                    alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！！");
+                                    return false;
+                                }
                             }
                         }
                     }
-                }
-                this.setCart(obj);
-                obj = {};
-                alert("成功加入购物车!");
-                this.$router.go({name : "cart"});
+                    this.setCart(obj);
+                    obj = {};
+                    alert("成功加入购物车!");
+                    this.$router.go({name : "cart"});
+                });
             }
         }
     }

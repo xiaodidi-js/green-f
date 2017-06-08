@@ -252,7 +252,6 @@
                         this.showGive = true;
                         this.listGift = response.data.maxmoney;
                     } else if(response.data.status === 0) {
-                        alert(response.data.info);
                         axios({
                             method: 'post',
                             url: localStorage.apiDomain + 'public/index/user/manjiusong',

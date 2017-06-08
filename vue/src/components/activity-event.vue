@@ -2,7 +2,7 @@
 
     .activity-body{
         width: 100%;
-        height: 100%;
+        height: auto;
         background: #fff;
         padding-top: 55px;
         color: #666;
@@ -45,12 +45,21 @@
         line-height:30px;
     }
 
+    .activity-body .activity-text .activity-img {
+        width: 95%;
+        height: 100%;
+        text-align: justify;
+        background: #fff;
+        padding: 10px 10px;
+        line-height: 30px;
+    }
+
 </style>
 
 
 <template>
     <div class="activity-body">
-        <div style="margin:0px 10px 10px;">
+        <div style="margin:0px 10px 0px;">
             <template v-for="item in list">
                 <a href="javascript:void(0);" class="activity-text" style="border:none;">
                     <div class="lyt-logo">
@@ -62,9 +71,9 @@
                         <div class="activity-data" style="float:right;line-height:35px;margin-right:0px;">{{ item.createtime | time }}</div>
                     </div>
                     <div class="activity-img">
-                        <img :src="item.content" alt="" style="width:100%;" />
+                        {{ item.content }}
                     </div>
-                    <p class="next-desc">{{ item.sdesc }}</p>
+                    <!--<p class="next-desc">{{ item.sdesc }}</p>-->
                 </a>
             </template>
         </div>
@@ -86,7 +95,21 @@
             }
         },
         ready () {
+            var ele = document.getElementsByClassName("activity-img")[0];
+            var chil = ele.getElementsByTagName("img");
+            ele.innerHTML = this.list[0].content;
+            // 处理异常
+            try {
+                for(var i in chil) {
+                    chil[i].style.width = "100%";
+                    chil[i].style.height = "100%";
+                    console.log(chil[i].style.width);
+                }
+            } catch(e) {
+                console.log(e);
+            } finally {
 
+            }
         },
         filters: {
             time: function (value) {
@@ -106,7 +129,6 @@
                     return true;
                 }
                 this.$dispatch('orderCancel');
-                console.log(1);
             },
         }
     }

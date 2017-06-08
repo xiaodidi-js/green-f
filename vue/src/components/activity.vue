@@ -1,7 +1,7 @@
 <style type="text/css">
     .activity-body{
-        padding-top:10px;
         width:100%;
+        padding-top:10px;
         z-index:-1;
     }
 
@@ -53,7 +53,7 @@
             <template v-for="item in data">
                 <div style="margin:0px 10px 10px;">
                     <a href="javascript:void(0);" class="activity-text" @click="goActivity()"> <!-- v-link="{name:'activity-event',params:{pid:item.id}}" -->
-                        <div class="activity-img">
+                        <div class="">
                             <img :src="item.img" alt="" style="width:100%;height:100%;" />
                         </div>
                         <div style="position: relative">

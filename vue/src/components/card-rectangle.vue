@@ -347,16 +347,21 @@
 						<template v-for='item1 in item.arr'>
 							<div class="shop-item">
 								<div style="width:100%;">
-									<img :src="item1.shopshotcut" style="width: 100%;height:100%;"
-										 v-link="{name:'detail',params:{pid:item1.shopid}}" />
+									<img :src="item1.shopshotcut" style="width: 100%;height:100%;" v-link="{name:'detail',params:{pid:item1.shopid}}" />
 								</div>
 								<p class="shop-name" style="">{{ item1.shopname }}</p>
 								<p class="box-money" style="float:left;">
 									<i style="font-size: 12px;">￥</i>
 									<span style="font-size: 18px;">{{ item1.shopprice }}</span>
 								</p>
-								<p class="add-cart"
-								   @click="gocart(item1)" style="float:right;"></p>
+								<p class="add-cart" @click="gocart(
+									   item1.shopid,
+									   item1.shopname,
+									   item1.shopprice,
+									   item1.shopshotcut,
+									   item1.deliverytime,
+									   item1.peisongok,
+									   item1.activestu)" style="float:right;"></p>
 							</div>
 						</template>
 					</div>
@@ -377,6 +382,8 @@
     import { setCartStorage } from 'vxpath/actions'
     import { cartNums } from 'vxpath/getters'
     import Toast from 'vux/src/components/toast'
+    import axios from 'axios'
+    import qs from 'qs'
 
     export default{
         vuex: {
@@ -394,7 +401,10 @@
 		data() {
 			return {
                 toastMessage: '',
-                toastShow: false
+                toastShow: false,
+                buyNums: 1,
+                proNums: 1,
+
 			}
 		},
         vuex: {
@@ -413,41 +423,47 @@
             Toast
         },
         methods: {
-            gocart: function (data) {
-                var obj = {};
-                var cart = JSON.parse(sessionStorage.getItem("myCart"));
-                obj = {
-                    id: data.id,
-                    name: data.name,
-                    price: data.price,
-                    shotcut: data.img,
-                    deliverytime: data.deliverytime,
-                    activestu: data.activestu,
-                    peisongok: data.peisongok,
-                    nums: 1,
-                    store: 1,
-                    format: '',
-                    formatName: '',
-                }
-                if(data.peisongok == 0 && data.deliverytime == 1) {
-                    alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
-                    return false;
-                }
-                if(sessionStorage.getItem("myCart") != '') {
-                    for(var y in cart) {
-                        if (cart[y]["deliverytime"] != data.deliverytime) {
-                            if (data.deliverytime == 0) {
-                                alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                return false;
-                            } else if (data.deliverytime == 1) {
-                                alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                return false;
+            gocart: function (id,name,price,img,deliverytime,peisongok,activestu) {
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
+                var cart = JSON.parse(sessionStorage.getItem("myCart")), obj = {};
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + id,
+                }).then((response) => {
+                    obj = {
+                        id: id,
+                        name: name,
+                        price: price,
+                        shotcut: img,
+                        deliverytime:deliverytime,
+                        nums:this.buyNums,
+                        store:this.proNums = response.data.store,
+                        format: '',
+                        formatName: '',
+                        activestu: activestu,
+                        peisongok:peisongok
+                    }
+                    if(peisongok == 0 && deliverytime == 1) {
+                        alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                        return false;
+                    }
+                    if(sessionStorage.getItem("myCart") != '') {
+                        for(var y in cart) {
+                            if (cart[y]["deliverytime"] != deliverytime) {
+                                if (deliverytime == 0) {
+                                    alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                    return false;
+                                } else if (deliverytime == 1) {
+                                    alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                    return false;
+                                }
                             }
                         }
                     }
-                }
-                this.setCart(obj);
-                alert("加入购物车成功！");
+                    this.setCart(obj);
+                    alert("加入购物车成功！");
+                });
             }
 		}
 	}

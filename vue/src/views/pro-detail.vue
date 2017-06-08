@@ -1084,27 +1084,31 @@
 //                    }
                     var scaleBox = this.data.content;
                     var itemEle = document.getElementsByClassName('ms-item')[1];
-					if(scaleBox === '') {
-                        itemEle.innerHTML = "暂时没有详情图~~~";
-                        itemEle.style.paddingTop = "10px";
-                        itemEle.style.height = "150px";
-                        itemEle.style.lineHeight = "150px";
-					} else {
-                        itemEle.innerHTML = scaleBox;
-                        var chil = itemEle.children;
-                        console.log(chil);
-                        for(var i in chil) {
-                            chil[i].style.display = "block";
-						}
-					}
+                    // 处理异常
+                    try {
+                        if(scaleBox === '') {
+                            itemEle.innerHTML = "暂时没有详情图~~~";
+                            itemEle.style.paddingTop = "10px";
+                            itemEle.style.height = "150px";
+                            itemEle.style.lineHeight = "150px";
+                        } else {
+                            itemEle.innerHTML = scaleBox;
+                            var chil = itemEle.getElementsByTagName("img");
+                            for(var i in chil) {
+                                chil[i].style.display = "block";
+                            }
+                        }
+					} catch(e) {
+						console.log(e);
+					} finally {
+
+                    }
 //                    document.getElementsByClassName('ms-item')[2].innerHTML = this.data.detail;
 				});
 			},(response)=>{
 				this.toastMessage = "网络开小差啦~";
 				this.toastShow = true;
 			});
-
-
 		},
 		computed: {
 			makeFreight: function(){
@@ -1172,11 +1176,15 @@
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
                 var _this = this;
-                this.$http.get(localStorage.apiDomain+'public/index/sale/SaleTimeSolt/uid').then((response) => {
-                    if(response.data.status===1) {
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/sale/SaleTimeSolt/uid',
+                }).then((response) => {
+                    if(response.data.status == 1) {
+                        console.log(response.data);
                         this.gotimeline = response.data.SaleTimeSolt;
                         console.log(this.gotimeline);
-                    } else if(response.data.status===-1) {
+                    } else if(response.data.status === -1) {
                         this.toastMessage = response.data.info;
                         this.toastShow = true;
                         let context = this;
@@ -1189,10 +1197,7 @@
                     } else {
                         this.toastMessage = response.data.info;
                         this.toastShow = true;
-                    }
-                },(response)=>{
-                    this.toastMessage = '网络开小差了~';
-                    this.toastShow = true;
+					}
                 });
             },
             $id: function(id) {
@@ -1366,8 +1371,6 @@
                     store:this.proNums,
                     activestu:this.data.activestu
                 };
-
-
                 var _self = this;
                 var shoping = JSON.parse(sessionStorage.getItem("myCart"));
                 if(this.data.peisongok == 0) {

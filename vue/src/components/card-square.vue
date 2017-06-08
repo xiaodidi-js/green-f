@@ -153,6 +153,8 @@
 
     import { setCartStorage } from 'vxpath/actions'
     import { cartNums } from 'vxpath/getters'
+    import axios from 'axios'
+    import qs from 'qs'
 
 	export default{
 		props: {
@@ -178,8 +180,13 @@
 		},
 		methods: {
             addCart (data) {
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
                 var obj = {} , cart = JSON.parse(sessionStorage.getItem("myCart")), _self = this;
-                for(var i in this.info.list) {
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
+                }).then((response) => {
                     if(data.peisongok == 0 && data.deliverytime == 1) {
                         alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                         return false;
@@ -210,9 +217,9 @@
                         formatName: '',
                         format: '',
                     };
-				}
-				this.setCart(obj);
-                alert("加入购物车成功！");
+                    this.setCart(obj);
+                    alert("加入购物车成功！");
+                });
 			},
 		}
 	}

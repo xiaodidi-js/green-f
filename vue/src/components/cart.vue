@@ -181,7 +181,7 @@
 					:img="item.shotcut" :pname="item.name"
 					:pprice="item.price" :pnums="item.nums"
 					:pstore="item.store" :mode="editMode"
-					:pformat="item.format" :pfname="item.formatName"
+					:pformat="item.format" :pfname="item.formatName" :store="item.store"
 					:pdelivery="item.deliverytime" :peisongok="item.peisongok">
 			</cart-list>
 
@@ -223,6 +223,7 @@
 
 	<!-- <猜你喜欢> -->
 	<cardlike></cardlike>
+
 	<!-- <猜你喜欢> -->
 
 	<!-- 确定弹框 -->
@@ -339,6 +340,10 @@
                 for(var i = 0;i < shoping.length;i++) {
                     let ok = nary[i].peisongok;
                     nary[i].deliverytime == 0 ? nary[i].deliverytime == 1 : nary[i].deliverytime == 2;
+                    if (nary[i].store == 0) {
+                        alert(nary[i].name + "---" + "库存不足");
+                        return false;
+                    }
                     if (nary[i].deliverytime != nary[i++].deliverytime) {
                         _this.toastMessage = "购物车有配送类别不一样的商品@！";
                         _this.toastShow = true;

@@ -111,7 +111,7 @@
 		</div>
 	</div>
 	<!-- 轮播图 -->
-	<banners></banners> <!-- :testarr="data.index_data" -->
+	<banners></banners>
 	<div class="sub-content">
 		<!-- 显示抢购 -->
 		<card-column :columns="maincolumns" keep-alive></card-column>
@@ -124,6 +124,7 @@
 </template>
 
 <script>
+
 	import CardColumn from 'components/card-column'
     import banners from 'components/banners'
 	import CardRectangle from 'components/card-rectangle'
@@ -180,7 +181,6 @@
 		ready() {
 			this.indexMessage();
             this.timeline();
-
             $(window).scroll(function(){
                 if($(window).scrollTop() >= 350){
                     $(".goto_top").fadeIn(500);

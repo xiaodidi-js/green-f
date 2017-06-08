@@ -47,6 +47,20 @@
 		background-repeat:no-repeat;
 		background-position:center;
 		background-size:cover;
+		position: relative;
+	}
+
+	.card-box .maininfo .img .overtext {
+		width:100%;
+		height:100%;
+		text-align:center;
+		line-height:8.4rem;
+		background: rgba(0,0,0,0.5);
+		position: absolute;
+		top:0px;
+		left:0px;
+		font-size:16px;
+		color:#fff;
 	}
 
 	.card-box .maininfo .mes{
@@ -83,6 +97,11 @@
 		color:#F9AD0C;
 		position:relative;
 		margin-bottom:2%;
+		float:left;
+	}
+
+	.card-box .maininfo .mes .store {
+		padding-left: 45px;
 	}
 
 	.card-box .maininfo .mes .money .unit{
@@ -98,6 +117,7 @@
 		color:#CCC;
 		position:relative;
 		text-align:left;
+		clear: both;
 	}
 
 	.card-box .maininfo .mes .status .del{
@@ -171,20 +191,31 @@
 
 <template>
 	<div class="card-box" :class="className">
+		<!--<div class="addition" v-if="store == 0"></div>-->
 		<div class="addition">
 			<icon type="success" class="my-icon-chosen" @click="unActIt()" v-show="showVal"></icon>
 			<icon type="circle" class="my-icon" @click="actIt()" v-show="!showVal"></icon>
 		</div>
 		<div class="maininfo">
-			<div class="img"  v-link="{name:'detail',params:{pid:pid}}"> <!-- v-lazy:background-image="img" -->
-				<img :src="img" style="width:100%;height:100%;" alt="" />
+			<div class="img"  v-link="{name:'detail',params:{pid:pid}}"  v-if="store == 0"> <!-- v-lazy:background-image="img" -->
+				<div class="overtext">已售罄</div>
+				<img :src="img" style="width:100%;height:100%;" alt=""/>
 			</div>
+
+			<div class="img"  v-link="{name:'detail',params:{pid:pid}}" v-else> <!-- v-lazy:background-image="img" -->
+				<img :src="img" style="width:100%;height:100%;" alt=""/>
+			</div>
+
 			<div class="mes">
 				<div class="name">{{ pname }}</div>
 				<div class="format" v-if="pfname == ''">&nbsp;</div>
 				<div class="format" v-else>{{ pfname }}</div>
 				<div class="money">
 					<label class="unit">¥</label>{{ pprice }}
+				</div>
+				<div class="store">
+					<span>库存</span>
+					<span>{{ store }}</span>
 				</div>
 				<div class="status">
 					<div class="num-counter">
@@ -276,11 +307,16 @@
             peisongok: {
 			    type: [Number,String],
 				default: ''
+			},
+            store: {
+			    type: [Number,String],
+				default: ''
 			}
 		},
 		data() {
 			return {
-				confirmShow: false
+				confirmShow: false,
+                storeHidden: true,
 			}
 		},
 		computed: {
