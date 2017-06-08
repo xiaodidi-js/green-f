@@ -356,14 +356,7 @@
 									<span style="font-size: 18px;">{{ item1.shopprice }}</span>
 								</p>
 								<p class="add-cart"
-								   @click="gocart(
-									   item1.shopid,
-									   item1.shopname,
-									   item1.shopprice,
-									   item1.shopshotcut,
-									   item1.deliverytime,
-									   item1.peisongok,
-									   item1.activestu)" style="float:right;"></p>
+								   @click="gocart(item1)" style="float:right;"></p>
 							</div>
 						</template>
 					</div>
@@ -420,37 +413,33 @@
             Toast
         },
         methods: {
-            gocart: function (id,name,price,img,deliverytime,peisongok,activestu) {
+            gocart: function (data) {
                 var obj = {};
                 var cart = JSON.parse(sessionStorage.getItem("myCart"));
                 obj = {
-                    id: id,
-                    name: name,
-                    price: price,
-                    shotcut: img,
-                    deliverytime:deliverytime,
+                    id: data.id,
+                    name: data.name,
+                    price: data.price,
+                    shotcut: data.img,
+                    deliverytime: data.deliverytime,
+                    activestu: data.activestu,
+                    peisongok: data.peisongok,
                     nums: 1,
                     store: 1,
                     format: '',
                     formatName: '',
-                    activestu: activestu,
-                    peisongok:peisongok
                 }
-                var date = new Date(), hours = date.getHours(), minute = date.getMinutes(), seconds = date.getSeconds();
-                var minuteOfDay =  hours * 60  + minute; //从0:00分开是到目前为止的分钟数
-                var start = 0 * 60; //开始时间
-                var end = 20 * 60;  //结束时间
                 if(data.peisongok == 0 && data.deliverytime == 1) {
                     alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                     return false;
                 }
                 if(sessionStorage.getItem("myCart") != '') {
                     for(var y in cart) {
-                        if (cart[y]["deliverytime"] != deliverytime) {
-                            if (deliverytime == 0) {
+                        if (cart[y]["deliverytime"] != data.deliverytime) {
+                            if (data.deliverytime == 0) {
                                 alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
                                 return false;
-                            } else if (deliverytime == 1) {
+                            } else if (data.deliverytime == 1) {
                                 alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
                                 return false;
                             }

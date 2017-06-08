@@ -359,7 +359,7 @@
 		</div>
 
 		<!--倒计时-->
-		<surplus :showele="showTime" :time="data.process[0].endtime - data.process[0].stime" :clickType="clickType"></surplus>
+		<surplus :showele="showTime" :time="data.process[0].endtime - data.process[0].nowtime" :clickType="clickType"></surplus>
 
 		<!--<div class="changePay" v-show="showTime">-->
 			<!--<div class="prompt">请在15分钟内完成付款,晚了就给人抢了</div>-->
@@ -501,6 +501,7 @@ export default{
             stop: false,
             interval: '',
             showTime: false,
+			nowtime: 0,
         }
 	},
 	components: {
@@ -523,6 +524,7 @@ export default{
 		}
 	},
 	ready() {
+
 		let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 		ustore = JSON.parse(ustore);
 		var self = this;
@@ -542,6 +544,8 @@ export default{
                 } else if(this.data.order.statext == '待支付') {
                     this.showTime = true;
                 } else if(this.data.order.statext == '确认收货') {
+                    this.showTime = false;
+				} else if(this.data.order.statext == '待发货' || this.data.order.statext == '待收货' || this.data.order.statext == '待评价') {
                     this.showTime = false;
 				} else if (this.minute == '0' && this.second == "0") {
                     //取消订单

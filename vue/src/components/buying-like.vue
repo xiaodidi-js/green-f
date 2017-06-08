@@ -221,10 +221,6 @@
                     format:'',
                     formatName:'',
                 };
-                var date = new Date(), hours = date.getHours(), minute = date.getMinutes(), seconds = date.getSeconds();
-                var minuteOfDay =  hours * 60  + minute; //从0:00分开是到目前为止的分钟数
-                var start = 0 * 60; //开始时间
-                var end = 20 * 60;  //结束时间
                 if(data.peisongok == 0 && data.deliverytime == 1) {
                     alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                     return false;

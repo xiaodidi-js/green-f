@@ -134,6 +134,8 @@
 
 <script>
 	import Icon from 'vux/src/components/icon'
+    import axios from 'axios'
+    import qs from 'qs'
 
 	export default{
 		components: {
@@ -151,9 +153,16 @@
 			money: {
 			    type: String,
 			},
+            address: {
+                type: Number,
+			},
             showPop: {
 			    type: Boolean,
 				default: false
+			},
+            title: {
+			    type: String,
+				default: '',
 			}
 		},
 		data() {
@@ -187,27 +196,22 @@
                 }
             },
 			changeActive: function(evt){
-
                 this.showPop = true;
-
 			    this.ischonse = true;
+				this.oneGift(this.address,this.money);
 				evt.preventDefault();
 				evt.stopPropagation();
-
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
                 let pids = '';
                 this.$http.get(localStorage.apiDomain + 'public/index/user/manjiusong/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + this.obj.id + '/money/' + this.money).then((response)=>{
-                    console.log(1);
                     if(response.data.status === 1) {
-                        console.log(2);
                         $("#give-list").css({
                             display:"block"
                         });
                         this.listGift = response.data.maxmoney;
                         console.log(this.listGift);
                     }else if(response.data.status=== -1) {
-                        console.log(3);
                         this.toastMessage = response.data.info;
                         this.toastShow = true;
                         let context = this;
@@ -218,7 +222,6 @@
                             context.$router.go({name:'login'});
                         },800);
                     } else if(response.data.status === 0) {
-                        console.log(4);
                         $("#give-list").css({
                             display:""
                         });
@@ -229,7 +232,48 @@
                 });
 
 				this.$dispatch('setChosen',this.obj);
-			}
+			},
+			oneGift: function (id,money) {
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
+                axios({
+                    method: 'post',
+                    url: localStorage.apiDomain + 'public/index/user/manjiusong',
+                    data: qs.stringify({
+                        uid:ustore.id,
+                        token:ustore.token,
+                        sinceid:id,
+                        money:money
+                    })
+                }).then((response) => {
+                    console.log(response.data);
+                    if(response.data.status == 1) {
+                        this.title = '请选择满20元赠品';
+                        this.showGive = true;
+                        this.listGift = response.data.maxmoney;
+                    } else if(response.data.status === 0) {
+                        alert(response.data.info);
+                        axios({
+                            method: 'post',
+                            url: localStorage.apiDomain + 'public/index/user/manjiusong',
+                            data: qs.stringify({
+                                uid:ustore.id,
+                                token:ustore.token,
+                                sinceid:id,
+                                money:money
+                            })
+                        }).then((response) => {
+                            if(response.data.status == 1) {
+                                this.title = '请选择首单用户赠品';
+                                this.showGive = true;
+                                this.listGift = response.data.maxmoney;
+                            } else if(response.data.status === 0) {
+                                this.showGive = false;
+                            }
+                        });
+                    }
+                });
+            },
 		}
 	}
 </script>

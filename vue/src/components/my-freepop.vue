@@ -260,7 +260,11 @@
         </div>
         <div class="con-box" id="content-box" v-on:touchmove="conMove">
             <div class="emline" v-show="showStatus">{{ showTips }}</div>
-            <freepop-list :money="money" v-for="item in tmp_address" :obj="item" :chose-id="chosen" :showPop="showGive"></freepop-list>
+            <freepop-list :money="money" :address="add"
+                          v-for="item in tmp_address"
+                          :obj="item" :chose-id="chosen"
+                          :title="showGive"
+                          :showPop="showGive"></freepop-list>
         </div>
         <div class="btn" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</div>
     </div>
@@ -314,6 +318,14 @@
             money: {
                 type: String,
                 default: ''
+            },
+            add: {
+                type:  Number,
+                default: 0
+            },
+            textGift: {
+                type: String,
+                default: '',
             }
         },
         data() {
@@ -334,6 +346,7 @@
         },
         ready() {
             this.selList();
+            console.log(this.arr);
         },
         methods: {
             fun: function () {
@@ -538,7 +551,6 @@
         },
         computed: {
             data:function(){
-//                console.log(1);
 //                var self = this;
 //                if (this.searchKey) {
 //                    var arr = []

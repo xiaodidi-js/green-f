@@ -164,9 +164,7 @@
             addCartShop (data){
                 //购物车缓存
                 var date = new Date(), hours = date.getHours(), minute = date.getMinutes(), seconds = date.getSeconds();
-                var minuteOfDay =  hours * 60  + minute; //从0:00分开是到目前为止的分钟数
-                var start = 0 * 60; //开始时间
-                var end = 20 * 60;  //结束时间
+                var cart = JSON.parse(sessionStorage.getItem("myCart")) , obj = {} , self = this;
                 if(data.peisongok == 0 && data.deliverytime == 1) {
                     alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                     return false;
@@ -174,7 +172,7 @@
                 if(cart != '') {
                     for(var y in cart) {
                         if (cart[y]["deliverytime"] != data.deliverytime) {
-                            if (_self.list[y].deliverytime == 0) {
+                            if (self.list[y].deliverytime == 0) {
                                 alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
                                 return false;
                             } else if (data.deliverytime == 1) {

@@ -443,7 +443,8 @@
 				</div>
 				<div style="text-align:center;" class="words" v-else>
 					<div class="add noTips">
-						选择自提点地址？<a @click="showPop">点我设置</a>  <!--  @click="setAddress" -->
+						<span>选择自提点地址？</span>
+						<a @click="showPop">点我设置</a>  <!--  @click="setAddress" -->
 					</div>
 				</div>
 			</div>
@@ -468,7 +469,7 @@
 				<div style="margin:0px 10px;">
 					<p class="give-title">
 						<i class="icon-img1"></i>
-						<span>首单用户,就送如下商品,请选择赠品</span>
+						<span>{{ textGift }}</span>
 					</p>
 				</div>
 			</div>
@@ -559,8 +560,6 @@
 
 	<separator :set-height="4.5"></separator>
 
-
-
 	<!-- 底部支付按钮 -->
 	<bottom-pay :sum="lastPaySum" :fixed="true"></bottom-pay>
 
@@ -568,7 +567,7 @@
 	<actionsheet :show.sync="actionShow" :menus="data.deliver" :show-cancel="true" cancel-text="取消" @on-click-menu="clickMenu"></actionsheet>
 
 	<!-- 地址/自提点 -->
-	<my-freepop :money="lastPaySum" :show.sync="popShow" title="选择地址" :show-confirm="true" :chosen.sync="address"></my-freepop>
+	<my-freepop :money="lastPaySum" :add="address" :message="textGift" :show.sync="popShow" title="选择地址" :show-confirm="true" :chosen.sync="address"></my-freepop>
 
 	<!-- 优惠券-->
 	<my-coupop :show.sync="couShow" title="选择优惠券" :show-confirm="true" :price="paySum" :chosen.sync="coupon"></my-coupop>
@@ -605,6 +604,8 @@
     import { selCartInfo,selCartSum,selCartIdsNoFormat } from 'vxpath/getters'
     import { clearAll,clearSel } from 'vxpath/actions'
     import Scroller from 'vux/src/components/scroller'
+    import axios from 'axios'
+    import qs from 'qs'
 
     export default{
         vuex: {
@@ -650,6 +651,7 @@
                 theDay: "当日",
                 giftstu: 0,	//赠品状态,
                 showGive: false,
+				textGift: "",
             }
         },
         components: {
@@ -795,48 +797,6 @@
                 //清除禁用按钮
                 document.getElementsByClassName("addCar")[0].disabled = "";
             },
-			//首单赠品
-            oneGift: function (oid,money) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                var obj = {
-                    uid:ustore.id,
-                    token:ustore.token,
-                    sinceid:oid,
-                    money:money
-                }
-                this.$http.post(localStorage.apiDomain + 'public/index/user/manjiusong' , obj).then((response)=>{
-                    if(response.data.status === 1) {
-                        this.showGive = true;
-                        this.listGift = response.data.maxmoney;
-                        console.log(response.data.maxmoney);
-						this.giftstu = 1;
-                    } else if(response.data.status=== -1) {
-                        this.toastMessage = response.data.info;
-                        this.toastShow = true;
-                        let context = this;
-                        setTimeout(function(){
-                            context.clearAll();
-                            sessionStorage.removeItem('userInfo');
-                            localStorage.removeItem('userInfo');
-                            context.$router.go({name:'login'});
-                        },800);
-                    } else if(response.data.status === 0) {
-                        this.showGive = true;
-                        this.giftstu = 0;
-                        this.$http.post(localStorage.apiDomain + 'public/index/user/shoudan' ,	 obj).then((response)=>{
-                            this.listGift = response.data.shoudan_data;
-                            console.log(this.listGift);
-						},(response)=>{
-                            this.toastMessage = '网络开小差了~';
-                            this.toastShow = true;
-                        });
-					}
-                },(response)=>{
-                    this.toastMessage = '网络开小差了~';
-                    this.toastShow = true;
-                });
-            },
             changePayType: function(tp){
                 this.payType = tp;
             },
@@ -894,7 +854,7 @@
             showPop: function(){
                 this.popShow = true;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                this.oneGift(this.address,this.lastPaySum);
+//                this.oneGift(this.address,this.lastPaySum);
 //                this.showGive = true;
             },
             showCou: function(){
@@ -959,7 +919,7 @@
                         score:this.scoreSwitch,
                         paysum:this.lastPaySum,
                         tips:this.memo,
-                        openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
+                        openid: 'os0CqxBBANhLuBLTsViL3C0zDlNs',//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                         pshonse:this.shonse,
                         gift:{'shopid':this.dtype,'id':this.shopid,'giftstu':this.giftstu},
                     };
