@@ -108,7 +108,10 @@ class Index extends RestBase
 					['id'=>3,'name'=>'热卖产品','type'=>0,'img'=>'http://vue.wogoule.com/photos/banners/mcol3.jpg','url'=>'#','desc'=>'Pepperidge Farm 非凡农庄棋人形曲奇饼','time'=>'']
 				];
 				$hotproducts = db('product')->where('is_del',0)->where('is_sell',1)->where('store','gt',0)->field('id,name,description as sdesc,price as money,shotcut as img')->order('sale desc,createtime desc')->limit(5)->select();
-				$articles = db('product_article')->where('status',1)->field('id,title,short_desc as sdesc,product as proname,price as proprice,visitor as reading,shotcut as img,createtime,updatetime,htmlspecialchars_decode(content)')->order('top desc,createtime desc')->select();
+				$articles = db('product_article')->where('status',1)->field('id,title,short_desc as sdesc,product as proname,price as proprice,visitor as reading,shotcut as img,createtime,updatetime,content')->order('top desc,createtime desc')->select();
+				foreach ($articles as $key => &$value) {
+					$value['content'] = htmlspecialchars_decode($value['content']);
+				}
 				$data = [];
 				if($maincolumns) $data['maincolumns'] = $maincolumns;
 				if($hotproducts){

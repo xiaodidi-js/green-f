@@ -307,7 +307,7 @@ class Excel extends Controller
 
     }
 
-    public function xiaoshou($orderdata){
+    public function xiaoshou($orderdata,$time){
         $obj = new \PHPExcel();
         $obj->getProperties()->setCreator("JAMES")
             ->setLastModifiedBy("JAMES")
@@ -324,7 +324,7 @@ class Excel extends Controller
         $obj->getActiveSheet()->getRowDimension('3')->setRowHeight(23);
         $obj->getActiveSheet()->getRowDimension('4')->setRowHeight(24);
         $obj->getActiveSheet()->getColumnDimension('B')->setWidth(25);
-        $obj->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+        $obj->getActiveSheet()->getColumnDimension('C')->setWidth(15);
         $obj->getActiveSheet()->getColumnDimension('D')->setWidth(15);
         $obj->getActiveSheet()->getColumnDimension('E')->setWidth(35);
         $obj->getActiveSheet()->getColumnDimension('H')->setWidth(20);
@@ -333,13 +333,14 @@ class Excel extends Controller
         $obj->getActiveSheet()->getColumnDimension('K')->setWidth(20);
 
         //标题
-        $obj->getActiveSheet()->mergeCells('A1:N1');
+        $obj->getActiveSheet()->mergeCells('A1:K1');
         $obj->getActiveSheet()->mergeCells('A2:B2');
+        $obj->getActiveSheet()->mergeCells('C2:E2');
 
         $obj->getActiveSheet()->mergeCells('G2:I2');
         $obj->getActiveSheet()->mergeCells('G3:I3');
         $obj->getActiveSheet()->mergeCells('G4:I4');
-        $obj->getActiveSheet()->getStyle('A2:A2')->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+        $obj->getActiveSheet()->getStyle('A2:E2')->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
         $obj->getActiveSheet()->getStyle('G2:K4')->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 
         $obj->getActiveSheet()->mergeCells('J2:K2');
@@ -352,7 +353,7 @@ class Excel extends Controller
         $obj->getActiveSheet()->setCellValue("A2", "报表日期");
 /*        $obj->getActiveSheet()->setCellValue("A3", "日关注新客户数：人");
         $obj->getActiveSheet()->setCellValue("A4", "日注册新客户数：人");*/
-        $obj->getActiveSheet()->setCellValue("C2", date('Y-m-d'));
+        $obj->getActiveSheet()->setCellValue("C2", $time['stime'].'-'.$time['etime']);
 /*        $obj->getActiveSheet()->setCellValue("C3", $guanzhu);
         $obj->getActiveSheet()->setCellValue("C4", $guanzhu);*/
         $obj->getActiveSheet()->getStyle('A2:C2')->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
@@ -389,7 +390,7 @@ class Excel extends Controller
                 $vo['weight'], 
                 $vo['weight'] * $vo['amount'], 
                 $vo['price'], 
-                $vo['zprice']);
+                $vo['listprice']);
             $this->excel_foreach('A', $len, $title3, $obj->getActiveSheet());
             $obj->getActiveSheet()->getRowDimension($len)->setRowHeight(25);
             // $sum += $vo['sum'];
@@ -399,7 +400,7 @@ class Excel extends Controller
         $obj->getActiveSheet()->setCellValue("J3", $orderdata['money']);
         $obj->getActiveSheet()->setCellValue("J4", $orderdata['zonghe']);
         $obj->getActiveSheet()->getStyle('A6:K' . $len)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
-        $name = time();
+        $name = $time['stime'].'至'.$time['etime'].'公司销售表';
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $name . '.xls"');
         header('Cache-Control: max-age=0');

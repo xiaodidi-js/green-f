@@ -823,7 +823,7 @@ class User extends RestBase
                 //提交状态
                 if($order['createtime']){
 
-                    $status[] = ['status'=>1,'title'=>'提交订单','time'=>date('Y-m-d H:i:s',$order['createtime']),'endtime'=>$order['createtime']+900,'stime'=>$order['createtime']];
+                    $status[] = ['status'=>1,'title'=>'提交订单','time'=>date('Y-m-d H:i:s',$order['createtime']),'endtime'=>$order['createtime']+900,'nowtime'=>time()];
                     $active = 0;
                     $order['statext'] = '待支付';
                 }else{
@@ -971,8 +971,8 @@ class User extends RestBase
                 }
                 unset($addressInfo);
                 //检查并获取优惠券
-                $clistDb = db('coupon_list');
-                if($data['coupon']){
+                /*$clistDb = db('coupon_list');
+                    if($data['coupon']){
                     $couponInfo = db('coupon')->where('id',$data['coupon'])->where('stime','<=',$now)->where('etime','>=',$now)->where('status',1)->field('collect_money,minus_money,discount,type')->find();
                     if(!$couponInfo){
                         $result = makeResult(0,'优惠券已过期或不存在');
@@ -981,8 +981,9 @@ class User extends RestBase
                         $result = makeResult(0,'优惠券已失效');
                         return $this->response($result,'json',200);
                     }
-                }
+                }*/
                 //处理积分
+                
                 if($data['score']){
                     $orderData['score'] = intval($user['score'])/100;
                 }else{
@@ -999,7 +1000,7 @@ class User extends RestBase
                 $orderDb = db('member_orders');
                 do{
                    $orderNum = $this->makeOrderNumber(); 
-                }while(empty($orderNum)||$orderDb->where('orderid',$orderNum)->find());
+                }while(empty($orderNum)||$orderDb->where('orderid',$orderNum)->field('id')->find());
                 //初始化添加数据
                 $orderData['uid'] = $id;
                 $orderData['pay'] = 0;
@@ -1178,13 +1179,35 @@ class User extends RestBase
                 }
 
                 //防止恶意提交订单
-                if($orderDb->where('createtime','>=',$now-5)->where('pay',0)->where('status',0)->where('is_del',0)->find()){
+                if($orderDb->where('createtime','>=',$now-5)->where('pay',0)->where('status',0)->where('is_del',0)->field('id')->find()){
                     $result = makeResult(0,'请勿频繁提交订单');
                     return $this->response($result,'json',200);
                 }
 
                 //检查实际支付金额
                 $orderData['money'] = $orderData['money']<=0 ? 0.01 : floatval($orderData['money']);
+
+                // 处理赠品信息
+                if(!empty($data['gift']['shopid'])){
+                    $querygift = Model('Product')->querygift($data['gift']['shopid']);
+                    if($data['gift']['giftstu'] == 0){
+                        $sdwhere['pay'] = 1;
+                        $sdwhere['uid'] = $id;
+                        $shoudan = $orderDb->where($sdwhere)->field('id')->count();
+                        if($shoudan != 0){
+                            $result = makeResult(0,'你已经不是首单用户了哦,你太坏了!');
+                            return $this->response($result,'json',200);
+                        }
+                        $stu = -1;
+                    }else{
+                        $stu = $data['gift']['id'];
+                    }
+                    if(empty($productsData)){
+                        $result = makeResult(0,'不能单买赠品哦，你太坏了！');
+                        return $this->response($result,'json',200);
+                    }
+                    $productsData[] = ['uid'=>$id,'oid'=>$orderNum,'pid'=>$data['gift']['shopid'],'price'=> '0' ,'amount'=>'1','format'=>'','fname'=>'','sale'=>0,'share'=>0,'qrcode'=>0,'activity'=>$stu]; 
+                }
 
                 // 生成过期队列
                 $Redis = $this->RedisOrderQueue($orderData);
@@ -1201,29 +1224,14 @@ class User extends RestBase
                 }
 
                 //添加优惠券使用数据
-                if(isset($couponInfo)){
+                /*if(isset($couponInfo)){
                     $clistDb->insert(['uid'=>$id,'cid'=>$data['coupon'],'usetime'=>$now]);
-                }
+                }*/
 
                 //添加积分使用记录
                 if($orderData['score']>0){
                     db('score_lists')->insert(['uid'=>$id,'type'=>'orders','amount'=>'-'.$user['score'],'createtime'=>$now]);
                     db('member')->where('id',$id)->update(['score'=>0]);
-                }
-
-                // 处理赠品信息
-                if(!empty($data['gift']['shopid'])){
-                    $querygift = Model('Product')->querygift($data['gift']['shopid']);
-                    if($data['gift']['giftstu'] == 0){
-                        $stu = -1;
-                    }else{
-                        $stu = $data['gift']['id'];
-                    }
-                    if(empty($productsData)){
-                        $result = makeResult(0,'不能单买赠品哦，你太坏了！');
-                        return $this->response($result,'json',200);
-                    }
-                    $productsData[] = ['uid'=>$id,'oid'=>$orderNum,'pid'=>$data['gift']['shopid'],'price'=> '0' ,'amount'=>'1','format'=>'','fname'=>'','sale'=>0,'share'=>0,'qrcode'=>0,'activity'=>$stu]; 
                 }
 
                 //插入订单列表数据
@@ -2093,11 +2101,10 @@ class User extends RestBase
     // 满就送
     public function manjiusong(){
         $request = Request::instance();
-        $since = intval($request->post('sinceid'));
-        $money = intval($request->post('moeny'));
+        $since = $request->post('sinceid');
+        $money = $request->post('money');
         $id = intval($request->post('uid'));
         $gtoken = trim($request->post('token'));
-        // dump($request);
         if(!$id||!$gtoken||!$money||!$since){
             $result = makeResult(0,'参数错误');
             return $this->response($result,'json',200);

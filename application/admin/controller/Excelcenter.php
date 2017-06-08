@@ -204,21 +204,19 @@ class Excelcenter extends Base{
         $money = 0;
         foreach ($queryorder as $key => &$value) {
             // 赠品处理
-            if($value['gift'] == 0){
-                $value['zprice'] = $value['listprice'];
-                $money = $money + $value['money'];
-            }else{
-                $value['zprice'] = 0;
+            if($value['gift'] == 1){
+                $value['listprice'] = 0;
                 $value['price'] = 0;
             }
             if(empty($allok[$value['pid']])){
                 $allok[$value['pid']] = $value;
-                $allok[$value['pid']]['zprice'] = 0;
-                $allok[$value['pid']]['amount'] = 0;
+            }else{
+                $allok[$value['pid']]['listprice'] = $allok[$value['pid']]['listprice'] + $value['listprice'];
+                $allok[$value['pid']]['amount'] = $allok[$value['pid']]['amount'] + $value['amount'];
             }
-            $allok[$value['pid']]['zprice'] = $allok[$value['pid']]['zprice'] + $value['zprice'];
-            $allok[$value['pid']]['amount'] = $allok[$value['pid']]['amount'] + $value['amount'];
+            $all[] = $value['listprice'];
         }
+        $money = array_sum($all);
         if($ordernum != 0 || $money != 0){
             $zonghe = $ordernum / $money;
             $zonghe = round($zonghe,2);
@@ -230,7 +228,9 @@ class Excelcenter extends Base{
         $data['zonghe'] = $zonghe;
         $data['data'] = $allok;
         $excel = new Excel();
-        $result = $excel->xiaoshou($data);
+        $time['stime'] = $get['stime'];
+        $time['etime'] = $get['etime'];
+        $result = $excel->xiaoshou($data,$time);
     }
 
 
