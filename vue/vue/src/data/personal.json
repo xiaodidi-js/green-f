@@ -1,0 +1,25 @@
+{
+	"collections":[
+		{"id":1,"img":"http://vue.wogoule.com/photos/banners/mcol1.jpg","name":"爱上对方就撒了点","money":"120.23","store":3,"active":0},
+		{"id":1,"img":"http://vue.wogoule.com/photos/banners/mcol2.jpg","name":"爱上对方就撒了点","money":"120.23","store":1,"active":0},
+		{"id":1,"img":"http://vue.wogoule.com/photos/banners/mcol3.jpg","name":"爱上对方就撒了点","money":"120.23","store":0,"active":0}
+	],
+	"addresses":[
+		{"id":1,"name":"asjdfsadfsad","tel":"11121212","address":"爱上对方会撒娇飞洒的减肥是肯定接发开始叫对方即可","default":0},
+		{"id":2,"name":"asjdfsadfsad","tel":"11121212","address":"爱上对方会撒娇飞洒的减肥是肯定接发开始叫对方即可","default":1},
+		{"id":3,"name":"asjdfsadfsad","tel":"11121212","address":"爱上对方会撒娇飞洒的减肥是肯定接发开始叫对方即可","default":0}
+	],
+	"coupons":[
+		{"id":1,"shotcut":"http://vue.wogoule.com/photos/banners/hot1.jpg","money":"20","enough":"250","day":"23","detail":1,"show":0,"brand":"哈舒服就撒了点积分","station":"爱上对方就撒地方了","city":"啥地方花洒放假","memo":"asdfsadf","deadline":"2016-12-23"},
+		{"id":2,"shotcut":"http://vue.wogoule.com/photos/banners/hot2.jpg","money":"20","enough":"250","day":"23","detail":0,"show":0,"deadline":"2016-12-23"},
+		{"id":3,"shotcut":"http://vue.wogoule.com/photos/banners/hot2.jpg","money":"20","enough":"250","day":"23","detail":0,"show":0,"deadline":"2016-12-23"},
+		{"id":4,"shotcut":"http://vue.wogoule.com/photos/banners/hot1.jpg","money":"20","enough":"250","day":"23","detail":1,"show":0,"brand":"哈舒服就撒了点积分","station":"爱上对方就撒地方了","city":"啥地方花洒放假","memo":"asdfsadf","deadline":"2016-12-23"},
+		{"id":5,"shotcut":"http://vue.wogoule.com/photos/banners/hot1.jpg","money":"20","enough":"250","day":"23","detail":1,"show":0,"brand":"哈舒服就撒了点积分","station":"爱上对方就撒地方了","city":"啥地方花洒放假","memo":"asdfsadf","deadline":"2016-12-23"}
+	],
+	"orders":[
+		{"id":123456,"status":0,"createtime":"2016/10/05 16:30:00","price":"220.05","imgs":["http://vue.wogoule.com/photos/banners/hot1.jpg","http://vue.wogoule.com/photos/banners/hot2.jpg","http://vue.wogoule.com/photos/banners/mcol1.jpg","http://vue.wogoule.com/photos/banners/mcol2.jpg"]},
+		{"id":123457,"status":1,"createtime":"2016/10/05 16:30:00","price":"220.05","imgs":["http://vue.wogoule.com/photos/banners/hot1.jpg","http://vue.wogoule.com/photos/banners/hot2.jpg","http://vue.wogoule.com/photos/banners/mcol1.jpg","http://vue.wogoule.com/photos/banners/mcol2.jpg"]},
+		{"id":123458,"status":2,"createtime":"2016/10/05 16:30:00","price":"220.05","imgs":["http://vue.wogoule.com/photos/banners/hot1.jpg","http://vue.wogoule.com/photos/banners/hot2.jpg","http://vue.wogoule.com/photos/banners/mcol1.jpg","http://vue.wogoule.com/photos/banners/mcol2.jpg"]},
+		{"id":123456,"status":-1,"createtime":"2016/10/05 16:30:00","price":"220.05","imgs":["http://vue.wogoule.com/photos/banners/hot1.jpg","http://vue.wogoule.com/photos/banners/hot2.jpg","http://vue.wogoule.com/photos/banners/mcol1.jpg","http://vue.wogoule.com/photos/banners/mcol2.jpg"]}
+	]
+}

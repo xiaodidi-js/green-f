@@ -1,0 +1,14 @@
+{
+	"imgmessage":{"id":1,"name":"激情夏日","src":"http://vue.wogoule.com/photos/big3.jpg"},
+	"grouplist":{
+		"title":"热卖爆款",
+		"list":[
+			{"src":"http://vue.wogoule.com/photos/big1.jpg","title":"标题一","price":"20.00"},
+			{"src":"http://vue.wogoule.com/photos/big2.jpg","title":"标题一","price":"56.50"},
+			{"src":"http://vue.wogoule.com/photos/big3.jpg","title":"标题一","price":"18.23"},
+			{"src":"http://vue.wogoule.com/photos/big4.jpg","title":"标题一","price":"89.88"},
+			{"src":"http://vue.wogoule.com/photos/big5.jpg","title":"标题一","price":"98.12"},
+			{"src":"http://vue.wogoule.com/photos/big2.jpg","title":"标题一","price":"100.25"}
+		]
+	}
+}
