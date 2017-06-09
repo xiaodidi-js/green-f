@@ -150,16 +150,6 @@
 				type: Number,
 				default: 0
 			},
-			money: {
-			    type: String,
-			},
-            address: {
-                type: Number,
-			},
-            showPop: {
-			    type: Boolean,
-				default: false
-			},
             title: {
 			    type: String,
 				default: '',
@@ -179,100 +169,16 @@
 				}
 			}
 		},
+		ready () {
+
+		},
 		methods: {
-            isActiveFun: function() {
-                var ele = document.getElementById("content-box");
-                var eleAddress = document.getElementsByClassName("mes-line");
-                var _this = this;
-                for(let i = 0; i < eleAddress.length; i++) {
-                    eleAddress[i].index = i;
-                    eleAddress[i].onclick = function(){
-                        this.className = "isActive";
-                        //同辈元素互斥
-                        _this.siblings(this,function(){
-                            this.className = "mes-line";
-                        });
-                    };
-                }
-            },
 			changeActive: function(evt){
-                this.showPop = true;
 			    this.ischonse = true;
-				this.oneGift(this.address,this.money);
 				evt.preventDefault();
 				evt.stopPropagation();
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                let pids = '';
-                this.$http.get(localStorage.apiDomain + 'public/index/user/manjiusong/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + this.obj.id + '/money/' + this.money).then((response)=>{
-                    if(response.data.status === 1) {
-                        $("#give-list").css({
-                            display:"block"
-                        });
-                        this.listGift = response.data.maxmoney;
-                        console.log(this.listGift);
-                    }else if(response.data.status=== -1) {
-                        this.toastMessage = response.data.info;
-                        this.toastShow = true;
-                        let context = this;
-                        setTimeout(function(){
-                            context.clearAll();
-                            sessionStorage.removeItem('userInfo');
-                            localStorage.removeItem('userInfo');
-                            context.$router.go({name:'login'});
-                        },800);
-                    } else if(response.data.status === 0) {
-                        $("#give-list").css({
-                            display:""
-                        });
-                    }
-                },(response)=>{
-                    this.toastMessage = '网络开小差了~';
-                    this.toastShow = true;
-                });
-
 				this.$dispatch('setChosen',this.obj);
-			},
-			oneGift: function (id,money) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                axios({
-                    method: 'post',
-                    url: localStorage.apiDomain + 'public/index/user/manjiusong',
-                    data: qs.stringify({
-                        uid:ustore.id,
-                        token:ustore.token,
-                        sinceid:id,
-                        money:money
-                    })
-                }).then((response) => {
-                    console.log(response.data);
-                    if(response.data.status == 1) {
-                        this.title = '请选择满20元赠品';
-                        this.showGive = true;
-                        this.listGift = response.data.maxmoney;
-                    } else if(response.data.status === 0) {
-                        axios({
-                            method: 'post',
-                            url: localStorage.apiDomain + 'public/index/user/manjiusong',
-                            data: qs.stringify({
-                                uid:ustore.id,
-                                token:ustore.token,
-                                sinceid:id,
-                                money:money
-                            })
-                        }).then((response) => {
-                            if(response.data.status == 1) {
-                                this.title = '请选择首单用户赠品';
-                                this.showGive = true;
-                                this.listGift = response.data.maxmoney;
-                            } else if(response.data.status === 0) {
-                                this.showGive = false;
-                            }
-                        });
-                    }
-                });
-            },
+			}
 		}
 	}
 </script>

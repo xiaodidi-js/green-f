@@ -380,7 +380,7 @@
 <script>
 
     import Swiper from 'vux/src/components/swiper'
-    import { setCartStorage } from 'vxpath/actions'
+    import { setCartStorage,clearAll } from 'vxpath/actions'
     import { cartNums } from 'vxpath/getters'
     import Toast from 'vux/src/components/toast'
     import axios from 'axios'
@@ -392,7 +392,8 @@
                 cartNums
             },
             actions: {
-                setCart: setCartStorage
+                setCart: setCartStorage,
+                clearAll
             }
         },
 		props: {
@@ -424,24 +425,24 @@
             Toast
         },
         methods: {
-            gocart: function (oid,name,price,img,deliverytime,peisongok,activestu,activeid) {
+            gocart: function (id,name,price,img,deliverytime,peisongok,activestu,activeid) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                let getUrl = '' , self = this;
+                var cart = JSON.parse(localStorage.getItem("myCart")), obj = {} , self = this;
                 if(ustore == null) {
                     alert("没有登录，请先登录！");
                     setTimeout(function () {
+                        self.clearAll();
                         self.$router.go({name: 'login'});
                     }, 800);
                     return false;
-                } else if (ustore != null) {
-                    var cart = JSON.parse(sessionStorage.getItem("myCart")), obj = {};
+				} else if (ustore != null) {
                     axios({
                         method: 'get',
-                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + oid,
+                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + id,
                     }).then((response) => {
                         obj = {
-                            id: oid,
+                            id: id,
                             name: name,
                             price: price,
                             shotcut: img,
@@ -473,7 +474,7 @@
                                 }
                             }
                         }
-                        self.setCart(obj);
+                        this.setCart(obj);
                         alert("加入购物车成功！");
                     });
 				}

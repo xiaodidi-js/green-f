@@ -418,7 +418,7 @@
 <script>
 
     import Scroller from 'vux/src/components/scroller'
-    import { setCartStorage } from 'vxpath/actions'
+    import { setCartStorage,clearAll } from 'vxpath/actions'
     import { cartNums } from 'vxpath/getters'
 	import formatPop from 'components/format-pop'
     import Toast from 'vux/src/components/toast'
@@ -431,7 +431,8 @@
                 cartNums
             },
             actions: {
-                setCart: setCartStorage
+                setCart: setCartStorage,
+                clearAll
             }
         },
         props: {
@@ -524,6 +525,7 @@
                         }, 100);
                     }
                 } ,10);
+
                 intervalTime_right = setInterval(function() {
                     var resultContentH = $("#left_Menu").height();
                     if (resultContentH > 0) {
@@ -554,7 +556,6 @@
 
 			},
             chooseSort(cid){
-
                 axios({
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/index/classifylist/cid/' + cid,
@@ -567,13 +568,17 @@
                     console.log(e);
 				});
             },
+            comfirmFun: function (cid) {
+
+            },
             goCart: function(data) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                var obj = {} , self = this, cart = JSON.parse(sessionStorage.getItem("myCart"));
+                var obj = {} , self = this, cart = JSON.parse(localStorage.getItem("myCart"));
                 if(ustore == null) {
                     alert("没有登录，请先登录！");
                     setTimeout(function () {
+                        self.clearAll();
                         self.$router.go({name: 'login'});
                     }, 800);
                     return false;

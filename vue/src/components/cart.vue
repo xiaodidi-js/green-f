@@ -328,7 +328,7 @@
                     this.$dispatch('showMes','还未选择商品');
                     return false;
                 }
-                var shoping = JSON.parse(sessionStorage.getItem("myCart"));
+                var shoping = JSON.parse(localStorage.getItem("myCart"));
 				axios({
 					method: 'post',
 					url: localStorage.apiDomain + 'public/index/usercenter/shopingclick',

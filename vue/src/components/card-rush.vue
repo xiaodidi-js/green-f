@@ -51,21 +51,19 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         font-weight: normal;
-        margin-bottom: 1.2rem;
 	}
 
 	.card-box .mes .progress-bar{
-		width:70%;
-		height:0.5rem;
+		width: 100%;
+		height: 1rem;
 		background: #fff;
-		overflow:hidden;
-		border:#81c429 solid 1px;
-		border-radius:0.3rem;
-		margin-bottom:0.5rem;
+		overflow: hidden;
+		border-radius: 0.3rem;
+		margin-top: 0.5rem;
 	}
 
 	.card-box .mes .progress-bar .progress{
-		width:50%;
+		width:0%;
 		height:100%;
 		background: #81c429;
 	}
@@ -85,14 +83,13 @@
 	}
 
 	.card-box .mes .money{
-        font-size: 2.9rem;
+        font-size: 2.6rem;
         color: #F9AD0C;
         position: relative;
-        margin-top: 11px;
 	}
 
 	.card-box .mes .money .unit{
-		font-size:1.4rem;
+		font-size:1.9rem;
 		margin-right:0.3rem
 	}
 
@@ -117,6 +114,12 @@
 	.card-box .mes .money .rush.disabled{
 		background:#F3C76A;
 	}
+
+
+	progress::-moz-progress-bar { background: #0064B4; }
+	progress::-webkit-progress-bar { background: #eee; }
+	progress::-webkit-progress-value  { background: #81c429; }
+
 </style>
 
 <template>
@@ -134,10 +137,11 @@
 			<!-- 正在抢购/抢购完毕 -->
 			<div class="mes" v-else>
 				<div class="name">{{ list.name }}</div>
-				<div class="progress-bar">
-					<div class="progress"></div>
-				</div>
-				<div class="desc">已抢购50%</div>
+				<progress class="progress-bar" max="100" value="0"></progress>
+				<!--<div class="progress-bar">-->
+					<!--<div class="progress"></div>-->
+				<!--</div>-->
+				<div class="desc">已抢购{{ number }}%</div>
 				<div class="money" v-for="money in list.saledata">
 					<label class="unit">¥</label>{{ money.saleprice }}
 					<a class="rush">马上抢</a>
@@ -159,7 +163,9 @@
 		},
 		data() {
 			return {
-                timeline: []
+                timeline: [],
+				showbar: '',
+				number: 0
 			}
 		},
         filters: {
@@ -176,9 +182,15 @@
         },
         methods: {
 
+
         },
         ready() {
-
+		    setInterval(function() {
+                if(this.number < 100) {
+                    this.number++;
+				};
+                $(".progress-bar").val(this.number);
+			},1000);
         },
 	}
 </script>

@@ -249,9 +249,13 @@
                     this.list = response.data.list;
                     if(response.data.status == 0) {
                         alert("今天已签到了哦!");
-                    } else if(response.data.status == 1) {
                         this.$router.go({name: 'integral'});
+
+
+
+                    } else if(response.data.status == 1) {
                         alert("签到成功！");
+                        this.$router.go({name: 'integral'});
                     }
                 },(response)=>{
                     this.toastMessage = '网络开小差了~';

@@ -707,11 +707,32 @@
 					<div class="price nowrap" >
 						<div class="price nowrap" v-if="data.is_promote || !data.sale">
 							<label class="unit">¥</label>
-							<span style="font-size:40px;">{{ data.price }}</span>
+							<template v-if="data.activeid > 0">
+								<span style="font-size:40px;">
+									{{ data.price }}
+									<i style="font-size:23px;color:#c40000">每人限购{{ data.activepay }}份</i>
+								</span>
+							</template>
+							<template v-else>
+								<span style="font-size:40px;">
+									{{ data.price }}
+								</span>
+							</template>
 							<div class="old">原价:¥ {{ data.starprice }}</div>
 						</div>
 						<div class="price nowrap" v-else>
-							<label class="unit">¥</label> {{ data.price }}
+							<label class="unit">¥</label>
+							<template v-if="data.activeid > 0">
+								<span style="font-size:40px;">
+									{{ data.price }}
+									<i style="font-size:23px;color:#c40000">每人限购{{ data.activepay }}份</i>
+								</span>
+							</template>
+							<template v-else>
+								<span style="font-size:40px;">
+									{{ data.price }}
+								</span>
+							</template>
 						</div>
 					</div>
 					<div class="deliver">

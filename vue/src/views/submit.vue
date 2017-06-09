@@ -275,20 +275,20 @@
 	.give-container .give-order {
 		clear:both;
 		height: 145px;
+		overflow-x: auto;
+		overflow-y: hidden;
 	}
 
 	.give-container .give-order ul .notActive {
-		width: 29.4%;
-		float:left;
-		margin: 0px 5px;
-		transition:0.5s;
-		border:2px solid #fff;
+		width: 23.7%;
+		float: left;
+		transition: 0.5s;
+		border: 2px solid #fff;
 	}
 
 	.give-container .give-order ul .activeGift {
-		width: 29.4%;
+		width: 23.7%;
 		float:left;
-		margin: 0px 5px;
 		border:2px solid #c40000;
 		transition:0.5s;
 	}
@@ -299,9 +299,9 @@
 	}
 
 	.give-container .give-order ul li p {
-		font-size:14px;
-		line-height: 30px;
-		text-align:center;
+		font-size: 12px;
+		line-height: 20px;
+		text-align: left;
 	}
 
 	/* getShop start */
@@ -464,18 +464,18 @@
 		<balance-list :list="cartInfo" :gift="listGift" ></balance-list>
 
 		<!-- 首单列表 -->
-		<div class="give-container" v-show="showGive">
-			<div class="" style="margin:10px 0px;border-bottom: 1px solid #eee;height:46px;width:100%;">
+		<div class="give-container" v-show="openpop">
+			<div class="" style="margin:10px 0px 5px;border-bottom: 1px solid #eee;height:46px;width:100%;">
 				<div style="margin:0px 10px;">
 					<p class="give-title">
 						<i class="icon-img1"></i>
-						<span>{{ textGift }}</span>
+						<span>{{ description }}</span>
 					</p>
 				</div>
 			</div>
 			<div class="give-order">
 				<ul>
-					<li @click="chosenGift(item.id)" v-for="item in listGift" class="notActive" :class="{'activeGift':dtype == item.id}">
+					<li @click="chosenGift(item.id)" v-for="item in list" class="notActive" :class="{'activeGift':shopid == item.id}">
 						<p class="shop-img">
 							<img :src="item.shotcut" alt="" style="width:100%;height:100%;" />
 						</p>
@@ -567,7 +567,9 @@
 	<actionsheet :show.sync="actionShow" :menus="data.deliver" :show-cancel="true" cancel-text="取消" @on-click-menu="clickMenu"></actionsheet>
 
 	<!-- 地址/自提点 -->
-	<my-freepop :money="lastPaySum" :add="address" :message="textGift" :show.sync="popShow" title="选择地址" :show-confirm="true" :chosen.sync="address"></my-freepop>
+	<my-freepop :message="textGift" :show.sync="popShow"
+				title="选择地址" :show-confirm="true" :pop="openpop"
+				:chosen.sync="address"></my-freepop>
 
 	<!-- 优惠券-->
 	<my-coupop :show.sync="couShow" title="选择优惠券" :show-confirm="true" :price="paySum" :chosen.sync="coupon"></my-coupop>
@@ -644,14 +646,14 @@
                     address:null,
                     pay:[]
                 },
-                listGift: "",
+                list: [], //赠品
 				dtype: 0,
                 shopid:0,
                 shonse:1,
                 theDay: "当日",
                 giftstu: 0,	//赠品状态,
-                showGive: false,
-				textGift: "",
+                openpop: false,
+                description: "",
             }
         },
         components: {
@@ -684,7 +686,7 @@
             this.isRadio();
             let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
             ustore = JSON.parse(ustore);
-            let pids = '';
+            let pids = '' , content = this;
             if(this.cartIds.length > 0) {
                 pids = this.cartIds.join(',');
             }
@@ -695,7 +697,9 @@
                 opid = '/openid/' + opid;
             }
             this.$http.get(localStorage.apiDomain+'public/index/user/ordersubmission/uid/'+ustore.id+'/token/'+ustore.token+'/ids/'+pids+opid).then((response)=>{
-                if(response.data.status===1) {
+                console.log(1);
+                if(response.data.status === 1) {
+                    console.log(2);
                     this.data.deliver = response.data.deliver;
                     if(typeof this.data.deliver.express !== 'undefined' && this.data.deliver.express !== '') {
                         this.deliverType = 'express';
@@ -709,10 +713,11 @@
                     this.data.address = response.data.address;
                     if(this.data.address){
                         this.address = this.data.address.id;
+                        console.log(this.address);
                     }
                     this.score = response.data.score;
                     this.freight = response.data.freight;
-                }else if(response.data.status === -1) {
+                } else if(response.data.status === -1) {
                     this.toastMessage = response.data.info;
                     this.toastShow = true;
                     let context = this;
@@ -730,6 +735,7 @@
                 this.toastMessage = '网络开小差了~';
                 this.toastShow = true;
             });
+
         },
         computed: {
             scoreMoney: function() {
@@ -777,7 +783,6 @@
                         $(".my-icon").eq(1).addClass("my-icon-chosen")
 						$(".label-radio").eq(0).hide();
                         this.theDay = "当日";
-
                         switch($(".my-icon").val()) {
                             case 1:
                         }
@@ -790,12 +795,60 @@
                 });
 			},
 			chosenGift: function (type) {
-                if (this.dtype == type) return true;
-                this.dtype = type;
-                console.log(this.dtype);
+                if (this.shopid == type) return true;
+                this.shopid = type;
                 document.getElementsByClassName("addCar")[0].style.background = '#81c429';
                 //清除禁用按钮
                 document.getElementsByClassName("addCar")[0].disabled = "";
+            },
+            oneGift: function (id,money) {
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
+                var content = this;
+                axios({
+                    method: 'post',
+                    url: localStorage.apiDomain + 'public/index/user/manjiusong',
+                    data: qs.stringify({
+                        uid:ustore.id,
+                        token:ustore.token,
+                        sinceid:id,
+                        money:money
+                    })
+                }).then((response) => {
+                    console.log(response.data.status )
+                    if(response.data.status == 1) {
+                        console.log(response.data);
+                        console.log("赠品");
+                        this.description = '请选择满20元赠品';
+                        this.showGive = true;
+                        this.list = response.data.maxmoney;
+                        console.log(this.list);
+                        this.giftstu = 1;
+                    } else if(response.data.status == 0) {
+                        console.log(123123123);
+                        content.openpop =  false;
+                        axios({
+                            method: 'post',
+                            url: localStorage.apiDomain + 'public/index/user/shoudan',
+                            data: qs.stringify({
+                                uid:ustore.id,
+                                token:ustore.token,
+                                sinceid:id,
+                                money:money
+                            })
+                        }).then((response) => {
+                            if(response.data.status == 1) {
+                                console.log("首单");
+                                this.description = '请选择首单用户赠品';
+                                this.showGive = true;
+                                this.list = response.data.maxmoney;
+                                console.log(this.list);
+                            } else if(response.data.status === 0) {
+                                this.showGive = false;
+                            }
+                        });
+                    }
+                });
             },
             changePayType: function(tp){
                 this.payType = tp;
@@ -854,8 +907,8 @@
             showPop: function(){
                 this.popShow = true;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-//                this.oneGift(this.address,this.lastPaySum);
-//                this.showGive = true;
+                this.oneGift(this.address,this.lastPaySum);
+                this.openpop = true;
             },
             showCou: function(){
                 this.couShow = true;
@@ -921,7 +974,7 @@
                         tips:this.memo,
                         openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                         pshonse:this.shonse,
-                        gift:{'shopid':this.dtype,'id':this.shopid,'giftstu':this.giftstu},
+                        gift:{'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                     };
                     this.$http.post(localStorage.apiDomain + 'public/index/user/getSubmitOrder',pdata).then((response)=>{
                         if(response.data.status===1){

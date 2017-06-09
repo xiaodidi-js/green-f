@@ -153,7 +153,7 @@
 <script>
 
     import Scroller from 'vux/src/components/scroller'
-    import { setCartStorage } from 'vxpath/actions'
+    import { setCartStorage,clearAll } from 'vxpath/actions'
     import { cartNums } from 'vxpath/getters'
     import Toast from 'vux/src/components/toast'
     import axios from 'axios'
@@ -165,7 +165,8 @@
                 cartNums
             },
             actions: {
-                setCart: setCartStorage
+                setCart: setCartStorage,
+                clearAll
             }
         },
         props: {
@@ -214,14 +215,15 @@
             addCarts: function (data) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                var obj = {} , cart = JSON.parse(sessionStorage.getItem("myCart")) , self = this;
+                var obj = {} , cart = JSON.parse(localStorage.getItem("myCart")) , _self = this;
                 if(ustore == null) {
                     alert("没有登录，请先登录！");
                     setTimeout(function () {
+                        self.clearAll();
                         self.$router.go({name: 'login'});
                     }, 800);
                     return false;
-                } else if(ustore != null) {
+                } else if (ustore != null) {
                     axios({
                         method: 'get',
                         url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
@@ -262,7 +264,7 @@
                                 }
                             }
                         }
-                        self.setCart(obj);
+                        this.setCart(obj);
                         obj = {};
                         alert("成功加入购物车!");
                         this.$router.go({name : "cart"});

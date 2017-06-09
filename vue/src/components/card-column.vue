@@ -265,7 +265,6 @@
             this.$watch('columns',function(newVal) {
                 for(var i = 0;i < newVal.length; i++) {
                     var mytime = newVal[i].etime - newVal[i].servertime;
-                    console.log(mytime);
                     if(newVal[i].nowsale == 1 && newVal[i].etime > 0) {
                         this.showele = true;
                         _self.time = mytime;

@@ -221,7 +221,7 @@
 			</div>
 		</div>
 		<template v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}">
-			<template  v-if="item.activity == 0">
+			<template  v-if="item.gift == 0">
 				<div class="line">
 					<div class="img"> <!--  v-lazy:background-image="item.shotcut" -->
 						<img :src="item.shotcut" style="width:100%;height:100%;" />
@@ -249,12 +249,12 @@
 			<div style="margin:0px 10px;">
 				<p class="give-title">
 					<i class="icon-img1"></i>
-					<span>请选择<i style="color:#c40000;">首单赠品</i></span>
+					<span>赠品</span>
 				</p>
 			</div>
 		</div>
 		<template v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}">
-			<template v-if="item.activity == -1 || item.activity > 0" >
+			<template v-if="item.gift == 1">
 				<div class="line">
 					<div class="img"> <!--  v-lazy:background-image="item.shotcut" -->
 						<img :src="item.shotcut" style="width:100%;height:100%;" />

@@ -260,11 +260,7 @@
         </div>
         <div class="con-box" id="content-box" v-on:touchmove="conMove">
             <div class="emline" v-show="showStatus">{{ showTips }}</div>
-            <freepop-list :money="money" :address="add"
-                          v-for="item in tmp_address"
-                          :obj="item" :chose-id="chosen"
-                          :title="showGive"
-                          :showPop="showGive"></freepop-list>
+            <freepop-list v-for="item in tmp_address" :obj="item" :chose-id="chosen"></freepop-list>
         </div>
         <div class="btn" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</div>
     </div>
@@ -315,17 +311,13 @@
                 default: 0,
                 twoWay: true
             },
-            money: {
-                type: String,
-                default: ''
-            },
-            add: {
-                type:  Number,
-                default: 0
-            },
-            textGift: {
+            message: {
                 type: String,
                 default: '',
+            },
+            pop: {
+                type: Boolean,
+                default: true,
             }
         },
         data() {
@@ -341,12 +333,10 @@
                 search: '',
                 tmp_address: [],
                 data: [],
-                showGive: false,
             }
         },
         ready() {
             this.selList();
-            console.log(this.arr);
         },
         methods: {
             fun: function () {
@@ -481,7 +471,6 @@
                         area: obj.area
                     };
                     this.$http.post(localStorage.apiDomain + 'public/index/user/addresschosen', pdata).then((response) => {
-                        console.log(response.data);
                         if (response.data.status === 1) {
                             this.chosen = obj.id;
                             this.$parent.data.address = obj;
@@ -519,7 +508,6 @@
                     ustore = JSON.parse(ustore);
                     this.getType = this.$parent.deliverType;
                     this.$http.get(localStorage.apiDomain + 'public/index/user/addresschosen/uid/' + ustore.id + '/token/' + ustore.token + '/type/' + this.getType).then((response) => {
-                        console.log(response.data);
                         if (response.data.status === 1) {
                             this.showStatus = false;
                             this.showTips = '加载中...';
@@ -566,8 +554,6 @@
 //                } else {
 //                    this.data = this.address
 //                }
-
-
             }
         }
     }
