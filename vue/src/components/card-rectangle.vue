@@ -457,6 +457,9 @@
                         if(peisongok == 0 && deliverytime == 1) {
                             alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                             return false;
+                        } else if(peisongok == 0 && deliverytime == 0) {
+                            alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
+                            return false;
                         } else if (activeid > 0) {
                             alert("这是限时抢购商品！");
                             return false;

@@ -1,11 +1,12 @@
 <style type="text/css">
-    .activity-body{
+    .activity-index{
         width:100%;
-        padding-top:10px;
         z-index:-1;
+        margin-bottom: 68px;
+        padding-top: 48px;
     }
 
-    .activity-body .activity-text{
+    .activity-index .activity-text{
         font-size: 1.5rem;
         line-height: 2rem;
         color: #333;
@@ -26,7 +27,7 @@
         top: 6px;
     }
 
-    .activity-body .activity-text .act-title{
+    .activity-index .activity-text .act-title{
         width:18rem;
         height:30px;
         line-height:30px;
@@ -48,8 +49,8 @@
 </style>
 
 <template>
-    <div style="width:100%;height:100%;background: #fff;">
-        <div class="activity-body" id="activity">
+    <div style="width:100%;height:auto;background: #fff;padding: 10px 0px;">
+        <div class="activity-index" id="activity">
             <template v-for="item in data">
                 <div style="margin:0px 10px 10px;">
                     <a href="javascript:void(0);" class="activity-text" @click="goActivity()"> <!-- v-link="{name:'activity-event',params:{pid:item.id}}" -->

@@ -1,60 +1,3 @@
-<style type="text/css">
-
-    .activity-body{
-        width: 100%;
-        height: auto;
-        background: #fff;
-        padding-top: 55px;
-        color: #666;
-        line-height: 26px;
-    }
-
-    .lyt-logo{
-        width: 100%;
-        clear: both;
-        position: relative;
-        height: 50px;
-        line-height: 50px;
-    }
-
-    .lyt-logo .readying {
-        float:right;
-
-    }
-
-    .lyt-logo span {
-        font-size: 16px;
-        color: #3cc51f;
-        line-height: 50px;
-        padding-left: 15px;
-        display: block;
-        width: 56%;
-        height: 40px;
-        float: left;
-        text-overflow: ellipsis;
-        overflow: hidden;
-    }
-
-    .activity-body .activity-text .next-edit{
-        line-height: 40px;
-        color:#000;
-        border-bottom: 1px solid #eee;
-    }
-
-    .activity-body .activity-text .next-desc {
-        line-height:30px;
-    }
-
-    .activity-body .activity-text .activity-img {
-        width: 95%;
-        height: 100%;
-        text-align: justify;
-        background: #fff;
-        padding: 10px 10px;
-        line-height: 30px;
-    }
-
-</style>
 
 
 <template>
@@ -67,13 +10,12 @@
                         <span>{{ item.proname }}</span>
                     </div>
                     <div style="position: relative;height: 35px;">
-                        <div class="readying" style="float:left;line-height:35px;">阅读量:<i>{{ item.reading }}</i></div>
+                        <div class="readying">阅读量:<i>{{ item.reading }}</i></div>
                         <div class="activity-data" style="float:right;line-height:35px;margin-right:0px;">{{ item.createtime | time }}</div>
                     </div>
                     <div class="activity-img">
                         {{ item.content }}
                     </div>
-                    <!--<p class="next-desc">{{ item.sdesc }}</p>-->
                 </a>
             </template>
         </div>
@@ -85,6 +27,7 @@
     export default {
         vuex: {
             actions: {
+
 
             }
         },
@@ -133,3 +76,63 @@
         }
     }
 </script>
+
+<style type="text/css">
+
+    .activity-body{
+        width: 100%;
+        height: auto;
+        background: #fff;
+        padding-top: 55px;
+        color: #666;
+        line-height: 26px;
+    }
+
+    .lyt-logo{
+        width: 100%;
+        clear: both;
+        position: relative;
+        height: 50px;
+        line-height: 50px;
+    }
+
+    .activity-body .lyt-logo .readying {
+        float:right;
+        font-size:16px;
+        color:#2c3e50;
+        float:left;line-height:35px;
+    }
+
+    .lyt-logo span {
+        font-size: 16px;
+        color: #3cc51f;
+        line-height: 50px;
+        padding-left: 15px;
+        display: block;
+        width: 56%;
+        height: 40px;
+        float: left;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .activity-body .activity-text .next-edit{
+        line-height: 40px;
+        color:#000;
+        border-bottom: 1px solid #eee;
+    }
+
+    .activity-body .activity-text .next-desc {
+        line-height:30px;
+    }
+
+    .activity-body .activity-text .activity-img {
+        width: 95%;
+        height: 100%;
+        text-align: justify;
+        background: #fff;
+        padding: 10px 10px;
+        line-height: 30px;
+    }
+
+</style>

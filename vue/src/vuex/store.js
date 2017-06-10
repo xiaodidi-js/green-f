@@ -11,13 +11,23 @@ const state = {
 	shopname: {},
     message: {},
 	text: "",
-    number: 0,
+    giftList: {},
+    song: ""
 }
 
 //应用状态操作
 const mutations = {
-    myScrollTop (state,number) {
-        state.number = number;
+    mySong (state,song) {
+        state.song = song;
+        sessionStorage.setItem("song",JSON.stringify(state.song));
+    },
+    commitData (state, params) {
+    	state[params.target] = params.data
+	},
+    myGift (state,giftList) {	//自提点ID
+        state.giftList = giftList;
+        alert(state.giftList);
+        sessionStorage.setItem("giftlist",JSON.stringify(state.giftList));
     },
     myActiveTwo (state,text) {
         state.text = text;

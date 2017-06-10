@@ -1,3 +1,115 @@
+<template>
+	<div class="mes-line my-common-fadein" :class="{'isChonse':obj.id == this.choseId}">
+		<div class="edit" v-link="{name:'address-edit',params:{aid:obj.id}}" v-if="$parent.getType=='express'">
+			<img src="../images/add-edit.png" />
+		</div>
+		<div class="addcon" @click="changeActive()" v-if="$parent.getType=='express'">
+			<div class="name nowrap">
+				<div class="default" v-if="obj.is_default === 1">默认</div>
+				<p style="line-height: 22px;">
+					<span class="address-left">地址:</span>
+					<span>{{ obj.name }}</span>
+				</p>
+				<p style="line-height: 22px;">
+					<span class="address-left">地点:</span>
+					<span>{{ obj.tel }}</span>
+				</p>
+			</div>
+			<div class="address nowrap">
+				{{ obj.address  }}
+			</div>
+		</div>
+		<div class="addcon noicon" @click="changeActive" v-else>
+			<div class="name nowrap">
+				<div class="default" v-if="obj.is_default === 1">默认</div>
+				<p style="line-height: 22px;">
+					<span class="address-left">地址:</span>
+					<span>{{ obj.name }}</span>
+				</p>
+				<p style="line-height: 22px;">
+					<span class="address-left">地点:</span>
+					<span>{{ obj.tel }}</span>
+				</p>
+			</div>
+			<div class="address nowrap">
+				<p style="line-height: 22px;">
+					<span>详细地址</span>
+					<span>{{ obj.address  }}</span>
+				</p>
+			</div>
+		</div>
+		<div class="check">
+			<icon type="success" class="my-icon-chosen" v-show="selSta"></icon>
+			<icon type="circle" class="my-icon" @click="changeActive" v-show="!selSta"></icon>
+		</div>
+	</div>
+</template>
+
+<script>
+	import Icon from 'vux/src/components/icon'
+    import { myGift } from 'vxpath/actions'
+    import axios from 'axios'
+    import qs from 'qs'
+
+	export default{
+		components: {
+			Icon
+		},
+        vuex: {
+            getters: {
+
+            },
+            actions: {
+                myGift
+            }
+        },
+		props: {
+			obj: {
+				type: Object,
+				required: true
+			},
+			choseId: {
+				type: Number,
+				default: 0
+			},
+            sumMoney: {
+                type: [String,Number],
+                default: 0
+			},
+            title: {
+			    type: String,
+				default: '',
+			}
+		},
+		data() {
+			return {
+                ischonse: false,
+			}
+		},
+		computed: {
+			selSta: function(){
+                if(this.obj.id === this.choseId) {
+					return true;
+				}else{
+					return false;
+				}
+			}
+		},
+		ready () {
+
+		},
+		methods: {
+			changeActive: function(evt){
+//                this.oneGift(this.choseId,this.sumMoney);
+			    this.ischonse = true;
+				evt.preventDefault();
+				evt.stopPropagation();
+				this.$dispatch('setChosen',this.obj);
+			}
+		}
+	}
+</script>
+
 <style scoped>
 	.mes-line{
 		width:100%;
@@ -84,101 +196,3 @@
 	}
 
 </style>
-
-<template>
-	<div class="mes-line my-common-fadein" :class="{'isChonse':obj.id == this.choseId}">
-		<div class="edit" v-link="{name:'address-edit',params:{aid:obj.id}}" v-if="$parent.getType=='express'">
-			<img src="../images/add-edit.png" />
-		</div>
-		<div class="addcon" @click="changeActive()" v-if="$parent.getType=='express'">
-			<div class="name nowrap">
-				<div class="default" v-if="obj.is_default === 1">默认</div>
-				<p style="line-height: 22px;">
-					<span class="address-left">地址:</span>
-					<span>{{ obj.name }}</span>
-				</p>
-				<p style="line-height: 22px;">
-					<span class="address-left">地点:</span>
-					<span>{{ obj.tel }}</span>
-				</p>
-			</div>
-			<div class="address nowrap">
-				{{ obj.address  }}
-			</div>
-		</div>
-		<div class="addcon noicon" @click="changeActive" v-else>
-			<div class="name nowrap">
-				<div class="default" v-if="obj.is_default === 1">默认</div>
-				<p style="line-height: 22px;">
-					<span class="address-left">地址:</span>
-					<span>{{ obj.name }}</span>
-				</p>
-				<p style="line-height: 22px;">
-					<span class="address-left">地点:</span>
-					<span>{{ obj.tel }}</span>
-				</p>
-			</div>
-			<div class="address nowrap">
-				<p style="line-height: 22px;">
-					<span>详细地址</span>
-					<span>{{ obj.address  }}</span>
-				</p>
-			</div>
-		</div>
-		<div class="check">
-			<icon type="success" class="my-icon-chosen" v-show="selSta"></icon>
-			<icon type="circle" class="my-icon" @click="changeActive" v-show="!selSta"></icon>
-		</div>
-	</div>
-</template>
-
-<script>
-	import Icon from 'vux/src/components/icon'
-    import axios from 'axios'
-    import qs from 'qs'
-
-	export default{
-		components: {
-			Icon
-		},
-		props: {
-			obj: {
-				type: Object,
-				required: true
-			},
-			choseId: {
-				type: Number,
-				default: 0
-			},
-            title: {
-			    type: String,
-				default: '',
-			}
-		},
-		data() {
-			return {
-                ischonse: false,
-			}
-		},
-		computed: {
-			selSta: function(){
-                if(this.obj.id === this.choseId) {
-					return true;
-				}else{
-					return false;
-				}
-			}
-		},
-		ready () {
-
-		},
-		methods: {
-			changeActive: function(evt){
-			    this.ischonse = true;
-				evt.preventDefault();
-				evt.stopPropagation();
-				this.$dispatch('setChosen',this.obj);
-			}
-		}
-	}
-</script>

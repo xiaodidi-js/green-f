@@ -36,7 +36,7 @@ let router = new VueRouter({
     saveScrollPosition: true,
     scrollBehavior (to, from, savedPosition) {
         if (savedPosition) {
-        	alert(savedPosition);
+            alert(savedPosition);
             return savedPosition
         } else {
             return { x: 0, y: 0 }
@@ -50,79 +50,86 @@ router.map(Routers);
 
 router.beforeEach((transition) => {
 
-	if(Env == 'production') {
-		//微信openid检测
-		if(!sessionStorage.getItem('openid')){
-			let query = transition.to.query;
-			if(typeof query.opid !== 'undefined' && query.opid != '') {
-                sessionStorage.setItem('openid',query.opid);
-			} else {
-				location.href = localStorage.getItem('apiDomain')+'public/index/home/index?back=' + encodeURI(transition.to.path);
-				return true;
-			}
-		}
-	}
+    if(Env == 'production') {
+        //微信openid检测
+        if(!sessionStorage.getItem('openid')){
+            let query = transition.to.query;
+            let since = sessionStorage.setItem('since',query.sinceid); //自提点关注检测
+            if(localStorage.getItem('openid')){
+                let leopid = localStorage.getItem('openid');
+                sessionStorage.setItem('openid',leopid);
+                return true;
+            }else{
+                if(typeof query.opid !== 'undefined' && query.opid != '') {
+                    localStorage.setItem('openid',query.opid);
+                } else {
+                    location.href = localStorage.getItem('apiDomain')+'public/index/home/index?back=' + encodeURI(transition.to.path);
+                    return true;
+                }
+            }
+        }
+    }
 
-	//登录检测
-	if(typeof(transition.to.login) !== 'undefined' && transition.to.login === true) {
-		let ustore = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo');
-		if(ustore===null) {
-			transition.redirect({name:'login'});
-		} else {
-			transition.next();
-		}
-	}else if(['login','register','find'].indexOf(transition.to.name)>=0) {
-		let ustore = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo');
-		if(ustore !== null) {
-			transition.abort();
-		}else{
-			transition.next();
-		}
-	}else{
-		transition.next();
-	}
+    //登录检测
+    if(typeof(transition.to.login) !== 'undefined' && transition.to.login === true) {
+        let ustore = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo');
+        if(ustore===null) {
+            transition.redirect({name:'login'});
+        } else {
+            transition.next();
+        }
+    }else if(['login','register','find'].indexOf(transition.to.name)>=0) {
+        let ustore = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo');
+        if(ustore !== null) {
+            transition.abort();
+        }else{
+            transition.next();
+        }
+    }else{
+        transition.next();
+    }
     window.scrollTo(0, 0);
 });
 
 router.afterEach((transition) => {
-	//获取微信分享配置
-	if(transition.to.name!='detail'){
-		Vue.http.get(localStorage.apiDomain+'public/index/index/wxshare').then((response)=>{
-			let getSession = response.data;
-			let shareData = {
-					title:getSession.title,
-					desc:getSession.desc,
-					link:'http://'+window.location.host+'/index_prod.html',
-					imgUrl:getSession.imgurl
-				};
-			WxJssdk.config({
-				debug:false,
-				appId:getSession.appid,
-				timestamp:getSession.timestamp,
-				nonceStr:getSession.noncestr,
-				signature:getSession.signature,
-				jsApiList:[
-					'onMenuShareTimeline',
-		            'onMenuShareAppMessage',
-		            'onMenuShareWeibo',
-		            'onMenuShareQQ',
-		            'onMenuShareQZone'
-				]
-			});
-			WxJssdk.ready(()=>{
-				WxJssdk.onMenuShareTimeline(shareData);
-				WxJssdk.onMenuShareAppMessage(shareData);
-				WxJssdk.onMenuShareWeibo(shareData);
-				WxJssdk.onMenuShareQZone(shareData);
-				WxJssdk.onMenuShareQQ(shareData);
-			});
-			WxJssdk.error(function(res){
-				console.log(res.errMsg);
-			});
-		},(response)=>{
-			console.log('get wx share failed.');
-		});
-	}
+    //获取微信分享配置
+    if(transition.to.name!='detail'){
+        Vue.http.get(localStorage.apiDomain+'public/index/index/wxshare').then((response)=>{
+            let getSession = response.data;
+            let shareData = {
+                title:getSession.title,
+                desc:getSession.desc,
+                link:'http://'+window.location.host+'/index_prod.html',
+                imgUrl:getSession.imgurl
+            };
+            WxJssdk.config({
+                debug:false,
+                appId:getSession.appid,
+                timestamp:getSession.timestamp,
+                nonceStr:getSession.noncestr,
+                signature:getSession.signature,
+                jsApiList:[
+                    'onMenuShareTimeline',
+                    'onMenuShareAppMessage',
+                    'onMenuShareWeibo',
+                    'onMenuShareQQ',
+                    'onMenuShareQZone'
+                ]
+            });
+            WxJssdk.ready(()=>{
+                WxJssdk.onMenuShareTimeline(shareData);
+                WxJssdk.onMenuShareAppMessage(shareData);
+                WxJssdk.onMenuShareWeibo(shareData);
+                WxJssdk.onMenuShareQZone(shareData);
+                WxJssdk.onMenuShareQQ(shareData);
+            });
+            WxJssdk.error(function(res){
+                console.log(res.errMsg);
+            });
+        },(response)=>{
+            console.log('get wx share failed.');
+        });
+    }
 });
 
 router.redirect({

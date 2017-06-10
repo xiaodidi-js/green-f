@@ -1,3 +1,213 @@
+
+
+<template>
+	<div class="wrapper" id="cardOrder" style="margin:0px;">
+		<div class="card-box" v-for="item in orders">
+			<div class="top-line">
+				<div class="date">{{ item.createtime }}</div>
+				<div class="status" v-if="item.pay == 0 && item.send == 0 && item.receive == 0 && item.status == 0">待付款</div>
+				<div class="status" v-if="item.pay == 1 && item.send == 0 && item.receive == 0 && item.status == 0">待发货</div>
+				<div class="status" v-if="item.pay == 1 && item.send == 1 && item.receive == 0 && item.status == 0">待收货</div>
+				<div class="status" v-if="item.reject == 0 && item.status == 1">交易完成</div>
+				<div class="status" v-if="item.reject == 0 && item.status == -1">已取消</div>
+				<div class="status" v-if="item.reject == 0 && item.status == -2">申请售后</div>
+				<div class="status" v-if="item.reject == 0 && item.status == -3">已关闭</div>
+				<div class="status" v-if="item.reject == 1">已退货</div>
+			</div>
+			<div class="mid-line" v-link="{name:'order-detail',params:{oid:item.id}}">
+				<div class="imgs" v-for="img in item.imgs"> <!--  v-lazy:background-image="img" -->
+					<img :src="img" style="width:100%;height:100%;" alt="" />
+				</div>
+				<div class="arrow"></div>
+			</div>
+			<div class="btm-line">
+				<div class="money">
+					总金额：<label>¥{{ item.price }}</label>
+				</div>
+				<div class="button">
+
+					<a class="manage-btn"
+					   v-if="item.pay == 0 && item.send == 0 && item.receive == 0 && item.status == 0"
+					   v-link="{name:'order-detail',params:{oid:item.id}}">去付款</a>
+
+					<a class="manage-btn"
+					   v-if="item.pay == 0 && item.send == 0 && item.receive == 0 && item.status == 0"
+					   @click="clickCancel">取消订单</a>
+
+					<a class="manage-btn"
+					   v-if="item.pay == 1 && item.send == 1 && item.receive == 0 && item.status == 0"
+					   @click="clickExpress(item.scid,item.snum)">查看快递</a>
+
+					<a class="manage-btn"
+					   v-if="item.pay == 1 && (item.send == 1 || item.send == 0) && item.reject == 0 || item.status == 1"
+					   @click="buyAgain(item.id)">再次购买</a>
+
+					<a class="manage-btn"
+					   v-if="item.pay == 1 && item.send == 1 && item.receive == 0 && item.status == 0"
+					   @click="clickConfirm()">确认收货</a>
+
+					<a class="manage-btn" v-if="item.reject == 0 && item.status == 1"
+					   v-link="{name:'comment-submit',params:{oid:item.id}}">客户评价</a>
+
+				</div>
+			</div>
+			<!-- 确定弹框 -->
+			<confirm :show.sync="confirmShow" :title="confirmTitle" confirm-text="确定" cancel-text="取消"
+					 @on-confirm="myConfirmClcik(item.id)" @on-cancel="cancelClick">
+				<p style="text-align:center;">{{ confirmText }}</p>
+			</confirm>
+		</div>
+	</div>
+	<!-- toast提示框 -->
+	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
+
+	<!-- loading加载框 -->
+	<loading :show="loadingShow" :text="loadingMessage"></loading>
+
+</template>
+
+<script>
+	import Loading from 'vux/src/components/loading'
+    import Toast from 'vux/src/components/toast'
+    import Confirm from 'vux/src/components/confirm'
+    import { setCartAgain,clearAll } from 'vxpath/actions'
+
+	export default{
+		vuex: {
+			actions: {
+                setCartAgain,
+				clearAll,
+			}
+		},
+        components: {
+            Loading,
+            Toast,
+            Confirm,
+        },
+		props: {
+            disabled: {
+                type: Boolean,
+                default: false
+            },
+			orders: {
+				type: Array,
+				default() {
+					return []
+				}
+			}
+		},
+		data() {
+			return {
+				loadingShow:false,
+				loadingMessage:'',
+                confirmShow: false,
+                confirmTitle:'',
+                confirmText: '',
+                data: {
+                    order:{},
+                }
+			}
+		},
+		ready() {
+
+		},
+		methods: {
+            myConfirmClcik: function(id) {
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
+                console.log(1);
+                switch(this.clickType) {
+                    case 1:
+                        let d = {uid:ustore.id,token:ustore.token,oid:id};
+                        this.$http.delete(localStorage.apiDomain + 'public/index/user/getsubmitorder/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + id).then((response)=>{
+                            if(response.data.status === 1) {
+                                console.log(response.data + '1');
+                                this.data.order.statext = '用户取消';
+                                this.data.order.status = -1;
+                                this.btnStatus = false;
+                                //刷新当前页面
+                                location.reload();
+                            }else if(response.data.status === -1) {
+                                this.btnStatus = false;
+                                this.toastMessage = response.data.info;
+                                this.toastShow = true;
+                                let context = this;
+                                setTimeout(function(){
+                                    context.clearAll();
+                                    sessionStorage.removeItem('userInfo');
+                                    localStorage.removeItem('userInfo');
+                                    context.$router.go({name:'login'});
+                                },800);
+                            }else{
+                                this.btnStatus = false;
+                                this.toastMessage = response.data.info;
+                                this.toastShow = true;
+                            }
+                        },(response)=>{
+                            this.toastMessage = '网络开小差了~';
+                            this.toastShow = true;
+                        });
+                    case 2:
+                        let pdata = {uid:ustore.id,token:ustore.token,oid:id};
+                        this.$http.put(localStorage.apiDomain + 'public/index/user/orderoperation',pdata).then((response)=>{
+                            //刷新当前页面
+                            location.reload();
+                        });
+                }
+			},
+			buyAgain: function(oid){
+				this.btnStatus = true;
+				this.loadingMessage = '请稍候...';
+				this.loadingShow = true;
+				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+				ustore = JSON.parse(ustore);
+				this.$http.get(localStorage.apiDomain+'public/index/user/orderoperation/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+oid).then((response)=>{
+					this.loadingShow = false;
+					this.btnStatus = false;
+					if(response.data.status===1) {
+						this.setCartAgain(response.data.list);
+						this.$router.go({name:'cart'});
+					}else if(response.data.status === -1) {
+						this.toastMessage = response.data.info;
+						this.toastShow = true;
+						let context = this;
+						setTimeout(function(){
+							context.clearAll();
+							sessionStorage.removeItem('userInfo');
+							localStorage.removeItem('userInfo');
+							context.$router.go({name:'login'});
+						},800);
+					}else{
+						this.toastMessage = response.data.info;
+						this.toastShow = true;
+					}
+				},(response)=>{
+					this.btnStatus = false;
+					this.toastMessage = '网络开小差了~';
+					this.toastShow = true;
+				});
+			},
+			clickExpress: function(scid,snum){
+				location.href='http://www.kuaidi100.com/chaxun?com='+scid+'&nu='+snum;
+			},
+			clickCancel: function(){
+                this.clickType = 1;
+                this.confirmTitle = '取消订单';
+                this.confirmText = '确定取消该订单吗,确认?';
+                this.btnStatus = true;
+                this.confirmShow = true;
+			},
+            clickConfirm: function () {
+                this.clickType = 2;
+                this.confirmTitle = '确认收货';
+                this.confirmText = '请在收到货物后才确认收货,确认?';
+                this.btnStatus = true;
+                this.confirmShow = true;
+            }
+		}
+	}
+</script>
+
 <style scoped>
 	.wrapper{
 		width:100%;
@@ -134,190 +344,3 @@
 		color:#fff;
 	}
 </style>
-
-<template>
-	<div class="wrapper" id="cardOrder" style="margin:0px;">
-		<div class="card-box" v-for="item in orders">
-			<div class="top-line">
-				<div class="date">{{ item.createtime }}</div>
-				<div class="status" v-if="item.pay ==0 && item.send == 0 && item.receive == 0 && item.status == 0">待付款</div>
-				<div class="status" v-if="item.pay ==1 && item.send == 0 && item.receive == 0 && item.status == 0">待发货</div>
-				<div class="status" v-if="item.pay ==1 && item.send == 1 && item.receive == 0 && item.status == 0">待收货</div>
-				<div class="status" v-if="item.reject == 0 && item.status == 1">交易完成</div>
-				<div class="status" v-if="item.reject == 0 && item.status == -1">已取消</div>
-				<div class="status" v-if="item.reject == 0 && item.status == -2">申请售后</div>
-				<div class="status" v-if="item.reject == 0 && item.status == -3">已关闭</div>
-				<div class="status" v-if="item.reject == 1">已退货</div>
-			</div>
-			<div class="mid-line" v-link="{name:'order-detail',params:{oid:item.id}}">
-				<div class="imgs" v-for="img in item.imgs"> <!--  v-lazy:background-image="img" -->
-					<img :src="img" style="width:100%;height:100%;" alt="" />
-				</div>
-				<div class="arrow"></div>
-			</div>
-			<div class="btm-line">
-				<div class="money">
-					总金额：<label>¥{{ item.price }}</label>
-				</div>
-				<div class="button">
-
-					<a class="manage-btn"
-					   v-if="item.pay==0&&item.send==0&&item.receive==0&&item.status==0"
-					   v-link="{name:'order-detail',params:{oid:item.id}}">去付款</a>
-
-					<a class="manage-btn"
-					   v-if="item.pay==1&&item.send==1&&item.receive==0&&item.status==0"
-					   @click="clickExpress(item.scid,item.snum)">查看快递</a>
-
-					<a class="manage-btn"
-					   v-if="item.pay==1&&(item.send==1||item.send==0)&&item.reject==0 || item.status==1"
-					   @click="buyAgain(item.id)">再次购买</a>
-
-					<a class="manage-btn" v-if="item.reject == 0 && item.status == 1"
-					   v-link="{name:'comment-submit',params:{oid:item.id}}">客户评价</a>
-
-				</div>
-			</div>
-			<!-- 确定弹框 -->
-			<confirm :show.sync="confirmShow" :title="confirmTitle" confirm-text="确定" cancel-text="取消"
-					 @on-confirm="myConfirmClcik(item.id)" @on-cancel="cancelClick">
-				<p style="text-align:center;">{{ confirmText }}</p>
-			</confirm>
-		</div>
-	</div>
-	<!-- toast提示框 -->
-	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
-
-	<!-- loading加载框 -->
-	<loading :show="loadingShow" :text="loadingMessage"></loading>
-
-</template>
-
-<script>
-	import Loading from 'vux/src/components/loading'
-    import Toast from 'vux/src/components/toast'
-    import Confirm from 'vux/src/components/confirm'
-    import { setCartAgain,clearAll } from 'vxpath/actions'
-
-	export default{
-		vuex: {
-			actions: {
-                setCartAgain,
-				clearAll,
-			}
-		},
-        components: {
-            Loading,
-            Toast,
-            Confirm,
-        },
-		props: {
-            disabled: {
-                type: Boolean,
-                default: false
-            },
-			orders: {
-				type: Array,
-				default() {
-					return []
-				}
-			}
-		},
-		data() {
-			return {
-				loadingShow:false,
-				loadingMessage:'',
-                confirmShow: false,
-                confirmTitle:'',
-                confirmText: '',
-                data: {
-                    order:{},
-                }
-			}
-		},
-		ready() {
-
-		},
-		methods: {
-            myConfirmClcik: function(id) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                console.log(1);
-                switch(this.clickType) {
-                    case 1:
-                        let d = {uid:ustore.id,token:ustore.token,oid:id};
-                        this.$http.delete(localStorage.apiDomain + 'public/index/user/getsubmitorder/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + id).then((response)=>{
-                            if(response.data.status === 1) {
-                                console.log(response.data + '1');
-                                this.data.order.statext = '用户取消';
-                                this.data.order.status = -1;
-                                this.btnStatus = false;
-                                $("#cancel-btn").css("display","none");
-                                $("#detail-btn").css("display","none");
-                            }else if(response.data.status === -1) {
-                                this.btnStatus = false;
-                                this.toastMessage = response.data.info;
-                                this.toastShow = true;
-                                let context = this;
-                                setTimeout(function(){
-                                    context.clearAll();
-                                    sessionStorage.removeItem('userInfo');
-                                    localStorage.removeItem('userInfo');
-                                    context.$router.go({name:'login'});
-                                },800);
-                            }else{
-                                this.btnStatus = false;
-                                this.toastMessage = response.data.info;
-                                this.toastShow = true;
-                            }
-                        },(response)=>{
-                            this.toastMessage = '网络开小差了~';
-                            this.toastShow = true;
-                        });
-                }
-			},
-			buyAgain: function(oid){
-				this.btnStatus = true;
-				this.loadingMessage = '请稍候...';
-				this.loadingShow = true;
-				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-				ustore = JSON.parse(ustore);
-				this.$http.get(localStorage.apiDomain+'public/index/user/orderoperation/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+oid).then((response)=>{
-					this.loadingShow = false;
-					this.btnStatus = false;
-					if(response.data.status===1) {
-						this.setCartAgain(response.data.list);
-						this.$router.go({name:'cart'});
-					}else if(response.data.status === -1) {
-						this.toastMessage = response.data.info;
-						this.toastShow = true;
-						let context = this;
-						setTimeout(function(){
-							context.clearAll();
-							sessionStorage.removeItem('userInfo');
-							localStorage.removeItem('userInfo');
-							context.$router.go({name:'login'});
-						},800);
-					}else{
-						this.toastMessage = response.data.info;
-						this.toastShow = true;
-					}
-				},(response)=>{
-					this.btnStatus = false;
-					this.toastMessage = '网络开小差了~';
-					this.toastShow = true;
-				});
-			},
-			clickExpress: function(scid,snum){
-				location.href='http://www.kuaidi100.com/chaxun?com='+scid+'&nu='+snum;
-			},
-			clickCancel: function(){
-                this.clickType = 1;
-                this.confirmTitle = '取消订单';
-                this.confirmText = '确定取消该订单吗,确认?';
-                this.btnStatus = true;
-                this.confirmShow = true;
-			}
-		}
-	}
-</script>
