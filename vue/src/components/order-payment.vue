@@ -52,6 +52,9 @@
                     <a class="manage-btn" v-if="item.reject == 0 && item.status == 1"
                        v-link="{name:'comment-submit',params:{oid:item.id}}">客户评价</a>
 
+                    <a class="manage-btn" v-if="item.reject == 0 && item.status == -1"
+                       @click="clickDelete">删除订单</a>
+
                 </div>
             </div>
             <!-- 确定弹框 -->
@@ -210,6 +213,9 @@
                 this.clickType = 0;
                 this.confirmTitle = '';
                 this.confirmText = '';
+            },
+            clickDelete () {
+                alert("在开发，稍等~~~");
             },
         }
     }

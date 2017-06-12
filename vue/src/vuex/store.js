@@ -12,11 +12,15 @@ const state = {
     message: {},
 	text: "",
     giftList: {},
-    song: ""
+    song: "",
+	giftstu : 0
 }
 
 //应用状态操作
 const mutations = {
+    mystu (state,giftstu) {
+        state.giftstu = giftstu;
+    },
     mySong (state,song) {
         state.song = song;
         sessionStorage.setItem("song",JSON.stringify(state.song));

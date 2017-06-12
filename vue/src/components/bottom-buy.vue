@@ -1,3 +1,97 @@
+
+
+<template>
+	<div class="bottom-buy" :class="{'fixed' : fixed}" :style="{bottom : fixed===true && btm > 0 ? btm + unit : 0}">
+		<div class="collect" :class="{active : collect}" @click="setCollect">
+			<div class="img"></div>
+			<p>收藏</p>
+		</div>
+		<div class="car" v-link="{name:'cart'}">
+			<div class="img"></div>
+			<p>购物车</p>
+			<div class="bage" v-show="bage > 0">{{ bage }}</div>
+		</div>
+		<div class="btn doBuy" @click="clickBuy" v-show="store > 0">立即购买</div>
+		<button class="btn addCar doBuyButton" @click="clickCart" v-show="store > 0">加入购物车</button>
+		<div class="btn noBuy" v-show="store <= 0">暂时缺货</div>
+	</div>
+</template>
+
+<script>
+
+	export default{
+		props: {
+			bage: {
+				type: Number,
+				default: 0
+			},
+			fixed: {
+				type: Boolean,
+				default: false
+			},
+			btm: {
+				type: Number,
+				default: 0
+			},
+			unit: {
+				type: String,
+				default: 'rem'
+			},
+			collect: {
+				type: Boolean,
+				default: false
+			},
+			pid: {
+				type:Number,
+				default: 0
+			},
+			store: {
+				type: Number,
+				required: true
+			}
+		},
+		data() {
+			return {
+				
+			}
+		},
+		methods: {
+			setCollect: function(){
+				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+				if(!ustore){
+					this.$router.go({name:'login'});
+					return false;
+				}
+				ustore = JSON.parse(ustore);
+				this.$http.put(localStorage.apiDomain+'public/index/user/usercollection',{uid:ustore.id,pid:this.$route.params.pid,token:ustore.token,action:this.collect}).then((response)=>{
+					if(response.data.status === 1) {
+						this.collect = !this.collect;
+					} else if (response.data.status === -1) {
+                        this.toastMessage = response.data.info;
+                        this.toastShow = true;
+                        let context = this;
+                        setTimeout(function() {
+                            context.clearAll();
+                            sessionStorage.removeItem('userInfo');
+                            localStorage.removeItem('userInfo');
+                            context.$router.go({name:'login'});
+                        },800);
+                    }
+					this.$dispatch('showSonMes',response.data.info);
+				},(response)=>{
+					this.$dispatch('showSonMes','网络开小差了~');
+				});
+			},
+			clickBuy: function(){
+				this.$dispatch('buyNow');
+			},
+			clickCart: function(){
+				this.$dispatch('addCart');
+			}
+		}
+	}
+</script>
+
 <style scoped>
 	.bottom-buy{
 		width:100%;
@@ -150,95 +244,3 @@
 	}
 
 </style>
-
-<template>
-	<div class="bottom-buy" :class="{'fixed' : fixed}" :style="{bottom : fixed===true && btm > 0 ? btm + unit : 0}">
-		<div class="collect" :class="{active : collect}" @click="setCollect">
-			<div class="img"></div>
-			<p>收藏</p>
-		</div>
-		<div class="car" v-link="{name:'cart'}">
-			<div class="img"></div>
-			<p>购物车</p>
-			<div class="bage" v-show="bage > 0">{{ bage }}</div>
-		</div>
-		<div class="btn doBuy" @click="clickBuy" v-show="store > 0">立即购买</div>
-		<button class="btn addCar doBuyButton" @click="clickCart" v-show="store > 0">加入购物车</button>
-		<div class="btn noBuy" v-show="store <= 0">暂时缺货</div>
-	</div>
-</template>
-
-<script>
-
-	export default{
-		props: {
-			bage: {
-				type: Number,
-				default: 0
-			},
-			fixed: {
-				type: Boolean,
-				default: false
-			},
-			btm: {
-				type: Number,
-				default: 0
-			},
-			unit: {
-				type: String,
-				default: 'rem'
-			},
-			collect: {
-				type: Boolean,
-				default: false
-			},
-			pid: {
-				type:Number,
-				default: 0
-			},
-			store: {
-				type: Number,
-				required: true
-			}
-		},
-		data() {
-			return {
-				
-			}
-		},
-		methods: {
-			setCollect: function(){
-				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-				if(!ustore){
-					this.$router.go({name:'login'});
-					return false;
-				}
-				ustore = JSON.parse(ustore);
-				this.$http.put(localStorage.apiDomain+'public/index/user/usercollection',{uid:ustore.id,pid:this.$route.params.pid,token:ustore.token,action:this.collect}).then((response)=>{
-					if(response.data.status === 1) {
-						this.collect = !this.collect;
-					} else if (response.data.status === -1) {
-                        this.toastMessage = response.data.info;
-                        this.toastShow = true;
-                        let context = this;
-                        setTimeout(function() {
-                            context.clearAll();
-                            sessionStorage.removeItem('userInfo');
-                            localStorage.removeItem('userInfo');
-                            context.$router.go({name:'login'});
-                        },800);
-                    }
-					this.$dispatch('showSonMes',response.data.info);
-				},(response)=>{
-					this.$dispatch('showSonMes','网络开小差了~');
-				});
-			},
-			clickBuy: function(){
-				this.$dispatch('buyNow');
-			},
-			clickCart: function(){
-				this.$dispatch('addCart');
-			}
-		}
-	}
-</script>

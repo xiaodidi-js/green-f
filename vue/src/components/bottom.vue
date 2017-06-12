@@ -1,3 +1,107 @@
+
+
+<template>
+	<div class="wrapper" keep-alive style="margin-bottom:0px;">
+		<!-- 购物车 -->
+		<div class="group-cart" v-link="{name:'cart'}" @click="cartFun()">
+			<i class="icons icon-icon22fuzhi"></i>
+			<div class="name">购物车</div>
+			<badge :text="cartNumsText" class="my-badge cart-bor" v-show="cartNums > 0"></badge>
+		</div>
+		<div id="card">
+			<!-- 选项卡一 -->
+			<div class="group" :class="{'active':$route.position === 1}" v-link="{name:'index'}">
+				<i class="icons icon-home"></i>
+				<div class="name">首页</div>
+			</div>
+			<!-- 选项卡二 -->
+			<div class="group" :class="{'active':$route.position === 2}" style="position: relative;left: -15px;" v-link="{name:'classify'}">
+				<i class="icons icon-zizhuxiadan"></i>
+				<div class="name">下单</div>
+			</div>
+			<!-- 选项卡三 -->
+			<div class="group" :class="{'active':$route.position === 3}" style="position: relative;left: 15px;" v-link="{name:'activity'}">
+				<i class="icons icon-huodong"></i>
+				<div class="name">活动</div>
+			</div>
+			<!-- 选项卡四 -->
+			<div class="group" :class="{'active':$route.position === 4}" @click="goConter()">
+				<i class="icons icon-gerenzhongxin"></i>
+				<div class="name">个人中心</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+	import { cartNums } from 'vxpath/getters'
+	import Badge from 'vux/src/components/badge'
+    import { myActive } from 'vxpath/actions'
+
+	export default{
+		components: {
+			Badge
+		},
+		vuex: {
+			getters: {
+				cartNums,
+			},
+            actions: {
+                myActive
+			}
+		},
+		data() {
+			return {
+				
+			}
+		},
+		ready() {
+
+		},
+        methods: {
+		    goConter: function() {
+                let openid = sessionStorage.getItem("openid");
+                this.$http.get(localStorage.apiDomain+'public/index/index/guanzhu?openid='+ openid).then((response)=>{
+                    if(response.data.status == 0) {
+                        this.$router.go({name: 'sao'});
+                        return;
+                    }
+                });
+                this.myActive(1);
+                this.$router.go({name: 'per-orders'})
+			},
+
+            cartFun: function() {
+                let openid = sessionStorage.getItem("openid");
+                this.$http.get(localStorage.apiDomain+'public/index/index/guanzhu?openid='+ openid).then((response)=>{
+                    if(response.data.status == 0) {
+                        this.$router.go({name: 'sao'});
+                        return;
+                    }
+                });
+                var cardDom = document.getElementById("card");
+                var active = cardDom.children;
+                for(var i = 0; i <= active.length; i++) {
+                    try {
+                        if(active[i]) {
+                            active[i].className = "group";
+                        }
+					} catch(e) {
+                        throw "呵呵哒！";
+					} finally {
+
+					}
+                }
+			},
+		},
+		computed: {
+			cartNumsText() {
+				return this.cartNums.toString()
+			}
+		}
+	}
+</script>
+
 <style scoped>
 	@import '../fonts/iconfont.css';
 
@@ -175,108 +279,4 @@
 
 	/* wrapper start */
 
-
-
 </style>
-
-<template>
-	<div class="wrapper" keep-alive style="margin-bottom:0px;">
-		<!-- 购物车 -->
-		<div class="group-cart" v-link="{name:'cart'}" @click="cartFun()">
-			<i class="icons icon-icon22fuzhi"></i>
-			<div class="name">购物车</div>
-			<badge :text="cartNumsText" class="my-badge cart-bor" v-show="cartNums > 0"></badge>
-		</div>
-		<div id="card">
-			<!-- 选项卡一 -->
-			<div class="group" :class="{'active':$route.position === 1}" v-link="{name:'index'}">
-				<i class="icons icon-home"></i>
-				<div class="name">首页</div>
-			</div>
-			<!-- 选项卡二 -->
-			<div class="group" :class="{'active':$route.position === 2}" style="position: relative;left: -15px;" v-link="{name:'classify'}">
-				<i class="icons icon-zizhuxiadan"></i>
-				<div class="name">下单</div>
-			</div>
-			<!-- 选项卡三 -->
-			<div class="group" :class="{'active':$route.position === 3}" style="position: relative;left: 15px;" v-link="{name:'activity'}">
-				<i class="icons icon-huodong"></i>
-				<div class="name">活动</div>
-			</div>
-			<!-- 选项卡四 -->
-			<div class="group" :class="{'active':$route.position === 4}" @click="goConter()">
-				<i class="icons icon-gerenzhongxin"></i>
-				<div class="name">个人中心</div>
-			</div>
-		</div>
-	</div>
-</template>
-
-<script>
-	import { cartNums } from 'vxpath/getters'
-	import Badge from 'vux/src/components/badge'
-    import { myActive } from 'vxpath/actions'
-
-	export default{
-		components: {
-			Badge
-		},
-		vuex: {
-			getters: {
-				cartNums,
-			},
-            actions: {
-                myActive
-			}
-		},
-		data() {
-			return {
-				
-			}
-		},
-		ready() {
-
-		},
-        methods: {
-		    goConter: function() {
-                let openid = sessionStorage.getItem("openid");
-                this.$http.get(localStorage.apiDomain+'public/index/index/guanzhu?openid='+ openid).then((response)=>{
-                    if(response.data.status == 0) {
-                        this.$router.go({name: 'sao'});
-                        return;
-                    }
-                });
-                this.myActive(1);
-                this.$router.go({name: 'per-orders'})
-			},
-
-            cartFun: function() {
-                let openid = sessionStorage.getItem("openid");
-                this.$http.get(localStorage.apiDomain+'public/index/index/guanzhu?openid='+ openid).then((response)=>{
-                    if(response.data.status == 0) {
-                        this.$router.go({name: 'sao'});
-                        return;
-                    }
-                });
-                var cardDom = document.getElementById("card");
-                var active = cardDom.children;
-                for(var i = 0; i <= active.length; i++) {
-                    try {
-                        if(active[i]) {
-                            active[i].className = "group";
-                        }
-					} catch(e) {
-                        throw "呵呵哒！";
-					} finally {
-
-					}
-                }
-			},
-		},
-		computed: {
-			cartNumsText() {
-				return this.cartNums.toString()
-			}
-		}
-	}
-</script>

@@ -56,7 +56,7 @@
 
 <script>
     import FreepopList from 'components/freepop-list'
-    import {clearAll,myGift,mySong, commitData } from 'vxpath/actions'
+    import {clearAll,myGift,mySong, commitData, mystu } from 'vxpath/actions'
     import Toast from 'vux/src/components/toast'
     import Loading from 'vux/src/components/loading'
     import axios from 'axios'
@@ -68,7 +68,8 @@
                 clearAll,
                 myGift,
                 mySong,
-                commitData
+                commitData,
+                mystu,
             }
         },
         components: {
@@ -237,9 +238,9 @@
                         content.openpop = true;
                         this.mySong('请选择满20元赠品');
                         content.showGive = true;
-                        content.giftstu = 1;
                         this.lists = response.data.maxmoney;
                         this.commitData({target: 'giftList', data: response.data.maxmoney})
+                        this.commitData({target: 'giftstu', data: 1})
                         console.log('log', this.$store.state.giftList)
                     } else if(response.data.status == 0) {
                         content.openpop =  false;
@@ -259,7 +260,8 @@
                                 content.showGive = true;
                                 this.myGift(this.lists);
                                 this.lists = response.data.shoduan_data;
-                                console.log(this.lists);
+                                this.commitData({target: 'giftList', data: response.data.maxmoney})
+                                this.commitData({target: 'giftstu', data: 2});
                             } else if(response.data.status === 0) {
                                 content.openpop = false;
                             }

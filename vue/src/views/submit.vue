@@ -330,6 +330,9 @@
             description () {
                 return this.$store.state.song
 			},
+            giftstu () {
+                return this.$store.state.giftstu
+			},
             scoreMoney: function() {
                 let obj = {};
                 let money = this.score / 100;
