@@ -5,6 +5,12 @@
 		font-size:0;
 	}
 
+	.cardImage {
+		margin: 50px 0px 0px;
+		padding-bottom: 30px;
+		background: #fff;
+	}
+
 	.title{
 		display:block;
 		margin:0.5rem 0rem 1rem 0rem;
@@ -42,10 +48,12 @@
 	}
 
 	.card-box .mes{
-		width:100%;
-		max-width:100%;
-		overflow:hidden;
-		position:relative;
+		width: 100%;
+		max-width: 100%;
+		overflow: hidden;
+		position: relative;
+		height: 3.5rem;
+		line-height: 3.5rem;
 	}
 
 	.card-box .mes .activity-data {
@@ -105,7 +113,7 @@
 </style>
 
 <template>
-	<div class="wrapper" style="margin:50px 0px 30px;">
+	<div class="wrapper cardImage" style="">
 		<!--<label class="title" v-if="articles.title">{{ articles.title }}</label>-->
 		<div class="card-box" style="width:95%;" v-for="item in list" v-link="{name:'article',params:{cid:item.id}}">
 			<img :src="item.img" class="img" alt="{{ item.title }}" />
