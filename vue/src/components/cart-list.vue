@@ -26,9 +26,9 @@
 				</div>
 				<div class="status">
 					<div class="num-counter" style="float:left;">
-						<div class="btns" :class="{'disabled':pnums <= 0}" @click.stop="rdcNums()"> - </div>
+						<button class="btns" :class="{'disabled':pnums <= 0}" @click.stop="rdcNums()"> - </button>
 						<input type="number" class="input" :value="pnums" @click.stop @touchstart.stop readonly />
-						<div class="btns" :class="{'disabled':pnums >= pstore}" @click.stop="addNums()"> + </div>
+						<button class="btns" :class="{'disabled':pnums >= pstore}" @click.stop="addNums()"> + </button>
 					</div>
 					<div class="elestore" style="">
 						<span>库存</span>
@@ -123,6 +123,10 @@
             store: {
 			    type: [Number,String],
 				default: ''
+			},
+            activepay: {
+                type: Number,
+                default: 0
 			}
 		},
 		data() {
@@ -157,7 +161,15 @@
 			}
 		},
 		ready () {
-
+            if(this.pnums == this.activepay) {
+                $(".num-counter").find("button").eq(1).attr("disabled","true").css({
+					"background":"rgb(212, 212, 212)",
+					"color":"#fff",
+                    "cursor":"pointer"
+				});
+            } else if(this.pnums < this.activepay) {
+                $(".num-counter").find("button").eq(1).removeAttr("disabled");
+            }
 		},
 		methods: {
 			actIt: function(){
@@ -189,6 +201,15 @@
 				if(this.pnums < this.pstore) {
 					this.increNums(this.pid,this.pformat);
 				}
+                if(this.pnums == this.activepay) {
+                    $(".num-counter").find("button").eq(1).attr("disabled","true").css({
+                        "background":"rgb(212, 212, 212)",
+                        "color":"#fff",
+                        "cursor":"pointer"
+                    });
+                } else if(this.pnums < this.activepay) {
+                    $(".num-counter").find("button").eq(1).removeAttr("disabled");
+                }
 			},
 			rdcNums: function(evt) {
 				if(this.pnums > 0) {
@@ -198,6 +219,21 @@
 						this.reduceNums(this.pid,this.pformat);
 					}
 				}
+
+                if(this.pnums == this.activepay) {
+                    $(".num-counter").find("button").eq(1).attr("disabled","true").css({
+                        "background":"rgb(212, 212, 212)",
+                        "color":"#fff",
+                        "cursor":"pointer"
+                    });
+                } else if(this.pnums < this.activepay) {
+                    $(".num-counter").find("button").eq(1).removeAttr("disabled").css({
+                        "background":"#fff",
+                        "color":"#333",
+                        "cursor":"pointer"
+                    });
+                }
+
 			},
 			confirmDel: function(){
 			    console.log(this.pid,this.pformat);
@@ -339,7 +375,7 @@
 	}
 
 	.my-icon:before{
-		color:#cccccc;
+		color:#ccc;
 	}
 
 	.my-icon-chosen:before{
@@ -355,20 +391,21 @@
 	}
 
 	.num-counter .btns{
-		display:inline-block;
-		vertical-align:top;
-		width:2rem;
-		height:2.5rem;
-		line-height:2.5rem;
-		font-size:1.2rem;
-		font-weight:bold;
-		color:#333;
-		border:#CACACA solid 1px;
-		text-align:center;
+		display: inline-block;
+		vertical-align: top;
+		width: 2rem;
+		height: 2.7rem;
+		line-height: 2.5rem;
+		font-size: 1.2rem;
+		font-weight: bold;
+		color: #333;
+		border: #CACACA solid 1px;
+		text-align: center;
+		background: #fff;
 	}
 
 	.num-counter .btns.disabled{
-		color:#ccc;
+		color:#c8c8cd;
 	}
 
 	.status .elestore {

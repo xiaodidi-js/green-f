@@ -68,10 +68,6 @@
                 type: Number,
                 default: 0
             },
-            clickType: {
-                type: Number,
-                default: 0
-            }
         },
         data() {
             return {

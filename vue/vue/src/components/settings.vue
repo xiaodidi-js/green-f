@@ -1,115 +1,4 @@
-<style scoped>
-.input-wrapper{
-	width:90%;
-	height:auto;
-	margin:auto;
-	padding:8% 0% 0% 0%;
-}
 
-.btn-wrapper{
-	width:90%;
-	margin:8% 5% 10% 5%;
-}
-
-.input-wrapper .list{
-	width:100%;
-	height:auto;
-	margin-bottom:0.8rem;
-	font-size:0;
-	line-height:2.5rem;
-	position:relative;
-}
-
-.input-wrapper .list:last-child{
-	margin-bottom:0rem;
-}
-
-.input-wrapper .list label,.input-wrapper .list input,.input-wrapper .list select{
-	display:inline-block;
-	font-size:1.6rem;
-}
-
-.input-wrapper .list label{
-	width:25%;
-}
-
-.input-wrapper .list input,.input-wrapper .list select{
-	width:75%;
-	height:2.5rem;
-	text-align:right;
-	background-color:transparent;
-}
-
-.input-wrapper .list select{
-	border:none;
-	text-align:right;
-	appearance:none;
-	-webkit-appearance:none;
-	-moz-appearance:none;
-	direction:rtl;
-}
-
-.input-wrapper .list .arrow{
-	width:2.5%;
-	height:100%;
-	position:absolute;
-	top:0rem;
-	right:0rem;
-	background-image:url('../images/arrow.png');
-	background-size:contain;
-	background-repeat:no-repeat;
-	background-position:center;
-}
-
-.input-wrapper .list.pwd{
-	text-align:center;
-}
-
-.input-wrapper .list.pwd input{
-	width:90%;
-	height:3.5rem;
-	text-align:left;
-	background-color:transparent;
-	margin-bottom:0.8rem;
-	border-bottom: 1px solid #ccc;
-	font-size: 14px;
-}
-
-</style>
-
-<style>
-.weui_cells{
-	margin-top:0 !important;
-}
-
-.weui_btn_default{
-	background-color:#F9AD0C !important;
-	color:#fff !important;
-	border-radius:0.2rem;
-}
-
-.weui_btn_default:active{
-	background-color:#DE9A08 !important;
-}
-
-.weui_btn_disabled.weui_btn_default{
-	background-color:#F3C76A !important;
-}
-
-a.calendar-title{
-	font-size:1.8rem;
-	margin:0.5rem 0rem;
-}
-
-table thead tr th{
-	font-size:1.4rem;
-	font-weight:600;
-}
-
-div.input-wrapper .weui_cell.vux-tap-active{
-	display:none;
-}
-</style>
 
 <template>
 	<!-- 输入内容 -->
@@ -216,6 +105,8 @@ export default{
 			this.clearAll();
 			sessionStorage.removeItem('userInfo');
 			localStorage.removeItem('userInfo');
+			localStorage.removeItem('openid');
+			sessionStorage.removeItem('openid');
 			this.$router.go({name:'index'});
 		},
 		checkBefore: function(){
@@ -327,3 +218,116 @@ export default{
 	}
 }
 </script>
+
+<style scoped>
+	.input-wrapper{
+		width:90%;
+		height:auto;
+		margin:auto;
+		padding:8% 0% 0% 0%;
+	}
+
+	.btn-wrapper{
+		width:90%;
+		margin:8% 5% 10% 5%;
+	}
+
+	.input-wrapper .list{
+		width:100%;
+		height:auto;
+		margin-bottom:0.8rem;
+		font-size:0;
+		line-height:2.5rem;
+		position:relative;
+	}
+
+	.input-wrapper .list:last-child{
+		margin-bottom:0rem;
+	}
+
+	.input-wrapper .list label,.input-wrapper .list input,.input-wrapper .list select{
+		display:inline-block;
+		font-size:1.6rem;
+	}
+
+	.input-wrapper .list label{
+		width:25%;
+	}
+
+	.input-wrapper .list input,.input-wrapper .list select{
+		width:75%;
+		height:2.5rem;
+		text-align:right;
+		background-color:transparent;
+	}
+
+	.input-wrapper .list select{
+		border:none;
+		text-align:right;
+		appearance:none;
+		-webkit-appearance:none;
+		-moz-appearance:none;
+		direction:rtl;
+	}
+
+	.input-wrapper .list .arrow{
+		width:2.5%;
+		height:100%;
+		position:absolute;
+		top:0rem;
+		right:0rem;
+		background-image:url('../images/arrow.png');
+		background-size:contain;
+		background-repeat:no-repeat;
+		background-position:center;
+	}
+
+	.input-wrapper .list.pwd{
+		text-align:center;
+	}
+
+	.input-wrapper .list.pwd input{
+		width:90%;
+		height:3.5rem;
+		text-align:left;
+		background-color:transparent;
+		margin-bottom:0.8rem;
+		border-bottom: 1px solid #ccc;
+		font-size: 14px;
+	}
+
+</style>
+
+<style>
+	.weui_cells{
+		margin-top:0 !important;
+	}
+
+	.weui_btn_default{
+		background-color:#F9AD0C !important;
+		color:#fff !important;
+		border-radius:0.2rem;
+	}
+
+	.weui_btn_default:active{
+		background-color:#DE9A08 !important;
+	}
+
+	.weui_btn_disabled.weui_btn_default{
+		background-color:#F3C76A !important;
+	}
+
+	a.calendar-title{
+		font-size:1.8rem;
+		margin:0.5rem 0rem;
+	}
+
+	table thead tr th{
+		font-size:1.4rem;
+		font-weight:600;
+	}
+
+	div.input-wrapper .weui_cell.vux-tap-active{
+		display:none;
+	}
+</style>

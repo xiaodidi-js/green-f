@@ -1,238 +1,4 @@
-<style scoped>
-	.card-box{
-		width: 92%;
-		height: auto;
-		padding: 4% 2%;
-		border-bottom: #B3B3B3 solid 1px;
-		margin: 10px auto 0;
-	}
 
-	#cardbox{display:none;}
-
-	.card-box .half-div{
-		display:inline-block;
-		vertical-align:middle;
-		font-size:1.4rem;
-		color:#333;
-		width:50%;
-		white-space:nowrap;
-		text-overflow:ellipsis;
-		overflow:hidden;
-	}
-
-	.my-icon-chosen:before{
-		color:#f9ad0c;
-	}
-
-	.text-right{
-		text-align:right;
-	}
-
-	.card-box .half-div .icon{
-		display:inline-block;
-		vertical-align:middle;
-		width: 1.8rem;
-		height: 1.8rem;
-	}
-
-	.card-box .half-div .icon.img{
-		background-position:center;
-		background-repeat:no-repeat;
-		background-size:contain;
-	}
-
-	.card-box .half-div .icon.img.edit{
-		background-image:url('../images/edit.png');
-	}
-
-	.card-box .half-div .icon.img.del{
-		background-image:url('../images/del.png');
-	}
-
-	.card-box .half-div .icon.separator{
-		width:0.1rem;
-		height:1rem;
-		background-color:#D2D2D2;
-		margin:0.2rem 0.8rem;
-	}
-
-	.card-box .address{
-		display:-webkit-box;
-		-webkit-line-clamp:2;
-		-webkit-box-orient:vertical;
-		width:100%;
-		max-height:3.6rem;
-		font-size:1.4rem;
-		line-height:1.8rem;
-		color:#808080;
-		margin-top:0.6rem;
-		margin-bottom:1.5rem;
-		overflow:hidden;
-	}
-
-
-
-	.card-box .address.active {
-		background: #81c429;
-	}
-
-	.comfire-chonse {
-		width:80%;
-		margin:23% 10% 10% 10%;
-	}
-
-	.add-address {
-		width:80%;
-		margin:5% 10% 30% 10%;
-	}
-
-	.address-comfirm {
-		-webkit-appearance: none;
-		-moz-appearance: none;
-		-ms-appearance: none;
-		-o-appearance: none;
-		appearance: none;
-		border:none;
-	}
-
-</style>
-
-<style>
-	.weui_icon_circle:before, .weui_icon_success:before{
-		font-size:2.2rem !important;
-		margin-right:0.3rem;
-		margin-top:0rem;
-	}
-
-	.weui_icon_success:before{
-		color:#fff;
-	}
-
-	.weui_btn_default{
-		background-color:#F9AD0C !important;
-		color:#fff !important;
-		border-radius:0.2rem;
-	}
-
-	.weui_btn_default:active{
-		background-color:#DE9A08 !important;
-	}
-
-	.weui_btn_disabled.weui_btn_default{
-		background-color:#F3C76A !important;
-	}
-
-	.weui_btn_dialog.primary{
-		color:#81c429 !important;
-	}
-
-	/* addresses_table start */
-	.addresses_table{
-		width: 100%;
-		height: 3.8rem;
-		border-bottom: 1px solid #ccc;
-		background: #efefef;
-		box-shadow: 1px 1px 10px #efefef;
-		position: fixed;
-		top: 222px;
-		z-index: 9;
-		box-shadow: 0 2px 15px #ccc;
-    }
-
-	.addresses_table ul li span {
-		display:block;
-
-		line-height:3.8rem;
-	}
-
-    .addresses_table ul li{
-		width:50%;
-		text-align:center;
-		font-size:14px;
-		float:left;
-		color:#333;
-
-	}
-    .addresses_table .sel-active{
-        border-bottom:3px solid #3cc51f;
-        position:absolute;
-        top:49px;
-        left:0px;
-        width:50%;
-    }
-
-    .addresses_table ul .active{border-bottom:3px solid #81c429;}
-
-    /* addresses_table end */
-
-	#ziti{
-		display:block;
-	}
-
-	#ziti .main_ziti{
-		width:100%;
-		margin:10px 0px;
-		position: relative;
-		top:50px;
-	}
-
-	#ziti .main_ziti .address{
-		width:98%;
-		height:auto;
-		background:#FEFEFE;
-		overflow:hidden;
-		position:relative;
-		margin:0 auto;
-		margin-bottom:1.16rem;
-	}
-
-	#ziti .main_ziti .isActive {
-		width:98%;
-		height:auto;
-		background:#81c429;
-		overflow:hidden;
-		position:relative;
-		margin:0 auto;
-		margin-bottom:1.16rem;
-	}
-
-	.isActive .address_list li {
-		color:#fff;
-	}
-
-	.isActive .yuan .weui_icon_success:before {
-		color:#fff;
-	}
-
-	.address_list li{
-		font-size: 1.4rem;
-		margin: 0rem 1.1rem;
-		color: #4d4d4d;
-		line-height: 25px;
-		text-align: left;
-		width: 100%;
-	}
-	.address_list li .left-title {
-		/*width:23%;*/
-		/*float:left;*/
-	}
-
-	.address_list li .right-title {
-		/*width:58%;*/
-		/*float:left;*/
-	}
-
-	.yuan {
-		width: 2.2rem;
-		height: 2.1rem;
-		position: absolute;
-		bottom: 38%;
-		right: 1.387rem;
-		line-height: 0.596rem;
-		text-align: center;
-	}
-
-</style>
 
 <template>
 	<div class="addresses_table">
@@ -361,8 +127,6 @@
 //			} else {
 //                $("#card").find("li").eq(1).addClass(this.$store.state.text);
 //			}
-//			console.log(act);
-//			console.log(this.$store.state.text);
 		},
 		methods: {
 			isActiveFun: function() {
@@ -595,3 +359,239 @@
 		}
 	}
 </script>
+
+<style scoped>
+	.card-box{
+		width: 92%;
+		height: auto;
+		padding: 4% 2%;
+		border-bottom: #B3B3B3 solid 1px;
+		margin: 10px auto 0;
+	}
+
+	#cardbox{display:none;}
+
+	.card-box .half-div{
+		display:inline-block;
+		vertical-align:middle;
+		font-size:1.4rem;
+		color:#333;
+		width:50%;
+		white-space:nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
+	}
+
+	.my-icon-chosen:before{
+		color:#f9ad0c;
+	}
+
+	.text-right{
+		text-align:right;
+	}
+
+	.card-box .half-div .icon{
+		display:inline-block;
+		vertical-align:middle;
+		width: 1.8rem;
+		height: 1.8rem;
+	}
+
+	.card-box .half-div .icon.img{
+		background-position:center;
+		background-repeat:no-repeat;
+		background-size:contain;
+	}
+
+	.card-box .half-div .icon.img.edit{
+		background-image:url('../images/edit.png');
+	}
+
+	.card-box .half-div .icon.img.del{
+		background-image:url('../images/del.png');
+	}
+
+	.card-box .half-div .icon.separator{
+		width:0.1rem;
+		height:1rem;
+		background-color:#D2D2D2;
+		margin:0.2rem 0.8rem;
+	}
+
+	.card-box .address{
+		display:-webkit-box;
+		-webkit-line-clamp:2;
+		-webkit-box-orient:vertical;
+		width:100%;
+		max-height:3.6rem;
+		font-size:1.4rem;
+		line-height:1.8rem;
+		color:#808080;
+		margin-top:0.6rem;
+		margin-bottom:1.5rem;
+		overflow:hidden;
+	}
+
+
+
+	.card-box .address.active {
+		background: #81c429;
+	}
+
+	.comfire-chonse {
+		width:80%;
+		margin:23% 10% 10% 10%;
+	}
+
+	.add-address {
+		width:80%;
+		margin:5% 10% 30% 10%;
+	}
+
+	.address-comfirm {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		-ms-appearance: none;
+		-o-appearance: none;
+		appearance: none;
+		border:none;
+	}
+
+</style>
+
+<style>
+	.weui_icon_circle:before, .weui_icon_success:before{
+		font-size:2.2rem !important;
+		margin-right:0.3rem;
+		margin-top:0rem;
+	}
+
+	.weui_icon_success:before{
+		color:#fff;
+	}
+
+	.weui_btn_default{
+		background-color:#F9AD0C !important;
+		color:#fff !important;
+		border-radius:0.2rem;
+	}
+
+	.weui_btn_default:active{
+		background-color:#DE9A08 !important;
+	}
+
+	.weui_btn_disabled.weui_btn_default{
+		background-color:#F3C76A !important;
+	}
+
+	.weui_btn_dialog.primary{
+		color:#81c429 !important;
+	}
+
+	/* addresses_table start */
+	.addresses_table{
+		width: 100%;
+		height: 3.8rem;
+		border-bottom: 1px solid #ccc;
+		background: #efefef;
+		box-shadow: 1px 1px 10px #efefef;
+		position: fixed;
+		top: 222px;
+		z-index: 9;
+		box-shadow: 0 2px 15px #ccc;
+	}
+
+	.addresses_table ul li span {
+		display:block;
+
+		line-height:3.8rem;
+	}
+
+	.addresses_table ul li{
+		width:50%;
+		text-align:center;
+		font-size:14px;
+		float:left;
+		color:#333;
+
+	}
+	.addresses_table .sel-active{
+		border-bottom:3px solid #3cc51f;
+		position:absolute;
+		top:49px;
+		left:0px;
+		width:50%;
+	}
+
+	.addresses_table ul .active{border-bottom:3px solid #81c429;}
+
+	/* addresses_table end */
+
+	#ziti{
+		display:block;
+	}
+
+	#ziti .main_ziti{
+		width:100%;
+		margin:10px 0px;
+		position: relative;
+		top:50px;
+	}
+
+	#ziti .main_ziti .address{
+		width:98%;
+		height:auto;
+		background:#FEFEFE;
+		overflow:hidden;
+		position:relative;
+		margin:0 auto;
+		margin-bottom:1.16rem;
+	}
+
+	#ziti .main_ziti .isActive {
+		width:98%;
+		height:auto;
+		background:#81c429;
+		overflow:hidden;
+		position:relative;
+		margin:0 auto;
+		margin-bottom:1.16rem;
+	}
+
+	.isActive .address_list li {
+		color:#fff;
+	}
+
+	.isActive .yuan .weui_icon_success:before {
+		color:#fff;
+	}
+
+	.address_list li{
+		font-size: 1.4rem;
+		margin: 0rem 1.1rem;
+		color: #4d4d4d;
+		line-height: 25px;
+		text-align: left;
+		width: 100%;
+	}
+	.address_list li .left-title {
+		/*width:23%;*/
+		/*float:left;*/
+	}
+
+	.address_list li .right-title {
+		/*width:58%;*/
+		/*float:left;*/
+	}
+
+	.yuan {
+		width: 2.2rem;
+		height: 2.1rem;
+		position: absolute;
+		bottom: 38%;
+		right: 1.387rem;
+		line-height: 0.596rem;
+		text-align: center;
+	}
+
+</style>

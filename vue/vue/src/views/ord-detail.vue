@@ -359,12 +359,7 @@
 		</div>
 
 		<!--倒计时-->
-		<surplus :showele="showTime" :time="data.process[0].endtime - data.process[0].nowtime" :clickType="clickType"></surplus>
-
-		<!--<div class="changePay" v-show="showTime">-->
-			<!--<div class="prompt">请在15分钟内完成付款,晚了就给人抢了</div>-->
-			<!--<div class="countdown">剩余支付时间{{ minute }} : {{ second }} </div>-->
-		<!--</div>-->
+		<surplus :showele="showTime" :time="data.process[0].endtime - data.process[0].nowtime"></surplus>
 
 		<!-- 订单状态 -->
 		<div class="bl-info-box status">
@@ -524,7 +519,6 @@ export default{
 		}
 	},
 	ready() {
-
 		let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 		ustore = JSON.parse(ustore);
 		var self = this;
@@ -538,7 +532,6 @@ export default{
 
                 this.TimeText = this.data.process[0].endtime - this.data.process[0].stime;
                 console.log(this.TimeText);
-
                 if(this.data.order.statext == '用户取消'){
                     this.showTime = false;
                 } else if(this.data.order.statext == '待支付') {
@@ -548,15 +541,13 @@ export default{
 				} else if(this.data.order.statext == '待发货' || this.data.order.statext == '待收货' || this.data.order.statext == '待评价') {
                     this.showTime = false;
 				} else if (this.minute == '0' && this.second == "0") {
-                    //取消订单
                     this.clickType = 1;
                     this.$router({name: 'ord-detail'});
                     this.showTime = false;
                 }
-
                 //判断是否有赠品
 				for(var i in this.data.products) {
-                    if(self.data.products[i].activity == -1) {
+                    if(self.data.products[i].gift == 1) {
                         self.vieible = true
 						console.log(this.vieible);
 					} else if(self.data.products[i].activity > 0) {
@@ -647,13 +638,16 @@ export default{
 						    console.log(response.data);
 							context.toastMessage = response.data.info;
 							context.toastShow = true;
-							if(response.data.status===1){
+							if(response.data.status === 1) {
 								context.data.pindex = 1;
 								context.data.process[1].status = 1;
 								context.data.process[1].time = response.data.time;
 								context.data.order.status = '待发货';
 								context.data.order.pay = 1;
-							}else if(response.data.status===-1){
+                                if(context.data.order.statext == '待发货' || context.data.order.statext == '待收货' || context.data.order.statext == '待评价') {
+                                    context.showTime = false;
+                                }
+                            }else if(response.data.status===-1){
 								setTimeout(function(){
 									context.clearAll();
 									sessionStorage.removeItem('userInfo');
@@ -823,6 +817,7 @@ export default{
 					//微信支付
 					if(typeof this.data.payment.appId === 'string' && typeof this.data.payment.package === 'string') {
 						this.callpay();
+                        this.$router.go({name:'order-detail'})
 						return;
 					}
 					let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
@@ -833,6 +828,7 @@ export default{
 						if(response.data.status === 1) {
 							this.data.payment = JSON.parse(response.data.payment);
 							this.callpay();
+							this.$router.go({name:'order-detail'})
 						}else if(response.data.status === -1) {
 							this.btnStatus = false;
 							this.toastMessage = response.data.info;

@@ -91,7 +91,7 @@
                 this.$http.get(url).then((response)=>{
 				    if(response.data.info.list == "") {
 						alert("商品为空！");
-						this.$router.go({name:'index'});
+                        location.reload();
 						return false;
 				    } else {
                         this.data.list = response.data.info.list;

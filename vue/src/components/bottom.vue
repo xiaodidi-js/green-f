@@ -20,7 +20,7 @@
 				<div class="name">下单</div>
 			</div>
 			<!-- 选项卡三 -->
-			<div class="group" :class="{'active':$route.position === 3}" style="position: relative;left: 15px;" v-link="{name:'activity'}">
+			<div class="group" :class="{'active':$route.position === 3}" style="position: relative;left: 15px;" v-link="{name:'card-image'}">
 				<i class="icons icon-huodong"></i>
 				<div class="name">活动</div>
 			</div>

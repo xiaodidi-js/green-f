@@ -24,35 +24,49 @@
 
 <script type="text/javascript">
 
+
+    import axios from 'axios'
+    import qs from 'qs'
+
     export default {
         vuex: {
             actions: {
-
 
             }
         },
         data() {
             return {
                 data: this.$store.state.message,
-                list: JSON.parse(sessionStorage.getItem("messgae")),
+                list: {},// JSON.parse(sessionStorage.getItem("messgae")),
             }
         },
         ready () {
-            var ele = document.getElementsByClassName("activity-img")[0];
-            var chil = ele.getElementsByTagName("img");
-            ele.innerHTML = this.list[0].content;
-            // 处理异常
-            try {
-                for(var i in chil) {
-                    chil[i].style.width = "100%";
-                    chil[i].style.height = "100%";
-                    console.log(chil[i].style.width);
-                }
-            } catch(e) {
-                console.log(e);
-            } finally {
-
-            }
+            console.log(this.$route.query);
+            let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+            ustore = JSON.parse(ustore);
+            var content = this;
+            axios({
+                method: 'get',
+                url: localStorage.apiDomain + 'public/index/index/productinfo/uid/' + ustore.id + '/pid/' + this.$route.query.pid,
+            }).then((response) => {
+                content.list = response.data.articles.list;
+                console.log(content.list);
+            });
+//            var ele = document.getElementsByClassName("activity-img")[0];
+//            var chil = ele.getElementsByTagName("img");
+//            ele.innerHTML = this.list[0].content;
+//            // 处理异常
+//            try {
+//                for(var i in chil) {
+//                    chil[i].style.width = "100%";
+//                    chil[i].style.height = "100%";
+//                    console.log(chil[i].style.width);
+//                }
+//            } catch(e) {
+//                console.log(e);
+//            } finally {
+//
+//            }
         },
         filters: {
             time: function (value) {
@@ -73,6 +87,11 @@
                 }
                 this.$dispatch('orderCancel');
             },
+        },
+        computed: {
+            list () {
+                return this.$store.state.message
+            }
         }
     }
 </script>

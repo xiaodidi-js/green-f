@@ -179,7 +179,8 @@
             }
         },
 		ready() {
-			this.indexMessage();
+			this.index();
+			this.follow();
             this.timeline();
             $(window).scroll(function(){
                 if($(window).scrollTop() >= 350){
@@ -225,10 +226,13 @@
                     this.toastShow = true;
                 });
 			},
-		    indexMessage: function() {
+		    index: function() {
                 let url = '';
-                url = localStorage.apiDomain + 'public/index/index';
-                this.$http.get(url).then((response)=>{
+//                url = localStorage.apiDomain + 'public/index/index';
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/index',
+                }).then((response) => {
                     this.data = response.data;
                     var data = this.data;
                     sessionStorage.setItem("arr",JSON.stringify(this.data));
@@ -241,29 +245,31 @@
                             }
                         }
                     }
-                },(response)=>{
-                    this.toastMessage = '网络开小差了~';
-                    this.toastShow = true;
                 });
 			},
+            follow: function() {
+                let url = '' , openid = sessionStorage.getItem("openid");
+                if(sessionStorage.getItem('since')) {
+                    axios({
+                        method: 'post',
+                        url: localStorage.apiDomain + 'public/index/usercenter/sincestar/',
+                        data: qs.stringify({
+                            sinceid: sessionStorage.getItem('since'),		//自提点ID
+                            openid: openid	//openid
+                        })
+                    }).then((response) => {
+						console.log(response.data);
+                    });
+                }
+            },
             timeline: function() {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
                 var _this = this;
                 this.$http.get(localStorage.apiDomain + 'public/index/sale/SaleTimeSolt/uid').then((response) => {
-                    if(response.data.status===1) {
+                    if(response.data.status === 1) {
                         this.maincolumns = response.data.SaleTimeSolt;
                         console.log(this.maincolumns);
-                    } else if(response.data.status===-1) {
-                        this.toastMessage = response.data.info;
-                        this.toastShow = true;
-                        let context = this;
-                        setTimeout(function(){
-                            context.clearAll();
-                            sessionStorage.removeItem('userInfo');
-                            localStorage.removeItem('userInfo');
-                            context.$router.go({name:'login'});
-                        },800);
                     } else {
                         this.toastMessage = response.data.info;
                         this.toastShow = true;

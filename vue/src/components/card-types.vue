@@ -595,6 +595,8 @@
                             deliverytime:data.deliverytime,
                             activestu:data.activestu,
                             peisongok:data.peisongok,
+                            activeid:data.activeid,
+                            activepay:data.activepay,
                             nums:this.buyNums,
                             store:this.proNums = response.data.store,
                             format:'',

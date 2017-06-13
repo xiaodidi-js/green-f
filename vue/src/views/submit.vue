@@ -501,9 +501,6 @@
             showPop: function(){
                 this.popShow = true;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-//                this.oneGift(this.address,this.lastPaySum);
-//                this.list = JSON.parse(sessionStorage.getItem("giftlist"));
-//                this.description = JSON.parse(sessionStorage.getItem("song"));
                 this.openpop = true;
             },
             showCou: function(){

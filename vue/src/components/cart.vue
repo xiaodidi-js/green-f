@@ -1,171 +1,4 @@
-<style scoped>
-	.col-wrapper,.card-wrapper{
-		width:100%;
-		height:auto;
-	}
 
-	.notify-box{
-		width:94%;
-		height:20px;
-		padding:10px 3%;
-		background-color:#81c429;
-		font-size:0;
-	}
-
-	.notify-box div{
-		display:inline-block;
-		vertical-align:middle;
-		font-size:1.4rem;
-		line-height:20px;
-		color:#fff;
-		white-space:nowrap;
-		text-overflow:ellipsis;
-		overflow:hidden;
-	}
-	.notify-box div.ntips{
-		width:65%;
-		margin-right:10%;
-	}
-
-	.notify-box div.btn{
-		width:25%;
-		text-align:right;
-	}
-
-	.col-wrapper .image{
-		width:45%;
-		padding-top:45%;
-		margin:10% auto;
-		background-image:url('../images/cart.png');
-		background-position:center;
-		background-size:contain;
-		background-repeat:no-repeat;
-	}
-
-	.col-wrapper .tips{
-		font-size:1.8rem;
-		color:#999;
-		text-align:center;
-	}
-
-	.my-icon:before{
-		color:#ccc;
-	}
-
-	.my-icon-chosen:before{
-		color:#f9ad0c;
-	}
-
-	.bottom{
-		width:100%;
-		height:auto;
-		position:fixed;
-		bottom:50px;
-		left:0;
-		font-size:0;
-		background: #EFEFEF;
-		z-index: 5;
-	}
-
-	.bottom.color{
-		background-color:#343136;
-		color:#fff;
-		z-index:10;
-	}
-
-	.bottom>div{
-		display:inline-block;
-		vertical-align:middle;
-	}
-
-	.bottom>div.left{
-		width:70%;
-		text-align:left;
-		font-size:1.6rem;
-	}
-
-	.bottom>div.left.color{
-		font-size:0;
-	}
-
-	.bottom>div.left.color>div{
-		display:inline-block;
-		vertical-align:middle;
-		font-size:14px;
-	}
-
-	.bottom>div.left.color>div.choose{
-		width:15%;
-		text-align:center;
-	}
-
-	.bottom>div.left.color>div.choose>label{
-		font-size:1.2rem;
-		display:block;
-	}
-
-	.bottom>div.left .my-icon,.bottom>div.left .my-icon-chosen{
-		margin-left:4.5%;
-	}
-
-	.bottom>div.left.color .my-icon,.bottom>div.left.color .my-icon-chosen{
-		margin-left:0%;
-	}
-
-	.bottom>div.left.color .my-icon:before,.bottom>div.left.color .my-icon-chosen:before{
-		font-size:2.1rem;
-	}
-
-	.bottom>div.left.color .sum{
-		width:80%;
-		margin-left:5%;
-		white-space:nowrap;
-		text-overflow:ellipsis;
-		overflow:hidden;
-	}
-
-	.bottom>div.right{
-		width:30%;
-		text-align:center;
-		font-size:1.4rem;
-		height:4.5rem;
-		line-height:2.9rem;
-	}
-
-	.bottom>div.right.color{
-		background:#81c429;
-	}
-
-
-	.bottom>div.right .btn{
-		width:80%;
-		border:#81c429 solid 0.1rem;
-		border-radius:0.3rem;
-		text-align:center;
-		color:#81c429;
-		margin:0.5rem auto;
-		height:3.5rem;
-		line-height:3.5rem;
-	}
-
-	.bottom>div.right span{
-		height:18px;
-		display:block;
-	}
-
-	.bottom>div.right .js-number {
-		overflow: hidden;
-		width: 95%;
-		text-overflow: ellipsis;
-		margin: -1px 2px;
-		height: 28px;
-	}
-
-	.isChonse .addcon .address .weui_icon_success:before {
-		color:#fff;
-	}
-
-</style>
 
 <template>
 	<div class="col-wrapper" v-if="cartList.length > 0" style="padding-top: 46px;">
@@ -182,7 +15,7 @@
 					:pprice="item.price" :pnums="item.nums"
 					:pstore="item.store" :mode="editMode"
 					:pformat="item.format" :pfname="item.formatName" :store="item.store"
-					:pdelivery="item.deliverytime" :peisongok="item.peisongok">
+					:pdelivery="item.deliverytime" :peisongok="item.peisongok" :activepay="item.activepay">
 			</cart-list>
 
 			<!-- 底部分隔 -->
@@ -390,3 +223,172 @@
         }
     }
 </script>
+
+<style scoped>
+	.col-wrapper,.card-wrapper{
+		width:100%;
+		height:auto;
+	}
+
+	.notify-box{
+		width:94%;
+		height:20px;
+		padding:10px 3%;
+		background-color:#81c429;
+		font-size:0;
+	}
+
+	.notify-box div{
+		display:inline-block;
+		vertical-align:middle;
+		font-size:1.4rem;
+		line-height:20px;
+		color:#fff;
+		white-space:nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
+	}
+	.notify-box div.ntips{
+		width:65%;
+		margin-right:10%;
+	}
+
+	.notify-box div.btn{
+		width:25%;
+		text-align:right;
+	}
+
+	.col-wrapper .image{
+		width:45%;
+		padding-top:45%;
+		margin:10% auto;
+		background-image:url('../images/cart.png');
+		background-position:center;
+		background-size:contain;
+		background-repeat:no-repeat;
+	}
+
+	.col-wrapper .tips{
+		font-size:1.8rem;
+		color:#999;
+		text-align:center;
+	}
+
+	.my-icon:before{
+		color:#ccc;
+	}
+
+	.my-icon-chosen:before{
+		color:#f9ad0c;
+	}
+
+	.bottom{
+		width:100%;
+		height:auto;
+		position:fixed;
+		bottom:50px;
+		left:0;
+		font-size:0;
+		background: #EFEFEF;
+		z-index: 5;
+	}
+
+	.bottom.color{
+		background-color:#343136;
+		color:#fff;
+		z-index:10;
+	}
+
+	.bottom>div{
+		display:inline-block;
+		vertical-align:middle;
+	}
+
+	.bottom>div.left{
+		width:70%;
+		text-align:left;
+		font-size:1.6rem;
+	}
+
+	.bottom>div.left.color{
+		font-size:0;
+	}
+
+	.bottom>div.left.color>div{
+		display:inline-block;
+		vertical-align:middle;
+		font-size:14px;
+	}
+
+	.bottom>div.left.color>div.choose{
+		width:15%;
+		text-align:center;
+	}
+
+	.bottom>div.left.color>div.choose>label{
+		font-size:1.2rem;
+		display:block;
+	}
+
+	.bottom>div.left .my-icon,.bottom>div.left .my-icon-chosen{
+		margin-left:4.5%;
+	}
+
+	.bottom>div.left.color .my-icon,.bottom>div.left.color .my-icon-chosen{
+		margin-left:0%;
+	}
+
+	.bottom>div.left.color .my-icon:before,.bottom>div.left.color .my-icon-chosen:before{
+		font-size:2.1rem;
+	}
+
+	.bottom>div.left.color .sum{
+		width:80%;
+		margin-left:5%;
+		white-space:nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
+	}
+
+	.bottom>div.right{
+		width:30%;
+		text-align:center;
+		font-size:1.4rem;
+		height:4.5rem;
+		line-height:2.9rem;
+	}
+
+	.bottom>div.right.color{
+		background:#81c429;
+	}
+
+
+	.bottom>div.right .btn{
+		width:80%;
+		border:#81c429 solid 0.1rem;
+		border-radius:0.3rem;
+		text-align:center;
+		color:#81c429;
+		margin:0.5rem auto;
+		height:3.5rem;
+		line-height:3.5rem;
+	}
+
+	.bottom>div.right span{
+		height:18px;
+		display:block;
+	}
+
+	.bottom>div.right .js-number {
+		overflow: hidden;
+		width: 95%;
+		text-overflow: ellipsis;
+		margin: -1px 2px;
+		height: 28px;
+	}
+
+	.isChonse .addcon .address .weui_icon_success:before {
+		color:#fff;
+	}
+
+</style>

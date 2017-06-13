@@ -11,8 +11,8 @@
 			<p>购物车</p>
 			<div class="bage" v-show="bage > 0">{{ bage }}</div>
 		</div>
-		<div class="btn doBuy" @click="clickBuy" v-show="store > 0">立即购买</div>
-		<button class="btn addCar doBuyButton" @click="clickCart" v-show="store > 0">加入购物车</button>
+		<button class="btn addCar doBuyButton buyButton" @click="clickCart" v-show="store > 0">加入购物车</button>
+		<button class="btn doBuy buyButton" @click="clickBuy" v-show="store > 0">立即购买</button>
 		<div class="btn noBuy" v-show="store <= 0">暂时缺货</div>
 	</div>
 </template>
@@ -201,24 +201,31 @@
 		font-size:14px;
 	}
 
-	.bottom-buy>div.btn.doBuy{
-		background-color:#81c429;
-
+	.bottom-buy .btn.doBuy{
+		background :#81c429;
+		display:block;
+		width:35%;
+		height:4.5rem;
+		line-height: 4.5rem;
+		float:right;
+		border:1px solid #81c429;
+		color:#fff;
+		font-size:14px;
 	}
 
-	.bottom-buy>div.btn.doBuy:active{
+	.bottom-buy .btn.doBuy:active{
 		background-color:#DE6156;
 	}
 
-	.bottom-buy>div.btn.addCar{
+	.bottom-buy .btn.addCar{
 		background-color:#F9AD0C;
 	}
 
-	.bottom-buy>div.btn.addCar:active{
+	.bottom-buy .btn.addCar:active{
 		background-color:#E29D0A;
 	}
 
-	.bottom-buy>div.btn.noBuy{
+	.bottom-buy .btn.noBuy{
 		width:70%;
 		background-color:#d6d6d6;
 		box-shadow:0.2rem 0.2rem 1rem #969696 inset;

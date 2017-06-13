@@ -167,6 +167,7 @@
 		},
 		methods: {
 			hidePanel: function(){
+
 				this.show = false;
 			},
 			conMove: function(evt){

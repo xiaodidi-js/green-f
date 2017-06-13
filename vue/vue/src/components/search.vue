@@ -49,10 +49,6 @@
 		padding:0;
 	}
 
-	.ui_box .img{
-		width:100%;
-		height:16rem;
-	}
 
 	.wrapper-search .ui_box .mes{
 		padding:0.7rem 0.5rem;
@@ -92,6 +88,25 @@
 		float: right;
 	}
 
+	.wrapper-search .ui_box .img {
+		position: relative;
+		width:100%;
+		height:16rem;
+	}
+
+	.wrapper-search .ui_box .img .qing {
+		position: absolute;
+		top:0px;
+		left:0px;
+		width:100%;
+		height: 100%;
+		text-align:center;
+		font-size:3rem;
+		background: rgba(0,0,0,0.5);
+		line-height: 16rem;
+		color:#fff;
+	}
+
 </style>
 
 <template>
@@ -99,13 +114,15 @@
 		<template v-for="item in list">
 			<div class="ui_box">
 				<div v-link="{name:'detail',params:{pid:item.id}}">
-					<div class="img"> <!--  v-lazy:background-image="item.src" -->
+					<div class="img" v-if="item.store == 0">
+						<div class="qing">已售罄</div>
+						<img :src="item.shotcut" style="width:100%;height:100%;" />
+					</div>
+					<div class="img" v-else>
 						<img :src="item.shotcut" style="width:100%;height:100%;" />
 					</div>
 					<div class="mes">
-						<div class="name">
-							{{ item.name }}
-					</div>
+						<div class="name">{{ item.name }}</div>
 					</div>
 				</div>
 				<div style="margin:0px 10px 10px;height: 20px;">
@@ -126,7 +143,7 @@
 <script>
 
     import Toast from 'vux/src/components/toast'
-    import { myActive,setCartStorage } from 'vxpath/actions'
+    import { myActive,setCartStorage,clearAll } from 'vxpath/actions'
     import { cartNums } from 'vxpath/getters'
     import axios from 'axios'
     import qs from 'qs'
@@ -138,6 +155,7 @@
         vuex: {
             actions: {
                 myActive,
+                clearAll,
                 setCart:setCartStorage
             }
         },
@@ -166,12 +184,13 @@
             addCartShop (data){
                 //购物车缓存
                 var date = new Date(), hours = date.getHours(), minute = date.getMinutes(), seconds = date.getSeconds();
-                var cart = JSON.parse(sessionStorage.getItem("myCart")) , obj = {} , self = this;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                var cart = JSON.parse(localStorage.getItem("myCart")) , obj = {} , self = this;
                 ustore = JSON.parse(ustore);
                 if(ustore == null) {
                     alert("没有登录，请先登录！");
                     setTimeout(function () {
+                        self.clearAll();
                         self.$router.go({name: 'login'});
                     }, 800);
                     return false;
@@ -181,41 +200,47 @@
                         url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
                     }).then((response) => {
                         if(data.peisongok == 0 && data.deliverytime == 1) {
-							alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
-							return false;
+                            alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                            return false;
+                        } else if(data.peisongok == 0 && data.deliverytime == 0) {
+                            alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
+                            return false;
+                        } else if (data.store == 0) {
+                            alert("已售罄");
+                            return false;
 						} else if (data.activeid > 0) {
-							alert("这是限时抢购商品！");
-							return false;
-						}
-						if(cart != '') {
-							for(var y in cart) {
-								if (cart[y]["deliverytime"] != data.deliverytime) {
-									if (self.list[y].deliverytime == 0) {
-										alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-										return false;
-									} else if (data.deliverytime == 1) {
-										alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-										return false;
-									}
-								}
-							}
-						}
-						obj = {
-							id:data.id,
-							name:data.name,
-							price:data.price,
-							shotcut:data.shotcut,
-							deliverytime:data.deliverytime,
-							peisongok:data.peisongok,
-							activestu:data.activestu,
-							nums:this.buyNums,
-							store:this.proNums = response.data.store,
-							format:'',
-							formatName:'',
-						}
-						this.setCart(obj);
-						alert("加入购物车成功!");
-                	});
+                            alert("这是限时抢购商品！");
+                            return false;
+                        }
+                        if(cart != '') {
+                            for(var y in cart) {
+                                if (cart[y]["deliverytime"] != data.deliverytime) {
+                                    if (self.list[y].deliverytime == 0) {
+                                        alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                        return false;
+                                    } else if (data.deliverytime == 1) {
+                                        alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        obj = {
+                            id:data.id,
+                            name:data.name,
+                            price:data.price,
+                            shotcut:data.shotcut,
+                            deliverytime:data.deliverytime,
+                            peisongok:data.peisongok,
+                            activestu:data.activestu,
+                            nums:this.buyNums,
+                            store:this.proNums = response.data.store,
+                            format:'',
+                            formatName:'',
+                        }
+                        this.setCart(obj);
+                        alert("加入购物车成功!");
+                    });
 				}
 			}
 		}

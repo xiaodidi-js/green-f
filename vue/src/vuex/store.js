@@ -36,7 +36,7 @@ const mutations = {
     myActiveTwo (state,text) {
         state.text = text;
     },
-    myVipMessage (state,message) {
+    myMessage (state,message) {
         state.message = message;
         sessionStorage.setItem("messgae",JSON.stringify(state.message));
     },

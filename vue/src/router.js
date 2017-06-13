@@ -340,26 +340,6 @@ const routers = {
             require(['./components/testSwiper.vue'], resolve);
         }
     },
-    '/activity': {
-        name:'activity',
-        header:true,
-        footer:true,
-        title:'活动',
-        position:3,
-        component (resolve) {
-            require(['./components/activity.vue'], resolve);
-        }
-    },
-    '/activity-event': {
-        name:'activity-event',
-        header:true,
-        footer:true,
-        title:'活动详情',
-        position:0,
-        component (resolve) {
-            require(['./components/activity-event.vue'], resolve);
-        }
-    },
     '/integral': {
         name:'integral',
         header:true,
@@ -609,6 +589,16 @@ const routers = {
         footer:false,
         component (resolve) {
             require(['./components/surplus.vue'], resolve);
+        }
+    },
+    '/card-image' : {
+        name:'card-image',
+        header:true,
+        footer:true,
+        title:'活动',
+        position:3,
+        component (resolve) {
+            require(['./components/card-image.vue'], resolve);
         }
     }
 };

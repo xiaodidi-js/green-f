@@ -34,14 +34,14 @@
     }
 
     .integral-head .sign {
-        margin:10px auto;
+        margin: 10px auto;
         display: block;
-        width: 10rem;
-        height: 3rem;
-        border:1px solid #81c429;
+        width: 15rem;
+        height: 3.5rem;
+        border: 1px solid #81c429;
         background: #81c429;
-        color:#fff;
-        border-radius:5px;
+        color: #fff;
+        border-radius: 5px;
     }
 
     /* integral-head end */
@@ -149,26 +149,28 @@
     </div>
     <div class="integral-tab">
         <ul id="card">
-            <li class="active" @click="Allmain()">全部积分</li>
+            <li class="active" @click="main()">全部积分</li>
             <li @click="main()">签到积分</li>
-            <li @click="Allmain()">消费积分</li>
+            <li @click="main()">消费积分</li>
         </ul>
     </div>
 
     <div class="integral-body" id="content">
         <!-- 全部积分 -->
         <template v-for="item in allList">
-            <div class="body-list">
-                <ul>
-                    <li>
-                        <div class="all-date">
-                            <p>签到</p>
-                            <p>{{ item.createtime | time }}</p>
-                        </div>
-                        <div class="add-number">+{{ item.amount }}</div>
-                    </li>
-                </ul>
-            </div>
+            <template v-if="item.type = 'qiandao'">
+                <div class="body-list">
+                    <ul>
+                        <li>
+                            <div class="all-date">
+                                <p>签到</p>
+                                <p>{{ item.createtime | time }}</p>
+                            </div>
+                            <div class="add-number">+{{ item.amount }}</div>
+                        </li>
+                    </ul>
+                </div>
+            </template>
         </template>
     </div>
 
@@ -177,7 +179,6 @@
 <script>
 
     import {formatDate} from '../filters/date.js';
-
 
     export default{
         vuex: {
@@ -249,9 +250,10 @@
                     this.list = response.data.list;
                     if(response.data.status == 0) {
                         alert("今天已签到了哦!");
+                        location.reload();
                     } else if(response.data.status == 1) {
-                        this.$router.go({name: 'integral'});
                         alert("签到成功！");
+                        location.reload();
                     }
                 },(response)=>{
                     this.toastMessage = '网络开小差了~';

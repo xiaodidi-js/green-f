@@ -216,6 +216,21 @@
                         method: 'get',
                         url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
                     }).then((response) => {
+                        obj = {
+                            id: data.id,
+                            name: data.title,
+                            price: data.price,
+                            shotcut: data.src,
+                            deliverytime: data.deliverytime,
+                            activestu: data.activestu,
+                            peisongok: data.peisongok,
+                            activeid:data.activeid,
+                            activepay:data.activepay,
+                            nums: this.buyNums,
+                            store: this.proNums,
+                            formatName: '',
+                            format: '',
+                        };
                         if(data.peisongok == 0 && data.deliverytime == 1) {
                             alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                             return false;
@@ -242,19 +257,6 @@
                                 }
                             }
                         }
-                        obj = {
-                            id: data.id,
-                            name: data.title,
-                            price: data.price,
-                            shotcut: data.src,
-                            deliverytime: data.deliverytime,
-                            activestu: data.activestu,
-                            peisongok: data.peisongok,
-                            nums: this.buyNums,
-                            store: this.proNums,
-                            formatName: '',
-                            format: '',
-                        };
                         self.setCart(obj);
                         alert("加入购物车成功！");
                     });

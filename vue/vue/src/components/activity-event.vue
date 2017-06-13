@@ -1,3 +1,104 @@
+
+
+<template>
+    <div class="activity-body">
+        <div style="margin:0px 10px 0px;">
+            <template v-for="item in list">
+                <a href="javascript:void(0);" class="activity-text" style="border:none;">
+                    <div class="lyt-logo">
+                        <img src="../images/logo_lv.png" alt="" style="width:40px;height:40px;float:left;" />
+                        <span>{{ item.proname }}</span>
+                    </div>
+                    <div style="position: relative;height: 35px;">
+                        <div class="readying">阅读量:<i>{{ item.reading }}</i></div>
+                        <div class="activity-data" style="float:right;line-height:35px;margin-right:0px;">{{ item.createtime | time }}</div>
+                    </div>
+                    <div class="activity-img">
+                        {{ item.content }}
+                    </div>
+                </a>
+            </template>
+        </div>
+    </div>
+</template>
+
+<script type="text/javascript">
+
+
+    import axios from 'axios'
+    import qs from 'qs'
+
+    export default {
+        vuex: {
+            actions: {
+
+            }
+        },
+        data() {
+            return {
+                data: this.$store.state.message,
+                list: '',// JSON.parse(sessionStorage.getItem("messgae")),
+            }
+        },
+        ready () {
+
+            console.log(this.$route);
+            return;
+
+            let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+            ustore = JSON.parse(ustore);
+            axios({
+                method: 'get',
+                url: localStorage.apiDomain + 'public/index/index/productinfo/uid/' + ustore.id + "/pid/" + this.$route.params.id,
+            }).then((response) => {
+                console.log(response);
+                console.log(this.$route);
+            });
+
+//            var ele = document.getElementsByClassName("activity-img")[0];
+//            var chil = ele.getElementsByTagName("img");
+//            ele.innerHTML = this.list[0].content;
+//            // 处理异常
+//            try {
+//                for(var i in chil) {
+//                    chil[i].style.width = "100%";
+//                    chil[i].style.height = "100%";
+//                    console.log(chil[i].style.width);
+//                }
+//            } catch(e) {
+//                console.log(e);
+//            } finally {
+//
+//            }
+        },
+        filters: {
+            time: function (value) {
+                let d = new Date(parseInt(value) * 1000);
+                var years = d.getFullYear();
+                var month = d.getMonth() + 1;
+                var days = d.getDate();
+                var hours = d.getHours();
+                var minutes = d.getMinutes();
+                var seconds = d.getSeconds();
+                return years + "-" + month + "-" + days;
+            }
+        },
+        method: {
+            cancelOrder: function() {
+                if(this.disabled){
+                    return true;
+                }
+                this.$dispatch('orderCancel');
+            },
+        },
+        computed: {
+            list () {
+                return this.$store.state.message
+            }
+        }
+    }
+</script>
+
 <style type="text/css">
 
     .activity-body{
@@ -17,9 +118,11 @@
         line-height: 50px;
     }
 
-    .lyt-logo .readying {
+    .activity-body .lyt-logo .readying {
         float:right;
-
+        font-size:16px;
+        color:#2c3e50;
+        float:left;line-height:35px;
     }
 
     .lyt-logo span {
@@ -55,81 +158,3 @@
     }
 
 </style>
-
-
-<template>
-    <div class="activity-body">
-        <div style="margin:0px 10px 0px;">
-            <template v-for="item in list">
-                <a href="javascript:void(0);" class="activity-text" style="border:none;">
-                    <div class="lyt-logo">
-                        <img src="../images/logo_lv.png" alt="" style="width:40px;height:40px;float:left;" />
-                        <span>{{ item.proname }}</span>
-                    </div>
-                    <div style="position: relative;height: 35px;">
-                        <div class="readying" style="float:left;line-height:35px;">阅读量:<i>{{ item.reading }}</i></div>
-                        <div class="activity-data" style="float:right;line-height:35px;margin-right:0px;">{{ item.createtime | time }}</div>
-                    </div>
-                    <div class="activity-img">
-                        {{ item.content }}
-                    </div>
-                    <!--<p class="next-desc">{{ item.sdesc }}</p>-->
-                </a>
-            </template>
-        </div>
-    </div>
-</template>
-
-<script type="text/javascript">
-
-    export default {
-        vuex: {
-            actions: {
-
-            }
-        },
-        data() {
-            return {
-                data: this.$store.state.message,
-                list: JSON.parse(sessionStorage.getItem("messgae")),
-            }
-        },
-        ready () {
-            var ele = document.getElementsByClassName("activity-img")[0];
-            var chil = ele.getElementsByTagName("img");
-            ele.innerHTML = this.list[0].content;
-            // 处理异常
-            try {
-                for(var i in chil) {
-                    chil[i].style.width = "100%";
-                    chil[i].style.height = "100%";
-                    console.log(chil[i].style.width);
-                }
-            } catch(e) {
-                console.log(e);
-            } finally {
-
-            }
-        },
-        filters: {
-            time: function (value) {
-                let d = new Date(parseInt(value) * 1000);
-                var years = d.getFullYear();
-                var month = d.getMonth() + 1;
-                var days = d.getDate();
-                var hours = d.getHours();
-                var minutes = d.getMinutes();
-                var seconds = d.getSeconds();
-                return years + "-" + month + "-" + days;
-            }
-        },
-        method: {
-            cancelOrder: function() {
-                if(this.disabled){
-                    return true;
-                }
-                this.$dispatch('orderCancel');
-            },
-        }
-    }
-</script>

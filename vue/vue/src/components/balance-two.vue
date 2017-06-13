@@ -1,3 +1,158 @@
+
+
+<template>
+
+	<div class="bl-wrapper">
+		<div class="line top" v-if="showTop">
+			<div class="icon">
+				<img src="../images/coupon.png" />
+			</div>
+			<div class="wtit">
+				购买清单
+				<label>（共{{ amount }}件商品）</label>
+			</div>
+		</div>
+		<template v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}">
+			<template  v-if="item.gift == 0">
+				<div class="line">
+					<div class="img"> <!--  v-lazy:background-image="item.shotcut" -->
+						<img :src="item.shotcut" style="width:100%;height:100%;" />
+					</div>
+					<div class="con">
+						<div class="left">
+							<div class="name">{{ item.name }}</div>
+							<div class="format">{{ item.formatName }}</div>
+						</div>
+						<div class="right">
+							<div class="price">¥{{ item.price }}</div>
+							<div class="num">x{{ item.nums }}</div>
+						</div>
+					</div>
+				</div>
+			</template>
+		</template>
+		<div class="line-bottom" v-if="showBtm">
+			<div style="display:block;float:right;">共{{ amount }}件商品合计：<label style="color:#f9ad0c;">¥{{ sum }}</label></div>
+		</div>
+	</div>
+
+	<div class="bl-wrapper" v-show="visi">
+		<div style="margin:10px 0px;border-bottom: 1px solid #eee;height:46px;width:100%;">
+			<div style="margin:0px 10px;">
+				<p class="give-title">
+					<i class="icon-img1"></i>
+					<span>赠品</span>
+				</p>
+			</div>
+		</div>
+		<template v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}">
+			<template v-if="item.gift == 1">
+				<div class="line">
+					<div class="img"> <!--  v-lazy:background-image="item.shotcut" -->
+						<img :src="item.shotcut" style="width:100%;height:100%;" />
+					</div>
+					<div class="con">
+						<div class="left">
+							<div class="name">{{ item.name }}</div>
+							<div class="format">{{ item.formatName }}</div>
+						</div>
+					</div>
+				</div>
+			</template>
+		</template>
+		<div class="line-bottom" v-if="showBtm">
+			<div style="display:block;float:right;">共{{ amount }}件商品合计：<label style="color:#f9ad0c;">¥{{ sum }}</label></div>
+		</div>
+	</div>
+
+</template>
+
+<script>
+
+    import Scroller from 'vux/src/components/scroller'
+    import Icon from 'vux/src/components/icon'
+
+	export default{
+		props: {
+			list: {
+				type: Array,
+				default() {
+					return []
+				}
+			},
+            gift: {
+			    type: Array,
+				default() {
+			        return []
+				}
+			},
+			showTop: {
+				type: Boolean,
+				default: false
+			},
+			showBtm: {
+				type: Boolean,
+				default: true
+			},
+            visi: {
+			    type: Boolean,
+				default: false
+			}
+		},
+		data() {
+			return {
+				amount:0,
+                showValA: false,
+                showValB: false,
+				shonse:0,
+                listGift: [],
+			}
+		},
+		ready() {
+
+			$(function() {
+			    $(".todaybtn").mouseover(function() {
+			        $(this).css({
+						background: "#f9ad0c",
+                        transition: "0.5s"
+					});
+				}).mouseout(function() {
+                    $(this).css({
+                        background: "#81c429",
+						transition: "0.5s"
+                    });
+				});
+			});
+
+		},
+        components: {
+            Scroller,
+            Icon
+		},
+		computed: {
+            activity: function () {
+
+            },
+			amount: function(){
+				return this.list.length;
+			},
+			sum: function() {
+				let sum = 0;
+				if(this.amount > 0) {
+					for(let ll = 0;ll < this.list.length; ll++) {
+						sum += this.list[ll].price * this.list[ll].nums;
+					}
+				}
+				return sum.toFixed(2);
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+
+
 <style type="text/css">
 	.bl-wrapper{
 		width:100%;
@@ -70,7 +225,7 @@
 		width:75%;
 		margin-left:3%;
 		margin-right:3%;
-		
+
 		text-align:left;
 	}
 
@@ -207,155 +362,3 @@
 	}
 
 </style>
-
-<template>
-
-	<div class="bl-wrapper">
-		<div class="line top" v-if="showTop">
-			<div class="icon">
-				<img src="../images/coupon.png" />
-			</div>
-			<div class="wtit">
-				购买清单
-				<label>（共{{ amount }}件商品）</label>
-			</div>
-		</div>
-		<template v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}">
-			<template  v-if="item.activity == 0">
-				<div class="line">
-					<div class="img"> <!--  v-lazy:background-image="item.shotcut" -->
-						<img :src="item.shotcut" style="width:100%;height:100%;" />
-					</div>
-					<div class="con">
-						<div class="left">
-							<div class="name">{{ item.name }}</div>
-							<div class="format">{{ item.formatName }}</div>
-						</div>
-						<div class="right">
-							<div class="price">¥{{ item.price }}</div>
-							<div class="num">x{{ item.nums }}</div>
-						</div>
-					</div>
-				</div>
-			</template>
-		</template>
-		<div class="line-bottom" v-if="showBtm">
-			<div style="display:block;float:right;">共{{ amount }}件商品合计：<label style="color:#f9ad0c;">¥{{ sum }}</label></div>
-		</div>
-	</div>
-
-	<div class="bl-wrapper" v-show="visi">
-		<div style="margin:10px 0px;border-bottom: 1px solid #eee;height:46px;width:100%;">
-			<div style="margin:0px 10px;">
-				<p class="give-title">
-					<i class="icon-img1"></i>
-					<span>请选择<i style="color:#c40000;">首单赠品</i></span>
-				</p>
-			</div>
-		</div>
-		<template v-for="item in list" v-link="{name:'detail',params:{pid:item.id}}">
-			<template v-if="item.activity == -1 || item.activity > 0" >
-				<div class="line">
-					<div class="img"> <!--  v-lazy:background-image="item.shotcut" -->
-						<img :src="item.shotcut" style="width:100%;height:100%;" />
-					</div>
-					<div class="con">
-						<div class="left">
-							<div class="name">{{ item.name }}</div>
-							<div class="format">{{ item.formatName }}</div>
-						</div>
-					</div>
-				</div>
-			</template>
-		</template>
-		<div class="line-bottom" v-if="showBtm">
-			<div style="display:block;float:right;">共{{ amount }}件商品合计：<label style="color:#f9ad0c;">¥{{ sum }}</label></div>
-		</div>
-	</div>
-
-</template>
-
-<script>
-
-    import Scroller from 'vux/src/components/scroller'
-    import Icon from 'vux/src/components/icon'
-
-	export default{
-		props: {
-			list: {
-				type: Array,
-				default() {
-					return []
-				}
-			},
-            gift: {
-			    type: Array,
-				default() {
-			        return []
-				}
-			},
-			showTop: {
-				type: Boolean,
-				default: false
-			},
-			showBtm: {
-				type: Boolean,
-				default: true
-			},
-            visi: {
-			    type: Boolean,
-				default: false
-			}
-		},
-		data() {
-			return {
-				amount:0,
-                showValA: false,
-                showValB: false,
-				shonse:0,
-                listGift: [],
-			}
-		},
-		ready() {
-
-			$(function() {
-			    $(".todaybtn").mouseover(function() {
-			        $(this).css({
-						background: "#f9ad0c",
-                        transition: "0.5s"
-					});
-				}).mouseout(function() {
-                    $(this).css({
-                        background: "#81c429",
-						transition: "0.5s"
-                    });
-				});
-			});
-
-		},
-        components: {
-            Scroller,
-            Icon
-		},
-		computed: {
-            activity: function () {
-
-            },
-			amount: function(){
-				return this.list.length;
-			},
-			sum: function() {
-				let sum = 0;
-				if(this.amount > 0) {
-					for(let ll = 0;ll < this.list.length; ll++) {
-						sum += this.list[ll].price * this.list[ll].nums;
-					}
-				}
-				return sum.toFixed(2);
-			}
-		},
-		methods: {
-
-		}
-	}
-</script>

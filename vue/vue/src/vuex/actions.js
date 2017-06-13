@@ -54,8 +54,8 @@ export const mySearch = function ({dispatch}, shopname) {
 }
 
 //搜索商品
-export const myVipMessage = function ({dispatch}, message) {
-    dispatch('myVipMessage', message);
+export const myMessage = function ({dispatch}, message) {
+    dispatch('myMessage', message);
 }
 
 //搜索商品
@@ -63,7 +63,19 @@ export const myActiveTwo = function ({dispatch}, text) {
     dispatch('myActiveTwo', text);
 }
 
-//保存滚动条
-export const myScrollTop = function ({dispatch}, number) {
-    dispatch('myScrollTop', number);
-}
+//自提点ID
+export const myGift = function ({dispatch}, giftList) {
+    dispatch('myGift', giftList);
+};
+
+//满就送
+export const mySong = function ({dispatch}, song) {
+    dispatch('mySong', song);
+};
+
+//通用
+export const commitData = function ({dispatch}, params) {
+	console.log(params)
+    dispatch('commitData', params);
+};
+

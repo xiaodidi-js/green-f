@@ -19,7 +19,7 @@
 	.card-box{
 		width:90%;
 		height:auto;
-		margin:0% 3% 2% 3%;
+		/*margin:0% 3% 2% 3%;*/
 		display:block;
 		padding:2%;
 		text-align:center;
@@ -46,6 +46,13 @@
 		max-width:100%;
 		overflow:hidden;
 		position:relative;
+	}
+
+	.card-box .mes .activity-data {
+		float:right;
+		line-height:30px;
+		margin-right:23px;
+		color:#666;
 	}
 
 	.card-box .mes .words{
@@ -85,8 +92,8 @@
 
 	.card-box .mes .reading{
 		color:#B3B3B3;
-		font-size:1.2rem;
-		width:27%;
+		font-size:1.4rem;
+		width:45%;
 		white-space:nowrap;
 		text-overflow:ellipsis;
 		overflow:hidden;
@@ -98,22 +105,24 @@
 </style>
 
 <template>
-	<div class="wrapper">
-		<label class="title" v-if="articles.title">{{ articles.title }}</label>
-		<div class="card-box" v-for="item in articles.list" v-link="{name:'article',params:{cid:item.id}}">
-			<img v-lazy="item.img" class="img" alt="{{ item.title }}" />
+	<div class="wrapper" style="margin:50px 0px 30px;">
+		<!--<label class="title" v-if="articles.title">{{ articles.title }}</label>-->
+		<div class="card-box" style="width:95%;" v-for="item in list" v-link="{name:'article',params:{cid:item.id}}">
+			<img :src="item.img" class="img" alt="{{ item.title }}" />
 			<div class="mes">
 				<div class="words">
 					<div class="name">{{ item.title }}</div>
-					<div class="desc">
-						{{ item.sdesc }}
-					</div>
-					<div class="proname">
-						{{ item.proname }}<label>¥{{ item.proprice }}</label>
-					</div>
+					<!--<div class="desc">-->
+						<!--{{ item.sdesc }}-->
+					<!--</div>-->
+					<!--<div class="proname">-->
+						<!--{{ item.proname }}<label>¥{{ item.proprice }}</label>-->
+					<!--</div>-->
 				</div>
 				<div class="reading">
-					阅读量{{ item.reading }}
+					<span>{{ item.createtime | time }}</span>
+					<span>阅读量</span>
+					<span>{{ item.reading }}</span>
 				</div>
 			</div>
 		</div>
@@ -121,6 +130,10 @@
 </template>
 
 <script>
+
+    import axios from 'axios'
+    import qs from 'qs'
+
 	export default{
 		props: {
 			articles: {
@@ -132,7 +145,35 @@
 		},
 		data() {
 			return {
-				
+				list: []
+			}
+		},
+		ready () {
+			this.message();
+		},
+        filters: {
+            time: function (value) {
+                let d = new Date(parseInt(value) * 1000);
+                var years = d.getFullYear();
+                var month = d.getMonth() + 1;
+                var days = d.getDate();
+                var hours = d.getHours();
+                var minutes = d.getMinutes();
+                var seconds = d.getSeconds();
+                return years + "-" + month + "-" + days;
+            }
+        },
+		methods: {
+		    message () {
+				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/index/productinfo/uid/' + ustore.id + '/pid/' + this.$route.query.pid,
+                }).then((response) => {
+                    this.list = response.data.articles.list;
+                    console.log(this.list);
+                });
 			}
 		}
 	}

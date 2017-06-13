@@ -260,7 +260,7 @@
                                 content.showGive = true;
                                 this.myGift(this.lists);
                                 this.lists = response.data.shoduan_data;
-                                this.commitData({target: 'giftList', data: response.data.maxmoney})
+                                this.commitData({target: 'giftList', data: response.data.shoudan_data})
                                 this.commitData({target: 'giftstu', data: 2});
                             } else if(response.data.status === 0) {
                                 content.openpop = false;

@@ -53,7 +53,7 @@
         <div class="activity-index" id="activity">
             <template v-for="item in data">
                 <div style="margin:0px 10px 10px;">
-                    <a href="javascript:void(0);" class="activity-text" @click="goActivity()"> <!-- v-link="{name:'activity-event',params:{pid:item.id}}" -->
+                    <a class="activity-text" v-link="{name:'activity-event',query:{cid:item.id}}"> <!-- v-link="{name:'activity-event',params:{pid:item.id}}" @click="goActivity" -->
                         <div class="">
                             <img :src="item.img" alt="" style="width:100%;height:100%;" />
                         </div>
@@ -71,14 +71,14 @@
 
 <script type="text/javascript">
 
-    import { myVipMessage } from 'vxpath/actions'
+    import { myMessage } from 'vxpath/actions'
     import axios from 'axios'
     import qs from 'qs'
 
     export default {
         vuex: {
             actions: {
-                myVipMessage
+                myMessage,
             }
         },
         data() {
@@ -99,7 +99,7 @@
             }
         },
         ready() {
-            this.vipMessage();
+            this.Message();
         },
         methods: {
             goActivity:function () {
@@ -107,11 +107,11 @@
                 this.$router.go({
                     name:'activity-event',
                     params:{
-                        arr:this.myVipMessage(this.data)
+                        arr:this.myMessage(this.data)
                     }
                 });
             },
-            vipMessage:function() {
+            Message:function() {
                 this.$http.get(localStorage.apiDomain + 'public/index/index/productinfo').then((response)=>{
                     this.data = response.data.articles.list;
                     console.log(this.data);

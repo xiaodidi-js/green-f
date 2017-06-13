@@ -1,3 +1,189 @@
+<template>
+	<div class="index-conten">
+		<div class="content_main">
+			<template v-for='item in testarr'>
+				<template v-if="item.type == 0">
+					<div style="width: 100%;clear:both;">
+						<template v-for='item1 in item.arr'>
+							<template v-if="item.arr.length == 1">
+								<div style="width:100%;float:left;">
+									<a class="href-ui">
+										<img :src="item1.url" alt="" style="width:100%;" />
+									</a>
+								</div>
+							</template>
+							<template v-if="item.arr.length == 2">
+								<div style="width:50%;float:left;">
+									<a class="href-ui" :href="'//'+item1.htmlurl">
+										<img :src="item1.url" alt="" style="width:100%;" />
+									</a>
+								</div>
+							</template>
+							<template v-if="item.arr.length == 3">
+								<div style="width:33.3%;float:left;">
+									<a class="href-ui" :href="'//'+item1.htmlurl">
+										<img :src="item1.url" alt="" style="width:100%;" />
+									</a>
+								</div>
+							</template>
+							<template v-if="item.arr.length == 4">
+								<div style="width:25%;float:left;">
+									<a class="href-ui" :href="'//'+item1.htmlurl" > <!-- :href="'//'+item1.htmlurl"  -->
+										<img :src="item1.url" alt="" style="width:100%;" />
+									</a>
+								</div>
+							</template>
+						</template>
+					</div>
+				</template>
+
+				<template v-if="item.type == 1 || item.type == 2 || item.type == 3">
+					<div class="box-two" style="clear:both;">
+						<template v-for='item1 in item.arr'>
+							<div class="shop-item">
+								<div style="width:100%;" class="over-img" v-if="item1.store == 0">
+									<div class="order_over">已售罄</div>
+									<img :src="item1.shopshotcut" style="width: 100%;height:100%;" v-link="{name:'detail',params:{pid:item1.shopid}}" />
+								</div>
+								<div style="width:100%;" class="over-img" v-else>
+									<img :src="item1.shopshotcut" style="width: 100%;height:100%;" v-link="{name:'detail',params:{pid:item1.shopid}}" />
+								</div>
+								<p class="shop-name" style="">{{ item1.shopname }}</p>
+								<p class="box-money" style="float:left;">
+									<i style="font-size: 12px;">￥</i>
+									<span style="font-size: 18px;">{{ item1.shopprice }}</span>
+								</p>
+								<p class="add-cart" @click="gocart(item1)" style="float:right;"></p>
+
+							</div>
+						</template>
+					</div>
+				</template>
+				<template style="clear: both;"></template>
+			</template>
+		</div>
+	</div>
+
+	<!-- toast显示框 -->
+	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
+
+</template>
+
+<script>
+
+    import Swiper from 'vux/src/components/swiper'
+    import { setCartStorage,clearAll } from 'vxpath/actions'
+    import { cartNums } from 'vxpath/getters'
+    import Toast from 'vux/src/components/toast'
+    import axios from 'axios'
+    import qs from 'qs'
+
+    export default{
+        vuex: {
+            getters: {
+                cartNums
+            },
+            actions: {
+                setCart: setCartStorage,
+                clearAll
+            }
+        },
+		props: {
+			testarr: [],
+			list: []
+		},
+		data() {
+			return {
+                toastMessage: '',
+                toastShow: false,
+                buyNums: 1,
+                proNums: 1,
+
+			}
+		},
+        vuex: {
+            getters: {
+                cartNums
+            },
+            actions: {
+                setCart: setCartStorage
+            }
+        },
+		ready() {
+
+        },
+        components: {
+            Swiper,
+            Toast
+        },
+        methods: {
+            gocart: function (data) {
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
+                var cart = JSON.parse(localStorage.getItem("myCart")), obj = {} , self = this;
+                if(ustore == null) {
+                    alert("没有登录，请先登录！");
+                    setTimeout(function () {
+                        self.$router.go({name: 'login'});
+                    }, 800);
+                    return false;
+				} else if (ustore != null) {
+
+                    axios({
+                        method: 'get',
+                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.shopid,
+                    }).then((response) => {
+
+                        obj = {
+                            id: data.shopid,
+                            name: data.shopname,
+                            price: data.shopprice,
+                            shotcut: data.shopshotcut,
+                            deliverytime: data.deliverytime,
+                            nums:this.buyNums,
+                            store:this.proNums = response.data.store,
+                            activeid: data.activeid,
+                            activestu: data.activestu,
+                            activepay: data.activepay,
+                            peisongok: data.peisongok,
+                            formatName: '',
+                            format: '',
+                        };
+                        if(data.peisongok == 0 && data.deliverytime == 1) {
+                            alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                            return false;
+                        } else if (data.peisongok == 0 && data.deliverytime == 0) {
+                            alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
+                            return false;
+                        } else if (data.activeid > 0) {
+                            alert("这是限时抢购商品！");
+                            return false;
+                        } else if (data.store == 0) {
+                            alert("已售罄");
+                            return false;
+						}
+                        if(sessionStorage.getItem("myCart") != '') {
+                            for(var y in cart) {
+                                if (cart[y]["deliverytime"] != data.deliverytime) {
+                                    if (data.deliverytime == 0) {
+                                        alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                        return false;
+                                    } else if (data.deliverytime == 1) {
+                                        alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        this.setCart(obj);
+                        alert("加入购物车成功！");
+                    });
+				}
+            }
+		}
+	}
+</script>
+
 <style scoped>
 
 	.wrapper{
@@ -174,6 +360,23 @@
 		margin: 0px 1.5px 1rem;
 	}
 
+	.shop-item .over-img {
+		position: relative;
+	}
+
+	.shop-item .over-img .order_over {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		text-align:center;
+		line-height: 11.5rem;
+		font-size:23px;
+		color:#fff;
+		background: rgba(0,0,0,0.5);
+	}
+
 	.content_main .box-two .shop-item .box-money {
 		float: left;
 		font-size: 14px;
@@ -300,184 +503,3 @@
 	}
 
 </style>
-
-<template>
-
-
-	<div class="index-conten">
-		<div class="content_main">
-			<template v-for='item in testarr'>
-				<template v-if="item.type == 0">
-					<div style="width: 100%;clear:both;">
-						<template v-for='item1 in item.arr'>
-							<template v-if="item.arr.length == 1">
-								<div style="width:100%;float:left;">
-									<a class="href-ui">
-										<img :src="item1.url" alt="" style="width:100%;" />
-									</a>
-								</div>
-							</template>
-							<template v-if="item.arr.length == 2">
-								<div style="width:50%;float:left;">
-									<a class="href-ui" :href="'//'+item1.htmlurl">
-										<img :src="item1.url" alt="" style="width:100%;" />
-									</a>
-								</div>
-							</template>
-							<template v-if="item.arr.length == 3">
-								<div style="width:33.3%;float:left;">
-									<a class="href-ui" :href="'//'+item1.htmlurl">
-										<img :src="item1.url" alt="" style="width:100%;" />
-									</a>
-								</div>
-							</template>
-							<template v-if="item.arr.length == 4">
-								<div style="width:25%;float:left;">
-									<a class="href-ui" :href="'//'+item1.htmlurl" > <!-- :href="'//'+item1.htmlurl"  -->
-										<img :src="item1.url" alt="" style="width:100%;" />
-									</a>
-								</div>
-							</template>
-						</template>
-					</div>
-				</template>
-
-				<template v-if="item.type == 1 || item.type == 2 || item.type == 3">
-					<div class="box-two" style="clear:both;">
-						<template v-for='item1 in item.arr'>
-							<div class="shop-item">
-								<div style="width:100%;">
-									<img :src="item1.shopshotcut" style="width: 100%;height:100%;" v-link="{name:'detail',params:{pid:item1.shopid}}" />
-								</div>
-								<p class="shop-name" style="">{{ item1.shopname }}</p>
-								<p class="box-money" style="float:left;">
-									<i style="font-size: 12px;">￥</i>
-									<span style="font-size: 18px;">{{ item1.shopprice }}</span>
-								</p>
-								<p class="add-cart" @click="gocart(
-									   item1.shopid,
-									   item1.shopname,
-									   item1.shopprice,
-									   item1.shopshotcut,
-									   item1.deliverytime,
-									   item1.peisongok,
-									   item1.activeid,
-									   item1.activestu)" style="float:right;"></p>
-							</div>
-						</template>
-					</div>
-				</template>
-				<template style="clear: both;"></template>
-			</template>
-		</div>
-	</div>
-
-	<!-- toast显示框 -->
-	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
-
-</template>
-
-<script>
-
-    import Swiper from 'vux/src/components/swiper'
-    import { setCartStorage } from 'vxpath/actions'
-    import { cartNums } from 'vxpath/getters'
-    import Toast from 'vux/src/components/toast'
-    import axios from 'axios'
-    import qs from 'qs'
-
-    export default{
-        vuex: {
-            getters: {
-                cartNums
-            },
-            actions: {
-                setCart: setCartStorage
-            }
-        },
-		props: {
-			testarr: [],
-			list: []
-		},
-		data() {
-			return {
-                toastMessage: '',
-                toastShow: false,
-                buyNums: 1,
-                proNums: 1,
-
-			}
-		},
-        vuex: {
-            getters: {
-                cartNums
-            },
-            actions: {
-                setCart: setCartStorage
-            }
-        },
-		ready() {
-
-        },
-        components: {
-            Swiper,
-            Toast
-        },
-        methods: {
-            gocart: function (oid,name,price,img,deliverytime,peisongok,activestu,activeid) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                let getUrl = '' , self = this;
-                if(ustore == null) {
-                    alert("没有登录，请先登录！");
-                    setTimeout(function () {
-                        self.$router.go({name: 'login'});
-                    }, 800);
-                    return false;
-                } else if (ustore != null) {
-                    var cart = JSON.parse(sessionStorage.getItem("myCart")), obj = {};
-                    axios({
-                        method: 'get',
-                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + oid,
-                    }).then((response) => {
-                        obj = {
-                            id: oid,
-                            name: name,
-                            price: price,
-                            shotcut: img,
-                            deliverytime:deliverytime,
-                            nums:this.buyNums,
-                            store:this.proNums = response.data.store,
-                            format: '',
-                            formatName: '',
-                            activestu: activestu,
-                            peisongok:peisongok
-                        }
-                        if(peisongok == 0 && deliverytime == 1) {
-                            alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
-                            return false;
-                        } else if (activeid > 0) {
-                            alert("这是限时抢购商品！");
-                            return false;
-                        }
-                        if(sessionStorage.getItem("myCart") != '') {
-                            for(var y in cart) {
-                                if (cart[y]["deliverytime"] != deliverytime) {
-                                    if (deliverytime == 0) {
-                                        alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                        return false;
-                                    } else if (deliverytime == 1) {
-                                        alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                        self.setCart(obj);
-                        alert("加入购物车成功！");
-                    });
-				}
-            }
-		}
-	}
-</script>
