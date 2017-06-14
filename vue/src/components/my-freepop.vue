@@ -239,8 +239,8 @@
                         this.mySong('请选择满20元赠品');
                         content.showGive = true;
                         this.lists = response.data.maxmoney;
-                        this.commitData({target: 'giftList', data: response.data.maxmoney})
-                        this.commitData({target: 'giftstu', data: 1})
+                        this.commitData({target: 'giftList', data: response.data.maxmoney});
+                        this.commitData({target: 'giftstu', data: 1});
                         console.log('log', this.$store.state.giftList)
                     } else if(response.data.status == 0) {
                         content.openpop =  false;

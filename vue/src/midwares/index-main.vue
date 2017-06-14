@@ -1,3 +1,200 @@
+<template>
+	<div class="order-search"  style="background: #81c429;">
+		<div class="logo" style="background: none;width:50px;float:left;">
+			<img src="../images/logo_lv.png" alt="" style="width:40px;height:40px;margin: 5px 15px;" />
+		</div>
+		<div class="search" style="width:65%;position:relative;left:12px;">
+			<input type="text" placeholder="请输入您要搜索的商品" v-model="searchKey" @keydown="breakSearch()" />
+			<input type="button" class="order-search-btn" @click="goSearch()" value="搜索" />
+		</div>
+		<div class="customer">
+			<a href="javascript:void(0)" class="txt-service" @click="goPage"></a>
+		</div>
+	</div>
+	<!-- 轮播图 -->
+	<banners></banners>
+	<div class="sub-content">
+		<!-- 显示抢购 -->
+		<card-column :columns="maincolumns" keep-alive></card-column>
+		<!-- 热销产品排行榜 -->
+		<card-rectangle :testarr="data.index_data"></card-rectangle>
+	</div>
+	<div class="goto_top"></div>
+    <!-- toast提示框 -->
+    <toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
+</template>
+
+<script>
+
+	import CardColumn from 'components/card-column'
+    import banners from 'components/banners'
+	import CardRectangle from 'components/card-rectangle'
+	import CardImage from 'components/card-image'
+	import Toast from 'vux/src/components/toast'
+    import Swiper from 'vux/src/components/swiper'
+    import { myActive,mySearch,commitData } from 'vxpath/actions'
+    import axios from 'axios'
+    import qs from 'qs'
+
+	export default{
+		components: {
+			CardColumn,
+			CardRectangle,
+			CardImage,
+			Toast,
+            Swiper,
+            banners
+		},
+        vuex: {
+            actions: {
+                myActive,
+                mySearch,
+                commitData,
+            }
+        },
+		data() {
+			return {
+				toastMessage:'',
+				toastShow:false,
+				data: {
+					articles: {title:'',list:[]},
+					hotproducts: {title:'',list:[]},
+					maincolumns: []
+				},
+                maincolumns:[],
+                searchKey: '',
+				arr: [],
+				tuijian: 1
+			}
+		},
+		route: {
+
+		},
+        filters: {
+            timeline: function (value) {
+                let d = new Date(parseInt(value) * 1000);
+                var hours = d.getHours();
+                var minutes = d.getMinutes();
+                var seconds = d.getSeconds();
+                return (hours > 9 ? hours : '0' + hours) + ':' + (minutes > 9 ? minutes : '0' + minutes) + ":" + (seconds > 9 ? seconds : '0' + seconds)
+            }
+        },
+		ready() {
+			this.index();
+			this.follow();
+            this.timeline();
+            var content = this;
+            $(window).scroll(function(){
+                if($(window).scrollTop() >= 350) {
+                    content.commitData({target: 'scroll', data: $(window).scrollTop()});
+                    $(".goto_top").fadeIn(500);
+                } else {
+                    $(".goto_top").stop(true,true).fadeOut(500);
+                }
+            });
+            $(".goto_top").click(function(){
+                $("html,body").animate({
+                    scrollTop:0
+                },200);
+            });
+            this.breakSearch();
+		},
+        mounted: {
+
+		},
+        methods: {
+		    //按钮回车事件
+            breakSearch: function (event) {
+				var e = window.event || event;
+				if(e && e.keyCode == 13) {
+					this.goSearch();
+				}
+            },
+            goSearch: function() {
+                var _self = this;
+                this.$http.get(localStorage.apiDomain + 'public/index/index/searchshop?shopname=' + this.searchKey).then((response)=>{
+                    if(response.data.status == 1) {
+                        let arr = [];
+                        arr = response.data.info;
+                        this.$router.go({
+                            name:'search',
+                            params:{
+                                arr:this.mySearch(response.data.info.data)
+                            }
+                        });
+					} else if(response.data.status == 0) {
+						alert(response.data.info);
+                        this.searchKey = '';
+					}
+
+                },(response)=>{
+                    this.toastMessage = '网络开小差了~';
+                    this.toastShow = true;
+                });
+			},
+		    index: function() {
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/index',
+                }).then((response) => {
+                    this.data = response.data;
+                    //存储到缓存
+                    JSON.stringify(sessionStorage.setItem("iData",this.data));
+                    var data = this.data;
+                    for (var i = 0; i < data.index_data.length; i++) {
+                        if(data.index_data[i].type == 4) {
+                            var l = data.index_data[i].arr.length;
+                            for (var k = 0; k < l; k++) {
+                                data.index_data[i].arr[k].img = data.index_data[i].arr[k].url;
+                                data.index_data[i].arr[k].url = data.index_data[i].arr[k].htmlurl;
+                            }
+                        }
+                    }
+                });
+			},
+            follow: function() {
+                let url = '' , openid = sessionStorage.getItem("openid");
+                if(sessionStorage.getItem('since')) {
+                    axios({
+                        method: 'post',
+                        url: localStorage.apiDomain + 'public/index/usercenter/sincestar/',
+                        data: qs.stringify({
+                            sinceid: sessionStorage.getItem('since'),		//自提点ID
+                            openid: openid	//openid
+                        })
+                    }).then((response) => {
+						console.log(response.data);
+                    });
+                }
+            },
+            timeline: function() {
+                try {
+                    let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                    ustore = JSON.parse(ustore);
+                    var _this = this;
+                    this.$http.get(localStorage.apiDomain + 'public/index/sale/SaleTimeSolt/uid').then((response) => {
+                        if(response.data.status === 1) {
+                            this.maincolumns = response.data.SaleTimeSolt;
+                        } else {
+                            this.toastMessage = response.data.info;
+                            this.toastShow = true;
+                        }
+                    },(response)=>{
+                        this.toastMessage = '网络开小差了~';
+                        this.toastShow = true;
+                    });
+				} catch (e) {
+					console.log(e);
+				}
+            },
+            goPage () {
+                this.myActive(5);
+                this.$router.go({name: 'per-orders'})
+            }
+		}
+	}
+</script>
+
 <style scoped>
 	.goto_top {
 		width:3.7rem;
@@ -92,197 +289,5 @@
 		float:left;
 		padding: 5px 5px 5px 10px;
 	}
-
 	/* search end */
-
 </style>
-
-<template>
-	<div class="order-search"  style="background: #81c429;">
-		<div class="logo" style="background: none;width:50px;float:left;">
-			<img src="../images/logo_lv.png" alt="" style="width:40px;height:40px;margin: 5px 15px;" />
-		</div>
-		<div class="search" style="width:65%;position:relative;left:12px;">
-			<input type="text" placeholder="请输入您要搜索的商品" v-model="searchKey" @keydown="breakSearch()" />
-			<input type="button" class="order-search-btn" @click="goSearch()" value="搜索" />
-		</div>
-		<div class="customer">
-			<a href="javascript:void(0)" class="txt-service" @click="goPage"></a>
-		</div>
-	</div>
-	<!-- 轮播图 -->
-	<banners></banners>
-	<div class="sub-content">
-		<!-- 显示抢购 -->
-		<card-column :columns="maincolumns" keep-alive></card-column>
-		<!-- 热销产品排行榜 -->
-		<card-rectangle :testarr="data.index_data"></card-rectangle>
-		<!-- toast提示框 -->
-		<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
-	</div>
-	<div class="goto_top"></div>
-</template>
-
-<script>
-
-	import CardColumn from 'components/card-column'
-    import banners from 'components/banners'
-	import CardRectangle from 'components/card-rectangle'
-	import CardImage from 'components/card-image'
-	import Toast from 'vux/src/components/toast'
-    import Swiper from 'vux/src/components/swiper'
-    import { myActive,mySearch,myScrollTop } from 'vxpath/actions'
-    import axios from 'axios'
-    import qs from 'qs'
-
-	export default{
-		components: {
-			CardColumn,
-			CardRectangle,
-			CardImage,
-			Toast,
-            Swiper,
-            banners
-		},
-        vuex: {
-            actions: {
-                myActive,
-                mySearch,
-                myScrollTop,
-            }
-        },
-		data() {
-			return {
-				toastMessage:'',
-				toastShow:false,
-				data: {
-					articles: {title:'',list:[]},
-					hotproducts: {title:'',list:[]},
-					maincolumns: []
-				},
-                maincolumns:[],
-                searchKey: '',
-				arr: [],
-				tuijian: 1
-			}
-		},
-		route: {
-
-		},
-        filters: {
-            timeline: function (value) {
-                let d = new Date(parseInt(value) * 1000);
-                var hours = d.getHours();
-                var minutes = d.getMinutes();
-                var seconds = d.getSeconds();
-                return (hours > 9 ? hours : '0' + hours) + ':' + (minutes > 9 ? minutes : '0' + minutes) + ":" + (seconds > 9 ? seconds : '0' + seconds)
-            }
-        },
-		ready() {
-			this.index();
-			this.follow();
-            this.timeline();
-            $(window).scroll(function(){
-                if($(window).scrollTop() >= 350){
-                    $(".goto_top").fadeIn(500);
-                } else {
-                    $(".goto_top").stop(true,true).fadeOut(500);
-                }
-            });
-            $(".goto_top").click(function(){
-                $("html,body").animate({
-                    scrollTop:0
-                },200);
-            });
-            this.breakSearch();
-		},
-        methods: {
-		    //按钮回车事件
-            breakSearch: function (event) {
-				var e = window.event || event;
-				if(e && e.keyCode == 13) {
-					this.goSearch();
-				}
-            },
-            goSearch: function() {
-                var _self = this;
-                this.$http.get(localStorage.apiDomain + 'public/index/index/searchshop?shopname=' + this.searchKey).then((response)=>{
-                    if(response.data.status == 1) {
-                        let arr = [];
-                        arr = response.data.info;
-                        this.$router.go({
-                            name:'search',
-                            params:{
-                                arr:this.mySearch(response.data.info.data)
-                            }
-                        });
-					} else if(response.data.status == 0) {
-						alert(response.data.info);
-                        this.searchKey = '';
-					}
-
-                },(response)=>{
-                    this.toastMessage = '网络开小差了~';
-                    this.toastShow = true;
-                });
-			},
-		    index: function() {
-                let url = '';
-//                url = localStorage.apiDomain + 'public/index/index';
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/index',
-                }).then((response) => {
-                    this.data = response.data;
-                    var data = this.data;
-                    sessionStorage.setItem("arr",JSON.stringify(this.data));
-                    for (var i = 0; i < data.index_data.length; i++) {
-                        if(data.index_data[i].type == 4) {
-                            var l = data.index_data[i].arr.length;
-                            for (var k = 0; k < l; k++) {
-                                data.index_data[i].arr[k].img = data.index_data[i].arr[k].url;
-                                data.index_data[i].arr[k].url = data.index_data[i].arr[k].htmlurl;
-                            }
-                        }
-                    }
-                });
-			},
-            follow: function() {
-                let url = '' , openid = sessionStorage.getItem("openid");
-                if(sessionStorage.getItem('since')) {
-                    axios({
-                        method: 'post',
-                        url: localStorage.apiDomain + 'public/index/usercenter/sincestar/',
-                        data: qs.stringify({
-                            sinceid: sessionStorage.getItem('since'),		//自提点ID
-                            openid: openid	//openid
-                        })
-                    }).then((response) => {
-						console.log(response.data);
-                    });
-                }
-            },
-            timeline: function() {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                var _this = this;
-                this.$http.get(localStorage.apiDomain + 'public/index/sale/SaleTimeSolt/uid').then((response) => {
-                    if(response.data.status === 1) {
-                        this.maincolumns = response.data.SaleTimeSolt;
-                        console.log(this.maincolumns);
-                    } else {
-                        this.toastMessage = response.data.info;
-                        this.toastShow = true;
-                    }
-                },(response)=>{
-                    this.toastMessage = '网络开小差了~';
-                    this.toastShow = true;
-                });
-            },
-            goPage () {
-                this.myActive(5);
-                this.$router.go({name: 'per-orders'})
-            }
-		}
-	}
-</script>

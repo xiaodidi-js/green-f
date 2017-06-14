@@ -12,8 +12,6 @@ import WxJssdk from 'weixin-js-sdk'
 import fetchGet from './libs/util.js'
 import fetchPost from './libs/util.js'
 
-
-
 // Vue.use(VueLazy,{
 // 	preLoad:1.2,
 // 	error:'dist/assets/error.png',
@@ -33,6 +31,7 @@ localStorage.setItem('apiDomain','http://green-f.cn/'); /* http://newshop.com/ *
 let router = new VueRouter({
     // 是否开启History模式的路由,默认开发环境开启,生产环境不开启。如果生产环境的服务端没有进行相关配置,请慎用
     history: Env != 'production',
+    // history: true,
     saveScrollPosition: true,
     scrollBehavior (to, from, savedPosition) {
         if (savedPosition) {
@@ -49,7 +48,6 @@ router.map(fetchGet);
 router.map(Routers);
 
 router.beforeEach((transition) => {
-
     if(Env == 'production') {
         //微信openid检测
         if(!sessionStorage.getItem('openid')){
@@ -137,3 +135,26 @@ router.redirect({
 });
 
 router.start(App, '#app');
+
+// // 监听页面滚动条的状态（是否滚动）
+// window.addEventListener("scroll",function () {
+//     //  滚动时获取页面滚动条的位置
+//     var sTop = document.documentElement.scrollTop || document.body.scrollTop;
+//     //  滚动条的位置保存到本地存储里面
+//     ls.setItem("sTop",sTop);
+// },false);
+//
+// //存储滚动条到本地
+// var ls = window.localStorage;
+// // 页面每次加载的时候获取本地存储里面的值
+// if(ls.getItem("sTop")) {
+//     var oldStop = ls.getItem('sTop');
+//     console.log(oldStop);
+//     // 获取到的值来设置页面滚动条的位置
+//     if(document.documentElement.scrollTop) {
+//         document.documentElement.scrollTop = oldStop;
+//     } else {
+//         document.body.scrollTop = oldStop;
+//     }
+//     console.log(ls.getItem("sTop"));
+// }

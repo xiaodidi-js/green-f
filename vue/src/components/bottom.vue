@@ -1,5 +1,3 @@
-
-
 <template>
 	<div class="wrapper" keep-alive style="margin-bottom:0px;">
 		<!-- 购物车 -->

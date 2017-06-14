@@ -13,6 +13,7 @@
 		</div>
 		<button class="btn addCar doBuyButton buyButton" @click="clickCart" v-show="store > 0">加入购物车</button>
 		<button class="btn doBuy buyButton" @click="clickBuy" v-show="store > 0">立即购买</button>
+		<button class="btn shareButton" v-show="share" @click="clickShare">分享抢购</button>
 		<div class="btn noBuy" v-show="store <= 0">暂时缺货</div>
 	</div>
 </template>
@@ -48,6 +49,10 @@
 			store: {
 				type: Number,
 				required: true
+			},
+            share: {
+			    type: Boolean,
+				default: false,
 			}
 		},
 		data() {
@@ -56,6 +61,9 @@
 			}
 		},
 		methods: {
+            clickShare () {
+                alert("请分享商品方便购买！");
+			},
 			setCollect: function(){
 				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 				if(!ustore){
@@ -248,6 +256,21 @@
 		border:1px solid #f9ad0c;
 		color:#fff;
 		font-size:14px;
+	}
+
+	.shareButton {
+		width:70%;
+		color:#fff;
+		float: right;
+		height: 4.5rem;
+		font-size: 14px;
+		line-height: 4.5rem;
+		background: #81c429;
+		border:1px solid #81c429;
+	}
+
+	.shareButton:active {
+		background: #3cc51f;
 	}
 
 </style>

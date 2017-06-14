@@ -7,7 +7,7 @@
 						<template v-for='item1 in item.arr'>
 							<template v-if="item.arr.length == 1">
 								<div style="width:100%;float:left;">
-									<a class="href-ui">
+									<a class="href-ui" :href="'//'+item1.htmlurl">
 										<img :src="item1.url" alt="" style="width:100%;" />
 									</a>
 								</div>
@@ -36,7 +36,6 @@
 						</template>
 					</div>
 				</template>
-
 				<template v-if="item.type == 1 || item.type == 2 || item.type == 3">
 					<div class="box-two" style="clear:both;">
 						<template v-for='item1 in item.arr'>
@@ -54,7 +53,6 @@
 									<span style="font-size: 18px;">{{ item1.shopprice }}</span>
 								</p>
 								<p class="add-cart" @click="gocart(item1)" style="float:right;"></p>
-
 							</div>
 						</template>
 					</div>
@@ -63,7 +61,6 @@
 			</template>
 		</div>
 	</div>
-
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
 
@@ -98,7 +95,6 @@
                 toastShow: false,
                 buyNums: 1,
                 proNums: 1,
-
 			}
 		},
         vuex: {
@@ -128,12 +124,10 @@
                     }, 800);
                     return false;
 				} else if (ustore != null) {
-
                     axios({
                         method: 'get',
                         url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.shopid,
                     }).then((response) => {
-
                         obj = {
                             id: data.shopid,
                             name: data.shopname,
@@ -155,8 +149,11 @@
                         } else if (data.peisongok == 0 && data.deliverytime == 0) {
                             alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
                             return false;
-                        } else if (data.activeid > 0) {
+                        } else if (data.activeid == 1) {
                             alert("这是限时抢购商品！");
+                            return false;
+                        } else if (data.activeid == 2) {
+                            alert("这是限时分享商品！");
                             return false;
                         } else if (data.store == 0) {
                             alert("已售罄");

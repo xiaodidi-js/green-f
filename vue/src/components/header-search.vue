@@ -107,7 +107,7 @@
 </style>
 
 <template>
-	<div class="search-header" :class="{'fixed':fixed}" :style="{backgroundColor:bgcolor,top:fixed===true&&top>0 ? top+unit : 0}">
+	<div class="search-header" :class="{'fixed':fixed}" :style="{backgroundColor : bgcolor,top : fixed===true && top > 0 ? top+unit : 0}">
 		<div class="left">
 			<div class="arrow" @click="goBack"></div>
 		</div>

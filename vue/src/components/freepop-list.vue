@@ -123,7 +123,6 @@
 		margin: 5px 0px;
 	}
 
-
 	.mes-line .addcon .address{
 		width:100%;
 		color:#808080;

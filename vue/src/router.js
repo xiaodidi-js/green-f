@@ -170,9 +170,9 @@ const routers = {
     '/article/:cid': {
         name:'article',
         header:true,
-        footer:false,
+        footer:true,
         title:'精选编辑',
-        position:1,
+        position:3,
         component (resolve) {
             require(['./views/article.vue'], resolve);
         }

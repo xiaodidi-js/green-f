@@ -12,9 +12,11 @@
 		width: 100%;
 		height: 164px;
 		margin-top: 46px;
-		/*position: fixed;*/
-		/*top: 0px;*/
-		/*left: 0px;*/
+	}
+
+	.sub-content .pict {
+		width: 100%;
+		margin-top: 46px;
 	}
 
 </style>
@@ -22,7 +24,8 @@
 	<div class="sub-content"> <!--:style="background:data.background"-->
 		<!-- 头部 -->
 		<header-search :fixed="true"></header-search>
-		<div class="imgs">
+		<div class="pict" v-if="data.img ==''"></div>
+		<div class="imgs" v-else>
 			<img :src="data.img" style="width:100%;height:100%;" />
 		</div>
 		<!-- tab导航栏 -->
@@ -79,7 +82,6 @@
         methods: {
             getData: function(sk){
                 let url = '';
-                console.log(this.$route.query.tuijian);
 				if(this.$route.query.tuijian == 0) {
                     url = localStorage.apiDomain+'public/index/index/classifylist/cid/' + this.$route.params.cid + '/action/' + this.column;
 				}else{
@@ -89,14 +91,18 @@
                     url += '/search/' + sk;
                 }
                 this.$http.get(url).then((response)=>{
-				    if(response.data.info.list == "") {
-						alert("商品为空！");
-                        location.reload();
-						return false;
-				    } else {
+                    if(response.data.info.list == "") {
+                        alert("商品为空！");
+//                        this.$router.go({name : 'cla-list'});
+//                        location.reload();
+                        return false;
+                    } else {
                         this.data.list = response.data.info.list;
                         this.data.img = response.data.info.img;
                         this.data.background = response.data.info.background;
+                    }
+				    if(response.data.status = 0) {
+                        this.$router.go({name : 'index'});
 					}
                 },(response)=>{
                     this.toastMessage = "网络开小差啦~";

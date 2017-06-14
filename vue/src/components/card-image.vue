@@ -1,3 +1,78 @@
+<template>
+	<div class="wrapper cardImage">
+		<!--<label class="title" v-if="articles.title">{{ articles.title }}</label>-->
+		<div class="card-box" style="width:95%;" v-for="item in list" v-link="{name:'article',params:{cid:item.id}}">
+			<img :src="item.img" class="img" alt="{{ item.title }}" />
+			<div class="mes">
+				<div class="words">
+					<div class="name">{{ item.title }}</div>
+					<!--<div class="desc">-->
+						<!--{{ item.sdesc }}-->
+					<!--</div>-->
+					<!--<div class="proname">-->
+						<!--{{ item.proname }}<label>¥{{ item.proprice }}</label>-->
+					<!--</div>-->
+				</div>
+				<div class="reading">
+					<!--<span>{{ item.createtime | time }}</span>-->
+					<span>阅读量</span>
+					<span>{{ item.reading }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+
+    import axios from 'axios'
+    import qs from 'qs'
+
+	export default{
+		props: {
+			articles: {
+				type: Object,
+				default() {
+					return {}
+				}
+			}
+		},
+		data() {
+			return {
+				list: []
+			}
+		},
+		ready () {
+			this.message();
+		},
+        filters: {
+            time: function (value) {
+                let d = new Date(parseInt(value) * 1000);
+                var years = d.getFullYear();
+                var month = d.getMonth() + 1;
+                var days = d.getDate();
+                var hours = d.getHours();
+                var minutes = d.getMinutes();
+                var seconds = d.getSeconds();
+                return years + "-" + month + "-" + days;
+            }
+        },
+		methods: {
+		    message () {
+				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/index/productinfo/uid/' + ustore.id + '/pid/' + this.$route.query.pid,
+                }).then((response) => {
+                    this.list = response.data.articles.list;
+                    console.log(this.list);
+                });
+			}
+		}
+	}
+</script>
+
 <style scoped>
 	.wrapper{
 		width:100%;
@@ -111,78 +186,3 @@
 		text-align:right;
 	}
 </style>
-
-<template>
-	<div class="wrapper cardImage" style="">
-		<!--<label class="title" v-if="articles.title">{{ articles.title }}</label>-->
-		<div class="card-box" style="width:95%;" v-for="item in list" v-link="{name:'article',params:{cid:item.id}}">
-			<img :src="item.img" class="img" alt="{{ item.title }}" />
-			<div class="mes">
-				<div class="words">
-					<div class="name">{{ item.title }}</div>
-					<!--<div class="desc">-->
-						<!--{{ item.sdesc }}-->
-					<!--</div>-->
-					<!--<div class="proname">-->
-						<!--{{ item.proname }}<label>¥{{ item.proprice }}</label>-->
-					<!--</div>-->
-				</div>
-				<div class="reading">
-					<span>{{ item.createtime | time }}</span>
-					<span>阅读量</span>
-					<span>{{ item.reading }}</span>
-				</div>
-			</div>
-		</div>
-	</div>
-</template>
-
-<script>
-
-    import axios from 'axios'
-    import qs from 'qs'
-
-	export default{
-		props: {
-			articles: {
-				type: Object,
-				default() {
-					return {}
-				}
-			}
-		},
-		data() {
-			return {
-				list: []
-			}
-		},
-		ready () {
-			this.message();
-		},
-        filters: {
-            time: function (value) {
-                let d = new Date(parseInt(value) * 1000);
-                var years = d.getFullYear();
-                var month = d.getMonth() + 1;
-                var days = d.getDate();
-                var hours = d.getHours();
-                var minutes = d.getMinutes();
-                var seconds = d.getSeconds();
-                return years + "-" + month + "-" + days;
-            }
-        },
-		methods: {
-		    message () {
-				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/index/productinfo/uid/' + ustore.id + '/pid/' + this.$route.query.pid,
-                }).then((response) => {
-                    this.list = response.data.articles.list;
-                    console.log(this.list);
-                });
-			}
-		}
-	}
-</script>

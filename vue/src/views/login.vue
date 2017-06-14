@@ -150,7 +150,7 @@ export default{
 				this.btnText = '正在登录...';
 				this.btnDis = true;
 				this.loadingShow = true;
-				this.$http.get(localStorage.apiDomain+'public/index/login/useraction/uname/'+this.un+'/upwd/'+this.up).then((response)=>{
+				this.$http.get(localStorage.apiDomain + 'public/index/login/useraction/uname/' + this.un + '/upwd/' + this.up).then((response)=>{
 					if(response.data.status === 1) {
 						let obj = {id:response.data.id,token:response.data.token,time:response.data.time};
 						sessionStorage.removeItem('userInfo');

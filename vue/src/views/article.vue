@@ -35,11 +35,10 @@
 			}
 		},
 		ready() {
-            this.$http.get(localStorage.apiDomain+'public/index/index/articledetail/cid/'+this.$route.params.cid).then((response)=>{
+            this.$http.get(localStorage.apiDomain + 'public/index/index/articledetail/cid/' + this.$route.params.cid).then((response)=>{
                 if(response.data.status === 1) {
                     this.$id("article").innerHTML = response.data.content.content;
                     this.list = response.data.content;
-                    console.log(this.list);
                 }else{
                     this.toastMessage = response.data.info;
                     this.toastShow = true;
@@ -72,7 +71,7 @@
 <style>
 
 	.lyt-logo{
-		width: 100%;
+		/*width: 100%;*/
 		clear: both;
 		position: relative;
 		height: 50px;

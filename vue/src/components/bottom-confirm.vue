@@ -1,3 +1,94 @@
+<template>
+	<div class="bottom-buy" :class="{'fixed':fixed}" :style="{bottom:fixed===true&&btm>0 ? btm+unit : 0}">
+			<div v-if="pay==0&&send==0&&receive==0">
+				<div class="btn service" :class="{'disabled':disabled}" @click="clickCancel">取消订单</div>
+			<div class="btn again" :class="{'disabled':disabled}" @click="clickPay">确认支付</div>
+		</div>
+		<div v-if="pay==1&&(send==0||send==1)&&receive==0">
+			<div class="btn confirm" :class="{'disabled':disabled}" @click="clickConfirm">确认收货</div>
+			<div class="btn again" :class="{'disabled':disabled}" @click="clickAgain">再次购买</div>
+		</div>
+		<div v-if="pay==1&&send==1&&receive==1">
+			<div class="btn service" :class="{'disabled':disabled}" @click="clickService">申请售后</div>
+			<div class="btn again" :class="{'disabled':disabled}" @click="clickAgain">再次购买</div>
+		</div>
+	</div>
+</template>
+
+<script>
+
+	export default{
+		props: {
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			pay: {
+				type: Number,
+				default: 0
+			},
+			send: {
+				type: Number,
+				default: 0
+			},
+			receive: {
+				type: Number,
+				default: 0
+			},
+			fixed: {
+				type: Boolean,
+				default: false
+			},
+			btm: {
+				type: Number,
+				default: 0
+			},
+			unit: {
+				type: String,
+				default: 'rem'
+			}
+		},
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+			clickPay: function(){
+				if(this.disabled){
+					return true;
+				}
+				this.$dispatch('payOrder');
+			},
+			clickAgain: function(){
+				if(this.disabled){
+					return true;
+				}
+				this.$dispatch('payAgain');
+			},
+			clickConfirm: function(){
+				if(this.disabled){
+					return true;
+				}
+				this.$dispatch('orderConfirm');
+			},
+			clickCancel: function(){
+				if(this.disabled){
+				    console.log(1);
+					return true;
+				}
+				this.$dispatch('orderCancel');
+			},
+			clickService: function(){
+				if(this.disabled){
+					return true;
+				}
+				this.$dispatch('serviceApply');
+			}
+		}
+	}
+</script>
+
 <style scoped>
 	.bottom-buy{
 		width:100%;
@@ -67,94 +158,3 @@
 		background-color:#9a9a9a;
 	}
 </style>
-
-<template>
-	<div class="bottom-buy" :class="{'fixed':fixed}" :style="{bottom:fixed===true&&btm>0 ? btm+unit : 0}">
-			<div v-if="pay==0&&send==0&&receive==0">
-				<div class="btn service" :class="{'disabled':disabled}" @click="clickCancel">取消订单</div>
-			<div class="btn again" :class="{'disabled':disabled}" @click="clickPay">确认支付</div>
-		</div>
-		<div v-if="pay==1&&(send==0||send==1)&&receive==0">
-			<div class="btn confirm" :class="{'disabled':disabled}" @click="clickConfirm">确认收货</div>
-			<div class="btn again" :class="{'disabled':disabled}" @click="clickAgain">再次购买</div>
-		</div>
-		<div v-if="pay==1&&send==1&&receive==1">
-			<div class="btn service" :class="{'disabled':disabled}" @click="clickService">申请售后</div>
-			<div class="btn again" :class="{'disabled':disabled}" @click="clickAgain">再次购买</div>
-		</div>
-	</div>
-</template>
-
-<script>
-
-	export default{
-		props: {
-			disabled: {
-				type: Boolean,
-				default: false
-			},
-			pay: {
-				type: Number,
-				default: 0
-			},
-			send: {
-				type: Number,
-				default: 0
-			},
-			receive: {
-				type: Number,
-				default: 0
-			},
-			fixed: {
-				type: Boolean,
-				default: false
-			},
-			btm: {
-				type: Number,
-				default: 0
-			},
-			unit: {
-				type: String,
-				default: 'rem'
-			}
-		},
-		data() {
-			return {
-				
-			}
-		},
-		methods: {
-			clickPay: function(){
-				if(this.disabled){
-					return true;
-				}
-				this.$dispatch('payOrder');
-			},
-			clickAgain: function(){
-				if(this.disabled){
-					return true;
-				}
-				this.$dispatch('payAgain');
-			},
-			clickConfirm: function(){
-				if(this.disabled){
-					return true;
-				}
-				this.$dispatch('orderConfirm');
-			},
-			clickCancel: function(){
-				if(this.disabled){
-				    console.log(1);
-					return true;
-				}
-				this.$dispatch('orderCancel');
-			},
-			clickService: function(){
-				if(this.disabled){
-					return true;
-				}
-				this.$dispatch('serviceApply');
-			}
-		}
-	}
-</script>

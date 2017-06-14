@@ -13,12 +13,16 @@ const state = {
 	text: "",
     giftList: {},
     song: "",
-	giftstu : 0
+	giftstu : 0,
+	scroll: 0,
 }
 
 //应用状态操作
 const mutations = {
-    mystu (state,giftstu) {
+	winScroll (state,scroll) {
+		state.scroll = scroll;
+	},
+    mystu (state,giftstu) {	//赠品状态
         state.giftstu = giftstu;
     },
     mySong (state,song) {
@@ -30,7 +34,6 @@ const mutations = {
 	},
     myGift (state,giftList) {	//自提点ID
         state.giftList = giftList;
-        alert(state.giftList);
         sessionStorage.setItem("giftlist",JSON.stringify(state.giftList));
     },
     myActiveTwo (state,text) {

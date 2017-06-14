@@ -21,7 +21,7 @@ export const fetchGet = (target, data) => {
     }
     return new Promise((resolve, reject) => {
         axios({
-            url: target,
+            url: localStorage.apiDomain + target,
             method: 'get',
             withCredentials: false
         }).then(function (response) {
@@ -36,7 +36,7 @@ export const fetchPost = (target, data) => {
     return new Promise((resolve, reject) => {
         var postData = Qs.stringify(data)
         axios({
-            url: target,
+            url: localStorage.apiDomain + target,
             method: 'post',
             data: postData,
             withCredentials: false

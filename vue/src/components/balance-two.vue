@@ -1,7 +1,4 @@
-
-
 <template>
-
 	<div class="bl-wrapper">
 		<div class="line top" v-if="showTop">
 			<div class="icon">

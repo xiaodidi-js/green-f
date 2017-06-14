@@ -141,7 +141,7 @@
 	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
 
 	<!-- 底部购买 -->
-	<bottom-buy :bage="cartNums" :fixed="true" :collect="data.collect" :store="proNums"></bottom-buy>
+	<bottom-buy :bage="cartNums" :fixed="true" :collect="data.collect" :store="proNums" :share="showShare"></bottom-buy>
 
 	<!-- actionpanel -->
 	<my-pop title="商家公告" :show.sync="showPanel" :show-confirm="true" confirm-text="完成" :service="data.notice"></my-pop>
@@ -235,7 +235,8 @@
                 gotimeline: [],
                 seckillShow: false,
 				local:localStorage.apiDomain,
-				tjData: {} //推荐组合
+				tjData: {} ,//推荐组合
+                showShare: false,
 			}
 		},
 		components: {
@@ -275,33 +276,50 @@
 			}else{
 				getUrl = localStorage.apiDomain + 'public/index/index/productdetail/uid/0/pid/' + this.$route.params.pid;
 			}
-            var _self = this;
+            var _self = this, cart = JSON.parse(localStorage.getItem("myCart"));
 			this.$http.get(getUrl).then((response)=>{
 				this.data = response.data;
+                //判断是否分享商品
+//                if(this.data.activestu == 2) {
+//                    _self.showShare = true;
+//                    $(".buyButton").css({
+//                        "display":"none"
+//                    });
+//                } else {
+//                    _self.showShare = false
+//                }
+                var cartObj = {
+                    id:this.$route.params.pid,
+                    shotcut:this.data.shotcut,
+                    name:this.data.name,
+                    price:this.data.price,
+                    deliverytime:this.data.deliverytime,
+                    peisongok:this.data.peisongok,
+                    activestu:this.data.activestu,
+                    activeid:this.data.activeid,
+                    activepay:this.data.activepay,
+                    format: '',
+                    formatName: '',
+                    nums:this.buyNums,
+                    store:this.proNums = response.data.store,
+                    activestu:this.data.activestu,
+                };
                 if(!this.data.format){
 					this.proNums = this.data.store;
 				}
                 //判断是否活动商品
                 if(_self.data.activeid == 0) {
                     _self.seckillShow = false
-					console.log(_self.seckillShow);
 				} else if(_self.data.activeid != 0) {
-                    console.log(_self.seckillShow);
                     _self.seckillShow = true;
 				}
-                var mycart = JSON.parse(localStorage.getItem("myCart"));
-                if(mycart != null) {
-                    for(var i in mycart) {
-                        console.log(mycart[i].nums);
-                        console.log(this.data.store);
-                        if(mycart[i].nums == this.data.store) {
+                if(cart != null) {
+                    for(var i in cart) {
+                        if(cart[i].nums == this.data.store) {
                             $(".buyButton").attr("disabled","true");
                         }
                     }
 				}
-
-                //判断是否分享商品
-//                this.data.share != null ? _self.activestu = 2 : _self.activestu = 0;
                 //微信分享
 				this.$http.get(localStorage.apiDomain+'public/index/index/wxshare').then((response)=>{
 					let getSession = response.data;
@@ -333,59 +351,166 @@
 						WxJssdk.onMenuShareQQ(shareData);
 					});
 
-					// 分享朋友圈
-					WxJssdk.onMenuShareTimeline({
+                    // 分享好友
+                    WxJssdk.onMenuShareAppMessage({
                         title: this.data.name, // 分享标题
-                        link:'http://'+window.location.host+'/index_prod.html#!/detail/'+this.data.id,
+                        link:'http://'+window.location.host + '/index_prod.html#!/detail/'+this.data.id,
                         imgUrl: this.data.shotcut, // 分享图标
                         success: function () {
-                            alert("成功!");
-                            _self.$http.get(localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid).then((response)=>{
-                                console.log(response.data.msg);
-                                console.log(response.data.msg);
-                                $(".addCar").attr("disabled",true);
-                            },(response)=>{
-                                this.toastMessage = '网络开小差了~';
-                                this.toastShow = true;
+                            axios({
+                                method: 'get',
+                                url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
+                            }).then((response) => {
+                                if(response.data.status == 1) {
+                                    var cart = JSON.parse(localStorage.getItem("myCart"));
+                                    console.log(cart);
+                                    if(cart == '') {
+                                        alert(response.data.info);
+                                        $(".addCar").attr("disabled",true);
+                                        _self.setCart(cartObj);
+                                    } else {
+                                        for (var i in cart) {
+                                            if(cart[i].nums == _self.data.activepay) {
+                                                alert("您已分享过了!");
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                }
                             });
                         },
-					});
+                        cancel: function() {
+                            alert("已取消分享");
+                        },
+                    });
 
-					// 分享好友
-					WxJssdk.onMenuShareAppMessage({
+                    // 分享朋友圈
+                    WxJssdk.onMenuShareTimeline({
                         title: this.data.name, // 分享标题
-                        link:'http://'+window.location.host+'/index_prod.html#!/detail/'+this.data.id,
+                        link:'http://'+window.location.host + '/index_prod.html#!/detail/' + this.data.id,
                         imgUrl: this.data.shotcut, // 分享图标
                         success: function () {
-                            alert("成功!");
-                            _self.$http.get(localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid).then((response)=>{
-                                console.log(response.data.msg);
-                                console.log(response.data.msg);
-                                $(".addCar").attr("disabled",true);
-                            },(response)=>{
-                                this.toastMessage = '网络开小差了~';
-                                this.toastShow = true;
+                            axios({
+                                method: 'get',
+                                url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
+                            }).then((response) => {
+                                if(response.data.status == 1) {
+                                    var cart = JSON.parse(localStorage.getItem("myCart"));
+                                    if(cart == '') {
+                                        alert(response.data.info);
+                                        $(".addCar").attr("disabled",true);
+                                        _self.setCart(cartObj);
+                                    } else {
+                                        for (var i in cart) {
+                                            if(cart[i].nums == _self.data.activepay) {
+                                                alert("您已分享过了!");
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                }
                             });
                         },
-					});
+                        cancel: function() {
+                            alert("已取消分享");
+                        }
+                    });
 
                     // 分享QQ
-					WxJssdk.onMenuShareQQ({
+                    WxJssdk.onMenuShareQQ({
                         title: this.data.name, // 分享标题
-                        link:'http://'+window.location.host+'/index_prod.html#!/detail/'+this.data.id,
+                        link:'http://'+window.location.host + '/index_prod.html#!/detail/' + this.data.id,
                         imgUrl: this.data.shotcut, // 分享图标
                         success: function () {
-                            alert("成功!");
-                            _self.$http.get(localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid).then((response)=>{
-                                console.log(response.data.msg);
-                                console.log(response.data.msg);
-                                $(".addCar").css("background","#eee").attr("disabled",true);
-                            },(response)=>{
-                                this.toastMessage = '网络开小差了~';
-                                this.toastShow = true;
+                            axios({
+                                method: 'get',
+                                url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
+                            }).then((response) => {
+                                if(response.data.status == 1) {
+                                    var cart = JSON.parse(localStorage.getItem("myCart"));
+                                    if(cart == '') {
+                                        alert(response.data.info);
+                                        $(".addCar").attr("disabled",true);
+                                        _self.setCart(cartObj);
+                                    } else {
+                                        for (var i in cart) {
+                                            if(cart[i].nums == _self.data.activepay) {
+                                                alert("限购数量已用完!");
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                }
                             });
                         },
-					});
+                        cancel: function() {
+                            alert("已取消分享");
+                        },
+                    });
+
+                    // 分享到腾讯微博
+                    WxJssdk.onMenuShareWeibo({
+                        title: this.data.name, // 分享标题
+                        link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
+                        imgUrl: this.data.shotcut, // 分享图标
+                        success: function () {
+                            axios({
+                                method: 'get',
+                                url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
+                            }).then((response) => {
+                                if(response.data.status == 1) {
+                                    var cart = JSON.parse(localStorage.getItem("myCart"));
+                                    if(cart == '') {
+                                        alert(response.data.info);
+                                        $(".addCar").attr("disabled",true);
+                                        _self.setCart(cartObj);
+                                    } else {
+                                        for (var i in cart) {
+                                            if(cart[i].nums == _self.data.activepay) {
+                                                alert("您已分享过了!");
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        },
+                        cancel: function() {
+                            alert("已取消分享");
+                        },
+                    });
+
+                    // 分享QQ空间
+                    WxJssdk.onMenuShareQZone({
+                        title: this.data.name, // 分享标题
+                        link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
+                        imgUrl: this.data.shotcut, // 分享图标
+                        success: function () {
+                            axios({
+                                method: 'get',
+                                url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
+                            }).then((response) => {
+                                if(response.data.status == 1) {
+                                    var cart = JSON.parse(localStorage.getItem("myCart"));
+                                    if(cart == '') {
+                                        alert(response.data.info);
+                                        $(".addCar").attr("disabled",true);
+                                        _self.setCart(cartObj);
+                                    } else {
+                                        for (var i in cart) {
+                                            if(cart[i].nums == _self.data.activepay) {
+                                                alert("您已分享过了!");
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        },
+                        cancel: function() {
+                            alert("已取消分享");
+                        },
+                    });
 					WxJssdk.error(function(res){
                         console.log(res.errMsg);
 					});
@@ -487,24 +612,22 @@
                 }
             },
             gofun: function() {
-                var _self = this;
-                var shoping = JSON.parse(sessionStorage.getItem("myCart"));
-                if(shoping === null) {
-                    return true;
-                } else {
-                    for(let i = 0; i < shoping.length; i++) {
-                        if(shoping[i]["deliverytime"] != this.data.deliverytime) {
-                            if(this.data.deliverytime == 0){
-                                _self.toastMessage = "购物车有当日商品！";
-                                _self.toastShow = true;
-                                return false;
-                            } else if (this.data.deliverytime == 1) {
-                                _self.toastMessage = "购物车有次日商品！";
-                                _self.toastShow = true;
-                                return false;
-                            }
-                        }
-                    }
+                if(!this.formatPopShow == true) {
+                    this.formatPopShow = true;
+                    return false;
+                }
+                if(this.proNums <= 0) {
+                    this.toastMessage = '商品暂时缺货';
+                    this.toastShow = true;
+                    return false;
+                } else if (this.buyNums < 1) {
+                    this.toastMessage = '购买数量不能小于1';
+                    this.toastShow = true;
+                    return false;
+                } else if (this.buyNums > this.proNums) {
+                    this.toastMessage = '购买数量超过库存数量';
+                    this.toastShow = true;
+                    return false;
                 }
             },
             timeline: function() {
@@ -668,6 +791,7 @@
 				}
 			},
 			buyNow: function() {
+			    console.log(12313123213123);
                 if(!this.formatPopShow == true) {
                     this.formatPopShow = true;
                     console.log(this.data.activepay);
