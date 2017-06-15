@@ -1,6 +1,12 @@
-
-
 <template>
+
+	<!--引导购买-->
+	<div class="share" v-show="shareele">
+		<div class="share_shop" @click="clearShare()">
+			<button class="share_clear" @click="clearShare()">OK</button>
+		</div>
+	</div>
+
 	<div class="bottom-buy" :class="{'fixed' : fixed}" :style="{bottom : fixed===true && btm > 0 ? btm + unit : 0}">
 		<div class="collect" :class="{active : collect}" @click="setCollect">
 			<div class="img"></div>
@@ -57,12 +63,15 @@
 		},
 		data() {
 			return {
-				
+                shareele: false,
 			}
 		},
 		methods: {
             clickShare () {
-                alert("请分享商品方便购买！");
+				this.shareele = true;
+			},
+            clearShare () {
+                this.shareele = false;
 			},
 			setCollect: function(){
 				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
@@ -273,4 +282,42 @@
 		background: #3cc51f;
 	}
 
+	/* share start */
+	.share {
+		width: 100%;
+		height: 100%;
+		background: rgba(0,0,0,0.5);
+		position: fixed;
+		top: 0px;
+		left: 0px;
+	}
+
+	.share .share_shop {
+		width:100%;
+		height:100%;
+		background: url("../images/share.png") no-repeat top center;
+		background-size: 90%;
+
+	}
+
+	.share .share_shop .share_clear {
+		clear:both;
+		width:150px;
+		height:45px;
+		border-radius:5px;
+		background: #81c429;
+		border:1px solid #8dc21f;
+		color:#fff;
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		right: 0px;
+		margin: 290px auto 0px;
+	}
+
+	.share .share_shop .share_clear:active {
+		background: #55a532;
+	}
+
+	/* share end */
 </style>

@@ -179,6 +179,8 @@
 		</div>
 	</div>
 
+
+
 </template>
 
 <script>
@@ -237,6 +239,7 @@
 				local:localStorage.apiDomain,
 				tjData: {} ,//推荐组合
                 showShare: false,
+                shareEle: false,
 			}
 		},
 		components: {
@@ -278,16 +281,16 @@
 			}
             var _self = this, cart = JSON.parse(localStorage.getItem("myCart"));
 			this.$http.get(getUrl).then((response)=>{
-				this.data = response.data;
+                this.data = response.data;
                 //判断是否分享商品
-//                if(this.data.activestu == 2) {
-//                    _self.showShare = true;
-//                    $(".buyButton").css({
-//                        "display":"none"
-//                    });
-//                } else {
-//                    _self.showShare = false
-//                }
+                if(this.data.activestu == 2) {
+                    _self.showShare = true;
+                    $(".buyButton").css({
+                        "display":"none"
+                    });
+                } else {
+                    _self.showShare = false
+                }
                 var cartObj = {
                     id:this.$route.params.pid,
                     shotcut:this.data.shotcut,
@@ -308,9 +311,9 @@
 					this.proNums = this.data.store;
 				}
                 //判断是否活动商品
-                if(_self.data.activeid == 0) {
+                if(_self.data.activestu == 0 && _self.data.activestu == 2) {
                     _self.seckillShow = false
-				} else if(_self.data.activeid != 0) {
+				} else if(_self.data.activestu == 1) {
                     _self.seckillShow = true;
 				}
                 if(cart != null) {
@@ -1625,6 +1628,8 @@
 	img {
 		display:block;
 	}
+
+
 
 </style>
 
