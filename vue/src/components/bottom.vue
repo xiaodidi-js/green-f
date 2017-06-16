@@ -1,7 +1,7 @@
 <template>
-	<div class="wrapper" keep-alive style="margin-bottom:0px;">
+	<div class="wrapper" style="margin-bottom:0px;">
 		<!-- 购物车 -->
-		<div class="group-cart" v-link="{name:'cart'}" @click="cartFun()">
+		<div class="group-cart" v-link="{name:'cart'}" @click="goCart()">
 			<i class="icons icon-icon22fuzhi"></i>
 			<div class="name">购物车</div>
 			<badge :text="cartNumsText" class="my-badge cart-bor" v-show="cartNums > 0"></badge>
@@ -68,8 +68,7 @@
                 this.myActive(1);
                 this.$router.go({name: 'per-orders'})
 			},
-
-            cartFun: function() {
+            goCart: function() {
                 let openid = sessionStorage.getItem("openid");
                 this.$http.get(localStorage.apiDomain+'public/index/index/guanzhu?openid='+ openid).then((response)=>{
                     if(response.data.status == 0) {
@@ -81,14 +80,10 @@
                 var active = cardDom.children;
                 for(var i = 0; i <= active.length; i++) {
                     try {
-                        if(active[i]) {
-                            active[i].className = "group";
-                        }
+                        if(active[i]) active[i].className = "group";
 					} catch(e) {
                         throw "呵呵哒！";
-					} finally {
-
-					}
+					} finally {}
                 }
 			},
 		},

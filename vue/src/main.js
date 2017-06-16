@@ -48,11 +48,13 @@ router.map(fetchGet);
 router.map(Routers);
 
 router.beforeEach((transition) => {
+
     if(Env == 'production') {
         //微信openid检测
         if(!sessionStorage.getItem('openid')){
             let query = transition.to.query;
             let since = sessionStorage.setItem('since',query.sinceid); //自提点关注检测
+            location.reload();
             if(localStorage.getItem('openid')){
                 let leopid = localStorage.getItem('openid');
                 sessionStorage.setItem('openid',leopid);
@@ -76,7 +78,7 @@ router.beforeEach((transition) => {
         } else {
             transition.next();
         }
-    }else if(['login','register','find'].indexOf(transition.to.name)>=0) {
+    }else if(['login','register','find'].indexOf(transition.to.name) >= 0) {
         let ustore = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo');
         if(ustore !== null) {
             transition.abort();

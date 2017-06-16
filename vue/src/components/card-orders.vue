@@ -1,10 +1,8 @@
-
-
 <template>
 	<div class="wrapper" id="cardOrder" style="margin:0px;">
 		<div class="card-box" v-for="item in orders">
 			<div class="top-line">
-				<div class="date">{{ item.createtime }}</div>
+				<div class="date">{{ item.orderid }}</div>
 				<div class="status" v-if="item.pay == 0 && item.send == 0 && item.receive == 0 && item.status == 0">待付款</div>
 				<div class="status" v-if="item.pay == 1 && item.send == 0 && item.receive == 0 && item.status == 0">待发货</div>
 				<div class="status" v-if="item.pay == 1 && item.send == 1 && item.receive == 0 && item.status == 0">待收货</div>
@@ -22,10 +20,10 @@
 			</div>
 			<div class="btm-line">
 				<div class="money">
-					总金额：<label>¥{{ item.price }}</label>
+					<span>总金额：</span>
+					<label>¥{{ item.price }}</label>
 				</div>
 				<div class="button">
-
 					<a class="manage-btn"
 					   v-if="item.pay == 0 && item.send == 0 && item.receive == 0 && item.status == 0"
 					   v-link="{name:'order-detail',params:{oid:item.id}}">去付款</a>
@@ -48,7 +46,6 @@
 
 					<a class="manage-btn" v-if="item.reject == 0 && item.status == 1"
 					   v-link="{name:'comment-submit',params:{oid:item.id}}">客户评价</a>
-
 				</div>
 			</div>
 			<!-- 确定弹框 -->
@@ -236,10 +233,8 @@
 	.card-box .top-line,.card-box .btm-line{
 		height:auto;
 		line-height:2.5rem;
-
 		/* height:3.5rem;
 		line-height:3.2rem; */
-
 	}
 
 	.card-box .top-line,.card-box .mid-line,.card-box .btm-line{
@@ -250,10 +245,9 @@
 	}
 
 	.card-box .top-line div,.card-box .btm-line div{
-		display:inline-block;
-		font-size:1.4rem;
-		color:#4D4D4D;
-		width:50%;
+		display: block;
+		font-size: 1.4rem;
+		color: #4D4D4D;
 	}
 
 	.card-box .top-line div.date,.card-box .btm-line div.money{
@@ -261,6 +255,19 @@
 		text-overflow:ellipsis;
 		overflow:hidden;
 		text-align:left;
+	}
+
+	.card-box .top-line .date {
+		float:left;
+		width: 56%;
+		height:3.5rem;
+		line-height: 3.1rem;
+	}
+
+	.card-box .top-line .status {
+		float:right;
+		height:3.5rem;
+		line-height: 3.1rem;
 	}
 
 	.card-box .btm-line div.money{

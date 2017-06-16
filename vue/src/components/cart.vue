@@ -11,11 +11,10 @@
 		</div>
 		<div class="card-wrapper">
 			<cart-list :chosen.sync="choseArr" v-for="item in cartList" :pid="item.id"
-					:img="item.shotcut" :pname="item.name"
-					:pprice="item.price" :pnums="item.nums"
-					:pstore="item.store" :mode="editMode"
+					:img="item.shotcut" :pname="item.name" :pprice="item.price"
+					:pnums="item.nums" :pstore="item.store" :mode="editMode"
 					:pformat="item.format" :pfname="item.formatName" :store="item.store"
-					:pdelivery="item.deliverytime" :peisongok="item.peisongok" :activepay="item.activepay">
+					:activestu="item.activestu" :pdelivery="item.deliverytime" :peisongok="item.peisongok" :activepay="item.activepay">
 			</cart-list>
 
 			<!-- 底部分隔 -->

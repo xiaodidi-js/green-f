@@ -127,6 +127,10 @@
             activepay: {
                 type: Number,
                 default: 0
+			},
+            activestu: {
+                type: Number,
+                default: 0
 			}
 		},
 		data() {
@@ -161,15 +165,7 @@
 			}
 		},
 		ready () {
-            if(this.pnums == this.activepay) {
-                $(".num-counter").find("button").eq(1).attr("disabled","true").css({
-					"background":"rgb(212, 212, 212)",
-					"color":"#fff",
-                    "cursor":"pointer"
-				});
-            } else if(this.pnums < this.activepay) {
-                $(".num-counter").find("button").eq(1).removeAttr("disabled");
-            }
+
 		},
 		methods: {
 			actIt: function(){
@@ -201,15 +197,6 @@
 				if(this.pnums < this.pstore) {
 					this.increNums(this.pid,this.pformat);
 				}
-                if(this.pnums == this.activepay) {
-                    $(".num-counter").find("button").eq(1).attr("disabled","true").css({
-                        "background":"rgb(212, 212, 212)",
-                        "color":"#fff",
-                        "cursor":"pointer"
-                    });
-                } else if(this.pnums < this.activepay) {
-                    $(".num-counter").find("button").eq(1).removeAttr("disabled");
-                }
 			},
 			rdcNums: function(evt) {
 				if(this.pnums > 0) {
@@ -219,21 +206,6 @@
 						this.reduceNums(this.pid,this.pformat);
 					}
 				}
-
-                if(this.pnums == this.activepay) {
-                    $(".num-counter").find("button").eq(1).attr("disabled","true").css({
-                        "background":"rgb(212, 212, 212)",
-                        "color":"#fff",
-                        "cursor":"pointer"
-                    });
-                } else if(this.pnums < this.activepay) {
-                    $(".num-counter").find("button").eq(1).removeAttr("disabled").css({
-                        "background":"#fff",
-                        "color":"#333",
-                        "cursor":"pointer"
-                    });
-                }
-
 			},
 			confirmDel: function(){
 			    console.log(this.pid,this.pformat);

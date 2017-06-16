@@ -71,7 +71,7 @@
 		<balance-two :list="data.products" :show-top="true" :show-btm="false" :visi="vieible"></balance-two>
 
 		<div class="comment" v-if="data.order.pay == 1 && data.order.receive == 1">
-			<a v-if="data.order.comment==1" v-link="{name:'comment-detail',params:{oid:this.$route.params.oid}}">查看评价</a>
+			<a v-if="data.order.comment == 1" v-link="{name:'comment-detail',params:{oid:this.$route.params.oid}}">查看评价</a>
 			<a v-else v-link="{name:'comment-submit',params:{oid:this.$route.params.oid}}">我要评价</a>
 		</div>
 

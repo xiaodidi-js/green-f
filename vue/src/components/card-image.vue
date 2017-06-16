@@ -14,9 +14,9 @@
 					<!--</div>-->
 				</div>
 				<div class="reading">
-					<!--<span>{{ item.createtime | time }}</span>-->
-					<span>阅读量</span>
-					<span>{{ item.reading }}</span>
+					<span>{{ item.createtime | time }}</span>
+					<!--<span>阅读量</span>-->
+					<!--<span>{{ item.reading }}</span>-->
 				</div>
 			</div>
 		</div>

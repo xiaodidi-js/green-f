@@ -75,7 +75,6 @@ export const mySong = function ({dispatch}, song) {
 
 //通用
 export const commitData = function ({dispatch}, params) {
-	console.log(params)
     dispatch('commitData', params);
 };
 

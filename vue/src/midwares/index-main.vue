@@ -63,26 +63,15 @@
 				},
                 maincolumns:[],
                 searchKey: '',
-				arr: [],
+				arr: {},
 				tuijian: 1
 			}
 		},
-		route: {
-
-		},
-        filters: {
-            timeline: function (value) {
-                let d = new Date(parseInt(value) * 1000);
-                var hours = d.getHours();
-                var minutes = d.getMinutes();
-                var seconds = d.getSeconds();
-                return (hours > 9 ? hours : '0' + hours) + ':' + (minutes > 9 ? minutes : '0' + minutes) + ":" + (seconds > 9 ? seconds : '0' + seconds)
-            }
-        },
-		ready() {
-			this.index();
-			this.follow();
+        ready() {
+            this.index();
+            this.follow();
             this.timeline();
+            this.breakSearch();
             var content = this;
             $(window).scroll(function(){
                 if($(window).scrollTop() >= 350) {
@@ -97,11 +86,16 @@
                     scrollTop:0
                 },200);
             });
-            this.breakSearch();
-		},
-        mounted: {
-
-		},
+        },
+        filters: {
+            timeline: function (value) {
+                let d = new Date(parseInt(value) * 1000);
+                var hours = d.getHours();
+                var minutes = d.getMinutes();
+                var seconds = d.getSeconds();
+                return (hours > 9 ? hours : '0' + hours) + ':' + (minutes > 9 ? minutes : '0' + minutes) + ":" + (seconds > 9 ? seconds : '0' + seconds)
+            }
+        },
         methods: {
 		    //按钮回车事件
             breakSearch: function (event) {
@@ -114,8 +108,6 @@
                 var _self = this;
                 this.$http.get(localStorage.apiDomain + 'public/index/index/searchshop?shopname=' + this.searchKey).then((response)=>{
                     if(response.data.status == 1) {
-                        let arr = [];
-                        arr = response.data.info;
                         this.$router.go({
                             name:'search',
                             params:{
@@ -138,8 +130,9 @@
                     url: localStorage.apiDomain + 'public/index/index',
                 }).then((response) => {
                     this.data = response.data;
-                    //存储到缓存
-                    JSON.stringify(sessionStorage.setItem("iData",this.data));
+//                    JSON.stringify(sessionStorage.setItem("iData",this.data));
+                    sessionStorage.setItem("iData",JSON.stringify(this.data));
+                    this.arr = JSON.parse(sessionStorage.getItem("iData"));
                     var data = this.data;
                     for (var i = 0; i < data.index_data.length; i++) {
                         if(data.index_data[i].type == 4) {
@@ -275,6 +268,11 @@
 		-ms-appearance: none;
 		-o-appearance: none;
 		appearance: none;
+	}
+
+	.order-search-btn:active {
+		background: #3cc51f;
+		color:#fff;
 	}
 
 	/* search start */

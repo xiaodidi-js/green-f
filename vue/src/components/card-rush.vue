@@ -1,29 +1,31 @@
 <template>
 	<div class="wrapper" v-for="item in rushproducts">
-		<div class="card-box" v-for="list in item.arr" v-link="{name:'detail',params:{pid:list.shopid}}">
-			<div class="img" :style="{backgroundImage:'url('+list.shotcut+')'}"></div>
-			<!-- 即将开始 -->
-			<div class="mes" v-if="item.stime > item.servertime">
-				<div class="name">{{ list.name }}</div>
-				<div class="pre-desc">{{ item.stime | time }}准时开抢</div>
-				<div class="money" v-for="money in list.saledata">
-					<label class="unit">¥</label>{{ money.saleprice }}
+		<template v-for="list in item.arr">
+			<div class="card-box" v-link="{name:'detail',params:{pid:list.shopid}}" v-if="item.nowsale == 0">
+				<div class="img" :style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
+				<!-- 即将开始 -->
+				<div class="mes">
+					<div class="name">{{ list.name }}</div>
+					<div class="pre-desc">{{ item.stime | time }}准时开抢</div>
+					<div class="money" v-for="money in list.saledata">
+						<label class="unit">¥</label>{{ money.saleprice }}
+					</div>
 				</div>
 			</div>
-			<!-- 正在抢购/抢购完毕 -->
-			<div class="mes" v-else>
-				<div class="name">{{ list.name }}</div>
-				<progress class="progress-bar" max="100" value="0"></progress>
-				<!--<div class="progress-bar">-->
-					<!--<div class="progress"></div>-->
-				<!--</div>-->
-				<div class="desc">已抢购{{ number }}%</div>
-				<div class="money" v-for="money in list.saledata">
-					<label class="unit">¥</label>{{ money.saleprice }}
-					<a class="rush">马上抢</a>
+			<div class="card-box" v-link="{name:'detail',params:{pid:list.shopid}}" v-else>
+				<div class="img" :style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
+				<!-- 正在抢购/抢购完毕 -->
+				<div class="mes">
+					<div class="name">{{ list.name }}</div>
+					<progress class="progress-bar" max="100" value="30"></progress>
+					<div class="desc">已抢购{{ number }}%</div>
+					<div class="money" v-for="money in list.saledata">
+						<label class="unit">¥</label>{{ money.saleprice }}
+						<a class="rush">马上抢</a>
+					</div>
 				</div>
 			</div>
-		</div>
+		</template>
 	</div>
 </template>
 
@@ -58,15 +60,9 @@
         },
         methods: {
 
-
         },
         ready() {
-		    setInterval(function() {
-                if(this.number < 100) {
-                    this.number++;
-				};
-                $(".progress-bar").val(this.number);
-			},1000);
+
         },
 	}
 </script>

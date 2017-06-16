@@ -41,8 +41,8 @@
 						<template v-for='item1 in item.arr'>
 							<div class="shop-item">
 								<div style="width:100%;" class="over-img" v-if="item1.store == 0">
-									<div class="order_over">已售罄</div>
-									<img :src="item1.shopshotcut" style="width: 100%;height:100%;" v-link="{name:'detail',params:{pid:item1.shopid}}" />
+									<div class="order_over" v-link="{name:'detail',params:{pid:item1.shopid}}" >已售罄</div>
+									<img :src="item1.shopshotcut" style="width: 100%;height:100%;" />
 								</div>
 								<div style="width:100%;" class="over-img" v-else>
 									<img :src="item1.shopshotcut" style="width: 100%;height:100%;" v-link="{name:'detail',params:{pid:item1.shopid}}" />

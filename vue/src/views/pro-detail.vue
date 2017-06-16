@@ -291,6 +291,13 @@
                 } else {
                     _self.showShare = false
                 }
+				for(var i in cart) {
+                    if(cart[i].id == _self.data.id) {
+						console.log(cart[i].id + "--" + _self.data.id);
+					} else {
+                        console.log(cart[i].id + "--" + _self.data.id);
+					}
+				}
                 var cartObj = {
                     id:this.$route.params.pid,
                     shotcut:this.data.shotcut,
@@ -329,7 +336,7 @@
 					let shareData = {
 							title:this.data.name,
 							desc:this.data.description,
-							link:'http://'+window.location.host+'/index_prod.html#!/detail/' + this.data.id,
+							link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
 							imgUrl:this.data.shotcut
 						};
 					WxJssdk.config({
@@ -365,20 +372,9 @@
                                 url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
                             }).then((response) => {
                                 if(response.data.status == 1) {
-                                    var cart = JSON.parse(localStorage.getItem("myCart"));
-                                    console.log(cart);
-                                    if(cart == '') {
-                                        alert(response.data.info);
-                                        $(".addCar").attr("disabled",true);
-                                        _self.setCart(cartObj);
-                                    } else {
-                                        for (var i in cart) {
-                                            if(cart[i].nums == _self.data.activepay) {
-                                                alert("您已分享过了!");
-                                                return false;
-                                            }
-                                        }
-                                    }
+                                    alert(response.data.info);
+                                    _self.setCart(cartObj);
+                                    _self.$router.go({name:'cart'});
                                 }
                             });
                         },
@@ -398,19 +394,9 @@
                                 url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
                             }).then((response) => {
                                 if(response.data.status == 1) {
-                                    var cart = JSON.parse(localStorage.getItem("myCart"));
-                                    if(cart == '') {
-                                        alert(response.data.info);
-                                        $(".addCar").attr("disabled",true);
-                                        _self.setCart(cartObj);
-                                    } else {
-                                        for (var i in cart) {
-                                            if(cart[i].nums == _self.data.activepay) {
-                                                alert("您已分享过了!");
-                                                return false;
-                                            }
-                                        }
-                                    }
+                                    alert(response.data.info);
+                                    _self.setCart(cartObj);
+                                    _self.$router.go({name:'cart'});
                                 }
                             });
                         },
@@ -430,19 +416,9 @@
                                 url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
                             }).then((response) => {
                                 if(response.data.status == 1) {
-                                    var cart = JSON.parse(localStorage.getItem("myCart"));
-                                    if(cart == '') {
-                                        alert(response.data.info);
-                                        $(".addCar").attr("disabled",true);
-                                        _self.setCart(cartObj);
-                                    } else {
-                                        for (var i in cart) {
-                                            if(cart[i].nums == _self.data.activepay) {
-                                                alert("限购数量已用完!");
-                                                return false;
-                                            }
-                                        }
-                                    }
+                                    alert(response.data.info);
+                                    _self.setCart(cartObj);
+                                    _self.$router.go({name:'cart'});
                                 }
                             });
                         },
@@ -462,19 +438,9 @@
                                 url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
                             }).then((response) => {
                                 if(response.data.status == 1) {
-                                    var cart = JSON.parse(localStorage.getItem("myCart"));
-                                    if(cart == '') {
-                                        alert(response.data.info);
-                                        $(".addCar").attr("disabled",true);
-                                        _self.setCart(cartObj);
-                                    } else {
-                                        for (var i in cart) {
-                                            if(cart[i].nums == _self.data.activepay) {
-                                                alert("您已分享过了!");
-                                                return false;
-                                            }
-                                        }
-                                    }
+                                    alert(response.data.info);
+                                    _self.setCart(cartObj);
+                                    _self.$router.go({name:'cart'});
                                 }
                             });
                         },
@@ -494,19 +460,9 @@
                                 url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
                             }).then((response) => {
                                 if(response.data.status == 1) {
-                                    var cart = JSON.parse(localStorage.getItem("myCart"));
-                                    if(cart == '') {
-                                        alert(response.data.info);
-                                        $(".addCar").attr("disabled",true);
-                                        _self.setCart(cartObj);
-                                    } else {
-                                        for (var i in cart) {
-                                            if(cart[i].nums == _self.data.activepay) {
-                                                alert("您已分享过了!");
-                                                return false;
-                                            }
-                                        }
-                                    }
+                                    alert(response.data.info);
+                                    _self.setCart(cartObj);
+                                    _self.$router.go({name:'cart'});
                                 }
                             });
                         },
@@ -580,7 +536,6 @@
 		},
 		methods: {
             tuijian () {
-                console.log();
                 axios({
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/user/tuijianzuhe/pid/' + this.$route.params.pid,
@@ -794,7 +749,6 @@
 				}
 			},
 			buyNow: function() {
-			    console.log(12313123213123);
                 if(!this.formatPopShow == true) {
                     this.formatPopShow = true;
                     console.log(this.data.activepay);
@@ -1163,7 +1117,7 @@
 
 	.comment-box{
 		width:100%;
-		margin:0% 0px 10%;
+		margin: 0% 0px 30%;
 		height:auto;
 		background-color:#fff;
 	}
@@ -1628,8 +1582,6 @@
 	img {
 		display:block;
 	}
-
-
 
 </style>
 
