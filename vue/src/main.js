@@ -34,8 +34,8 @@ let router = new VueRouter({
     // history: true,
     saveScrollPosition: true,
     scrollBehavior (to, from, savedPosition) {
+        alert(123123);
         if (savedPosition) {
-            alert(savedPosition);
             return savedPosition
         } else {
             return { x: 0, y: 0 }

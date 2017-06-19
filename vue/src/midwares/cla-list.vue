@@ -91,17 +91,18 @@
                     url += '/search/' + sk;
                 }
                 this.$http.get(url).then((response)=>{
-                    if(response.data.info.list == "") {
-                        alert("商品为空！");
+				    if(response.data.status = 1) {
+                        if(response.data.info.list == "") {
+                            alert("商品为空！");
 //                        this.$router.go({name : 'cla-list'});
 //                        location.reload();
-                        return false;
-                    } else {
-                        this.data.list = response.data.info.list;
-                        this.data.img = response.data.info.img;
-                        this.data.background = response.data.info.background;
-                    }
-				    if(response.data.status = 0) {
+                            return false;
+                        } else {
+                            this.data.list = response.data.info.list;
+                            this.data.img = response.data.info.img;
+                            this.data.background = response.data.info.background;
+                        }
+					} else if(response.data.status = 0) {
                         this.$router.go({name : 'index'});
 					}
                 },(response)=>{

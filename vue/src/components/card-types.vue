@@ -458,6 +458,8 @@
                 activestu:0
             }
         },
+        created () {
+		},
         ready() {
             this.dtype = sessionStorage.getItem('number');
             if(this.dtype == null) {
@@ -477,7 +479,7 @@
                     $(".type-bg").height(doc_H);
                 }
             });
-			this.onToure();
+            this.onToure();
         },
         components: {
             Scroller,
@@ -485,64 +487,48 @@
             Toast
 		},
         methods: {
-            addNums: function(){
-                if(this.buyNums>=this.proNums){
-                    return false;
-                }
-                this.buyNums++;
-            },
-            reduceNums: function() {
-                if(this.buyNums <= 1) {
-                    return false;
-                }
-                this.buyNums--;
-            },
-            hidePop: function(evt){
-                evt.stopPropagation();
-                this.popShow = false;
-            },
-            showFormatPop: function(){
-                this.popShow = true;
-            },
             onToure:function() {
                 var myScroll_left;
                 var myScroll_right;
                 var intervalTime_left = null , intervalTime_right = null;
-                intervalTime_left = setInterval(function() {
-                    var resultContentH = $("#left_Menu").height();
-                    if (resultContentH > 0) {
-                        $("#left_Menu").height(resultContentH);
-                        setTimeout(function () {
-                            clearInterval(intervalTime_left);
-                            myScroll_left = new IScroll('#left_Menu', {
-                                vScroll: true,
-                                mouseWheel: true,
-                                vScrollbar: false,
-                                probeType: 2,
-                                click: true
-                            });
-                            myScroll_left.refresh();
-                        }, 100);
-                    }
-                } ,10);
-
-                intervalTime_right = setInterval(function() {
-                    var resultContentH = $("#left_Menu").height();
-                    if (resultContentH > 0) {
-                        $("#left_Menu").height(resultContentH);
-                        setTimeout(function () {
-                            clearInterval(intervalTime_right);
-                            myScroll_right = new IScroll('#right_Menu', {
-                                vScroll: true,
-                                mouseWheel: true,
-                                vScrollbar: false,
-                                probeType: 2,
-                                click: true
-                            });
-                            myScroll_right.refresh();
-                        }, 100);
-                    }
-                } ,10);
+                try {
+                    intervalTime_left = setInterval(function() {
+                        var resultContentH = $("#left_Menu").height();
+                        if (resultContentH > 0) {
+                            $("#left_Menu").height(resultContentH);
+                            setTimeout(function () {
+                                clearInterval(intervalTime_left);
+                                myScroll_left = new IScroll('#left_Menu', {
+                                    vScroll: true,
+                                    mouseWheel: true,
+                                    vScrollbar: false,
+                                    probeType: 2,
+                                    click: true
+                                });
+                                myScroll_left.refresh();
+                            }, 100);
+                        }
+                    } ,10);
+                    intervalTime_right = setInterval(function() {
+                        var resultContentH = $("#left_Menu").height();
+                        if (resultContentH > 0) {
+                            $("#left_Menu").height(resultContentH);
+                            setTimeout(function () {
+                                clearInterval(intervalTime_right);
+                                myScroll_right = new IScroll('#right_Menu', {
+                                    vScroll: true,
+                                    mouseWheel: true,
+                                    vScrollbar: false,
+                                    probeType: 2,
+                                    click: true
+                                });
+                                myScroll_right.refresh();
+                            }, 100);
+                        }
+                    } ,10);
+				} catch (e) {
+                    throw e;
+				}
 			},
             getChonse: function(type) {
                 if(this.dtype == type) {

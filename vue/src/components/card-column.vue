@@ -1,4 +1,145 @@
-	<style scoped>
+<template>
+	<div v-show="showele">
+		<div class="buy">
+			<p class="myp">限时抢购</p>
+			<div class="timer">
+				<p class="timer_p">距结束</p>
+				<div class="box"><span style="font-size: 1.4rem;">{{ timeRes.hour }}</span></div>
+				<p class="timer_dian">:</p>
+				<div class="box"><span style="font-size: 1.4rem;">{{ timeRes.minute }}</span></div>
+				<p class="timer_dian">:</p>
+				<div class="box"><span style="font-size: 1.4rem;">{{ timeRes.second }}</span></div>
+				<div class="time">
+					<label class="dotted" v-if="status == 0">抢购进行中!</label>
+					<label class="none" v-if="status < 0">抢购已结束</label>
+				</div>
+			</div>
+			<div class="watch_more" v-link="{name:'tap-card'}">
+				<span>查看更多 &gt; </span>
+			</div>
+		</div>
+
+		<div class="content">
+			<template  v-for="item in columns">
+				<template v-if="item.nowsale == 1">
+					<div class="box-list" v-for="list in item.arr" v-link="{name:'detail',params:{pid:list.shopid}}">
+						<p class="main-title">秒杀价</p>
+						<template v-for="mon in list.saledata">
+							<p class="main-price">
+								<i style="font-size: 1.2rem;">￥</i>
+								<i style="font-size: 2.3rem;">{{ mon.saleprice }}</i>
+							</p>
+						</template>
+						<div class="main-des">{{ list.name }}</div>
+						<div style="width:90%;margin:7px auto;">
+							<img :src="list.shotcut" style="width:100%;height:100%;" />
+						</div>
+					</div>
+				</template>
+			</template>
+		</div>
+	</div>
+</template>
+<script>
+
+    export default{
+        props: {
+            columns: {
+                type: Array,
+                default() {
+                    return []
+                }
+            },
+            time: {
+                type: Number,
+                default: 0,
+                twoWay: true
+            }
+        },
+        data() {
+            return {
+                time:'',
+                timer:null,
+                status:1,
+                showele: false
+            }
+        },
+        components: {
+
+		},
+        ready() {
+
+            let _self = this;
+            this.$watch('columns',function(newVal) {
+                for(var i = 0;i < newVal.length; i++) {
+                    var mytime = newVal[i].etime - newVal[i].servertime;
+                    if(newVal[i].nowsale == 1 && newVal[i].etime > 0) {
+                        this.showele = true;
+                        _self.time = mytime;
+                        _self.nowsale = 1;
+                    }
+                }
+            });
+        },
+        methods: {
+            setTime:function() {
+                let _self = this;
+                this.timer = setInterval(function(){
+                    _self.time--;
+                    if(_self.time == 0) {
+                        _self.showele = false;
+                        _self.$router.go({name:'index'});
+                    }
+                },1000);
+            }
+        },
+        computed: {
+            timeRes: function() {
+                let timeObj = {"hour" : "00","minute" : "00","second" : "00"};
+                let tmpTime = this.time;
+                let htimes = 0,mtimes = 0;
+                //计算小时数
+                if(tmpTime >= 3600) {
+                    htimes = parseInt(tmpTime / 3600);
+                    timeObj.hour = htimes.toString();
+                    if(htimes < 10) {
+                        timeObj.hour = "0" + timeObj.hour;
+                    }
+                    tmpTime = tmpTime - 3600 * htimes;
+                }
+                //计算分钟数
+                if(tmpTime >= 60) {
+                    mtimes = parseInt(tmpTime / 60);
+                    timeObj.minute = mtimes.toString();
+                    if(mtimes < 10) {
+                        timeObj.minute = "0" + timeObj.minute;
+                    }
+                    tmpTime = tmpTime - 60 * mtimes;
+                }
+                //计算秒数
+                if(tmpTime >= 0) {
+                    timeObj.second = tmpTime.toString();
+                    if(tmpTime < 10) {
+                        timeObj.second = "0" + timeObj.second;
+                    }
+                }
+                return timeObj;
+            }
+        },
+        watch: {
+            time:function(nval,oval) {
+                if (oval == '') {
+                    this.setTime();
+                } else if (nval <= 0) {
+                    this.nowsale = 0;
+                    clearInterval(this.timer);
+                }
+            }
+        }
+    }
+</script>
+
+<style scoped>
 	.wrapper{
 		/*padding:4% 3%;*/
 		height:300px;
@@ -191,142 +332,3 @@
 	}
 
 </style>
-<template>
-	<div v-show="showele">
-		<div class="buy">
-			<p class="myp">限时抢购</p>
-			<div class="timer">
-				<p class="timer_p">距结束</p>
-				<div class="box"><span style="font-size: 1.4rem;">{{ timeRes.hour }}</span></div>
-				<p class="timer_dian">:</p>
-				<div class="box"><span style="font-size: 1.4rem;">{{ timeRes.minute }}</span></div>
-				<p class="timer_dian">:</p>
-				<div class="box"><span style="font-size: 1.4rem;">{{ timeRes.second }}</span></div>
-				<div class="time">
-					<label class="dotted" v-if="status == 0">抢购进行中!</label>
-					<label class="none" v-if="status < 0">抢购已结束</label>
-				</div>
-			</div>
-			<div class="watch_more" v-link="{name:'tap-card'}">
-				<span>查看更多 &gt; </span>
-			</div>
-		</div>
-
-		<div class="content">
-			<template  v-for="item in columns">
-				<template v-if="item.nowsale == 1">
-					<div class="box-list" v-for="list in item.arr" v-link="{name:'detail',params:{pid:list.shopid}}">
-						<p class="main-title">秒杀价</p>
-						<template v-for="mon in list.saledata">
-							<p class="main-price">
-								<i style="font-size: 1.2rem;">￥</i>
-								<i style="font-size: 2.3rem;">{{ mon.saleprice }}</i>
-							</p>
-						</template>
-						<div class="main-des">{{ list.name }}</div>
-						<div style="width:90%;margin:7px auto;">
-							<img :src="list.shotcut" style="width:100%;height:100%;" />
-						</div>
-					</div>
-				</template>
-			</template>
-		</div>
-	</div>
-</template>
-<script>
-
-    export default{
-        props: {
-            columns: {
-                type: Array,
-                default() {
-                    return []
-                }
-            },
-            time: {
-                type: Number,
-                default: 0,
-                twoWay: true
-            }
-        },
-        data() {
-            return {
-                time:'',
-                timer:null,
-                status:1,
-                showele: false
-            }
-        },
-        components: {
-
-		},
-        ready() {
-            let _self = this;
-            this.$watch('columns',function(newVal) {
-                for(var i = 0;i < newVal.length; i++) {
-                    var mytime = newVal[i].etime - newVal[i].servertime;
-                    if(newVal[i].nowsale == 1 && newVal[i].etime > 0) {
-                        this.showele = true;
-                        _self.time = mytime;
-                        _self.nowsale = 1;
-                    }
-                }
-            });
-        },
-        methods: {
-            setTime:function() {
-                let _self = this;
-                this.timer = setInterval(function(){
-                    _self.time--;
-                    if(_self.time == 0) {
-                        _self.showele = false;
-                        _self.$router.go({name:'index'});
-					}
-                },1000);
-            }
-        },
-        computed: {
-            timeRes: function() {
-                let timeObj = {"hour" : "00","minute" : "00","second" : "00"};
-                let tmpTime = this.time;
-                let htimes = 0,mtimes = 0;
-                //计算小时数
-                if(tmpTime >= 3600) {
-                    htimes = parseInt(tmpTime / 3600);
-                    timeObj.hour = htimes.toString();
-                    if(htimes < 10) {
-                        timeObj.hour = "0" + timeObj.hour;
-                    }
-                    tmpTime = tmpTime - 3600 * htimes;
-                }
-                //计算分钟数
-                if(tmpTime >= 60) {
-                    mtimes = parseInt(tmpTime / 60);
-                    timeObj.minute = mtimes.toString();
-                    if(mtimes < 10) {
-                        timeObj.minute = "0" + timeObj.minute;
-                    }
-                    tmpTime = tmpTime - 60 * mtimes;
-                }
-                //计算秒数
-                if(tmpTime >= 0) {
-                    timeObj.second = tmpTime.toString();
-                    if(tmpTime < 10) {
-                        timeObj.second = "0" + timeObj.second;
-                    }
-                }
-                return timeObj;
-            }
-        },
-        watch: {
-            time:function(nval,oval) {
-                if (oval == '') {
-                    this.setTime();
-                } else if (nval <= 0) {
-                    this.nowsale = 0;
-                    clearInterval(this.timer);
-                }
-            }
-        }
-    }
-</script>

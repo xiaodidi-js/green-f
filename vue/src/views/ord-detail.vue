@@ -467,7 +467,7 @@ export default{
 					//微信支付
 					if(typeof this.data.payment.appId === 'string' && typeof this.data.payment.package === 'string') {
 						this.callpay();
-                        this.$router.go({name:'order-detail'})
+                        this.$router.go({name:'order-detail'});
 						return;
 					}
 					let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
@@ -480,7 +480,7 @@ export default{
                             location.reload();
 							this.callpay();
 //                            window.location.href="http://m.green-f.cn/index_prod.html"
-						}else if(response.data.status === -1) {
+						} else if(response.data.status === -1) {
 							this.btnStatus = false;
 							this.toastMessage = response.data.info;
 							this.toastShow = true;

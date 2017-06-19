@@ -24,7 +24,7 @@
 		<template v-for="item in gotimeline">
 			<div class="words">
 				<label class="title">限时限量 疯狂抢购</label>
-				<label class="timer" v-if="item.next == 0"></label>
+				<label class="timer" v-if="item.next == null"></label>
 				<label class="timer" v-else>
 					<timer-countdown :time="item.next - item.servertime" desc="下场开始还有" end="" keep-alive></timer-countdown>
 				</label>

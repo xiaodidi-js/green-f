@@ -19,6 +19,7 @@
 		<!-- 热销产品排行榜 -->
 		<card-rectangle :testarr="data.index_data"></card-rectangle>
 	</div>
+	<!-- 回到顶部 -->
 	<div class="goto_top"></div>
     <!-- toast提示框 -->
     <toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
@@ -68,10 +69,6 @@
 			}
 		},
         ready() {
-            this.index();
-            this.follow();
-            this.timeline();
-            this.breakSearch();
             var content = this;
             $(window).scroll(function(){
                 if($(window).scrollTop() >= 350) {
@@ -96,6 +93,15 @@
                 return (hours > 9 ? hours : '0' + hours) + ':' + (minutes > 9 ? minutes : '0' + minutes) + ":" + (seconds > 9 ? seconds : '0' + seconds)
             }
         },
+        created () {
+            this.main();
+            this.follow();
+            this.timeline();
+            this.breakSearch();
+    	},
+        computed:{
+
+		},
         methods: {
 		    //按钮回车事件
             breakSearch: function (event) {
@@ -124,13 +130,12 @@
                     this.toastShow = true;
                 });
 			},
-		    index: function() {
+		    main: function() {
                 axios({
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/index',
                 }).then((response) => {
                     this.data = response.data;
-//                    JSON.stringify(sessionStorage.setItem("iData",this.data));
                     sessionStorage.setItem("iData",JSON.stringify(this.data));
                     this.arr = JSON.parse(sessionStorage.getItem("iData"));
                     var data = this.data;

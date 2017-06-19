@@ -25,13 +25,12 @@
                     总金额：<label>¥{{ item.price }}</label>
                 </div>
                 <div class="button">
-
                     <a class="manage-btn"
                        v-if="item.pay == 0 && item.send == 0 && item.receive == 0 && item.status == 0"
                        v-link="{name:'order-detail',params:{oid:item.id}}">去付款</a>
 
                     <a class="manage-btn"
-                       v-if="item.pay==0&&item.send==0&&item.receive==0&&item.status==0"
+                       v-if="item.pay == 0 && item.send == 0 && item.receive == 0 && item.status == 0"
                        @click="clickCancel">取消订单</a>
 
                     <a class="manage-btn"
@@ -49,11 +48,14 @@
                     <a class="manage-btn" v-if="item.reject == 0 && item.status == 1"
                        v-link="{name:'service-apply',params:{oid:item.id}}">申请售后</a>
 
-                    <a class="manage-btn" v-if="item.reject == 0 && item.status == 1"
-                       v-link="{name:'comment-submit',params:{oid:item.id}}">客户评价</a>
-
-                    <a class="manage-btn" v-if="item.reject == 0 && item.status == -1"
-                       @click="clickDelete">删除订单</a>
+                    <span v-if="item.pinlun == 0">
+                        <a class="manage-btn" v-if="item.reject == 0 && item.status == 1"
+                           v-link="{name:'comment-submit',params:{oid:item.id}}">客户评价</a>
+                    </span>
+                    <span v-else>
+                        <a class="manage-btn"  v-if="item.reject == 0 && item.status == 1"
+                           v-link="{name:'comment-detail',params:{oid:item.id}}">查看评价</a>
+                    </span>
 
                 </div>
             </div>
@@ -213,9 +215,7 @@
                 this.clickType = 0;
                 this.confirmTitle = '';
                 this.confirmText = '';
-            },
-            clickDelete () {
-                alert("在开发，稍等~~~");
+                console.log();
             },
         }
     }

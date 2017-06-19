@@ -374,7 +374,7 @@
 	.list .tap-type .my-badge{
 		background-color: #f9ad0c;
 		position: absolute;
-		top: 0.1rem;
+		top: -0.9rem;
 		right: 2px;
 		text-align-last: center;
 	}

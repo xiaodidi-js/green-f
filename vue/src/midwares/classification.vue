@@ -295,7 +295,7 @@
                         document.body.scrollTop = 0;
                         this.count = response.data.count;
                         this.data = response.data.list;
-                    }else if(response.data.status===-1){
+                    } else if (response.data.status === -1) {
                         this.toastMessage = response.data.info;
                         this.toastShow = true;
                         let context = this;

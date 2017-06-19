@@ -48,18 +48,7 @@
             }
         },
         ready() {
-//            var boxDom = this.$id("saosao");
-//            var sw = boxDom.offsetWidth;
-//            var sh = boxDom.offsetHeight;
-//            var dw = window.innerWidth;
-//            var dh = window.innerHeight;
-//            var cleft = (dw - sw) / 2;
-//            var ctop = (dh - sh) / 2;
-//            boxDom.style.left = cleft + "px";
-//            boxDom.style.top = ctop + "px";
-//            window.onresize = function(){
-//                centerElement("saosao");
-//            };
+
         },
         components: {
         },

@@ -1,4 +1,3 @@
-
 <template>
     <div class="masker" :class="{'show':show}"
          @click="hidePanel" @touchmove.stop.prevent @touchend.stop
@@ -45,10 +44,8 @@
         </div>
         <div class="btn" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</div>
     </div>
-
     <!-- toast显示框 -->
     <toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
-
     <!-- loading加载框 -->
     <loading :show="loadingShow" :text="loadingMessage"></loading>
 
@@ -127,9 +124,7 @@
             }
         },
         ready() {
-
             this.selList();
-            console.log(this.money);
         },
         methods: {
             fun: function () {
@@ -236,14 +231,17 @@
                 }).then((response) => {
                     if(response.data.status == 1) {
                         content.openpop = true;
-                        this.mySong('请选择满20元赠品');
                         content.showGive = true;
                         this.lists = response.data.maxmoney;
+                        for(var i in this.lists) {
+                            this.mySong('请选择满'+ this.lists[i].maxmoney +'元赠品');
+                            console.log(this.lists[i].maxmoney);
+                        }
                         this.commitData({target: 'giftList', data: response.data.maxmoney});
                         this.commitData({target: 'giftstu', data: 1});
-                        console.log('log', this.$store.state.giftList)
+                        this.commitData({target: 'visibleEle', data: true});
                     } else if(response.data.status == 0) {
-                        content.openpop =  false;
+                        this.commitData({target: 'visibleEle', data: false});
                         axios({
                             method: 'post',
                             url: localStorage.apiDomain + 'public/index/user/shoudan',
@@ -255,7 +253,7 @@
                             })
                         }).then((response) => {
                             if(response.data.status == 1) {
-                                content.openpop = true;
+                                this.commitData({target: 'visibleEle', data: true});
                                 this.mySong('请选择首单用户赠品');
                                 content.showGive = true;
                                 this.myGift(this.lists);
@@ -263,7 +261,7 @@
                                 this.commitData({target: 'giftList', data: response.data.shoudan_data})
                                 this.commitData({target: 'giftstu', data: 2});
                             } else if(response.data.status === 0) {
-                                content.openpop = false;
+                                this.commitData({target: 'visibleEle', data: false});
                             }
                         });
                     }

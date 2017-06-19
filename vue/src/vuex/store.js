@@ -15,10 +15,14 @@ const state = {
     song: "",
 	giftstu : 0,
 	scroll: 0,
+	visibleEle: false,
 }
 
 //应用状态操作
 const mutations = {
+	myVisible (state,visibleEle) {
+		state.visibleEle = visibleEle;
+	},
 	winScroll (state,scroll) {
 		state.scroll = scroll;
 	},
