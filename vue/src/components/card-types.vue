@@ -547,7 +547,8 @@
                     url: localStorage.apiDomain + 'public/index/index/classifylist/cid/' + cid,
                 }).then((response) => {
                     if (response.data.status == 1) {
-                        this.pdata = response.data.info.list;
+                        sessionStorage.setItem("pdata",JSON.stringify(response.data.info.list));
+                        this.pdata = JSON.parse(sessionStorage.getItem("pdata"));
                         console.log(this.pdata);
                     }
                 }).catch(function(e) {
@@ -600,7 +601,7 @@
                         } else if (data.activeid == 1) {
                             alert("这是限时抢购商品！");
                             return false;
-                        } else if (data.activeid == 2) {
+                        } else if (data.activestu == 2) {
                             alert("这是限时分享商品！");
                             return false;
                         }

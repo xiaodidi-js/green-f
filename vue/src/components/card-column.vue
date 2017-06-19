@@ -68,7 +68,6 @@
 
 		},
         ready() {
-
             let _self = this;
             this.$watch('columns',function(newVal) {
                 for(var i = 0;i < newVal.length; i++) {

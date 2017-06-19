@@ -129,7 +129,7 @@
 	div#article.article img,div#article.article table,div#article.article embed,div#article.article object,div#article.article div,div#article.article p {
 		max-width:100% !important;
 		width:100%;
-		font-size:16px;
+		font-size:14px;
 		line-height: 30px;
 		text-align:justify;
 	}

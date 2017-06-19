@@ -23,6 +23,7 @@
 				<div class="format" v-else>{{ pfname }}</div>
 				<div class="money">
 					<label class="unit">¥</label>{{ pprice }}
+					<div class="del" v-show="mode === 1" @click.stop="setDel()"></div>
 				</div>
 				<div class="status">
 					<div class="num-counter" style="float:left;">
@@ -34,7 +35,6 @@
 						<span>库存</span>
 						<span>{{ store }}</span>
 					</div>
-					<div class="del" v-show="mode === 1" @click.stop="setDel()"></div>
 
 				</div>
 			</div>
@@ -237,7 +237,7 @@
 	.card-box .maininfo,.card-box .addition{
 		display:inline-block;
 		vertical-align:middle;
-		width:80%;
+		width:84%;
 	}
 
 	.card-box .addition{
@@ -247,7 +247,6 @@
 
 	.card-box .addition.aw{
 		width:6%;
-		margin-right:3%
 	}
 
 	.card-box .addition.aw>img{
@@ -334,12 +333,12 @@
 		clear: both;
 	}
 
-	.card-box .maininfo .mes .status .del{
+	.card-box .maininfo .mes .del{
 		width:1.6rem;
 		height:1.6rem;
 		position:absolute;
-		top: 0.5rem;
-		right: -3rem;
+		top: -0.1rem;
+		right: -15rem;
 		background-image:url('../images/del2.png');
 		background-position:center;
 		background-size:contain;
@@ -355,7 +354,7 @@
 	}
 
 	.num-counter{
-		width:56%;
+		width:51%;
 		height:auto;
 		text-align:left;
 		font-size:0;

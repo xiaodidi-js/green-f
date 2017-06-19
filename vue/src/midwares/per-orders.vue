@@ -59,7 +59,7 @@
 		</div>
 
 		<!--<separator :set-height="11.5"></separator>-->
-		<div class="list" style="margin-top:115px;">
+		<div class="list" style="margin-top:120px;">
 			<card-orders :orders="data"></card-orders>
 		</div>
 	</div>

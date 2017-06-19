@@ -11,6 +11,8 @@ import Env from './config/env';
 import WxJssdk from 'weixin-js-sdk'
 import fetchGet from './libs/util.js'
 import fetchPost from './libs/util.js'
+import ElementUI from 'element-ui'
+import ElementDefault from 'element-theme-default'
 
 // Vue.use(VueLazy,{
 // 	preLoad:1.2,
@@ -43,13 +45,12 @@ let router = new VueRouter({
     }
 });
 
-router.map(fetchPost);
 router.map(fetchGet);
 router.map(Routers);
-
+router.map(fetchPost);
 router.beforeEach((transition) => {
 
-    if(Env == 'production') {
+    // if(Env == 'production') {
         //微信openid检测
         if(!sessionStorage.getItem('openid')){
             let query = transition.to.query;
@@ -68,7 +69,7 @@ router.beforeEach((transition) => {
                 }
             }
         }
-    }
+    // }
 
     //登录检测
     if(typeof(transition.to.login) !== 'undefined' && transition.to.login === true) {

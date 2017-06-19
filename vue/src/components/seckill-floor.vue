@@ -1,49 +1,3 @@
-<style type="text/css">
-	/* buying-time start */
-	.buying-time{
-		width: 99%;
-		height: 75px;
-		margin: 5px auto 0;
-		border: 1px solid #f26c60;
-		border-radius: 5px;
-		display: block;
-	}
-
-	.buying-time .buying-time-title{
-		width: 50px;
-		background: #f26c60;
-		height: 100%;
-		text-align: center;
-		line-height: 30px;
-		font-size: 16px;
-		border-radius: 5px 0px 0px 5px;
-		position: relative;
-		right: 1px;
-		float:left;
-	}
-
-	.buying-time .buying-time-title span{
-		width:100%;
-		display:block;
-		color:#fff;
-		line-height: 30px;
-		position: relative;
-		top: 8px;
-	}
-
-	.buying-time .buying-time-body{
-		float:left;
-		font-size:16px;
-		margin: 9px 22.5px	;
-		line-height:30px;
-	}
-
-	.buying-time .buying-time-body span{
-		display:block;
-	}
-
-	/* buying-time end */
-</style>
 
 <template>
 	<!-- 抢购时间 -->
@@ -175,3 +129,51 @@
         }
     }
 </script>
+
+
+<style type="text/css">
+	/* buying-time start */
+	.buying-time{
+		width: 99%;
+		height: 75px;
+		margin: 5px auto 0;
+		border: 1px solid #f26c60;
+		border-radius: 5px;
+		display: block;
+	}
+
+	.buying-time .buying-time-title{
+		width: 50px;
+		background: #f26c60;
+		height: 100%;
+		text-align: center;
+		line-height: 30px;
+		font-size: 16px;
+		border-radius: 5px 0px 0px 5px;
+		position: relative;
+		right: 1px;
+		float:left;
+	}
+
+	.buying-time .buying-time-title span{
+		width:100%;
+		display:block;
+		color:#fff;
+		line-height: 30px;
+		position: relative;
+		top: 8px;
+	}
+
+	.buying-time .buying-time-body{
+		float:left;
+		font-size:16px;
+		margin: 9px 22.5px	;
+		line-height:30px;
+	}
+
+	.buying-time .buying-time-body span{
+		display:block;
+	}
+
+	/* buying-time end */
+</style>

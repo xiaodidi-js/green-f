@@ -1,139 +1,4 @@
-<style type="text/css">
-    /* integral-head start */
-    .integral-head{
-        font-size:16px;
-        width:100%;
-        background: #fff;
-        padding: 10px 0px;
-    }
 
-    .integral-head .integral-head-h1{
-        width:100%;
-        margin:10px auto;
-    }
-
-    .integral-head .integral-title{
-        font-size:16px;
-        text-indent:1em;
-        padding-top:10px;
-    }
-
-    .integral-head .integral-number{
-        font-size: 57px;
-        color: #81c429;
-        font-family: 'PingFang';
-        text-align: center;
-        display: block;
-    }
-
-    .integral-head .integral-h5{
-        color:#999;
-        text-align:center;
-        margin:0px 10px;
-        font-size: 14px;
-    }
-
-    .integral-head .sign {
-        margin: 10px auto;
-        display: block;
-        width: 15rem;
-        height: 3.5rem;
-        border: 1px solid #81c429;
-        background: #81c429;
-        color: #fff;
-        border-radius: 5px;
-    }
-
-    /* integral-head end */
-
-    /* integral-tab start */
-    .integral-tab{
-        width:100%;
-        background: #81c429;
-        height:50px;
-        border-top:5px solid #f2f2f2;
-    }
-
-    .integral-tab ul li{
-        font-size: 14px;
-        float: left;
-        width: 33%;
-        height:55px;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        display: block;
-        text-align: center;
-        line-height: 50px;
-        position:relative;
-        color:#fff;
-    }
-
-    .integral-tab ul .active {
-        width:33%;
-        height:47px;
-        border-bottom: 3px solid #f9cc3d;
-    }
-
-    /*.integral-tab ul li .list {*/
-        /*width:50%;*/
-        /*height:3px;*/
-        /*background: #f9cc3d;*/
-        /*position:absolute;*/
-        /*left:28px;*/
-        /*bottom:0px;*/
-    /*}*/
-
-    /* integral-tab end */
-
-    /* integral-body start */
-    .integral-body{
-        width:100%;
-    }
-
-    .integral-body .body-list{
-        margin:10px 10px 0;
-    }
-
-    .integral-body .body-list ul li{
-        height: 60px;
-        border-bottom: 1px solid #CACACA;
-        color: #4d4d4d;
-        width: 100%;
-    }
-
-    .integral-body .body-list ul li .all-date{
-        width:60%;
-        float:left;
-        font-size:14.5px;
-        margin-top: 5px;
-    }
-
-    .integral-body .body-list ul li .all-date p{
-        height:25px;
-        line-height: 25px;
-        text-align:left;
-        /*padding:10px 0px;*/
-    }
-
-    .integral-body .body-list ul li .add-number{
-        font-size: 28px;
-        float:right;
-        color:#81c429;
-        margin-top: 8px;
-    }
-
-    #sign{
-        display:none;
-    }
-
-    #consumption{
-        display:none;
-    }
-
-    /* integral-body end */
-
-</style>
 
 <template>
     <div class="integral-head">
@@ -144,7 +9,7 @@
             </p>
             <i class="integral-number">{{ number }}</i>
         </div>
-        <button class="sign" @click="qiandaoFun()">点我签到</button>
+        <button class="sign public-bgcolor" @click="qiandaoFun()">点我签到</button>
         <p class="integral-h5">小积分大用途，通过每日签到和订单评价获取更多积分</p>
     </div>
     <div class="integral-tab">
@@ -300,3 +165,140 @@
         }
     }
 </script>
+
+<style type="text/css">
+    /* integral-head start */
+    .integral-head{
+        font-size:16px;
+        width:100%;
+        background: #fff;
+        padding: 10px 0px;
+    }
+
+    .integral-head .integral-head-h1{
+        width:100%;
+        margin:10px auto;
+    }
+
+    .integral-head .integral-title{
+        font-size:16px;
+        text-indent:1em;
+        padding-top:10px;
+    }
+
+    .integral-head .integral-number{
+        font-size: 57px;
+        color: #81c429;
+        font-family: 'PingFang';
+        text-align: center;
+        display: block;
+    }
+
+    .integral-head .integral-h5{
+        color:#999;
+        text-align:center;
+        margin:0px 10px;
+        font-size: 14px;
+    }
+
+    .integral-head .sign {
+        margin: 10px auto;
+        display: block;
+        width: 15rem;
+        height: 3.5rem;
+        border: 1px solid #81c429;
+        background: #81c429;
+        color: #fff;
+        border-radius: 5px;
+    }
+    /* integral-head end */
+
+    /* integral-tab start */
+    .integral-tab{
+        width:100%;
+        background: #81c429;
+        height:50px;
+        border-top:5px solid #f2f2f2;
+    }
+
+    .integral-tab ul li{
+        font-size: 14px;
+        float: left;
+        width: 33%;
+        height:55px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        display: block;
+        text-align: center;
+        line-height: 50px;
+        position:relative;
+        color:#fff;
+    }
+
+    .integral-tab ul .active {
+        width:33%;
+        height:47px;
+        border-bottom: 3px solid #f9cc3d;
+    }
+
+    /*.integral-tab ul li .list {*/
+    /*width:50%;*/
+    /*height:3px;*/
+    /*background: #f9cc3d;*/
+    /*position:absolute;*/
+    /*left:28px;*/
+    /*bottom:0px;*/
+    /*}*/
+
+    /* integral-tab end */
+
+    /* integral-body start */
+    .integral-body{
+        width:100%;
+        margin: 0px 0px 50px;
+    }
+
+    .integral-body .body-list{
+        margin:10px 10px 0;
+    }
+
+    .integral-body .body-list ul li{
+        height: 60px;
+        border-bottom: 1px solid #CACACA;
+        color: #4d4d4d;
+        width: 100%;
+    }
+
+    .integral-body .body-list ul li .all-date{
+        width:60%;
+        float:left;
+        font-size:14.5px;
+        margin-top: 5px;
+    }
+
+    .integral-body .body-list ul li .all-date p{
+        height:25px;
+        line-height: 25px;
+        text-align:left;
+        /*padding:10px 0px;*/
+    }
+
+    .integral-body .body-list ul li .add-number{
+        font-size: 28px;
+        float:right;
+        color:#81c429;
+        margin-top: 8px;
+    }
+
+    #sign{
+        display:none;
+    }
+
+    #consumption{
+        display:none;
+    }
+
+    /* integral-body end */
+
+</style>

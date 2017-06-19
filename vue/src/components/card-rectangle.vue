@@ -152,7 +152,7 @@
                         } else if (data.activeid == 1) {
                             alert("这是限时抢购商品！");
                             return false;
-                        } else if (data.activeid == 2) {
+                        } else if (data.activestu == 2) {
                             alert("这是限时分享商品！");
                             return false;
                         } else if (data.store == 0) {

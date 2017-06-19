@@ -10,24 +10,25 @@
 			<!-- 选项卡一 -->
 			<div class="group" :class="{'active':$route.position === 1}" v-link="{name:'index'}">
 				<i class="icons icon-home"></i>
-				<div class="name">首页</div>
+				<div class="name public-color">首页</div>
 			</div>
 			<!-- 选项卡二 -->
 			<div class="group" :class="{'active':$route.position === 2}" style="position: relative;left: -15px;" v-link="{name:'classify'}">
 				<i class="icons icon-zizhuxiadan"></i>
-				<div class="name">下单</div>
+				<div class="name public-color">下单</div>
 			</div>
 			<!-- 选项卡三 -->
 			<div class="group" :class="{'active':$route.position === 3}" style="position: relative;left: 15px;" v-link="{name:'card-image'}">
 				<i class="icons icon-huodong"></i>
-				<div class="name">活动</div>
+				<div class="name public-color">活动</div>
 			</div>
 			<!-- 选项卡四 -->
 			<div class="group" :class="{'active':$route.position === 4}" @click="goConter()">
 				<i class="icons icon-gerenzhongxin"></i>
-				<div class="name">个人中心</div>
+				<div class="name public-color">个人中心</div>
 			</div>
 		</div>
+		<input type="color" />
 	</div>
 </template>
 

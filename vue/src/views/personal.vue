@@ -1,159 +1,3 @@
-<style scoped>
-	.container{
-		width:100%;
-		height:auto;
-	}
-
-	.white-bg{
-		background-color:#fff;
-	}	
-
-	.container .top-message{
-		width:90%;
-		height:16.5rem;
-		padding:1rem 5%;
-		position:fixed;
-		top:0;
-		left:0;
-		z-index:100;
-	}
-
-	.container .top-message .shotcut{
-		width:10rem;
-		height:10rem;
-		border:#efefef solid 1px;
-		border-radius:5rem;
-		margin:auto;
-		overflow:hidden;
-		background-repeat:no-repeat;
-		background-position:center;
-		background-size:cover;
-		background-color:#efefef;
-		text-align:center;
-	}
-
-	.container .top-message .shotcut>span{
-		width:0;
-		height:100%;
-		display:inline-block;
-		vertical-align:middle;
-	}
-
-	.container .top-message .shotcut>img{
-		width:30%;
-		height:auto;
-		vertical-align:middle;
-	}
-
-	.container .top-message .nickname{
-		margin:0.5rem auto 0.3rem auto;
-		width:80%;
-		font-size:16px;
-		color:#666;
-		text-align:center;
-		white-space:nowrap;
-		text-overflow:ellipsis;
-		overflow:hidden;
-		color:#666;
-	}
-
-	.container .top-message .score{
-		margin:auto;
-		width:50%;
-		font-size:1.4rem;
-		color:#fff;
-		line-height: 30px;
-		text-align:left;
-		white-space:nowrap;
-		text-overflow:ellipsis;
-		overflow:hidden;
-		background: url("../images/qiandao.png") no-repeat #81c429;
-		background-size: 23px 23px;
-		background-position: 5px 2px;
-		border-radius: 5px;
-		text-indent: 2.5em;
-		margin: 7px auto;
-		text-align: center;
-	}
-
-	.container .mid-card{
-		width:100%;
-		height:2.2rem;
-		padding:1.5rem 0rem 0.8rem 0rem;
-		text-align:center;
-		font-size:0;
-		position:fixed;
-		top:17.7rem;
-		left:0;
-		z-index:100;
-	}
-
-	.container .mid-card .tap-logo{
-		display:inline-block;
-		width:2rem;
-		height:2.2rem;
-		margin-right:11%;
-		background-size:contain;
-		background-repeat:no-repeat;
-		background-position:center;
-		vertical-align:middle;
-		position:relative;
-	}
-
-	.container .mid-card .tap-logo .arrow{
-		position:absolute;
-		width:0rem;
-		height:0rem;
-		bottom:-0.8rem;
-		left:0.5rem;
-	}
-
-	.container .mid-card .tap-logo .arrow.actived{
-		border-top:transparent solid 0.5rem;
-		border-left:transparent solid 0.5rem;
-		border-right:transparent solid 0.5rem;
-		border-bottom:#efefef solid 0.5rem;
-	}
-
-	.container .mid-card .tap-logo.coupons .arrow.actived{
-		border-top:transparent solid 0.5rem;
-		border-left:transparent solid 0.5rem;
-		border-right:transparent solid 0.5rem;
-		border-bottom:#81c429 solid 0.5rem;
-	}
-
-	.container .mid-card .tap-logo.collections .arrow.actived{
-		border-top:transparent solid 0.5rem;
-		border-left:transparent solid 0.5rem;
-		border-right:transparent solid 0.5rem;
-		border-bottom:#81c429 solid 0.5rem;
-	}
-
-	.container .mid-card .tap-logo.orders{
-		background-image:url('../images/orders.png');
-	}
-
-	.container .mid-card .tap-logo.coupons{
-		background-image:url('../images/coupons.png');
-	}
-
-	.container .mid-card .tap-logo.collections{
-		background-image:url('../images/collections.png');
-	}
-
-	.container .mid-card .tap-logo.addresses{
-		background-image:url('../images/addresses.png');
-	}
-
-	.container .mid-card .tap-logo.settings{
-		background-image:url('../images/settings.png');
-	}
-
-	.container .mid-card .tap-logo:last-child{
-		margin-right:0%;
-	}
-</style>
-
 <template>
 	<div class="container">
 		<div class="top-message white-bg">
@@ -363,3 +207,159 @@
 		}
 	}
 </script>
+
+<style scoped>
+	.container{
+		width:100%;
+		height:auto;
+	}
+
+	.white-bg{
+		background-color:#fff;
+	}
+
+	.container .top-message{
+		width:90%;
+		height:16.5rem;
+		padding:1rem 5%;
+		position:fixed;
+		top:0;
+		left:0;
+		z-index:100;
+	}
+
+	.container .top-message .shotcut{
+		width:10rem;
+		height:10rem;
+		border:#efefef solid 1px;
+		border-radius:5rem;
+		margin:auto;
+		overflow:hidden;
+		background-repeat:no-repeat;
+		background-position:center;
+		background-size:cover;
+		background-color:#efefef;
+		text-align:center;
+	}
+
+	.container .top-message .shotcut>span{
+		width:0;
+		height:100%;
+		display:inline-block;
+		vertical-align:middle;
+	}
+
+	.container .top-message .shotcut>img{
+		width:30%;
+		height:auto;
+		vertical-align:middle;
+	}
+
+	.container .top-message .nickname{
+		margin:0.5rem auto 0.3rem auto;
+		width:80%;
+		font-size:16px;
+		color:#666;
+		text-align:center;
+		white-space:nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
+		color:#666;
+	}
+
+	.container .top-message .score{
+		margin:auto;
+		width:50%;
+		font-size:1.4rem;
+		color:#fff;
+		line-height: 30px;
+		text-align:left;
+		white-space:nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
+		background: url("../images/qiandao.png") no-repeat #81c429;
+		background-size: 23px 23px;
+		background-position: 5px 2px;
+		border-radius: 5px;
+		text-indent: 2.5em;
+		margin: 7px auto;
+		text-align: center;
+	}
+
+	.container .mid-card{
+		width:100%;
+		height:2.2rem;
+		padding:1.5rem 0rem 0.8rem 0rem;
+		text-align:center;
+		font-size:0;
+		position:fixed;
+		top:17.7rem;
+		left:0;
+		z-index:100;
+	}
+
+	.container .mid-card .tap-logo{
+		display:inline-block;
+		width:2rem;
+		height:2.2rem;
+		margin-right:11%;
+		background-size:contain;
+		background-repeat:no-repeat;
+		background-position:center;
+		vertical-align:middle;
+		position:relative;
+	}
+
+	.container .mid-card .tap-logo .arrow{
+		position:absolute;
+		width:0rem;
+		height:0rem;
+		bottom:-0.8rem;
+		left:0.5rem;
+	}
+
+	.container .mid-card .tap-logo .arrow.actived{
+		border-top:transparent solid 0.5rem;
+		border-left:transparent solid 0.5rem;
+		border-right:transparent solid 0.5rem;
+		border-bottom:#efefef solid 0.5rem;
+	}
+
+	.container .mid-card .tap-logo.coupons .arrow.actived{
+		border-top:transparent solid 0.5rem;
+		border-left:transparent solid 0.5rem;
+		border-right:transparent solid 0.5rem;
+		border-bottom:#81c429 solid 0.5rem;
+	}
+
+	.container .mid-card .tap-logo.collections .arrow.actived{
+		border-top:transparent solid 0.5rem;
+		border-left:transparent solid 0.5rem;
+		border-right:transparent solid 0.5rem;
+		border-bottom:#81c429 solid 0.5rem;
+	}
+
+	.container .mid-card .tap-logo.orders{
+		background-image:url('../images/orders.png');
+	}
+
+	.container .mid-card .tap-logo.coupons{
+		background-image:url('../images/coupons.png');
+	}
+
+	.container .mid-card .tap-logo.collections{
+		background-image:url('../images/collections.png');
+	}
+
+	.container .mid-card .tap-logo.addresses{
+		background-image:url('../images/addresses.png');
+	}
+
+	.container .mid-card .tap-logo.settings{
+		background-image:url('../images/settings.png');
+	}
+
+	.container .mid-card .tap-logo:last-child{
+		margin-right:0%;
+	}
+</style>

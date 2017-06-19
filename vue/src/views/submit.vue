@@ -67,8 +67,12 @@
 			</div>
 			<div class="give-order">
 				<ul>
-					<li @click="chosenGift(item.id)" v-for="item in list" class="notActive" :class="{'activeGift':shopid == item.id}">
-						<p class="shop-img">
+					<li @click="chosenGift(item.id,item.store)" v-for="item in list" class="notActive" :class="{'activeGift':shopid == item.id}">
+						<p class="shop-img" v-if="item.store == '' ">
+							<span class="shopover">已售罄</span>
+							<img :src="item.shotcut" alt="" style="width:100%;height:100%;" />
+						</p>
+						<p class="shop-img" v-else>
 							<img :src="item.shotcut" alt="" style="width:100%;height:100%;" />
 						</p>
 						<p>{{ item.name }}</p>
@@ -132,7 +136,6 @@
 			</my-cell-item>
 
 			<my-cell-item style="margin:0px;" v-else>
-
 				<div class="line-con zero-font">
 					<div class="l-icon score"></div>
 					<div class="l-tit score">{{ score }}积分(可抵扣{{ scoreMoney.showText }}元)</div>
@@ -395,12 +398,16 @@
 					$(this).addClass("my-icon-chosen").siblings().removeClass("my-icon-chosen");
                 });
 			},
-			chosenGift: function (type) {
-                if (this.shopid == type) return true;
-                this.shopid = type;
-                document.getElementsByClassName("addCar")[0].style.background = '#81c429';
-                //清除禁用按钮
-                document.getElementsByClassName("addCar")[0].disabled = "";
+			chosenGift: function (type,store) {
+                if(store == '') {
+					return false;
+				} else {
+                    if (this.shopid == type) return true;
+                    this.shopid = type;
+                    document.getElementsByClassName("addCar")[0].style.background = '#81c429';
+                    //清除禁用按钮
+                    document.getElementsByClassName("addCar")[0].disabled = "";
+				}
             },
             oneGift: function (id,money) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
@@ -883,7 +890,7 @@
 
 	.give-container .give-order {
 		clear:both;
-		height: 145px;
+		height: 130px;
 		overflow-x: auto;
 		overflow-y: hidden;
 	}
@@ -904,7 +911,21 @@
 
 	.give-container .give-order ul li .shop-img {
 		width: 100%;
-		height: 95px;
+		height: 75px;
+		position: relative;
+	}
+
+	.give-container .give-order ul li .shop-img .shopover {
+		font-size:16px;
+		position: absolute;
+		top:0px;
+		left:0px;
+		line-height: 75px;
+		text-align:center;
+		width:100%;
+		height:75px;
+		background: rgba(0,0,0,0.5);
+		color:#fff;
 	}
 
 	.give-container .give-order ul li p {

@@ -32,11 +32,15 @@
 			<input type="password" placeholder="请输入新密码" v-model="data.npwd" />
 			<input type="password" placeholder="请确认新密码" v-model="data.cpwd" />
 		</div>
+		<div class="list">
+			<label style="line-height: 30px;">主题颜色</label>
+			<input type="color" class="chonseColor" v-model="colorVal" @change="chonseColor()" />
+		</div>
 	</div>
 
 	<!-- 底部按钮 -->
 	<div class="btn-wrapper">
-		<x-button :text="btnText" :disabled="btnDis" @click="postData"></x-button>
+		<x-button :text="btnText" id="confirm" :disabled="btnDis" @click="postData"></x-button>
 		<x-button text="退出登录" style="background-color:transparent !important;color:#81c429 !important;border:1px solid #81c429;margin-top:10px;" @click="showExit"></x-button>
 	</div>
 
@@ -81,11 +85,67 @@ export default{
 				birthday:"TODAY",
 				opwd:'',
 				npwd:'',
-				cpwd:''
-			}
+				cpwd:'',
+			},
+            colorVal: ''
 		}
 	},
 	methods: {
+        getStyleTemplate(data) {
+            const colorMap = {
+                '#20a0ff': 'primary',
+                '#0190fe': 'secondary',
+                '#fbfdff': 'darkWhite',
+                '#1f2d3d': 'baseBlack',
+                '#324157': 'lightBlack',
+                '#48576a': 'extraLightBlack',
+                '#8391a5': 'baseSilver',
+                '#97a8be': 'lightSilver',
+                '#bfcbd9': 'extraLightSilver',
+                '#d1dbe5': 'baseGray',
+                '#e4e8f1': 'lightGray',
+                '#eef1f6': 'extraLightGray',
+                '#1d90e6': 'buttonActive',
+                '#4db3ff': 'buttonHover',
+                '#dfe6ec': 'tableBorder',
+                '#d2ecff': 'datepickerInRange',
+                '#afddff': 'datepickerInRangeHover',
+                '#1c8de0': 'selectOptionSelected',
+                '#edf7ff': 'lightBackground'
+            };
+            Object.keys(colorMap).forEach(key => {
+                const value = colorMap[key];
+                data = data.replace(new RegExp(key, 'ig'), value);
+            });
+            return data;
+        },
+        writeNewStyle() {
+            let cssText = this.originalStyle;
+            Object.keys(this.colors).forEach(key => {
+                cssText = cssText.replace(new RegExp('(:|\\s+)' + key, 'g'), '$1' + this.colors[key]);
+            });
+            if (this.originalStylesheetCount === document.styleSheets.length) {
+                const style = document.createElement('style');
+                style.innerText = cssText;
+                document.head.appendChild(style);
+            } else {
+                document.head.lastChild.innerText = cssText;
+            }
+        },
+        chonseColor () {
+            var pColor = document.getElementsByClassName("public-color");
+            localStorage.setItem("color",this.colorVal);
+            var cVal = localStorage.getItem("color");
+            for(var i = 0; i <pColor.length; i++) {
+				pColor[i].style.color = cVal;
+			}
+			var btnColor = document.getElementsByClassName("public-bgcolor");
+			for(var i = 0; i <btnColor.length; i++) {
+                btnColor[i].style.background = cVal;
+			}
+			console.log();
+			console.log(this.colorVal);
+		},
 		changePwd: function(event){
 			let pwd = document.getElementById("pwd");
 			if(pwd.style.display==="none"){
@@ -254,6 +314,16 @@ export default{
 		width:25%;
 	}
 
+	.input-wrapper .list .chonseColor{
+		width: 15%;
+		height: 25px;
+		float: right;
+		position: relative;
+		top: 3px;
+		border: 3px solid #ccc;
+		border-radius: 5px;
+	}
+
 	.input-wrapper .list input,.input-wrapper .list select{
 		width:75%;
 		height:2.5rem;
@@ -295,6 +365,8 @@ export default{
 		border-bottom: 1px solid #ccc;
 		font-size: 14px;
 	}
+
+
 
 </style>
 

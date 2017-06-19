@@ -50,7 +50,7 @@
 	<div class="col-wrapper" style="padding:25px 0px 5px;" v-else>
 		<div class="image"></div>
 		<p class="tips">亲，您的购物车空空如也~</p>
-		<x-button text="逛一逛" style="width:40%;margin:2rem auto;" v-link="{name:'index'}"></x-button>
+		<x-button text="逛一逛" style="width:40%;margin:2rem auto;" class="public-bgcolor" v-link="{name:'index'}"></x-button>
 	</div>
 
 	<!-- <猜你喜欢> -->

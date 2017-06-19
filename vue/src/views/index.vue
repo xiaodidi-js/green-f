@@ -52,10 +52,13 @@ export default{
 		};
         this.getData('');
 	},
+	created() {
+//        location.reload();
+	},
     methods: {
         getData: function(sk) {
-            let url = localStorage.apiDomain+'/public/index/index/classifylist/cid/'+this.$route.params.cid+'/action/'+this.column;
-            if(sk.length > 0) url += '/search/'+sk;
+            let url = localStorage.apiDomain + '/public/index/index/classifylist/cid/' + this.$route.params.cid + '/action/' + this.column;
+            if(sk.length > 0) url += '/search/' + sk;
             this.$http.get(url).then((response) => {
                 this.data.list = response.data.list;
             },(response)=>{
