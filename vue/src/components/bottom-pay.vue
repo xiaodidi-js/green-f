@@ -1,3 +1,48 @@
+<template>
+	<div class="bottom-buy" :class="{'fixed':fixed}" :style="{bottom:fixed===true&&btm>0 ? btm+unit : 0}">
+		<div class="mes">
+			<span>合计：</span>
+			<span style="margin-left:12px;">¥{{ sum }}</span>
+		</div>
+		<!--<div class="btn addCar" disabled="disabled" @click="submit">提交订单</div>-->
+		<button class="btn addCar" @click="submit">提交订单</button>
+	</div>
+</template>
+
+<script>
+
+	export default{
+		props: {
+			sum: {
+				type: String,
+				default: '0.00'
+			},
+			fixed: {
+				type: Boolean,
+				default: false
+			},
+			btm: {
+				type: Number,
+				default: 0
+			},
+			unit: {
+				type: String,
+				default: 'rem'
+			}
+		},
+		data() {
+			return {
+				
+			}
+		},
+		methods: {
+			submit: function(){
+				this.$dispatch('submitOrder');
+			}
+		}
+	}
+</script>
+
 <style scoped>
 	.bottom-buy{
 		width:100%;
@@ -49,48 +94,3 @@
 		background-color:#81c429;
 	}
 </style>
-
-<template>
-	<div class="bottom-buy" :class="{'fixed':fixed}" :style="{bottom:fixed===true&&btm>0 ? btm+unit : 0}">
-		<div class="mes">
-			<span>合计：</span>
-			<span style="margin-left:12px;">¥{{ sum }}</span>
-		</div>
-		<!--<div class="btn addCar" disabled="disabled" @click="submit">提交订单</div>-->
-		<button class="btn addCar" @click="submit">提交订单</button>
-	</div>
-</template>
-
-<script>
-
-	export default{
-		props: {
-			sum: {
-				type: String,
-				default: '0.00'
-			},
-			fixed: {
-				type: Boolean,
-				default: false
-			},
-			btm: {
-				type: Number,
-				default: 0
-			},
-			unit: {
-				type: String,
-				default: 'rem'
-			}
-		},
-		data() {
-			return {
-				
-			}
-		},
-		methods: {
-			submit: function(){
-				this.$dispatch('submitOrder');
-			}
-		}
-	}
-</script>

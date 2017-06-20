@@ -1,3 +1,59 @@
+<template>
+	<div class="search-header" :class="{'fixed':fixed}" :style="{backgroundColor : bgcolor,top : fixed===true && top > 0 ? top+unit : 0}">
+		<div class="left">
+			<div class="arrow" @click="goBack"></div>
+		</div>
+		<div class="center">
+			<img src="../images/search-1.png">
+			<input type="text" placeholder="请输入您要搜索的商品" v-model="searchKey" />
+		</div>
+		<div class="right" @click="goSearch">搜索</div>
+	</div>
+</template>
+
+<script>
+
+	export default{
+		components: {
+		},
+		props: {
+			bgcolor: {
+				type: String,
+				default: ''
+			},
+			fixed: {
+				type: Boolean,
+				default: false
+			},
+			top: {
+				type: Number,
+				default: 0
+			},
+			unit: {
+				type: String,
+				default: 'rem'
+			}
+		},
+		data() {
+			return {
+				searchKey:''
+			}
+		},
+		methods: {
+			"goBack": function(){
+				window.history.back();
+			},
+			"goSearch": function(){
+				this.searchKey = this.searchKey.replace(/(^\s*)|(\s*$)/g,'');
+				if(this.searchKey.length<=0){
+					return false;
+				}
+				this.$dispatch('goSearch',this.searchKey);
+			}
+		}
+	}
+</script>
+
 <style scoped>
 	.search-header{
 		width:100%;
@@ -101,63 +157,4 @@
 			opacity:1;
 		}
 	}
-
-
-
 </style>
-
-<template>
-	<div class="search-header" :class="{'fixed':fixed}" :style="{backgroundColor : bgcolor,top : fixed===true && top > 0 ? top+unit : 0}">
-		<div class="left">
-			<div class="arrow" @click="goBack"></div>
-		</div>
-		<div class="center">
-			<img src="../images/search-1.png">
-			<input type="text" placeholder="请输入您要搜索的商品" v-model="searchKey" />
-		</div>
-		<div class="right" @click="goSearch">搜索</div>
-	</div>
-</template>
-
-<script>
-
-	export default{
-		components: {
-		},
-		props: {
-			bgcolor: {
-				type: String,
-				default: ''
-			},
-			fixed: {
-				type: Boolean,
-				default: false
-			},
-			top: {
-				type: Number,
-				default: 0
-			},
-			unit: {
-				type: String,
-				default: 'rem'
-			}
-		},
-		data() {
-			return {
-				searchKey:''
-			}
-		},
-		methods: {
-			"goBack": function(){
-				window.history.back();
-			},
-			"goSearch": function(){
-				this.searchKey = this.searchKey.replace(/(^\s*)|(\s*$)/g,'');
-				if(this.searchKey.length<=0){
-					return false;
-				}
-				this.$dispatch('goSearch',this.searchKey);
-			}
-		}
-	}
-</script>

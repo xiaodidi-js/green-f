@@ -52,9 +52,6 @@ export default{
 		};
         this.getData('');
 	},
-	created() {
-//        location.reload();
-	},
     methods: {
         getData: function(sk) {
             let url = localStorage.apiDomain + '/public/index/index/classifylist/cid/' + this.$route.params.cid + '/action/' + this.column;
@@ -66,8 +63,8 @@ export default{
                 this.toastShow = true;
             });
         },
-        changeColumn: function(col){
-            if(this.column===col){
+        changeColumn: function(col) {
+            if(this.column === col) {
                 return false;
             }
             this.column = col;
@@ -84,7 +81,6 @@ export default{
 </script>
 
 <style type="text/css">
-
 
 	#app{
 		position: relative;

@@ -135,9 +135,9 @@
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/index',
                 }).then((response) => {
-                    this.data = response.data;
-                    sessionStorage.setItem("iData",JSON.stringify(this.data));
-                    this.arr = JSON.parse(sessionStorage.getItem("iData"));
+//                    this.data = response.data;
+                    sessionStorage.setItem("iData",JSON.stringify(response.data));
+                    this.data = JSON.parse(sessionStorage.getItem("iData"));
                     var data = this.data;
                     for (var i = 0; i < data.index_data.length; i++) {
                         if(data.index_data[i].type == 4) {

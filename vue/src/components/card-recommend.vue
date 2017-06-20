@@ -1,6 +1,6 @@
 <template>
 	<template v-for="item in info">
-		<template v-for="list in item.data">
+		<div v-for="list in item.data" v-if="list.data !== '' ">
 			<div class="card-box" style="box-shadow: none;">
 				<div v-link="{name:'detail',params:{pid:list.id}}">
 					<div class="pict" v-if="list.store == 0">
@@ -23,8 +23,11 @@
 			<div class="card-box" style="box-shadow: none;">
 				<div class="shopnull">暂没有推荐商品</div>
 			</div>
-		</template>
+		</div>
 	</template>
+	<div class="nothings" v-else>
+		<span>—————&nbsp;&nbsp;暂时没有推荐商品&nbsp;&nbsp;—————</span>
+	</div>
 </template>
 
 <script>
@@ -122,6 +125,14 @@
 </script>
 
 <style scoped>
+
+	.nothings {
+		height: 60px;
+		line-height: 45px;
+		text-align: center;
+		font-size: 14px;
+		color: #808080;
+	}
 
 	.card-box{
 		width:31.1%;

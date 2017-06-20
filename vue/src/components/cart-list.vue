@@ -1,5 +1,3 @@
-
-
 <template>
 	<div class="card-box" :class="className">
 		<!--<div class="addition" v-if="store == 0"></div>-->
@@ -12,19 +10,17 @@
 				<div class="overtext">已售罄</div>
 				<img :src="img" style="width:100%;height:100%;" alt=""/>
 			</div>
-
 			<div class="img"  v-link="{name:'detail',params:{pid:pid}}" v-else> <!-- v-lazy:background-image="img" -->
 				<img :src="img" style="width:100%;height:100%;" alt=""/>
 			</div>
-
 			<div class="mes">
 				<div class="name">{{ pname }}</div>
 				<div class="format" v-if="pfname == ''">&nbsp;</div>
 				<div class="format" v-else>{{ pfname }}</div>
 				<div class="money">
 					<label class="unit">¥</label>{{ pprice }}
-					<div class="del" v-show="mode === 1" @click.stop="setDel()"></div>
 				</div>
+				<div class="del" v-show="mode === 1" @click.stop="setDel()"></div>
 				<div class="status">
 					<div class="num-counter" style="float:left;">
 						<button class="btns" :class="{'disabled':pnums <= 0}" @click.stop="rdcNums()"> - </button>
@@ -43,14 +39,10 @@
 			<img src="../images/arrow.png" />
 		</div>
 	</div>
-	
 	<!-- 确定弹框 -->
-	<confirm :show.sync="confirmShow"
-			 title="删除商品" confirm-text="确定" cancel-text="取消"
-			 @on-confirm="confirmDel">
+	<confirm :show.sync="confirmShow" title="删除商品" confirm-text="确定" cancel-text="取消" @on-confirm="confirmDel">
 		<p style="text-align:center;">确定删除该商品吗？</p>
 	</confirm>
-	
 </template>
 
 <script>
@@ -284,6 +276,7 @@
 		display:inline-block;
 		vertical-align:middle;
 		width:65%;
+		position: relative;
 		font-size:1.4rem;
 	}
 
@@ -337,8 +330,8 @@
 		width:1.6rem;
 		height:1.6rem;
 		position:absolute;
-		top: -0.1rem;
-		right: -15rem;
+		top: 3.9rem;
+		right: 0rem;
 		background-image:url('../images/del2.png');
 		background-position:center;
 		background-size:contain;

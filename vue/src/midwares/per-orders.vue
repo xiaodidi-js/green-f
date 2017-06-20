@@ -36,7 +36,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div id="customer">
 			<template  v-for="item in qqservice">
 				<ul class="service-ul">
@@ -64,6 +63,7 @@
 		</div>
 	</div>
 
+	<!-- 弹出 -->
 	<div class="prop-bg" @click="clearpro()" v-show="showpro"></div>
 	<div class="prop-img" id="propimg" v-show="showpro">
 		<div class="towcode"><img src="../images/qq-img.jpg" style="width:100%;height:100%;" /></div>

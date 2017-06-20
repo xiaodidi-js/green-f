@@ -1,5 +1,3 @@
-
-
 <template>
     <div class="integral-head">
         <p style="color:#4d4d4d;" class="integral-title">签到积分</p>
@@ -19,26 +17,22 @@
             <li @click="main()">消费积分</li>
         </ul>
     </div>
-
     <div class="integral-body" id="content">
         <!-- 全部积分 -->
         <template v-for="item in allList">
-            <template v-if="item.type = 'qiandao'">
-                <div class="body-list">
-                    <ul>
-                        <li>
-                            <div class="all-date">
-                                <p>签到</p>
-                                <p>{{ item.createtime | time }}</p>
-                            </div>
-                            <div class="add-number">+{{ item.amount }}</div>
-                        </li>
-                    </ul>
-                </div>
-            </template>
+            <div class="body-list">
+                <ul>
+                    <li>
+                        <div class="all-date">
+                            <p>签到</p>
+                            <p>{{ item.createtime | time }}</p>
+                        </div>
+                        <div class="add-number">{{ item.amount }}</div>
+                    </li>
+                </ul>
+            </div>
         </template>
     </div>
-
 </template>
 
 <script>
@@ -70,7 +64,6 @@
         ready() {
             this.siblingsDom();
             this.main();
-            this.Allmain();
         },
         filters: {
             time: function (value) {
@@ -85,16 +78,6 @@
             }
         },
         methods: {
-            Allmain () {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                this.$http.get(localStorage.apiDomain+'public/index/Usercenter/integral/uid/' + ustore.id + '/token/' + ustore.token).then((response)=>{
-                    this.allList = response.data.list;
-                },(response)=>{
-                    this.toastMessage = '网络开小差了~';
-                    this.toastShow = true;
-                });
-            },
             main: function() {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);

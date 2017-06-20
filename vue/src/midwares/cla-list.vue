@@ -1,25 +1,3 @@
-<style scoped>
-
-	.fixed-tab{
-		/*position:fixed;*/
-		/*top:210px;*/
-		/*left:0;*/
-		width:100%;
-		/*z-index:100;*/
-	}
-
-	.sub-content .imgs {
-		width: 100%;
-		height: 164px;
-		margin-top: 46px;
-	}
-
-	.sub-content .pict {
-		width: 100%;
-		margin-top: 46px;
-	}
-
-</style>
 <template>
 	<div class="sub-content"> <!--:style="background:data.background"-->
 		<!-- 头部 -->
@@ -125,5 +103,21 @@
         }
     }
 </script>
-
 <!--  tuijian -->
+
+<style scoped>
+	.fixed-tab{
+		width:100%;
+	}
+
+	.sub-content .imgs {
+		width: 100%;
+		height: 164px;
+		margin-top: 46px;
+	}
+
+	.sub-content .pict {
+		width: 100%;
+		margin-top: 46px;
+	}
+</style>

@@ -91,47 +91,6 @@ export default{
 		}
 	},
 	methods: {
-        getStyleTemplate(data) {
-            const colorMap = {
-                '#20a0ff': 'primary',
-                '#0190fe': 'secondary',
-                '#fbfdff': 'darkWhite',
-                '#1f2d3d': 'baseBlack',
-                '#324157': 'lightBlack',
-                '#48576a': 'extraLightBlack',
-                '#8391a5': 'baseSilver',
-                '#97a8be': 'lightSilver',
-                '#bfcbd9': 'extraLightSilver',
-                '#d1dbe5': 'baseGray',
-                '#e4e8f1': 'lightGray',
-                '#eef1f6': 'extraLightGray',
-                '#1d90e6': 'buttonActive',
-                '#4db3ff': 'buttonHover',
-                '#dfe6ec': 'tableBorder',
-                '#d2ecff': 'datepickerInRange',
-                '#afddff': 'datepickerInRangeHover',
-                '#1c8de0': 'selectOptionSelected',
-                '#edf7ff': 'lightBackground'
-            };
-            Object.keys(colorMap).forEach(key => {
-                const value = colorMap[key];
-                data = data.replace(new RegExp(key, 'ig'), value);
-            });
-            return data;
-        },
-        writeNewStyle() {
-            let cssText = this.originalStyle;
-            Object.keys(this.colors).forEach(key => {
-                cssText = cssText.replace(new RegExp('(:|\\s+)' + key, 'g'), '$1' + this.colors[key]);
-            });
-            if (this.originalStylesheetCount === document.styleSheets.length) {
-                const style = document.createElement('style');
-                style.innerText = cssText;
-                document.head.appendChild(style);
-            } else {
-                document.head.lastChild.innerText = cssText;
-            }
-        },
         chonseColor () {
             var pColor = document.getElementsByClassName("public-color");
             localStorage.setItem("color",this.colorVal);
@@ -322,6 +281,11 @@ export default{
 		top: 3px;
 		border: 3px solid #ccc;
 		border-radius: 5px;
+		appearance:none;
+		-o-appearance:none;
+		-ms-appearance:none;
+		-moz-appearance:none;
+		-webkit-appearance:none;
 	}
 
 	.input-wrapper .list input,.input-wrapper .list select{

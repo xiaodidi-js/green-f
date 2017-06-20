@@ -36,7 +36,6 @@ let router = new VueRouter({
     // history: true,
     saveScrollPosition: true,
     scrollBehavior (to, from, savedPosition) {
-        alert(123123);
         if (savedPosition) {
             return savedPosition
         } else {
@@ -45,12 +44,12 @@ let router = new VueRouter({
     }
 });
 
-router.map(fetchGet);
 router.map(Routers);
+router.map(fetchGet);
 router.map(fetchPost);
 router.beforeEach((transition) => {
 
-    // if(Env == 'production') {
+    if(Env == 'production') {
         //微信openid检测
         if(!sessionStorage.getItem('openid')){
             let query = transition.to.query;
@@ -69,7 +68,7 @@ router.beforeEach((transition) => {
                 }
             }
         }
-    // }
+    }
 
     //登录检测
     if(typeof(transition.to.login) !== 'undefined' && transition.to.login === true) {
@@ -94,7 +93,7 @@ router.beforeEach((transition) => {
 
 router.afterEach((transition) => {
     //获取微信分享配置
-    if(transition.to.name!='detail'){
+    if(transition.to.name != 'detail') {
         Vue.http.get(localStorage.apiDomain+'public/index/index/wxshare').then((response)=>{
             let getSession = response.data;
             let shareData = {

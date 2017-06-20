@@ -8,6 +8,8 @@ const routers = {
     	footer:true,
     	title:'绿秧田商城',
     	position:1,
+        savedPosition: sessionStorage.getItem("scrolltop"),
+        saveScrollPosition: true,
         scrollBehavior (to, from, savedPosition) {
             if (to.hash) {
                 return {

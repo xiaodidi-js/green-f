@@ -35,19 +35,19 @@
 <script>
 	export default{
 		props: {
-			sum: {
+			sum: {	//总价
 				type: [String,Number],
 				default: 0
 			},
-			coupon: {
+			coupon: {	//优惠券
 				type: [String,Number],
 				default: 0
 			},
-			score: {
+			score: {	//积分
 				type: [String,Number],
 				default: 0
 			},
-			freight: {
+			freight: {	//快递
 				type: [String,Number],
 				default: 0
 			},
@@ -94,6 +94,7 @@
 				return fee.toFixed(2);
 			},
 			lastSum: function(){
+			    //getSum = (总价 + 快递费) - (优惠券 + 积分)
 				let getSum = (this.sum + this.freight) - (this.coupon + this.score);
 				if(getSum <= 0) {
 					getSum = 0.01;

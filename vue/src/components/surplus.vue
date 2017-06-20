@@ -1,38 +1,9 @@
-<style>
-    .bal-wrapper .changePay {
-        width: 100%;
-        height: 8rem;
-        background: #fff;
-        margin: 10px 0px;
-        text-align: center;
-    }
-
-    .bal-wrapper .changePay .prompt {
-        color: #333;
-        width: 100%;
-        height: 48px;
-        line-height: 60px;
-        text-align: center;
-        font-size: 14px;
-    }
-
-    .bal-wrapper .changePay .countdown {
-        color: #81c429;
-        font-size:14px;
-    }
-</style>
-
-
 <template>
     <div class="changePay" v-show="showele">
         <div class="prompt">请在15分钟内完成付款,晚了就给人抢了</div>
         <div class="countdown">
-            剩余支付时间
-            {{ timeRes.hour}}
-            :
-            {{ timeRes.minute }}
-            :
-            {{ timeRes.second }}
+            <span>剩余支付时间</span>
+            <span>{{ timeRes.hour}} : {{ timeRes.minute }} : {{ timeRes.second }}</span>
         </div>
     </div>
 </template>
@@ -87,17 +58,19 @@
             }
         },
         methods: {
-            "setTime": function(){
-                let _self = this;
-                this.timer = setInterval(function(){
-                    _self.time--;
-                    if(_self.time == 0) {
-                        _self.showele = false;
-                        _self.$dispatch('overtime');
-                        _self.$router.go({name:'index'});
-                        clearInterval(_self.timer);
-                    }
-                },1000);
+            "setTime": function() {
+                try {
+                    let _self = this;
+                    this.timer = setInterval(function(){
+                        _self.time--;
+                        if(_self.time == 0) {
+                            _self.showele = false;
+                            _self.$dispatch('overtime');
+                            _self.$router.go({name:'index'});
+                            clearInterval(_self.timer);
+                        }
+                    },1000);
+                } catch (e) {}
             }
         },
         computed: {
@@ -145,3 +118,27 @@
         }
     }
 </script>
+
+<style>
+    .bal-wrapper .changePay {
+        width: 100%;
+        height: 8rem;
+        background: #fff;
+        margin: 10px 0px;
+        text-align: center;
+    }
+
+    .bal-wrapper .changePay .prompt {
+        color: #333;
+        width: 100%;
+        height: 48px;
+        line-height: 60px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .bal-wrapper .changePay .countdown {
+        color: #81c429;
+        font-size:14px;
+    }
+</style>

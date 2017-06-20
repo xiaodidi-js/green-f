@@ -229,6 +229,7 @@
                 payType:0,
                 score:0,
                 scoreSwitch:false,
+                scoreNumber: 0,
                 deliverType:'',
                 deliverName:'',
                 freight:0,
@@ -246,6 +247,7 @@
                 giftstu: 0,	//赠品状态,
                 openpop: false,
                 description: "",
+                lastPaySum: 0,
             }
         },
         components: {
@@ -344,8 +346,10 @@
                 let money = this.score / 100;
                 obj['showText'] = money.toFixed(2);
                 if(this.scoreSwitch) {
+                    this.scoreNumber = 1;
                     obj['makePrice'] = obj['showText'];
                 }else{
+                    this.scoreNumber = 2;
                     obj['makePrice'] = 0;
                 }
                 return obj;
@@ -363,7 +367,7 @@
             },
             lastPaySum: function() {
                 let lastMoney = parseFloat(this.paySum)+parseFloat(this.freight) - parseFloat(this.scoreMoney.makePrice) - parseFloat(this.couponMoney);
-                if(lastMoney <= 0) lastMoney = 0.02;
+                if(lastMoney <= 0) lastMoney = 0.01;
                 return lastMoney.toFixed(2);
             }
         },
@@ -573,12 +577,14 @@
                         address:this.address,
                         coupon:this.coupon,
                         score:this.scoreSwitch,
+                        scoreNumber: this.scoreNumber,
                         paysum:this.lastPaySum,
                         tips:this.memo,
                         openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                         pshonse:this.shonse,
                         gift:{'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                     };
+                    console.log(pdata.paysum);
                     this.$http.post(localStorage.apiDomain + 'public/index/user/getSubmitOrder',pdata).then((response)=>{
                         if(response.data.status === 1) {
                             this.clearSel();

@@ -1,5 +1,3 @@
-
-
 <template>
 	<div class="bal-wrapper" style="margin-top:80px;">
 		<!-- 快递状态 -->
@@ -7,15 +5,13 @@
 			<div class="mid-line"></div>
 			<div class="item" v-for="pitem in data.process">
 				<div class="top">{{ pitem.title }}</div>
-				<div class="ball" :class="{'active':data.pindex==$index,'none':pitem.status!=1}"></div>
-				<div class="btm" v-if="pitem.status==1">{{ pitem.time }}</div>
+				<div class="ball" :class="{'active':data.pindex == $index,'none':pitem.status != 1}"></div>
+				<div class="btm" v-if="pitem.status == 1">{{ pitem.time }}</div>
 				<div class="btm" v-else></div>
 			</div>
 		</div>
-
 		<!--倒计时-->
 		<surplus :showele="showTime" :time="data.process[0].endtime - data.process[0].nowtime"></surplus>
-
 		<!-- 订单状态 -->
 		<div class="bl-info-box status">
 			<div class="icon">
@@ -32,7 +28,6 @@
 				<div class="sta-line">
 					<span>订单总计：</span>
 					<label>￥{{ data.order.money }} （含运费 ￥{{ data.order.freight }}）</label>
-
 				</div>
 				<div class="sta-line" style="color:#c40000">
 					配送时间：<label class="peisongdate">{{ stime | time}}</label>
@@ -77,8 +72,7 @@
 
 		<!-- 价格详情 -->
 		<balance-price :sum="data.order.sum" :coupon="data.order.coupon" :score="data.order.score"
-				:freight="data.order.freight"
-				:show-sum="true"></balance-price>
+				:freight="data.order.freight" :show-sum="true"></balance-price>
 	</div>
 
 	<separator :set-height="4.5" v-show="data.order.status!=-1"></separator>
@@ -185,8 +179,7 @@ export default{
 				this.data.order = response.data.order;
 				this.data.products = response.data.products;
                 this.TimeText = this.data.process[0].endtime - this.data.process[0].stime;
-                console.log(this.TimeText);
-                if(this.data.order.statext == '用户取消'){
+                if(this.data.order.statext == '用户取消') {
                     this.showTime = false;
                 } else if(this.data.order.statext == '待支付') {
                     this.showTime = true;

@@ -342,7 +342,11 @@
         },
         watch: {
             search () {
-                this.fun()
+                if(this.search == '') {
+                    this.tmp_address = this.address;
+                } else {
+                    this.fun()
+                }
             },
             show: function (nval, oval) {
                 if ((nval === true && this.address.length <= 0) || (nval === true && this.$parent.deliverType != '' && this.$parent.deliverType != this.getType)) {
@@ -381,21 +385,7 @@
         },
         computed: {
             data:function(){
-//                var self = this;
-//                if (this.searchKey) {
-//                    var arr = []
-//                    for (var i in this.address) {
-//                        var obj = this.address[i]
-//                        if (obj['key'].indexOf(this.searchKey) !== -1) {
-//                            arr.push(obj)
-//                        }
-//                    }
-//                    this.tmp_address = this.address;
-//                    this.data = arr
-//                    console.log(this.address);
-//                } else {
-//                    this.data = this.address
-//                }
+
             }
         }
     }

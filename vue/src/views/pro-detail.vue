@@ -32,14 +32,11 @@
                         <div class="son">销量：{{ data.virtual_sale }}</div>
                         <div class="son">库存：{{ data.store }}</div>
 					</div>
-
 					<!-- 分割线 -->
 					<div class="divider"></div>
-
 					<!-- 抢购时间 -->
 					<seckill-floor v-show="seckillShow" :columns="gotimeline" end=""></seckill-floor>
 					<!-- 抢购时间 -->
-
 					<!--<div class="product_button">-->
 						<!--<div class="product_button_num">数量：</div>-->
 						<!--<div class="product_button_number">-->
@@ -48,9 +45,7 @@
 							<!--<div class="product_button_add" :class="{'disabled':buyNums>=proNums}" @click="addNums">+</div>-->
 						<!--</div>-->
 					<!--</div>-->
-
 				</div>
-
 				<div class="preferential">
 					<ul>
 						<li class="free">
@@ -63,7 +58,6 @@
 						</li>
 					</ul>
 				</div>
-
 				<div class="product_titile">
 					<ul id="card">
 						<li class="active">图文详情</li>
@@ -71,7 +65,6 @@
 						<li>推荐组合</li>
 					</ul>
 				</div>
-
 				<!--<tab default-color="#333" active-color="#F9AD0C" :line-width="2" class="fixed-tab">-->
 					<!--<tab-item :selected="column === 0" @click="changeColumn(0)">基本信息</tab-item>-->
 					<!--<tab-item :selected="column === 1" @click="changeColumn(1)">图文详情</tab-item>-->
@@ -178,9 +171,6 @@
 			</div>
 		</div>
 	</div>
-
-
-
 </template>
 
 <script>
@@ -364,7 +354,7 @@
                     // 分享好友
                     WxJssdk.onMenuShareAppMessage({
                         title: this.data.name, // 分享标题
-                        link:'http://'+window.location.host + '/index_prod.html#!/detail/'+this.data.id,
+                        link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
                         imgUrl: this.data.shotcut, // 分享图标
                         success: function () {
                             axios({
@@ -517,7 +507,6 @@
 				this.toastMessage = "网络开小差啦~";
 				this.toastShow = true;
 			});
-
 		},
 		computed: {
 			makeFreight: function(){
@@ -540,8 +529,13 @@
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/user/tuijianzuhe/pid/' + this.$route.params.pid,
                 }).then((response) => {
-					this.tjData = response.data;
-					console.log(this.tjData);
+                    if(response.data.status == 1) {
+                        this.tjData = response.data;
+					} else if (response.data.status == -1) {
+                        console.log("失败");
+					} else {
+                        console.log("无！");
+					}
                 });
             },
             judgefun:function () {

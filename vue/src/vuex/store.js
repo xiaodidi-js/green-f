@@ -23,8 +23,9 @@ const mutations = {
 	myVisible (state,visibleEle) {
 		state.visibleEle = visibleEle;
 	},
-	winScroll (state,scroll) {
+	scroll (state,scroll) {
 		state.scroll = scroll;
+        sessionStorage.setItem("scrolltop",JSON.stringify(state.scroll));
 	},
     mystu (state,giftstu) {	//赠品状态
         state.giftstu = giftstu;
@@ -34,7 +35,7 @@ const mutations = {
         sessionStorage.setItem("song",JSON.stringify(state.song));
     },
     commitData (state, params) {
-    	state[params.target] = params.data
+    	state[params.target] = params.data;
 	},
     myGift (state,giftList) {	//自提点ID
         state.giftList = giftList;
