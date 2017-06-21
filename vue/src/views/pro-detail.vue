@@ -948,7 +948,7 @@
 	}
 
 	.msg-head .msg-title {
-		font-size: 14px;
+		font-size: 16px;
 		width: 92%;
 	}
 
