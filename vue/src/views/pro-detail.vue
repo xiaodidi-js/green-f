@@ -1,6 +1,6 @@
 <template>
 	<div class="msg-head">
-		<div class="msg-back" @click="goback()">〈</div>
+		<div class="msg-back" @click="goback()"></div>
 		<div class="msg-title">{{ data.name }}</div>
 	</div>
 	<!-- 顶部选项 -->
@@ -916,8 +916,8 @@
 		color: #fff;
 		line-height: 4.6rem;
 		text-align: center;
-		background: rgb(51,61,56);
-		display:none;
+		background: #35495e;
+		display:block;
 	}
 
 	.msg-head .msg-back {
@@ -926,6 +926,25 @@
 		margin-left: 1rem;
 		height: 100%;
 		float: left;
+	}
+
+	.msg-head .msg-back:before {
+		content: "";
+		position: absolute;
+		display: block;
+		top: 16px;
+		left: 18px;
+		width: 12px;
+		height: 12px;
+		border: 1px solid #ccc;
+		border-width: 1px 0 0 1px;
+		margin-left: 3px;
+		margin-top: 1px;
+		transform: rotate(315deg);
+		-o-transform: rotate(315deg);
+		-ms-transform: rotate(315deg);
+		-moz-transform: rotate(315deg);
+		-webkit-transform: rotate(315deg);
 	}
 
 	.msg-head .msg-title {

@@ -56,12 +56,18 @@
                 orderList: [],
                 qiandaoList: [],
                 number: 0,
+                qiandaoOK: '点我签到',
             }
         },
         route: {
+
+        },
+        computed : {
+
         },
         ready() {
             this.siblingsDom();
+            this.qiandaoOK;
             this.main();
         },
         filters: {

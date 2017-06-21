@@ -135,7 +135,6 @@
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/index',
                 }).then((response) => {
-//                    this.data = response.data;
                     localStorage.setItem("iData",JSON.stringify(response.data));
                     this.data = JSON.parse(localStorage.getItem("iData"));
                     var data = this.data;
@@ -166,24 +165,19 @@
                 }
             },
             timeline: function() {
-                try {
-                    let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                    ustore = JSON.parse(ustore);
-                    var _this = this;
-                    this.$http.get(localStorage.apiDomain + 'public/index/sale/SaleTimeSolt/uid').then((response) => {
-                        if(response.data.status === 1) {
-                            this.maincolumns = response.data.SaleTimeSolt;
-                        } else {
-                            this.toastMessage = response.data.info;
-                            this.toastShow = true;
-                        }
-                    },(response)=>{
-                        this.toastMessage = '网络开小差了~';
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
+                this.$http.get(localStorage.apiDomain + 'public/index/sale/SaleTimeSolt/uid').then((response) => {
+                    if(response.data.status === 1) {
+                        this.maincolumns = response.data.SaleTimeSolt;
+                    } else {
+                        this.toastMessage = response.data.info;
                         this.toastShow = true;
-                    });
-				} catch (e) {
-					console.log(e);
-				}
+                    }
+                },(response)=>{
+                    this.toastMessage = '网络开小差了~';
+                    this.toastShow = true;
+                });
             },
             goPage () {
                 this.myActive(5);
