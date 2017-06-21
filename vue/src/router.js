@@ -214,7 +214,7 @@ const routers = {
         position:1,
         component (resolve) {
             require(['./views/pro-detail.vue'], resolve);
-        } 
+        }
     },
     '/comment/list/:pid': {
         name:'comment-list',
@@ -601,6 +601,17 @@ const routers = {
         component (resolve) {
             require(['./components/card-image.vue'], resolve);
         }
-    }
+    },
+    '/card-coupon' : {
+        name:'card-coupon',
+        header:true,
+        footer:true,
+        title:'活动',
+        position:3,
+        component (resolve) {
+            require(['./components/card-coupon.vue'], resolve);
+        }
+    },
+
 };
 export default routers;

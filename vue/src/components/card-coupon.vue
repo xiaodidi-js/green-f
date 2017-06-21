@@ -108,6 +108,7 @@
 			this.$http.get(localStorage.apiDomain+'public/index/user/couponinfo/uid/'+ustore.id+'/token/'+ustore.token).then((response)=>{
 				if(response.data.status===1){
 					this.data = response.data.coupon;
+					console.log(response.data);
 				}else if(response.data.status===-1){
 					this.$dispatch('showMes',response.data.info);
 					let context = this;

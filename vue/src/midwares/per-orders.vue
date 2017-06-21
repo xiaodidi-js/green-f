@@ -378,7 +378,12 @@
 		right: 2px;
 		text-align-last: center;
 	}
-	#customer{display:none;padding-top: 110px;}
+	
+	#customer{
+		display:none;
+		padding-top: 120px;
+	}
+
 	.sub-content-tab{
 		clear: both;
 		position: fixed;

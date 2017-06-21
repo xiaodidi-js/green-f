@@ -1,10 +1,124 @@
+<template>
+	<div class="card-coupon-box">
+		<div class="top">
+			<div class="divider">
+				<div class="shotcut"></div>
+			</div>
+			<div class="divider" v-if="obj.type==1||obj.type==3">
+				<label class="unit">￥</label>
+				<label class="number">{{ obj.minus_money }}</label>
+			</div>
+			<div class="divider" v-else>
+				<label class="unit">折</label>
+				<label class="number">{{ disOff }}</label>
+			</div>
+			<div class="divider nowrap">
+				<template v-if="obj.type == 3 || obj.type == 4">
+					<label class="mes">满{{ obj.collect_money }}元使用</label>
+				</template>
+				<template v-else>
+					<label class="mes" v-else>无门槛</label>
+				</template>
+
+				<label class="mes">剩余天数<span>{{ obj.remain }}</span>天</label>
+			</div>
+		</div>
+		<div class="wave"></div>
+		<div class="btm">
+			<div class="con detail" @click="toggle()">
+				<a style="display: block">
+					详细信息<div class="arrow" ></div>
+				</a>
+			</div>
+			<div class="con deadline">{{ obj.stime }} 至 {{ obj.etime }}</div>
+			<div class="addition" v-show="isShow">
+				<template v-if="obj.description">
+					<div class="line">
+						<div class="title">品牌信息：</div>
+						<div class="content">{{ obj.description }}</div>
+					</div>
+					<!--<div class="line">-->
+						<!--<div class="title">品牌信息：</div>-->
+						<!--<div class="content">适用于绿秧田购物商城</div>-->
+					<!--</div>-->
+					<!--<div class="line">-->
+						<!--<div class="title">限定平台：</div>-->
+						<!--<div class="content">限绿秧田购物商城微信版、绿秧田购物商城网页版</div>-->
+					<!--</div>-->
+					<!--<div class="line">-->
+						<!--<div class="title">限定城市：</div>-->
+						<!--<div class="content">所有城市通用</div>-->
+					<!--</div>-->
+					<!--<div class="line">-->
+						<!--<div class="title">限定商品:</div>-->
+						<!--<div class="content">部分限时抢购商品及特价商品不可用</div>-->
+					<!--</div>-->
+				</template>
+
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default{
+		props: {
+            obj: {
+                type:Object,
+                required: true
+            },
+            showing: {
+                type: Array,
+                twoWay: true,
+                required: true
+            }
+		},
+		data() {
+			return {
+                isShow:false,
+			}
+		},
+		methods: {
+			changeShow: function() {
+				let sindex = this.showing.indexOf(this.obj.id);
+				if(sindex < 0) {
+					this.showing.push(this.obj.id);
+				}else{
+					this.showing.splice(sindex,1);
+				}
+			},
+            toggle: function() {
+                this.isShow = !this.isShow;
+            }
+		},
+		computed: {
+			className: function() {
+				if(this.showing.indexOf(this.obj.id) >= 0) {
+					return true;
+				}
+				return false;
+			},
+			disOff: function() {
+				let offnum = 0;
+				if(this.obj.type == 2 || this.obj.type == 4){
+					offnum = this.obj.discount.toFixed(2) * 10;
+					if(offnum % 10 === 0){
+						offnum = offnum / 10;
+					}
+				}
+				return offnum;
+			}
+		}
+	}
+</script>
+
 <style scoped>
 	.card-coupon-box{
 		width: 96%;
 		height: auto;
 		margin: 2% 2%;
 	}
-	
+
 	.card-coupon-box:first-child{
 		margin-top:4%;
 	}
@@ -172,94 +286,3 @@
 		font-size:1.3rem;
 	}
 </style>
-
-<template>
-	<div class="card-coupon-box">
-		<div class="top">
-			<div class="divider">
-				<div class="shotcut"></div>
-			</div>
-			<div class="divider">
-				<label class="unit">￥</label>
-				<label class="number">30</label>
-			</div>
-			<div class="divider nowrap">
-				<label class="mes">满300元使用</label>
-				<label class="mes">无门槛</label>
-				<label class="mes">剩余天数<span>23</span>天</label>
-			</div>
-		</div>
-		<div class="wave"></div>
-		<div class="btm">
-			<div class="con detail" @click="toggle()">
-				<a >
-					详细信息<div class="arrow" ></div>
-				</a>
-			</div>
-			<div class="con deadline">2016-07-13 至 2016-08-13</div>
-			<!--<div class="con deadline">{{ obj.etime }}前使用</div>-->
-			<div class="addition" v-show="isShow">
-				<div class="line">
-					<div class="title">品牌信息：</div>
-					<div class="content">适用于绿秧田购物商城</div>
-				</div>
-				<div class="line">
-					<div class="title">限定平台：</div>
-					<div class="content">限绿秧田购物商城微信版、绿秧田购物商城网页版</div>
-				</div>
-				<div class="line">
-					<div class="title">限定城市：</div>
-					<div class="content">所有城市通用</div>
-				</div>
-				<div class="line">
-					<div class="title">限定商品:</div>
-					<div class="content">部分限时抢购商品及特价商品不可用</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</template>
-
-<script>
-	export default{
-		props: {
-
-		},
-		data() {
-			return {
-                isShow:false,
-			}
-		},
-		methods: {
-			changeShow: function() {
-				let sindex = this.showing.indexOf(this.obj.id);
-				if(sindex < 0) {
-					this.showing.push(this.obj.id);
-				}else{
-					this.showing.splice(sindex,1);
-				}
-			},
-            toggle: function() {
-                this.isShow = !this.isShow;
-            }
-		},
-		computed: {
-			className: function() {
-				if(this.showing.indexOf(this.obj.id) >= 0) {
-					return true;
-				}
-				return false;
-			},
-			disOff: function() {
-				let offnum = 0;
-				if(this.obj.type == 2 || this.obj.type == 4){
-					offnum = this.obj.discount.toFixed(2) * 10;
-					if(offnum % 10 === 0){
-						offnum = offnum / 10;
-					}
-				}
-				return offnum;
-			}
-		}
-	}
-</script>

@@ -1,9 +1,5 @@
 <style scoped>
 	.sub-content{height:87%;}
-
-
-
-
 </style>
 
 <template>

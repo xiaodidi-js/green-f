@@ -69,6 +69,7 @@
 			}
 		},
         ready() {
+            this.main();
             var content = this;
             $(window).scroll(function(){
                 if($(window).scrollTop() >= 350) {
@@ -94,7 +95,6 @@
             }
         },
         created () {
-            this.main();
             this.follow();
             this.timeline();
             this.breakSearch();
@@ -136,8 +136,8 @@
                     url: localStorage.apiDomain + 'public/index/index',
                 }).then((response) => {
 //                    this.data = response.data;
-                    sessionStorage.setItem("iData",JSON.stringify(response.data));
-                    this.data = JSON.parse(sessionStorage.getItem("iData"));
+                    localStorage.setItem("iData",JSON.stringify(response.data));
+                    this.data = JSON.parse(localStorage.getItem("iData"));
                     var data = this.data;
                     for (var i = 0; i < data.index_data.length; i++) {
                         if(data.index_data[i].type == 4) {

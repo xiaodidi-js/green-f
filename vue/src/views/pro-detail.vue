@@ -1,4 +1,8 @@
 <template>
+	<div class="msg-head">
+		<div class="msg-back" @click="goback()">〈</div>
+		<div class="msg-title">{{ data.name }}</div>
+	</div>
 	<!-- 顶部选项 -->
 	<!--<separator :set-height="44" unit="px"></separator>-->
 	<div class="my-swiper"> <!-- @touchstart="tslistener($event)" @touchend="telistener($event)" -->
@@ -509,6 +513,9 @@
 			});
 		},
 		computed: {
+            goback () {
+                window.history.back();
+			},
 			makeFreight: function(){
 				let fmoney = parseFloat(this.data.freight);
 				if(isNaN(fmoney)){
@@ -902,6 +909,30 @@
 
 
 <style scoped>
+
+	.msg-head {
+		width:100%;
+		height:4.6rem;
+		color: #fff;
+		line-height: 4.6rem;
+		text-align: center;
+		background: rgb(51,61,56);
+		display:none;
+	}
+
+	.msg-head .msg-back {
+		width: 10%;
+		font-size: 16px;
+		margin-left: 1rem;
+		height: 100%;
+		float: left;
+	}
+
+	.msg-head .msg-title {
+		font-size: 14px;
+		width: 92%;
+	}
+
 	.my-swiper{
 		width:100%;
 		height:auto;
@@ -941,19 +972,21 @@
 	}
 
 	.pro-mes .title{
-		font-size:14px;
-		color:#333;
-		width:100%;
-		height:auto;
-		margin-bottom:0.3rem;
-		white-space:normal;
+		font-size: 16px;
+		color: #232326;
+		width: 100%;
+		height: auto;
+		margin-bottom: 0.5rem;
+		white-space: normal;
 	}
 
 	.pro-mes .desc{
-		color:#81c429;
-		margin-bottom:0.3rem;
-		white-space:normal;
-		font-size:14px;
+		color: #81c429;
+		margin-bottom: 0.3rem;
+		white-space: normal;
+		font-size: 14px;
+		text-align: left;
+		text-indent: 2em;
 	}
 
 	.pro-mes .price{

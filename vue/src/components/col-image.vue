@@ -1,18 +1,3 @@
-<style scoped>
-	.wrapper{
-		width:100%;
-		height:auto;
-		text-align:center;
-	}
-
-	.col-img{
-		width:92%;
-		height:auto;
-		padding:4%;
-		border:none;
-	}
-</style>
-
 <template>
 	<div class="wrapper">
 		<img class="col-img" v-lazy="imgMes.src" alt="{{ imgMes.name }}" />
@@ -36,3 +21,18 @@
 		}
 	}
 </script>
+
+<style scoped>
+	.wrapper{
+		width:100%;
+		height:auto;
+		text-align:center;
+	}
+
+	.col-img{
+		width:92%;
+		height:auto;
+		padding:4%;
+		border:none;
+	}
+</style>
