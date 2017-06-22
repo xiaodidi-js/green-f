@@ -29,7 +29,7 @@
         <div class="scroll" id="scroller">
             <div>
                 <div class="everaddress" @click="allChonse()">全部</div>
-                <div class="down">完成</div>
+                <div class="down"  @click="downpop">完成</div>
             </div>
             <li class="list-li" v-for="item in options">
                 <div style="background: #eee;text-indent:0.5em;">{{ item.name }}</div>
@@ -495,7 +495,7 @@
         position: fixed;
         top:0px;
         left:0px;
-        z-index: 999;
+        z-index: 6666;
         background: rgba(0,0,0,0.1);
     }
 
@@ -576,6 +576,11 @@
         line-height: 4.5rem;
         text-align: center;
         font-size: 1.4rem;
+    }
+
+    .option-list .down:active {
+        background: #81c429;
+        color:#fff;
     }
 
     /* search_panel end */

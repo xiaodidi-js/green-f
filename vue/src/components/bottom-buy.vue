@@ -70,10 +70,11 @@
             clickShare () {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
+                var content = this;
                 if(ustore == null) {
                     alert("没有登录，请先登录！");
                     setTimeout(function () {
-                        _self.$router.go({name: 'login'});
+                        content.$router.go({name: 'login'});
                     }, 100);
                     return false;
                 }
