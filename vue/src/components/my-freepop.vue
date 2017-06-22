@@ -13,31 +13,7 @@
                 <div class="sel-bg">
                     <div class="select-add" id="selectTitle" @click="onChonse()">全部</div>
                     <i class="iconfont icon-sanjiao icon-sanjiao" id="icon-sanjiao"></i>
-                    <div class="popdown" v-show="popdown" @click="downpop">
-                        <ul class="option-list">
-                            <div>
-                                <div class="everaddress" @click="allChonse()">全部</div>
-                                <div class="down">完成</div>
-                            </div>
-                            <li class="list-li" v-for="item in options">
-                                <div style="background: #eee">{{ item.name }}</div>
-                                <i class="list" style="display:block;width:100%;height:1px;background: #f2f2f2;"></i>
-                                <div class="double-list">
-                                    <ul>
-                                        <li class="select-li" v-for="items in item.sub" @click="onOnlyAddress(items.id)">
-                                            {{ items.name }}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <!--<select class="sel-bg" id="sel">-->
-                        <!--<option @click="onChonse()">全部</option>-->
-                        <!--<optgroup label="{{ item.name }}" v-for="item in options">-->
-                            <!--<option v-for="items in item.sub" @click="onOnlyAddress(items.id)">{{ items.name }}</option>-->
-                        <!--</optgroup>-->
-                    <!--</select>-->
+
                 </div>
             </div>
         </div>
@@ -46,6 +22,25 @@
             <freepop-list v-for="item in tmp_address" :obj="item" :chose-id="chosen" :sum-money="money" ></freepop-list>
         </div>
         <div class="btn" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</div>
+    </div>
+
+    <div class="popdown" v-show="popdown" @click="downpop"></div>
+    <div class="option-list" id="left_Menu">
+        <div class="scroll" id="scroller">
+            <div>
+                <div class="everaddress" @click="allChonse()">全部</div>
+                <div class="down">完成</div>
+            </div>
+            <li class="list-li" v-for="item in options">
+                <div style="background: #eee;text-indent:0.5em;">{{ item.name }}</div>
+                <i class="list" style="display:block;width:100%;height:1px;background: #f2f2f2;"></i>
+                <div class="double-list">
+                    <ul>
+                        <li class="select-li" v-for="items in item.sub" @click="onOnlyAddress(items.id)">{{ items.name }}</li>
+                    </ul>
+                </div>
+            </li>
+        </div>
     </div>
     <!-- toast显示框 -->
     <toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
@@ -129,13 +124,39 @@
         },
         ready() {
             this.selList();
-//            $("#sel").change(function () {
-//                console.log($("option:selected",this).parent().index());
-//                $("option:selected",this).parent().index();
-//            });
+            this.onToureEle();
+            console.log(123123);
+        },
+        created() {
+
         },
         methods: {
+            onToureEle () {
+                try {
+                    var times = null , myScroll_left;
+                    times = setInterval(function() {
+                        var resultContentH = $("#left_Menu").height();
+                        if (resultContentH > 0) {
+                            $("#left_Menu").height(resultContentH);
+                            setTimeout(function () {
+                                clearInterval(times);
+                                myScroll_left = new IScroll('#left_Menu', {
+                                    vScroll: true,
+                                    mouseWheel: true,
+                                    vScrollbar: false,
+                                    probeType: 2,
+                                    click: true
+                                });
+                                myScroll_left.refresh();
+                            }, 100);
+                        }
+                    } ,100);
+                } catch (e) {}
+            },
             downpop () {
+                $(".option-list").show().animate({
+                    "bottom":"-250px"
+                },100);
                 this.popdown = false;
                 this.tansform('icon-sanjiao', 'rotate(0deg)');
                 this.isChonse = false;
@@ -211,6 +232,9 @@
             onChonse: function () {
                 var content = this;
                 this.popdown = true;
+                $(".option-list").show().animate({
+                    "bottom":"0px"
+                },100);
                 if (!this.isChonse) {
                     this.isChonse = true;
                     this.tansform('icon-sanjiao', 'rotate(180deg)');
@@ -331,7 +355,6 @@
                             this.chosen = obj.id;
                             this.$parent.data.address = obj;
                             this.$parent.data.tmp_address = obj;
-//                            this.$parent.data.data = obj;
                             this.$parent.freight = response.data.freight;
                         } else if (response.data.status === -1) {
                             this.$parent.toastMessage = response.data.info;
@@ -466,7 +489,7 @@
         color: #ccc;
     }
 
-    .search_panel .alladdress .sel-bg .popdown {
+    .popdown {
         width:100%;
         height:100%;
         position: fixed;
@@ -476,36 +499,49 @@
         background: rgba(0,0,0,0.1);
     }
 
-    .search_panel .alladdress .sel-bg .option-list {
-        z-index: 999;
+    .option-list {
+        z-index: 7777;
         width: 100%;
         height: 250px;
         background: #fff;
         position: fixed;
         border: 1px solid #ccc;
-        /* border-top: none; */
         left: -1px;
-        bottom: 0px;
+        bottom: -250px;
         overflow-y: auto;
-        overflow-x: hidden;
+        display: block;
+        -webkit-overflow-scrolling: touch;
+        -moz-overflow-scrolling: touch;
+        -ms-overflow-scrolling: touch;
+        -o-overflow-scrolling: touch;
+        overflow-scrolling: touch;
     }
 
-    .search_panel .alladdress .sel-bg .option-list .list-li {
-        line-height: 35px;
+    .option-list .list-li {
+        line-height: 4.5rem;
         font-size: 14px;
         position: relative;
         clear: both;
     }
 
-    .search_panel .alladdress .sel-bg .option-list .list-li .double-list {
+    .option-list .list-li .double-list {
         width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
-    .search_panel .alladdress .sel-bg .option-list .list-li .double-list ul li {
+    .option-list .list-li .double-list ul li {
         width: 105%;
-        height: 3.5rem;
+        height: 4.5rem;
         display: block;
-        margin-left: 2rem;
+        text-indent: 2em;
+        text-indent:2em;
+    }
+
+    .option-list .list-li .double-list ul li:active {
+        background: #81c429;
+        color:#fff;
     }
 
     .search_panel .alladdress .sel-bg .select-add {
@@ -519,19 +555,25 @@
         font-size: 14px;
     }
 
-    .search_panel .alladdress .sel-bg .option-list .everaddress {
+    .option-list .everaddress {
         clear:both;
-        height:3.5rem;
+        height:4.5rem;
         width:80%;
         float:left;
         font-size:1.4rem;
-        line-height:3.5rem;
+        line-height:4.5rem;
+        text-indent:0.5em;
     }
 
-    .search_panel .alladdress .sel-bg .down {
+    .option-list .everaddress:active {
+        background: #81c429;
+        color:#fff;
+    }
+
+    .option-list .down {
         width: 20%;
         float: right;
-        line-height: 35px;
+        line-height: 4.5rem;
         text-align: center;
         font-size: 1.4rem;
     }
@@ -545,7 +587,7 @@
         width: 0%;
         height: 0%;
         z-index: 1000;
-        background-color: transparent;
+        background: transparent;
     }
 
     .masker.show {

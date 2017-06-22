@@ -1,5 +1,269 @@
-<style scoped>
+<template>
+	<div class="type-bg" keep-alive>
+		<div type="popup" class="cla-wrapper" id="left_Menu" style="float: left;">
+			<div id="scroller">
+				<div class="menu-left">
+					<ul id="touch-ui">
+						<li class="cla-card-li" style="border:none;" :class="{'active':dtype == item.id}" v-for="item in types" @click="getChonse(item.id)">
+							<div class="menu-item" @click="chooseSort(item.id)">{{ item.name }}</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div type="popup" class="cla-message" id="right_Menu">
+			<div id="scroller2">
+				<div class="ele-fixed">
+					<template v-for="item in pdata">
+						<div class="main">
+							<div v-link="{name:'detail',params:{pid:item.id}}">
 
+								<div class="shotcut" v-if="item.store == 0">
+									<div class="qing">已售罄</div>
+									<img :src="item.src" alt="{{ item.title }}" class="shotcut-img" style="width:100%;height:100%;" />
+								</div>
+
+								<div class="shotcut" v-else>
+									<img :src="item.src" alt="{{ item.title }}" class="shotcut-img" style="width:100%;height:100%;" />
+								</div>
+
+								<div class="shotcut-txt">
+									<p style="height:35px;width:100%;overflow: hidden;text-overflow: ellipsis;">{{ item.title }}</p>
+									<p class="relative">
+										<i>￥</i>
+										<span class="money">{{item.price}}</span>
+									</p>
+								</div>
+							</div>
+							<div class="icon-card" @click="goCart(item)"></div>
+						</div>
+					</template>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- toast显示框 -->
+	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
+
+</template>
+
+<script>
+
+    import Scroller from 'vux/src/components/scroller'
+    import { setCartStorage,clearAll } from 'vxpath/actions'
+    import { cartNums } from 'vxpath/getters'
+	import formatPop from 'components/format-pop'
+    import Toast from 'vux/src/components/toast'
+    import axios from 'axios'
+    import qs from 'qs'
+    import 'element-ui/lib/theme-default/index.css'
+
+	export default{
+
+        vuex: {
+            getters: {
+                cartNums
+            },
+            actions: {
+                setCart: setCartStorage,
+                clearAll
+            }
+        },
+        props: {
+            types: {
+                type: Array,
+                default() {
+                    return []
+                }
+            }
+        },
+        data() {
+            return {
+                pdata: [],
+                item: [],
+                myScroll: '',
+                dtype: null,
+                guige: [],
+                popShow: false,
+                proNums: 1,
+                buyNums: 1,
+                toastMessage: '',
+                toastShow: false,
+                activestu:0
+            }
+        },
+        created () {
+		},
+        ready() {
+            this.dtype = sessionStorage.getItem('number');
+            if(this.dtype == null) {
+                this.chooseSort(26);
+                this.getChonse(26);
+                this.$router.go({name:'classify'});
+			} else {
+                this.chooseSort(this.dtype);
+                this.getChonse(this.dtype);
+			}
+            $(function() {
+                //菜单框架自动获取高度
+                var doc_H = $(document).height();
+                $(".type-bg").height(doc_H);
+                window.onresize = function(){
+                    var doc_H = $(document).height();
+                    $(".type-bg").height(doc_H);
+                }
+            });
+            this.onToure();
+        },
+        components: {
+            Scroller,
+            formatPop,
+            Toast
+		},
+        methods: {
+            onToure:function() {
+                var myScroll_left;
+                var myScroll_right;
+                var intervalTime_left = null , intervalTime_right = null;
+                try {
+                    intervalTime_left = setInterval(function() {
+                        var resultContentH = $("#left_Menu").height();
+                        if (resultContentH > 0) {
+                            $("#left_Menu").height(resultContentH);
+                            setTimeout(function () {
+                                clearInterval(intervalTime_left);
+                                myScroll_left = new IScroll('#left_Menu', {
+                                    vScroll: true,
+                                    mouseWheel: true,
+                                    vScrollbar: false,
+                                    probeType: 2,
+                                    click: true
+                                });
+                                myScroll_left.refresh();
+                            }, 100);
+                        }
+                    } ,10);
+                    intervalTime_right = setInterval(function() {
+                        var resultContentH = $("#left_Menu").height();
+                        if (resultContentH > 0) {
+                            $("#left_Menu").height(resultContentH);
+                            setTimeout(function () {
+                                clearInterval(intervalTime_right);
+                                myScroll_right = new IScroll('#right_Menu', {
+                                    vScroll: true,
+                                    mouseWheel: true,
+                                    vScrollbar: false,
+                                    probeType: 2,
+                                    click: true
+                                });
+                                myScroll_right.refresh();
+                            }, 100);
+                        }
+                    } ,10);
+				} catch (e) {
+                    throw e;
+				}
+			},
+            getChonse: function(type) {
+                if(this.dtype == type) {
+                    return true;
+                }
+                this.dtype = type;
+                sessionStorage.setItem('number',this.dtype);
+                this.menuIndex = type;
+            },
+            filters: {
+
+			},
+            chooseSort(cid){
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/index/classifylist/cid/' + cid,
+                }).then((response) => {
+                    if (response.data.status == 1) {
+                        sessionStorage.setItem("pdata",JSON.stringify(response.data.info.list));
+                        this.pdata = JSON.parse(sessionStorage.getItem("pdata"));
+                        console.log(this.pdata);
+                    }
+                }).catch(function(e) {
+                    console.log(e);
+				});
+            },
+            comfirmFun: function (cid) {
+
+            },
+            goCart: function(data) {
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
+                var obj = {} , self = this, cart = JSON.parse(localStorage.getItem("myCart"));
+                if(ustore == null) {
+                    alert("没有登录，请先登录！");
+                    setTimeout(function () {
+                        self.clearAll();
+                        self.$router.go({name: 'login'});
+                    }, 800);
+                    return false;
+				} else if (ustore != null) {
+                    axios({
+                        method: 'get',
+                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
+                    }).then((response) => {
+                        obj = {
+                            id:data.id,
+                            name:data.title,
+                            price:data.price,
+                            shotcut:data.src,
+                            deliverytime:data.deliverytime,
+                            activestu:data.activestu,
+                            peisongok:data.peisongok,
+                            activeid:data.activeid,
+                            activepay:data.activepay,
+                            nums:this.buyNums,
+                            store:this.proNums = response.data.store,
+                            format:'',
+                            formatName:'',
+                        };
+                        if(data.peisongok == 0 && data.deliverytime == 1) {
+                            alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                            return false;
+                        } else if(data.peisongok == 0 && data.deliverytime == 0) {
+                            alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
+                            return false;
+                        } else if(data.store == 0) {
+                            alert("已售罄");
+                            return false;
+                        } else if (data.activeid == 1) {
+                            alert("这是限时抢购商品！");
+                            return false;
+                        } else if (data.activestu == 2) {
+                            alert("这是限时分享商品！");
+                            return false;
+                        }
+                        if(sessionStorage.getItem("myCart") != '') {
+                            for(var y in cart) {
+                                if (cart[y]["deliverytime"] != data.deliverytime) {
+                                    if (data.deliverytime == 0) {
+                                        alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                        return false;
+                                    } else if (data.deliverytime == 1) {
+                                        alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                        self.setCart(obj);
+                        obj = {};
+                        alert("加入购物车成功");
+                    });
+				}
+			}
+        },
+    }
+</script>
+
+<style scoped>
 
 	.type-bg {
 		width:100%;
@@ -364,266 +628,3 @@
 	}
 
 </style>
-
-<template>
-	<div class="type-bg" keep-alive>
-		<div type="popup" class="cla-wrapper" id="left_Menu" style="float: left;">
-			<div id="scroller">
-				<div class="menu-left">
-					<ul id="touch-ui">
-						<li class="cla-card-li" style="border:none;" :class="{'active':dtype == item.id}" v-for="item in types" @click="getChonse(item.id)">
-							<div class="menu-item" @click="chooseSort(item.id)">{{ item.name }}</div>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div type="popup" class="cla-message" id="right_Menu">
-			<div id="scroller2">
-				<div class="ele-fixed">
-					<template v-for="item in pdata">
-						<div class="main">
-							<div v-link="{name:'detail',params:{pid:item.id}}">
-
-								<div class="shotcut" v-if="item.store == 0">
-									<div class="qing">已售罄</div>
-									<img :src="item.src" alt="{{ item.title }}" class="shotcut-img" style="width:100%;height:100%;" />
-								</div>
-
-								<div class="shotcut" v-else>
-									<img :src="item.src" alt="{{ item.title }}" class="shotcut-img" style="width:100%;height:100%;" />
-								</div>
-
-								<div class="shotcut-txt">
-									<p style="height:35px;width:100%;overflow: hidden;text-overflow: ellipsis;">{{ item.title }}</p>
-									<p class="relative">
-										<i>￥</i>
-										<span class="money">{{item.price}}</span>
-									</p>
-								</div>
-							</div>
-							<div class="icon-card" @click="goCart(item)"></div>
-						</div>
-					</template>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- toast显示框 -->
-	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
-
-</template>
-
-<script>
-
-    import Scroller from 'vux/src/components/scroller'
-    import { setCartStorage,clearAll } from 'vxpath/actions'
-    import { cartNums } from 'vxpath/getters'
-	import formatPop from 'components/format-pop'
-    import Toast from 'vux/src/components/toast'
-    import axios from 'axios'
-    import qs from 'qs'
-
-	export default{
-        vuex: {
-            getters: {
-                cartNums
-            },
-            actions: {
-                setCart: setCartStorage,
-                clearAll
-            }
-        },
-        props: {
-            types: {
-                type: Array,
-                default() {
-                    return []
-                }
-            }
-        },
-        data() {
-            return {
-                pdata: [],
-                item: [],
-                myScroll: '',
-                dtype: null,
-                guige: [],
-                popShow: false,
-                proNums: 1,
-                buyNums: 1,
-                toastMessage: '',
-                toastShow: false,
-                activestu:0
-            }
-        },
-        created () {
-		},
-        ready() {
-            this.dtype = sessionStorage.getItem('number');
-            if(this.dtype == null) {
-                this.chooseSort(26);
-                this.getChonse(26);
-                this.$router.go({name:'classify'});
-			} else {
-                this.chooseSort(this.dtype);
-                this.getChonse(this.dtype);
-			}
-            $(function() {
-                //菜单框架自动获取高度
-                var doc_H = $(document).height();
-                $(".type-bg").height(doc_H);
-                window.onresize = function(){
-                    var doc_H = $(document).height();
-                    $(".type-bg").height(doc_H);
-                }
-            });
-            this.onToure();
-        },
-        components: {
-            Scroller,
-            formatPop,
-            Toast
-		},
-        methods: {
-            onToure:function() {
-                var myScroll_left;
-                var myScroll_right;
-                var intervalTime_left = null , intervalTime_right = null;
-                try {
-                    intervalTime_left = setInterval(function() {
-                        var resultContentH = $("#left_Menu").height();
-                        if (resultContentH > 0) {
-                            $("#left_Menu").height(resultContentH);
-                            setTimeout(function () {
-                                clearInterval(intervalTime_left);
-                                myScroll_left = new IScroll('#left_Menu', {
-                                    vScroll: true,
-                                    mouseWheel: true,
-                                    vScrollbar: false,
-                                    probeType: 2,
-                                    click: true
-                                });
-                                myScroll_left.refresh();
-                            }, 100);
-                        }
-                    } ,10);
-                    intervalTime_right = setInterval(function() {
-                        var resultContentH = $("#left_Menu").height();
-                        if (resultContentH > 0) {
-                            $("#left_Menu").height(resultContentH);
-                            setTimeout(function () {
-                                clearInterval(intervalTime_right);
-                                myScroll_right = new IScroll('#right_Menu', {
-                                    vScroll: true,
-                                    mouseWheel: true,
-                                    vScrollbar: false,
-                                    probeType: 2,
-                                    click: true
-                                });
-                                myScroll_right.refresh();
-                            }, 100);
-                        }
-                    } ,10);
-				} catch (e) {
-                    throw e;
-				}
-			},
-            getChonse: function(type) {
-                if(this.dtype == type) {
-                    return true;
-                }
-                this.dtype = type;
-                sessionStorage.setItem('number',this.dtype);
-                this.menuIndex = type;
-            },
-            filters: {
-
-			},
-            chooseSort(cid){
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/index/classifylist/cid/' + cid,
-                }).then((response) => {
-                    if (response.data.status == 1) {
-                        sessionStorage.setItem("pdata",JSON.stringify(response.data.info.list));
-                        this.pdata = JSON.parse(sessionStorage.getItem("pdata"));
-                        console.log(this.pdata);
-                    }
-                }).catch(function(e) {
-                    console.log(e);
-				});
-            },
-            comfirmFun: function (cid) {
-
-            },
-            goCart: function(data) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                var obj = {} , self = this, cart = JSON.parse(localStorage.getItem("myCart"));
-                if(ustore == null) {
-                    alert("没有登录，请先登录！");
-                    setTimeout(function () {
-                        self.clearAll();
-                        self.$router.go({name: 'login'});
-                    }, 800);
-                    return false;
-				} else if (ustore != null) {
-                    axios({
-                        method: 'get',
-                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
-                    }).then((response) => {
-                        obj = {
-                            id:data.id,
-                            name:data.title,
-                            price:data.price,
-                            shotcut:data.src,
-                            deliverytime:data.deliverytime,
-                            activestu:data.activestu,
-                            peisongok:data.peisongok,
-                            activeid:data.activeid,
-                            activepay:data.activepay,
-                            nums:this.buyNums,
-                            store:this.proNums = response.data.store,
-                            format:'',
-                            formatName:'',
-                        };
-                        if(data.peisongok == 0 && data.deliverytime == 1) {
-                            alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
-                            return false;
-                        } else if(data.peisongok == 0 && data.deliverytime == 0) {
-                            alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
-                            return false;
-                        } else if(data.store == 0) {
-                            alert("已售罄");
-                            return false;
-                        } else if (data.activeid == 1) {
-                            alert("这是限时抢购商品！");
-                            return false;
-                        } else if (data.activestu == 2) {
-                            alert("这是限时分享商品！");
-                            return false;
-                        }
-                        if(sessionStorage.getItem("myCart") != '') {
-                            for(var y in cart) {
-                                if (cart[y]["deliverytime"] != data.deliverytime) {
-                                    if (data.deliverytime == 0) {
-                                        alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                        return false;
-                                    } else if (data.deliverytime == 1) {
-                                        alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                        self.setCart(obj);
-                        obj = {};
-                        alert("加入购物车成功");
-                    });
-				}
-			}
-        },
-    }
-</script>
