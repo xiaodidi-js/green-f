@@ -13,20 +13,25 @@
                 <div class="sel-bg">
                     <div class="select-add" id="selectTitle" @click="onChonse()">全部</div>
                     <i class="iconfont icon-sanjiao icon-sanjiao" id="icon-sanjiao"></i>
-                    <ul class="option-list" v-show="isChonse">
-                        <div class="everaddress" @click="allChonse()">全部</div>
-                        <li class="list-li" v-for="item in options">
-                            <div style="">{{ item.name }}</div>
-                            <i class="list" style="display:block;width:15rem;height:1px;background: #f2f2f2;"></i>
-                            <div class="double-list">
-                                <ul>
-                                    <li class="select-li" v-for="items in item.sub" @click="onOnlyAddress(items.id)">
-                                        {{ items.name }}
-                                    </li>
-                                </ul>
+                    <div class="popdown" v-show="popdown" @click="downpop">
+                        <ul class="option-list">
+                            <div>
+                                <div class="everaddress" @click="allChonse()">全部</div>
+                                <div class="down">完成</div>
                             </div>
-                        </li>
-                    </ul>
+                            <li class="list-li" v-for="item in options">
+                                <div style="background: #eee">{{ item.name }}</div>
+                                <i class="list" style="display:block;width:100%;height:1px;background: #f2f2f2;"></i>
+                                <div class="double-list">
+                                    <ul>
+                                        <li class="select-li" v-for="items in item.sub" @click="onOnlyAddress(items.id)">
+                                            {{ items.name }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                     <!--<select class="sel-bg" id="sel">-->
                         <!--<option @click="onChonse()">全部</option>-->
                         <!--<optgroup label="{{ item.name }}" v-for="item in options">-->
@@ -119,6 +124,7 @@
                 search: '',
                 tmp_address: [],
                 data: [],
+                popdown: false,
             }
         },
         ready() {
@@ -129,6 +135,11 @@
 //            });
         },
         methods: {
+            downpop () {
+                this.popdown = false;
+                this.tansform('icon-sanjiao', 'rotate(0deg)');
+                this.isChonse = false;
+            },
             fun: function () {
                 var self = this;
                 var data = self.tmp_address.filter(function (item) {
@@ -199,6 +210,7 @@
             },
             onChonse: function () {
                 var content = this;
+                this.popdown = true;
                 if (!this.isChonse) {
                     this.isChonse = true;
                     this.tansform('icon-sanjiao', 'rotate(180deg)');
@@ -454,31 +466,39 @@
         color: #ccc;
     }
 
+    .search_panel .alladdress .sel-bg .popdown {
+        width:100%;
+        height:100%;
+        position: fixed;
+        top:0px;
+        left:0px;
+        z-index: 999;
+        background: rgba(0,0,0,0.1);
+    }
+
     .search_panel .alladdress .sel-bg .option-list {
         z-index: 999;
-        width: 125%;
-        height: auto;
+        width: 100%;
+        height: 250px;
         background: #fff;
-        position: absolute;
+        position: fixed;
         border: 1px solid #ccc;
         /* border-top: none; */
         left: -1px;
-        top: 30px;
+        bottom: 0px;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .search_panel .alladdress .sel-bg .option-list .list-li {
-        /*height:35px;*/
         line-height: 35px;
         font-size: 14px;
-        /*border-bottom:1px solid #f2f2f2;*/
         position: relative;
+        clear: both;
     }
 
     .search_panel .alladdress .sel-bg .option-list .list-li .double-list {
-        /*position:absolute;*/
-        /*left:10rem;*/
-        /*top:0rem;*/
-        width: 10rem;
+        width: 100%;
     }
 
     .search_panel .alladdress .sel-bg .option-list .list-li .double-list ul li {
@@ -502,9 +522,18 @@
     .search_panel .alladdress .sel-bg .option-list .everaddress {
         clear:both;
         height:3.5rem;
-        width:100%;
+        width:80%;
+        float:left;
         font-size:1.4rem;
         line-height:3.5rem;
+    }
+
+    .search_panel .alladdress .sel-bg .down {
+        width: 20%;
+        float: right;
+        line-height: 35px;
+        text-align: center;
+        font-size: 1.4rem;
     }
 
     /* search_panel end */

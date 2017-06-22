@@ -70,10 +70,8 @@
 		},
         ready() {
             this.main();
-            var content = this;
-            $(window).scroll(function(){
+            $(window).scroll(function() {
                 if($(window).scrollTop() >= 350) {
-                    content.commitData({target: 'scroll', data: $(window).scrollTop()});
                     $(".goto_top").fadeIn(500);
                 } else {
                     $(".goto_top").stop(true,true).fadeOut(500);
