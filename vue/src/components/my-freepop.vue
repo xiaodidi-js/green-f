@@ -23,7 +23,6 @@
         </div>
         <div class="btn" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</div>
     </div>
-
     <div class="popdown" v-show="popdown" @click="downpop"></div>
     <div class="option-list" id="left_Menu">
         <div class="scroll" id="scroller">
@@ -46,7 +45,6 @@
     <toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
     <!-- loading加载框 -->
     <loading :show="loadingShow" :text="loadingMessage"></loading>
-
 </template>
 
 <script>

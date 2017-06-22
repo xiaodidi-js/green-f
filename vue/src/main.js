@@ -22,7 +22,6 @@ import ElementDefault from 'element-theme-default'
 // 	attempt:3
 // });
 
-Vue.use(ElementUI);
 Vue.use(VueResource);
 Vue.use(VueRouter);
 
@@ -90,7 +89,7 @@ router.beforeEach((transition) => {
     }else{
         transition.next();
     }
-    window.scrollTo(0, 0);
+    window.scrollTo(0,0);
 });
 
 router.afterEach((transition) => {
@@ -101,7 +100,7 @@ router.afterEach((transition) => {
             let shareData = {
                 title:getSession.title,
                 desc:getSession.desc,
-                link:'http://'+window.location.host+'/index_prod.html',
+                link:'http://' + window.location.host + '/index_prod.html',
                 imgUrl:getSession.imgurl
             };
             WxJssdk.config({
