@@ -513,9 +513,7 @@
 			});
 		},
 		computed: {
-            goback () {
-                window.history.back();
-			},
+
 			makeFreight: function(){
 				let fmoney = parseFloat(this.data.freight);
 				if(isNaN(fmoney)){
@@ -531,6 +529,9 @@
 			}
 		},
 		methods: {
+            goback () {
+                window.history.back();
+            },
             tuijian () {
                 axios({
                     method: 'get',
@@ -713,10 +714,7 @@
 			},
 			addNums: function(){
 			    if(this.data.activepay == 0) {
-                    if(this.buyNums >= this.proNums){
-                        return false;
-                    }
-                    this.buyNums++;
+
 				} else if(this.data.activeid != 0) {
                     if(this.data.activepay > this.buyNums) {
                         this.buyNums++;
@@ -805,10 +803,6 @@
                                 this.$router.go({name: 'cart'});
                                 return false;
                             }
-                        } else if(shoping[i].nums == _self.data.activepay) {
-                            alert("限购数量已用完");
-                            $(".buyButton").eq(0).attr("disabled","true");
-                            return false;
                         }
                     }
                 }
@@ -879,10 +873,6 @@
                                 this.$router.go({name: 'cart'});
                                 return false;
                             }
-                        } else if(shoping[i].nums == _self.data.activepay) {
-                            alert("限购数量已用完!");
-                            $(".buyButton").eq(1).attr("disabled","true");
-                            return false;
                         }
                     }
                 }

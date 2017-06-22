@@ -15,30 +15,30 @@
 import CardTypes from 'components/card-types'
 import Toast from 'vux/src/components/toast'
 
-export default{
-	data() {
-		return {
-			toastMessage:'',
-			toastShow:false,
-			data:[]
+	export default{
+		data() {
+			return {
+				toastMessage:'',
+				toastShow:false,
+				data:[]
+			}
+		},
+		components: {
+			CardTypes,
+			Toast
+		},
+		route: {
+
+		},
+		ready() {
+			this.$http.get(localStorage.apiDomain + 'public/index/index/columns').then((response)=>{
+				localStorage.setItem("classify",JSON.stringify(response.data.classify));
+				this.data = JSON.parse(localStorage.getItem("classify"));
+			},(response)=>{
+				this.toastMessage = "网络开小差啦~";
+				this.toastShow = true;
+			})
 		}
-	},
-	components: {
-		CardTypes,
-		Toast
-	},
-	route: {
-		
-	},
-	ready() {
-		this.$http.get(localStorage.apiDomain+'public/index/index/columns').then((response)=>{
-			this.data = response.data.classify;
-			sessionStorage.setItem("classify",JSON.stringify(this.data));
-		},(response)=>{
-			this.toastMessage = "网络开小差啦~";
-			this.toastShow = true;
-		})
 	}
-}
 
 </script>

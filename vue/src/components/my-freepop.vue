@@ -20,16 +20,14 @@
                             <i class="list" style="display:block;width:15rem;height:1px;background: #f2f2f2;"></i>
                             <div class="double-list">
                                 <ul>
-                                    <li class="select-li"
-                                        v-for="items in item.sub"
-                                        @click="onOnlyAddress(items.id)">
+                                    <li class="select-li" v-for="items in item.sub" @click="onOnlyAddress(items.id)">
                                         {{ items.name }}
                                     </li>
                                 </ul>
                             </div>
                         </li>
                     </ul>
-                    <!--<select class="sel-bg">-->
+                    <!--<select class="sel-bg" id="sel">-->
                         <!--<option @click="onChonse()">全部</option>-->
                         <!--<optgroup label="{{ item.name }}" v-for="item in options">-->
                             <!--<option v-for="items in item.sub" @click="onOnlyAddress(items.id)">{{ items.name }}</option>-->
@@ -125,12 +123,16 @@
         },
         ready() {
             this.selList();
+//            $("#sel").change(function () {
+//                console.log($("option:selected",this).parent().index());
+//                $("option:selected",this).parent().index();
+//            });
         },
         methods: {
             fun: function () {
                 var self = this;
                 var data = self.tmp_address.filter(function (item) {
-                    return item.address.indexOf(self.search) !== -1
+                    return item.name.indexOf(self.search) !== -1
                 });
                 this.tmp_address = data;
             },

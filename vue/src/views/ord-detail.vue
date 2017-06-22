@@ -237,14 +237,14 @@ export default{
 		update_timer () {
 			if (this.second === 0) {
 				if (this.minute < 0) {
-					clearInterval(this.Interval)
+					clearInterval(this.Interval);
 					if(this.payInfo){
 						this.$store.commit('showToast', {type:'cancel',msg:'订单超时！'})
 					}
-					this.minute = 0
-					this.second = 0
+					this.minute = 0;
+					this.second = 0;
 				} else {
-					this.second = 59
+					this.second = 59;
 					this.minute--
 				}
 			} else {
@@ -262,7 +262,7 @@ export default{
             this.stop = !this.stop
         },
 		jumpExpress: function() {
-			if(this.data.order.pay !=1 || this.data.order.send !=1 || !this.data.order.snum) {
+			if(this.data.order.pay != 1 || this.data.order.send != 1 || !this.data.order.snum) {
 				return false;
 			}
 			location.href='http://www.kuaidi100.com/chaxun?com='+this.data.order.scid+'&nu='+this.data.order.snum;

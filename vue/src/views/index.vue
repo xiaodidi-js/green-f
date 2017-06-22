@@ -8,33 +8,20 @@
 		<loading :show="loadingShow" :text="loadingMessage"></loading>
 	</div>
 </template>
-
 <script>
 
-import Swiper from 'vux/src/components/swiper'
-import Scroller from 'vux/src/components/scroller'
 import Toast from 'vux/src/components/toast'
 import Loading from 'vux/src/components/loading'
 
 export default{
 	data() {
 		return {
-			toastMessage:'',
-            loadingMessage:'',
-			toastShow:false,
 			data:{
-				banners:[],
-				columns:[],
-                title: '',
-                list: []
+
 			},
-			banners: [],
-            searchKey: '',
 		}
 	},
     components: {
-        Swiper,
-        Scroller,
         Toast,
         Loading
     },
@@ -42,39 +29,13 @@ export default{
 		
 	},
 	ready() {
-		var _this = this;
-		//回车搜索
-        document.onkeydown = function(event) {
-            var e = event || window.event || arguments.callee.caller.arguments[0];
-            if(e && e.keyCode == 13) {
-                _this.getData('');
-			}
-		};
-        this.getData('');
+
 	},
     methods: {
-        getData: function(sk) {
-            let url = localStorage.apiDomain + '/public/index/index/classifylist/cid/' + this.$route.params.cid + '/action/' + this.column;
-            if(sk.length > 0) url += '/search/' + sk;
-            this.$http.get(url).then((response) => {
-                this.data.list = response.data.list;
-            },(response)=>{
-                this.toastMessage = "网络开小差啦~";
-                this.toastShow = true;
-            });
-        },
-        changeColumn: function(col) {
-            if(this.column === col) {
-                return false;
-            }
-            this.column = col;
-            this.getData('');
-        }
+
 	},
 	events: {
-		goSearch: function(skey){
-			this.getData(skey);
-		}
+
 	}
 }
 
@@ -85,6 +46,7 @@ export default{
 	#app{
 		position: relative;
 	}
+
 	.wrapper{
 		width:100%;
 		height:auto;

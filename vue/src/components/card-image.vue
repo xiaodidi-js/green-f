@@ -65,7 +65,8 @@
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/index/productinfo/uid/' + ustore.id + '/pid/' + this.$route.query.pid,
                 }).then((response) => {
-                    this.list = response.data.articles.list;
+                    localStorage.setItem("articles",JSON.stringify(response.data.articles.list));
+                    this.list = JSON.parse(localStorage.getItem("articles"));
                     console.log(this.list);
                 });
 			}

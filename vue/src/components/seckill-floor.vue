@@ -82,7 +82,6 @@
                     }
                 }
             });
-
         },
         computed: {
             "timeRes": function() {

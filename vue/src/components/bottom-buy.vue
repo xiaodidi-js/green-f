@@ -230,21 +230,22 @@
 		font-size:14px;
 	}
 
-	.bottom-buy .btn.doBuy:active{
-		background-color:#DE6156;
+	.bottom-buy .btn.addCar{
+		background: #F9AD0C;
 	}
 
-	.bottom-buy .btn.addCar{
-		background-color:#F9AD0C;
+	.bottom-buy .btn.doBuy:active{
+		border:1px solid #DE6156;
+		background: #DE6156;
 	}
 
 	.bottom-buy .btn.addCar:active{
-		background-color:#E29D0A;
+		background: #E29D0A;
 	}
 
 	.bottom-buy .btn.noBuy{
 		width:70%;
-		background-color:#d6d6d6;
+		background: #d6d6d6;
 		box-shadow:0.2rem 0.2rem 1rem #969696 inset;
 	}
 

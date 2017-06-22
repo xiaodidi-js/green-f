@@ -604,8 +604,6 @@
                         }else{
                             this.loadingShow = false;
                             alert(response.data.info);
-//                            this.toastMessage = response.data.info;
-//                            this.toastShow = true;
                         }
                     },(response)=>{
                         this.loadingShow = false;
@@ -618,7 +616,6 @@
         }
     }
 </script>
-
 
 <style scoped>
 	.bal-wrapper{

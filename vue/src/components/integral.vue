@@ -103,8 +103,8 @@
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/usercenter/qiandao/uid/' + ustore.id + '/token/' + ustore.token,
                 }).then((response) => {
-                    this.list = response.data.list;
                     if(response.data.status == 0) {
+                        this.list = response.data.list;
                         alert("今天已签到了哦!");
                     } else if(response.data.status == 1) {
                         alert("签到成功！");

@@ -104,13 +104,13 @@
 		},
         methods: {
 		    //按钮回车事件
-            breakSearch: function (event) {
+            breakSearch (event) {
 				var e = window.event || event;
 				if(e && e.keyCode == 13) {
 					this.goSearch();
 				}
             },
-            goSearch: function() {
+            goSearch () {
                 var _self = this;
                 this.$http.get(localStorage.apiDomain + 'public/index/index/searchshop?shopname=' + this.searchKey).then((response)=>{
                     if(response.data.status == 1) {
@@ -130,13 +130,15 @@
                     this.toastShow = true;
                 });
 			},
-		    main: function() {
+		    main () {
                 axios({
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/index',
                 }).then((response) => {
                     localStorage.setItem("iData",JSON.stringify(response.data));
-                    this.data = JSON.parse(localStorage.getItem("iData"));
+                    if(localStorage.getItem("iData") != '') {
+                        this.data = JSON.parse(localStorage.getItem("iData"));
+					}
                     var data = this.data;
                     for (var i = 0; i < data.index_data.length; i++) {
                         if(data.index_data[i].type == 4) {
@@ -149,34 +151,35 @@
                     }
                 });
 			},
-            follow: function() {
+            follow () {
                 let url = '' , openid = sessionStorage.getItem("openid");
                 if(sessionStorage.getItem('since')) {
                     axios({
                         method: 'post',
                         url: localStorage.apiDomain + 'public/index/usercenter/sincestar/',
                         data: qs.stringify({
-                            sinceid: sessionStorage.getItem('since'),		//自提点ID
-                            openid: openid	//openid
+                            sinceid: sessionStorage.getItem('since'),
+                            openid: openid
                         })
                     }).then((response) => {
 						console.log(response.data);
                     });
                 }
             },
-            timeline: function() {
+            timeline () {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                this.$http.get(localStorage.apiDomain + 'public/index/sale/SaleTimeSolt/uid').then((response) => {
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/sale/SaleTimeSolt/uid',
+                }).then((response) => {
                     if(response.data.status === 1) {
-                        this.maincolumns = response.data.SaleTimeSolt;
+                        localStorage.setItem("salesolt",JSON.stringify(response.data.SaleTimeSolt));
+                        this.maincolumns = JSON.parse(localStorage.getItem("salesolt"));
                     } else {
                         this.toastMessage = response.data.info;
                         this.toastShow = true;
                     }
-                },(response)=>{
-                    this.toastMessage = '网络开小差了~';
-                    this.toastShow = true;
                 });
             },
             goPage () {

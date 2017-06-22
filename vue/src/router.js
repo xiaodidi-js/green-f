@@ -612,6 +612,5 @@ const routers = {
             require(['./components/card-coupon.vue'], resolve);
         }
     },
-
 };
 export default routers;
