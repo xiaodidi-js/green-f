@@ -24,13 +24,13 @@ class Shop extends Base{
 	public function orderxx(){
 		$get = $this->reqdata;
 		if(empty($get['id'])){
-			make_json(0,['没有订单数据序号，请联系趣果科技']);
+			return make_json(0,['没有订单数据序号，请联系趣果科技']);
 			exit();
 		}
 		$Orders = Model('Orders');
 		$info = $Orders->cxinfo($get);
 		if(empty($info)){
-			make_json(0,['这个订单不存在或已经删除']);
+			return make_json(0,['这个订单不存在或已经删除']);
 			exit();
 		}
 		$info['createtime'] = date('Y-m-d h:i:s',$info['createtime']);
@@ -50,7 +50,7 @@ class Shop extends Base{
 		$info['jfdk'] = $dikou['1'];
 		$cxuser = db('member')->where('id',$info['userid'])->field('utel')->find();
 		$info['tel'] = $cxuser['utel'];
-		make_json(1,['info'=>$info]);
+		return make_json(1,['info'=>$info]);
 	}
 
 	// 订单软删除
@@ -59,9 +59,9 @@ class Shop extends Base{
 		$update['del'] = 1;
 		$del = db('orders')->where('id',$get['id'])->update($update);
 		if($del){
-			make_json(1,'删除成功');
+			return make_json(1,'删除成功');
 		}else{
-			make_json(0,'删除失败，请联系趣果科技');
+			return make_json(0,'删除失败，请联系趣果科技');
 		}
 	}
 
@@ -72,14 +72,14 @@ class Shop extends Base{
 		if(!empty($post)){
 			$edit = $Orders->kjedit($post);
 			if($edit){
-				make_json(1,'编辑成功');
+				return make_json(1,'编辑成功');
 			}else{
-				make_json(0,'内容没有修改');
+				return make_json(0,'内容没有修改');
 			}
 		}else{
 			$get = $this->reqdata;
 			$info = $Orders->cxbj($get);
-			make_json(1,['info'=>$info]);
+			return make_json(1,['info'=>$info]);
 		}
 	}
 
@@ -87,6 +87,6 @@ class Shop extends Base{
 	public function selectztd(){
 		$get = $this->reqdata;
 		$list = db('handtake_place')->where('status',1)->field('id,name,address')->select();
-		make_json(1,['list'=>$list]);
+		return make_json(1,['list'=>$list]);
 	}
 }

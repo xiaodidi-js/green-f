@@ -44,9 +44,9 @@ class Qrcodeshop extends Base{
             $update['name'] = $post['name'];
             $edit = Model('ProductQrcode')->edit($update,$post['id']);
             if ($edit) {
-                make_json(1, '编辑成功');
+                return make_json(1, '编辑成功');
             } else {
-                make_json(0, '编辑失败');
+                return make_json(0, '编辑失败');
             }
         } else {
             if (empty($post['stime']) || empty($post['etime']) || empty($post['name'])) {
@@ -65,9 +65,9 @@ class Qrcodeshop extends Base{
             $data['ctime'] = time();
             $add = db('ProductQrcode')->insert($data);
             if ($add) {
-                make_json(1, '新增成功');
+                return make_json(1, '新增成功');
             } else {
-                make_json(0, '新增失败');
+                return make_json(0, '新增失败');
             }
         }
 	}
@@ -137,7 +137,7 @@ class Qrcodeshop extends Base{
         }else{
             $list = null;
         }
-        make_json(1,['info'=>$list]);
+        return make_json(1,['info'=>$list]);
     }
 
     // 完成配置保存
@@ -152,9 +152,9 @@ class Qrcodeshop extends Base{
 		}
 		$editsince = Model('ProductQrcode')->edit($data,$post['id']);
 		if($editsince){
-			make_json(1,'更新成功');
+			return make_json(1,'更新成功');
 		}else{
-			make_json(0,'更新失败');
+			return make_json(0,'更新失败');
 		}
 	}
 
@@ -167,12 +167,12 @@ class Qrcodeshop extends Base{
 			$content = 'http://'.$_SERVER['HTTP_HOST'].'/vue/index_prod.html#!/detail/'.$post['shopid'].'/qrcodeid/'.$post['qrcodeid'];
 			$path = $qrcode->qrcodeshop($content);
 			if($path){
-				make_json(1,['qrcodeimg' => $path]);
+				return make_json(1,['qrcodeimg' => $path]);
 			}else{
-				make_json(0,'生成二维码失败');
+				return make_json(0,'生成二维码失败');
 			}
 		}else{
-			make_json(0,'没有商品id或活动id');
+			return make_json(0,'没有商品id或活动id');
 		}
 	}
 }

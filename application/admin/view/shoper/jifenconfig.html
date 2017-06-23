@@ -54,7 +54,7 @@
 				var form = $('#form').serialize()
 				console.log(form)
 				$.post("{:url('admin/shoper/jifenconfig')}",form,function(data){
-					var data = JSON.parse(data)
+					var data = data
 					var nodesc = false
 					self.$Notice.open({
 						title: '信息提示',

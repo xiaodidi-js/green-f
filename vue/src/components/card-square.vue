@@ -10,6 +10,7 @@
 						<div class="img" v-if="item.store == 0">
 							<div class="qing">已售罄</div>
 							<div v-lazy:background-image="item.src" class="lazyImg"></div>
+							<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
 						</div>
 						<div class="img" v-else>
 							<div v-lazy:background-image="item.src" class="lazyImg"></div>
@@ -38,9 +39,11 @@
 					<div class="img" v-if="item.store == 0">
 						<div class="qing">已售罄</div>
 						<div v-lazy:background-image="item.src" class="lazyImg"></div>
+						<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
 					</div>
 					<div class="img" v-else>
 						<div v-lazy:background-image="item.src" class="lazyImg"></div>
+						<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
 					</div>
 					<div class="mes">
 						<div class="name">{{ item.title }}</div>
@@ -215,15 +218,17 @@
 
 	.wrapper .ui_box .img{
 		width:100%;
-		height:auto;
+		background-position:center;
+		background-size:cover;
+		background-repeat:no-repeat;
 		position: relative;
 	}
 
 	.wrapper .ui_box .img .lazyImg {
-		width: 100%;
+		width:100%;
 		padding-top:100%;
-		background-size: cover;
 		background-position: center;
+		background-size: cover;
 		background-repeat: no-repeat;
 	}
 

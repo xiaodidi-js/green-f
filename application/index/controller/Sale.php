@@ -21,7 +21,8 @@ class Sale extends RestBase{
             $time['etime'] = $value['etime'];
             $Sale = Model('sale');
             $ClickSaleShop = $Sale->QueryClickTimeShop($time);
-            $value['arr'] = $ClickSaleShop;
+            $value['arr'] = $ClickSaleShop['nowsale'];
+            $value['next'] = $ClickSaleShop['nextsale'];
             $value['servertime'] = time();
         }
         $result = makeResult(1,'ok',['SaleTimeSolt'=>$ClickTimeSolt]);

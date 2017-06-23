@@ -14,6 +14,12 @@ class Shoper extends Base{
 		$this->postdata = $this->request->post();
 	}
 
+	public function test(){
+		$update['caigouyuan'] = 0;
+		$update['fenjianzu'] = 0;
+		$update = db('product')->where('supplier','eq',0)->update($update);
+	}
+
 	//商家配置
 	public function config(){
 		$profile = db('profile')->where('id',1)->find();
@@ -252,7 +258,7 @@ class Shoper extends Base{
 		$where['p.is_del'] = 0;
 		$where['is_sell'] = 1;
 		$where['gift'] = 0;
-		$where['store'] = array('NEQ','0');
+		// $where['store'] = array('NEQ','0');
 		$skey = trim($request->param('search_key'));
 		if(!empty($skey)) $where['p.name'] = ['like','%'.$skey.'%'];
 		$cid = intval($request->param('cid'));
@@ -277,9 +283,24 @@ class Shoper extends Base{
 		$this->assign('cid',$cid);
 		$this->assign('classify',$classify);
 		$this->assign('list',$list);
+		$this->assign('is_sell',$where['is_sell']);
 		return $this->fetch('product');
+		
 	}
 
+	// 导出产品管理
+	public function daochuproduct(){
+		$get = $this->reqdata;
+		$where['p.is_sell'] = $get['excel'];
+		$where['p.is_del'] = 0;
+		$where['is_sell'] = 1;
+		$where['gift'] = 0;
+		$list = db('product')->alias('p')->join('product_classify c','p.cid = c.id','LEFT')->where($where)->field('p.id,name,title,price,store,sale,supplier,warn_num,is_sell,p.updatetime,p.sort,p.sn_code')->order('p.id desc')->select();
+		$excel = new Excel();
+        $result = $excel->product($list);
+	}
+
+	// 礼物仓库
 	public function productgift(){
 		$request = Request::instance();
 		$where = [];
@@ -287,7 +308,7 @@ class Shoper extends Base{
 		$where['p.is_del'] = 0;
 		// $where['is_sell'] = 1;
 		$where['gift'] = 1;
-		$where['store'] = array('NEQ','0');
+		// $where['store'] = array('NEQ','0');
 		$skey = trim($request->param('search_key'));
 		if(!empty($skey)) $where['p.name'] = ['like','%'.$skey.'%'];
 		$cid = intval($request->param('cid'));
@@ -345,6 +366,7 @@ class Shoper extends Base{
 		$this->assign('cid',$cid);
 		$this->assign('classify',$classify);
 		$this->assign('list',$list);
+		$this->assign('is_sell',$where['p.is_sell']);
 		return $this->fetch('product');
 	}
 
@@ -357,6 +379,13 @@ class Shoper extends Base{
 				$result['info'] = '没有提交数据';
 				return $result;
 			}
+			//产品编码检测
+			$sncheck = db('product')->where('sn_code',$data['sn_code'])->where('is_del',0)->field('id')->find();
+			if($sncheck){
+				$result['status'] = 0;
+				$result['info'] = '产品编码已存在';
+				return $result;
+			}
 			$validate = validate('Product');
 			if(!$validate->check($data)){
 				$result['status'] = 0;
@@ -364,12 +393,7 @@ class Shoper extends Base{
 			}else{
 				//产品轮播图处理
 				$data['gallery'] = count($data['gallery'])>0 ? json_encode($data['gallery']) : null;
-				if($data['qrcode'] == 1){
-					$qrcode = new PHPqrcode;
-					$content = 'http://m.green-f.cn/index_prod.html#!/detail/'.$id;
-					$path = $qrcode->qrcodeshop($content);
-					$data['qrcode'] = $path;
-				}
+				
 				//优惠活动处理
 				//lzc-不需要这个功能
 				/*$data['is_promote'] = intval($data['is_promote']);
@@ -423,10 +447,22 @@ class Shoper extends Base{
 				}
 				//添加产品信息
 				$product = model('Product');
+				// 判断是否二维码商品
+				if($data['qrcode'] == 1){
+					$qrcodestu = 1;
+				}
 				$add = $product->allowField(true)->save($data);
 				if($add){
 					//获取产品id
 					$add = $product->id;
+					// 如果是二维码商品开始处理新增
+					if(!empty($qrcodestu)){
+						$qrcode = new PHPqrcode;
+						$content = 'http://m.green-f.cn/index_prod.html#!/detail/'.$add;
+						$path = $qrcode->qrcodeshop($content);
+						$qrcodeupdate['qrcode'] = $path;
+						$product->where('id',$add)->update($qrcodeupdate);
+					}
 					//添加产品详情
 					$pcontent = db('product_content');
 					if($check=$pcontent->where('pid',$add)->find()){
@@ -518,7 +554,7 @@ class Shoper extends Base{
 			}
 			unset($data['id']);
 			//产品编码检测
-			$sncheck = db('product')->where('id','neq',$id)->where('sn_code',$data['sn_code'])->field('id')->find();
+			$sncheck = db('product')->where('id','neq',$id)->where('sn_code',$data['sn_code'])->where('is_del',0)->field('id')->find();
 			if($sncheck){
 				$result['status'] = 0;
 				$result['info'] = '产品编码已存在';
@@ -696,8 +732,8 @@ class Shoper extends Base{
 		$info = db('product')->alias('p')
 						->where('p.id',$id)
 						->join('product_content c','p.id = c.pid','LEFT')
-						->field('p.id,p.name,p.cid,p.sn_code,p.description,p.price,p.is_promote,p.promote_price,p.promote_start,p.promote_end,p.format,p.store,p.virtual_sale,p.supplier,p.sold_out,p.warn_num,p.shotcut,p.gallery,p.is_top,p.is_hot,p.is_new,p.sort,p.is_sell,p.starprice,p.taocan,c.content,p.gift,p.deliverytime,p.weight,p.unit,p.caigouyuan,p.fenjianzu,p.qrcode')
-							->find();
+						->field('p.id,p.name,p.cid,p.sn_code,p.description,p.price,p.is_promote,p.promote_price,p.promote_start,p.promote_end,p.format,p.store,p.virtual_sale,p.supplier,p.sold_out,p.warn_num,p.shotcut,p.gallery,p.is_top,p.is_hot,p.is_new,p.sort,p.is_sell,p.starprice,p.taocan,c.content,p.gift,p.deliverytime,p.weight,p.unit,p.caigouyuan,p.fenjianzu,p.qrcode,p.limits')
+						->find();
 
 		// lzc-人员配对
 		$staff[] = $info['caigouyuan'];
@@ -713,13 +749,13 @@ class Shoper extends Base{
                 $staffname['supplier'] = $play['name'];
             }
 		}
-		if($info['fenjianzu'] == '0'){
+		if(empty($info['fenjianzu'])){
             $staffname['fenjianzu'] = '暂无选择';
         }
-        if($info['caigouyuan'] == '0'){
+        if(empty($info['caigouyuan'])){
             $staffname['caigouyuan'] = '暂无选择';
         }
-        if($info['supplier'] == '0'){
+        if(empty($info['supplier'])){
             $staffname['supplier'] = '暂无选择';
         }
 
@@ -903,6 +939,7 @@ class Shoper extends Base{
 		return $this->fetch('handtake');
 	}
 
+	// 添加地区
 	public function addHandtake(){
 		$request = Request::instance();
 		if($request->isAjax()&&$request->isPost()){
@@ -933,6 +970,7 @@ class Shoper extends Base{
 		return $this->fetch('add_handtake');
 	}
 
+	// 编辑地区
 	public function editHandtake(){
 		$request = Request::instance();
 		if($request->isAjax()&&$request->isPost()){
@@ -969,6 +1007,7 @@ class Shoper extends Base{
 		return $this->fetch('edit_handtake');
 	}
 
+	// 添加区域
 	public function addHandtakeArea(){
 		$request = Request::instance();
 		if($request->isAjax()&&$request->isPost()){
@@ -1004,6 +1043,7 @@ class Shoper extends Base{
 		return $this->fetch('add_handtake_area');
 	}
 
+	// 编辑区域
 	public function editHandtakeArea(){
 		$handtake = db('handtake_place');
 		$request = Request::instance();
@@ -1042,6 +1082,7 @@ class Shoper extends Base{
 		return $this->fetch('edit_handtake_area');
 	}
 
+	// 自提点列表
 	public function handtakePoint(){
 		$request = Request::instance();
 		$pid = intval($request->param('pid'));
@@ -1049,14 +1090,20 @@ class Shoper extends Base{
 			$this->error('参数错误');
 		}
 		$list = db('handtake_place')->where('pid',$pid)->order('sort desc,id desc')->paginate();
-		foreach ($list as $key => $value) {
-			$allid[] = $value['id'];
+		if($list){
+			foreach ($list as $key => $value) {
+				$allid[] = $value['id'];
+			}
+		}else{
+			$allid = null;
 		}
+		
 		$this->assign('allid',json_encode($allid));
 		$this->assign('list',$list);
 		return $this->fetch('handtake_point');
 	}
 
+	// 添加自提点
 	public function addHandtakePoint(){
 		$handtake = db('handtake_place');
 		$request = Request::instance();
@@ -1091,7 +1138,7 @@ class Shoper extends Base{
 				$result['info'] = '站点添加失败';
 			}else{
 				$qrcode = new PHPqrcode;
-				$content = 'https://m.green-f.cn/index_prod.html?sinceid='.$up;
+				$content = 'http://m.green-f.cn/index_prod.html#!/index?sinceid='.$up;
 				$path = $qrcode->sinceqrcode($content);
 				$update['qrcode'] = $path;
 				$editqrcode = $handtake->where('id',$up)->update($update);
@@ -1109,6 +1156,7 @@ class Shoper extends Base{
 		return $this->fetch('add_handtake_point');
 	}
 
+	// 编辑自提点
 	public function editHandtakePoint(){
 		$handtake = db('handtake_place');
 		$request = Request::instance();
@@ -1157,7 +1205,7 @@ class Shoper extends Base{
 		$info = $handtake->where('id',$id)->find();
 		if(empty($info['qrcode'])){
 			$qrcode = new PHPqrcode;
-			$content = 'http://m.green-f.cn/index_prod.html?sinceid='.$id;
+			$content = 'http://m.green-f.cn/index_prod.html#!/index?sinceid='.$id;
 			$path = $qrcode->sinceqrcode($content);
 			$update['qrcode'] = $path;
 			$edit = $handtake->where('id',$id)->update($update);
@@ -1167,6 +1215,7 @@ class Shoper extends Base{
 		return $this->fetch('edit_handtake_point');
 	}
 
+	// 删除自提点
 	public function delHandtake(){
 		$request = Request::instance();
 		$handtake = db('handtake_place');
@@ -1177,8 +1226,21 @@ class Shoper extends Base{
 				$result['info'] = '参数错误';
 				return $result;
 			}
-			$top = $handtake->where('id',$id)->value('pid');
+			$top = $handtake->where('id',$id)->find();
+			$sinceif = $handtake->where('pid',$top['id'])->find();
+			if($sinceif){
+				$result['status'] = 0;
+				$result['info'] = '还有下级自提';
+				return $result;
+			}
 			$del = $handtake->delete($id);
+			// 删除销售和订单数据 危险操作
+			if($del){
+				$update['is_del'] = 1; 
+				$where['person'] = $top['name'];
+				$where['stype'] = 'parcel';
+				$delorder = db('member_orders')->where($where)->update($update);
+			}
 			if(!$del){
 				$result['status'] = 0;
 				$result['info'] = '删除失败';
@@ -1208,6 +1270,7 @@ class Shoper extends Base{
 		return $this->fetch('classify');
 	}
 
+	// 添加分类
 	public function addClassify(){
 		$cxclass = db('product_classify')->order('createtime desc')->select();
 		$category = new Category(array('id','class','title','cname'));
@@ -1826,7 +1889,10 @@ class Shoper extends Base{
 			if(!$id){
 				return makeResult(0,'参数错误');
 			}
-			$list = db('product')->where('cid',$id)->where('is_del',0)->column('name','id');
+			$where['is_del'] = 0;
+			$where['cid'] = $id;
+			$where['gift'] = 0;
+			$list = db('product')->where($where)->column('name','id');
 	        if (!$list) {
 	            return makeResult(0,'搜索不到相关商品');
 	        }
@@ -1841,7 +1907,11 @@ class Shoper extends Base{
 			if(empty($key)){
 				return makeResult(0,'搜索商品名称不能为空');
 			}
-			$list = db('product')->where('is_sell',1)->where('store','gt',0)->where('is_del',0)->where('name','like',"%$key%")->column('name','id');
+			$where['is_sell'] = 1;
+			$where['store'] = array('gt',0);
+			$where['is_del'] = 0;
+			$where['name'] = array('like',"%$key%");
+			$list = db('product')->where($where)->column('name','id');
 	        if (!$list) {
 	            return makeResult(0,'搜索不到相关商品');
 	        }
@@ -2288,21 +2358,21 @@ class Shoper extends Base{
             			\Log::DEBUG("fahuonotify: ".json_encode($wxorderfahuo));
             		}
             	}
-                make_json(1,'编辑成功');
+                return make_json(1,'编辑成功');
             }else{
-                make_json(0,'内容没有修改');
+                return make_json(0,'内容没有修改');
             }
         }else{
             $get = $this->reqdata;
             $info = $MemberOrders->QueryFastEdit($get);
-            make_json(1,['info'=>$info]);
+            return make_json(1,['info'=>$info]);
         }
     }
 
     // 查询自提点
     public function Querysince(){
         $list = Model('HandtakePlace')->QuerySinceAll();
-        make_json(1,['list'=>$list]);
+        return make_json(1,['list'=>$list]);
     }
 
 //    收货并收取积分
@@ -2316,9 +2386,9 @@ class Shoper extends Base{
             if($EditOrderReceive){
                 $JiFenReceiving = Model('Member')->AddJiFen($QueryOrder);
                 if($JiFenReceiving){
-                    make_json(1,'一键收货成功');
+                    return make_json(1,'一键收货成功');
                 }else{
-                    make_json(0,'一键收货失败');
+                    return make_json(0,'一键收货失败');
                 }
             }
         }
@@ -2366,13 +2436,13 @@ class Shoper extends Base{
 		$id = intval($request->param('id'));
 		if(!$id){
 			$this->error('参数错误');
-			// make_json(0,'参数错误,没有这个订单编号');
+			// return make_json(0,'参数错误,没有这个订单编号');
 		}
 		$getField = 'o.id,o.person,o.address,o.postcode,o.tel,o.pay,o.paytype,o.tips,o.sum,o.money,o.orderid,o.score,o.coupon,o.freight,o.paytime,o.createtime,o.send,o.stype,o.receive,o.reject,o.rtime,o.snum,o.scom,o.stime,o.status,m.uname as uid,o.wxoid,o.scid';
 		$info = $orderDb->alias('o')->join('member m','o.uid = m.id','LEFT')->where('o.id',$id)->where('o.is_del',0)->field($getField)->find();
 		if(!$info){
 			$this->error('订单不存在或已删除');
-			// make_json(0,'订单不存在或已删除');
+			// return make_json(0,'订单不存在或已删除');
 		}
 		if($info['send']==1&&!empty($info['scid'])&&!empty($info['scom'])){
 			$info['scid'] = $info['scid'].','.$info['scom'];
@@ -2386,7 +2456,7 @@ class Shoper extends Base{
 		}
 		$info['products'] = $products;
 		$this->assign('info',$info);
-		// make_json(1,['info'=>$info]);
+		// return make_json(1,['info'=>$info]);
 		return $this->fetch('order_detail');
 	}
 
@@ -2502,20 +2572,38 @@ class Shoper extends Base{
 	public function comment(){
 		$request = Request::instance();
 		$key = trim($request->get('search_key'));
+		$get = $request->get();
 		$where = '';
 		if(!empty($key)){
 			$where = '(p.name like "%'.$key.'%" OR m.uname like "%'.$key.'%" OR m.utel like "%'.$key.'%") AND c.top = 0 AND c.parent = 0';
 		}else{
 			$where .= 'c.top = 0 AND c.parent = 0';
 		}
+		if(!empty($get['time'])){
+			$miao = $get['miao'];
+			$nowtime = $get['time'];
+		}else{
+			$miao = '0';
+			$nowtime = date('Y-m-d');
+		}
+		$this->assign('miao',$miao);
+		if($miao == 0){
+			$miao = '10:30';
+		}else{
+			$miao = '16:30';
+		}
+		$time = $nowtime.$miao;
+		$where1['k.stime'] = strtotime($time);
 		$field = 'c.id,p.name,c.fname,c.stars,c.content,c.createtime,c.status,k.orderid,k.createtime as cjtime';
 		$list = db('product_comments')->alias('c')
 								->join('product p','c.pid = p.id','LEFT')
 								->join('member_orders k','c.oid = k.id','LEFT')
 								->where($where)
+								->where($where1)
 								->order('c.createtime desc')
 								->field($field)
 								->paginate();
+		$this->assign('time',$nowtime);
 		$this->assign('list',$list);
 		return $this->fetch('comment');
 	}
@@ -2566,7 +2654,7 @@ class Shoper extends Base{
 		}
 		$commentDb = db('product_comments');
 		$info = $commentDb->alias('c')
-							->join('member m','c.uid = m.id')
+							->join('member m','c.uid = m.id','LEFT')
 							->where('c.id',$id)
 							->where('c.top',0)
 							->where('c.parent',0)
@@ -2586,6 +2674,23 @@ class Shoper extends Base{
 		$info['nums'] = count($info['reply'])+1;
 		$this->assign('info',$info);
 		return $this->fetch('reply_comment');
+	}
+
+	// 编辑评论
+	public function editcomment(){
+		$request = Request::instance();
+		if($request->isAjax()&&$request->isPost()){
+			$post = $request->post();
+			$update['content'] = $post['content'];
+			$update['stars'] = $post['stars'];
+			$edit = db('product_comments')->where('id',$post['id'])->update($update);
+		}else{
+			$get = $request->param();
+			$info = db('product_comments')->where('id',$get['id'])->field('id,content,stars')->find();
+			$this->assign('info',$info);
+			$this->assign('id',$get['id']);
+			return $this->fetch();
+		}
 	}
 
 	public function delComment(){
@@ -2762,32 +2867,55 @@ class Shoper extends Base{
 	public function member(){
 		$request = Request::instance();
 		$key = trim($request->get('search_key'));
+		$param = $request->param();
 		if(!empty($key)){
 			$where = '(uname like "%'.$key.'%" OR utel like "%'.$key.'%") AND is_del = 0';
 		}else{
 			$where['is_del'] = 0;
 		}
-		$list = db('member')->where($where)->field('id,uname,utel,sex,birthday,score,createtime')->order('createtime desc')->paginate(10);
-		// 查询累计消费记录
-		foreach ($list as $key => &$value) {
-			$whereorder['is_del'] = 0;
-			$whereorder['uid'] = $value['id'];
-			$whereorder['pay'] = 1;
-			$queryorder = db('member_orders')->where($whereorder)->field('money')->select();
-			$data = $list->all();
-			foreach ($data as $key1 => &$value1) {
-				if(empty($value1['money'])){
-					$value1['money'] = 0;
+		// 导出Excel
+		if(empty($param['excel'])){
+			$list = db('member')->where($where)->field('id,uname,utel,sex,birthday,score,createtime')->order('createtime desc')->paginate(10);
+			// 查询累计消费记录
+			foreach ($list as $key => &$value) {
+				$whereorder['is_del'] = 0;
+				$whereorder['uid'] = $value['id'];
+				$whereorder['pay'] = 1;
+				$queryorder = db('member_orders')->where($whereorder)->field('money')->select();
+				$data = $list->all();
+				foreach ($data as $key1 => &$value1) {
+					if(empty($value1['money'])){
+						$value1['money'] = 0;
+					}
+					foreach ($queryorder as $key2 => $value2) {
+						
+						$value1['money'] = $value1['money'] + $value2['money'];
+					}
+				}
+				$list[$key] = $data[$key];
+			}
+			$this->assign('list',$list);
+			return $this->fetch('member');
+		}else{
+			$list = db('member')->where($where)->field('id,uname,utel,sex,birthday,score,createtime')->order('createtime desc')->select();
+			// 查询累计消费记录
+			foreach ($list as $key => &$value) {
+				$whereorder['is_del'] = 0;
+				$whereorder['uid'] = $value['id'];
+				$whereorder['pay'] = 1;
+				$queryorder = db('member_orders')->where($whereorder)->field('money')->select();
+				if(empty($value['money'])){
+					$value['money'] = 0;
 				}
 				foreach ($queryorder as $key2 => $value2) {
 					
-					$value1['money'] = $value1['money'] + $value2['money'];
+					$value['money'] = $value['money'] + $value2['money'];
 				}
 			}
-			$list[$key] = $data[$key];
+			$excel = new Excel();
+        	$result = $excel->huiyuan($list);
 		}
-		$this->assign('list',$list);
-		return $this->fetch('member');
+		
 	}
 
 	public function addMember(){
@@ -2934,9 +3062,9 @@ class Shoper extends Base{
 		$Product = Model('Product');
 		$editstore = $Product->editstore($post);
 		if($editstore){
-			make_json(1,'编辑成功');
+			return make_json(1,'编辑成功');
 		}else{
-			make_json(0,'编辑失败');
+			return make_json(0,'编辑失败');
 		}
 	}
 
@@ -2946,9 +3074,9 @@ class Shoper extends Base{
 		$Product = Model('Product');
 		$del = $Product->alldel($post);
 		if($del){
-			make_json(1,'删除成功');
+			return make_json(1,'删除成功');
 		}else{
-			make_json(0,'删除失败');
+			return make_json(0,'删除失败');
 		}
 	}
 
@@ -2958,9 +3086,9 @@ class Shoper extends Base{
 		$Product = Model('Product');
 		$downorup = $Product->alldownup($post);
 		if($downorup){
-			make_json(1,'上下架成功');
+			return make_json(1,'上下架成功');
 		}else{
-			make_json(0,'上下架失败');
+			return make_json(0,'上下架失败');
 		}
 	}
 
@@ -2969,7 +3097,7 @@ class Shoper extends Base{
 		$post = $this->postdata;
 		$Product = Model('Product');
 		$cx = $Product->where('is_del',0)->field('id,name')->select();
-		make_json(1,['shopmuen' => $cx]);
+		return make_json(1,['shopmuen' => $cx]);
 	}
 
 	// 查询商品
@@ -2980,7 +3108,7 @@ class Shoper extends Base{
 			$cx = $Product->where('id',$value)->field('id,name')->find();
 			$name[]= $cx['name'];
 		}
-		make_json(1,['shopname' => $name]);
+		return make_json(1,['shopname' => $name]);
 	}
 
 	// 查询人员
@@ -2989,7 +3117,7 @@ class Shoper extends Base{
 		$maa['is_del'] = 0;
 		$maa['class'] = $post['pid'];
 		$cx = db('buyer')->where($maa)->select();
-		make_json(1,['shuju' => $cx]);
+		return make_json(1,['shuju' => $cx]);
 	}
 
 	// 积分配置
@@ -3011,9 +3139,9 @@ class Shoper extends Base{
 			unset($post['stu']);
 			$add = db('jifen')->where('id',1)->update($post);
 			if($add){
-				make_json(1,'更新成功');
+				return make_json(1,'更新成功');
 			}else{
-				make_json(0,'更新失败');
+				return make_json(0,'更新失败');
 			}
 		}
 		$this->assign('info',$cx);
@@ -3044,9 +3172,9 @@ class Shoper extends Base{
 	public function sinceExcel(){
 		$post = $this->postdata;
 		if($post['miao'] == '0'){
-			$group = $post['time'].'10:30';
+			$group = $post['time'].' 10:30';
 		}else{
-			$group = $post['time'].'16:30';
+			$group = $post['time'].' 16:30';
 		}
         $sjcgroup = strtotime($group);
 		$cxsince = db('handtake_place')->where('id','in',$post['id'])->field('name,address')->select();
@@ -3060,11 +3188,11 @@ class Shoper extends Base{
 			$orderall[] = $cxorder;
 		}
 		if(!$orderall){
-			make_json(0,'没有数据');
+			return make_json(0,'没有数据');
 			exit();
 		}
     	$excel = new Excel();
-    	$result = $excel->sincewriter($orderall,$cxsince);
+    	$result = $excel->sincewriter($orderall,$cxsince,$group);
 	}
 
 	// 人员配置页面
@@ -3089,9 +3217,9 @@ class Shoper extends Base{
 		$data['is_del'] = 1;
 		$del = db('buyer')->where('id',$post['id'])->update($data);
 		if($del){
-			make_json(1,'删除成功');
+			return make_json(1,'删除成功');
 		}else{
-			make_json(0,'删除失败');
+			return make_json(0,'删除失败');
 		}
 	}
 
@@ -3114,9 +3242,9 @@ class Shoper extends Base{
 				$editoradd = db('buyer')->where('id',$get['id'])->update($data);
 			}
 			if($editoradd){
-				make_json(1,'新增成功');
+				return make_json(1,'新增成功');
 			}else{
-				make_json(0,'新增失败');
+				return make_json(0,'新增失败');
 			}
 		}else{
 			if(!empty($get['id'])){
@@ -3137,7 +3265,7 @@ class Shoper extends Base{
 		$request = Request::instance();
 		$post = $request->post();
 		if(empty($post['id'])){
-			make_json(0,'请选择自提点');
+			return make_json(0,'请选择自提点');
 			return;
 		}
 		$id = $post['id'];
@@ -3172,12 +3300,12 @@ class Shoper extends Base{
 				}
 				$gengxin['wxfahuo'] = 1;
 				$editwxfahuo = db('member_orders')->where('id','in',$allid)->update($gengxin);
-				make_json(1,'发货成功');
+				return make_json(1,'发货成功');
 			}else{
-				make_json(0,'自提点没有订单可发货');
+				return make_json(0,'自提点没有订单可发货');
 			}
         }else{
-        	make_json(0,'您选择的日期还没完成当天采购');
+        	return make_json(0,'您选择的日期还没完成当天采购');
         }
 	}
 
@@ -3296,6 +3424,46 @@ class Shoper extends Base{
 		return $this->fetch();
 	}
 
+	// 商品推荐导出表格
+	public function daochutuijian(){
+		$get = $this->reqdata;
+		$cxsince = db('product_tuijian')->where('id',$get['id'])->field('data,title')->find();
+		$where['gift'] = 0;
+		$where['is_del'] = 0;
+		if($cxsince['data']){
+			$morenshop = unserialize($cxsince['data']);
+			foreach ($morenshop as $key1 => $value1) {
+				$newmoren[] = $value1['id'];
+ 			}
+			$list = db('product')->where($where)->where('id','in',$newmoren)->field('id,shotcut,name,cid,price,createtime,is_del,sn_code')->select();
+			foreach ($list as $key2 => &$value2) {
+				foreach ($morenshop as $key3 => $value3) {
+					if($value2['id'] == $value3['id']){
+						if($value2['is_del'] == 1){
+							unset($morenshop[$key3]);
+						}else{
+							$value2['sort'] = $value3['sort'];
+							$value2['rate'] = $value3['rate'];
+							$value2['pay'] = $value3['pay'];
+							$value2['price'] = $value2['price'];
+							$value2['createtime'] = $value2['createtime'];
+						}
+					}
+				}
+			}
+			$array = $list;
+	        $number = array();
+			foreach($array as $key=>$val){
+            	$number[] = $val['sort'];
+        	}
+        	array_multisort($number,SORT_DESC,$array);
+		}else{
+			$array = null;
+		}
+		$excel = new Excel();
+        $result = $excel->tuijian($array,$cxsince['title']);
+	}
+
 	// 推荐商品修改
 	public function edittuijian(){
 		$post = $this->postdata;
@@ -3307,9 +3475,9 @@ class Shoper extends Base{
 		}
 		$editsince = db('product_tuijian')->where($where)->update($data);
 		if($editsince){
-			make_json(1,'更新成功');
+			return make_json(1,'更新成功');
 		}else{
-			make_json(0,'更新失败');
+			return make_json(0,'更新失败');
 		}
 	}
 
@@ -3318,6 +3486,7 @@ class Shoper extends Base{
 		$post = $this->postdata;
 		$cxsince = db('product_tuijian')->where('id',$post['id'])->field('data')->find();
 		$where['gift'] = 0;
+		$where['is_del'] = 0;
 		if($cxsince['data']){
 			$morenshop = unserialize($cxsince['data']);
 			foreach ($morenshop as $key1 => $value1) {
@@ -3348,7 +3517,7 @@ class Shoper extends Base{
 		}else{
 			$array = null;
 		}
-		make_json(1,['info'=>$array]);
+		return make_json(1,['info'=>$array]);
 	}
 
 	// 商品推荐删除
@@ -3375,5 +3544,128 @@ class Shoper extends Base{
 			$result['info'] = '非法操作';
 			return $result;
 		}
+	}
+
+	// 评价管理导航
+	public function allcomment(){
+		return $this->fetch();
+	}
+
+	// 虚拟评论
+	public function fictitiouscomment(){
+		$request = Request::instance();
+		$get = $request->get();
+		$where['is_del'] = 0;
+		if(!empty($get['shopname'])){
+			$where['name'] = array('like','%'.$get['shopname'].'%');
+		}
+		$list = db('product')->where($where)->field('id,name,price')->paginate();
+		$data = $list->all();
+		foreach ($data as $key1 => &$value1) {
+			$querypj = db('product_comments')->where('pid',$value1['id'])->field('id,stars')->select();
+			if(empty($value1['cha'])){
+				$value1['cha'] = 0;
+			}
+			if(empty($value1['zhong'])){
+				$value1['zhong'] = 0;
+			}
+			if(empty($value1['hao'])){
+				$value1['hao'] = 0;
+			}
+			foreach ($querypj as $key => $value2) {
+				if($value2['stars'] < 3){
+					$value1['cha'] = $value1['cha'] + 1;
+				}elseif($value2['stars'] == 3){
+					$value1['zhong'] = $value1['zhong'] + 1;
+				}else{
+					$value1['hao'] = $value1['hao'] + 1;
+				}
+			}
+			$list[$key1] = $data[$key1];
+		}
+		$this->assign('list',$list);
+		return $this->fetch();
+	}
+
+	// 查看指定商品的虚拟评价
+	public function checkfictitiouscomment(){
+		$request = Request::instance();
+		$get = $request->param();
+		$where = '';
+		$where .= 'c.top = 0 AND c.parent = 0';
+		$field = 'c.id,p.name,c.fname,c.stars,c.content,c.createtime,c.status,k.orderid,k.createtime as cjtime';
+		$list = db('product_comments')->alias('c')
+								->join('product p','c.pid = p.id','LEFT')
+								->join('member_orders k','c.oid = k.id','LEFT')
+								->where($where)
+								->where('pid',$get['id'])
+								->order('c.createtime desc')
+								->field($field)
+								->paginate();
+		$this->assign('id',$get['id']);
+		$this->assign('list',$list);
+		return $this->fetch();
+	}
+
+	// 添加评论
+	public function addfictitiouscomment(){
+		$request = Request::instance();
+		$get = $request->param();
+		$post = $request->post();
+		if($post){
+			if(empty($post['content']) || empty($post['stars']) || empty($post['time'])){
+				$result['status'] = 0;
+				$result['info'] = '请填写所需内容';
+				return $result;
+			}
+			$data['pid'] = $post['id'];
+			$data['stars'] = $post['stars'];
+			$data['content'] = $post['content'];
+			$data['uid'] = 0;
+			$data['oid'] = 0;
+			$data['status'] = 1;
+			$data['createtime'] = strtotime($post['time']);
+			$add = db('product_comments')->insert($data);
+			if($add){
+				$result['status'] = 1;
+				$result['info'] = '新增成功';
+			}else{
+				$result['status'] = 0;
+				$result['info'] = '新增失败';
+			}
+			return $result;
+		}else{
+			$this->assign('id',$get['id']);
+			return $this->fetch();
+		}
+	}
+
+	// 导出评论
+	public function daochucomment(){
+		$where['is_del'] = 0;
+		$list = db('product')->where($where)->field('name,id')->select();
+		foreach ($list as $key1 => &$value1) {
+			$querypj = db('product_comments')->where('pid',$value1['id'])->field('stars')->select();
+			if(empty($value1['cha'])){
+				$value1['cha'] = 0;
+			}
+			if(empty($value1['zhong'])){
+				$value1['zhong'] = 0;
+			}
+			if(empty($value1['hao'])){
+				$value1['hao'] = 0;
+			}
+			foreach ($querypj as $key => $value2) {
+				if($value2['stars'] < 3){
+					$value1['cha'] = $value1['cha'] + 1;
+				}elseif($value2['stars'] == 3){
+					$value1['zhong'] = $value1['zhong'] + 1;
+				}else{
+					$value1['hao'] = $value1['hao'] + 1;
+				}
+			}
+		}
+		$excel = new Excel();
+        $result = $excel->comment($list);
 	}
 }

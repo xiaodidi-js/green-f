@@ -10,15 +10,6 @@ namespace app\index\model;
 use think\Model;
 
 class Sale extends Model{
-
-//   根据时间段返回这个时间段的数据
-    public function ClickSaleShop($ClickTime){
-        $infoWhere['stu'] = 1;
-//        $infoWhere['']
-        $info = $this->where()->field('data')->select();
-
-    }
-
 //    查看全部时间段的限时抢购活动
     public function ClickAllTime(){
         $where['stu'] = 1;
@@ -44,7 +35,24 @@ class Sale extends Model{
 
 //  查询点击时间段的限时抢购商品
     public function QueryClickTimeShop($get){
-        $list = $this->where('stu',1)->where('is_del',0)->whereTime('stime','between',[$get['stime'],$get['etime']])->field('data')->find();
+        $list = $this->where('stu',1)
+                     ->where('is_del',0)
+                     ->whereTime('stime','between',[$get['stime'],$get['etime']])
+                     ->field('data')
+                     ->find();
+        $nextwhere['is_del'] = 0;
+        $nextwhere['stu'] = 1;
+        $querynext = $this->where($nextwhere)->select();
+        foreach ($querynext as $key1 => $value1) {
+            if($value1['stime'] >= $get['etime']){
+                $alltime[] = $value1['stime'];
+            }
+        }
+        if(!empty($alltime)){
+            $xinxi['nextsale'] = $alltime[0]; 
+        }else{
+            $xinxi['nextsale'] = null; 
+        }
         if($list){
             $data = unserialize($list['data']);
             if($data){
@@ -56,10 +64,11 @@ class Sale extends Model{
                     $value['shotcut'] = $QueryShop['shotcut'];
                 }
             }
+            $xinxi['nowsale'] = $data;
         }else{
-            $data = null;
+            $xinxi['nowsale'] = null;
         }
-        return $data;
+        return $xinxi;
     }
 
     // 查询限时抢购
@@ -67,6 +76,7 @@ class Sale extends Model{
         $where['etime'] = array('>=',$nowtime);
         $where['stime'] = array('<=',$nowtime);
         $where['stu'] = 1;
+        $where['is_del'] = 0;
         $list = $this->where($where)->order('stime asc')->field('stime,etime,data,id')->select();
         if($list){
             foreach ($list as $key => &$value) {

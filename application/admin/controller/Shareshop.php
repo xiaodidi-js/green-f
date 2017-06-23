@@ -42,9 +42,9 @@ class Shareshop extends Base{
             $update['name'] = $post['name'];
             $edit = Model('ProductShare')->editshare($update,$post['id']);
             if ($edit) {
-                make_json(1, '编辑成功');
+                return make_json(1, '编辑成功');
             } else {
-                make_json(0, '编辑失败');
+                return make_json(0, '编辑失败');
             }
         } else {
             if (empty($post['stime']) || empty($post['etime']) || empty($post['name'])) {
@@ -62,9 +62,9 @@ class Shareshop extends Base{
             $data['ctime'] = time();
             $add = db('ProductShare')->insert($data);
             if ($add) {
-                make_json(1, '新增成功');
+                return make_json(1, '新增成功');
             } else {
-                make_json(0, '新增失败');
+                return make_json(0, '新增失败');
             }
         }
 	}
@@ -134,7 +134,7 @@ class Shareshop extends Base{
         }else{
             $list = null;
         }
-        make_json(1,['info'=>$list]);
+        return make_json(1,['info'=>$list]);
     }
 
     // 完成配置保存
@@ -142,6 +142,20 @@ class Shareshop extends Base{
 		$request = Request::instance();
 		$post = $request->post();
 		$where['id'] = $post['id'];
+        foreach ($post['data'] as $key => $value) {
+            $where['stime'] = array('elt',$now);
+            $where['etime'] = array('egt',$now);
+            $queryshare = db('sale')->where($where)->field('data')->find();
+            if($queryshare){
+                foreach (unserialize($queryshare['data']) as $key1 => $value1) {
+                    if($value1['id'] == $value['id']){
+                        $queryshop = Model('ProductShare')->where('id',$value['id'])->field('name')->find();
+                        return make_json(0,$queryshop['name'].'商品已参加了限时抢购');
+                    }
+                }
+            }
+            
+        }
 		if(!empty($post['data'])){
 			$data['data'] = serialize($post['data']);
 		}else{
@@ -149,9 +163,9 @@ class Shareshop extends Base{
 		}
 		$editsince = Model('ProductShare')->editshare($data,$post['id']);
 		if($editsince){
-			make_json(1,'更新成功');
+			return make_json(1,'更新成功');
 		}else{
-			make_json(0,'更新失败');
+			return make_json(0,'更新失败');
 		}
 	}
 }

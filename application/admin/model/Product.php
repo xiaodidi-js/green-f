@@ -68,10 +68,12 @@ class Product extends Model{
 		$where['is_del'] = 0;
 		$where['gift'] = 0;
 //		查询商品id
-		$find = $this->where($where)->where('id',$data['shopid'])->field('id,shotcut,name,cid,store')->find();
-		$ShopFormatwhere['pid'] = $find['id'];
-//		查询这个商品下的规格
-        $QueryShopFormat = db('product_formlist')->where($ShopFormatwhere)->select();
+		$find = $this->where($where)->where('id',$data['shopid'])->field('id,shotcut,name,cid,store,price')->find();
+		// 如果商品删除了或者变成礼物了就不显示了
+		if($find){
+			$ShopFormatwhere['pid'] = $find['id'];
+//			查询这个商品下的规格
+        	$QueryShopFormat = db('product_formlist')->where($ShopFormatwhere)->select();
 //          如果这个商品有规格就把规格的数量和限时抢购资料绑定
             if($QueryShopFormat){
                 foreach($QueryShopFormat as $key => &$value){
@@ -99,6 +101,10 @@ class Product extends Model{
                 $FormatAll[0]['saledata']["salekucunnub"] = $data['saledata'][0]['salekucunnub'];
                 $find['formatAll'] = $FormatAll;
             }
+		}else{
+			$find = null;
+		}
+		
 
 		return $find;
 	}
@@ -107,7 +113,7 @@ class Product extends Model{
 	public function SaleConfigAllShop($NotIn){
 		$where['is_del'] = 0;
 		$where['gift'] = 0;
-		$list = $this->where($where)->where('id','not in',$NotIn)->field('id,shotcut,name,cid,store')->select();
+		$list = $this->where($where)->where('id','not in',$NotIn)->field('id,shotcut,name,cid,store,price')->select();
 		return $list;
 	}
 
@@ -138,7 +144,9 @@ class Product extends Model{
 
 //	用id查看商品
     public function queryidshop($id){
-	    $list = $this->where('id','in',$id)->field('sn_code,supplier,caigouyuan,fenjianzu,name,cid,weight,id,unit,taocan,gift')->select();
+    	$where['id'] = array('in',$id);
+    	$where['is_del'] = 0;
+	    $list = $this->where($where)->field('sn_code,supplier,caigouyuan,fenjianzu,name,cid,weight,id,unit,taocan,gift')->select();
 	    return $list;
     }
 }

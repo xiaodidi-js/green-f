@@ -86,7 +86,7 @@
   		if(!id){
   			return false;
   		}
-  		$('#myModal .modal-box').text('删除该项将会同时删除所属的区域和站点,确定?');
+  		$('#myModal .modal-box').html('删除该项将会同时删除所属的区域和站点<span style="color:red">[订单和销售记录都会删除]</span>确定?');
   		$('#myModal').modal();
   		$('#myModal #modalId').val(id);
   	}
@@ -95,7 +95,7 @@
   		if(!id){
   			return false;
   		}
-  		$('#myModal .modal-box').text('删除该项将会同时删除所属的站点,确定?');
+  		$('#myModal .modal-box').html('删除该项将会同时删除所属的站点<span style="color:red">[订单和销售记录都会删除]</span>确定?');
   		$('#myModal').modal();
   		$('#myModal #modalId').val(id);
   	}

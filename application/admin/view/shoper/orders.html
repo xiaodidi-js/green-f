@@ -192,7 +192,7 @@
                 self.delbox = true
                 self.id = id
                 $.get('{:url("admin/Shoper/getedit")}',{id:id},function(data) {
-                    var data = JSON.parse(data).msg.info;
+                    var data = data.msg.info;
                     self.send = data.send;
                     self.pay = data.pay;
                     // self.address = data.address;
@@ -204,7 +204,7 @@
                     self.bolftime = data.stime;
                 })
                 $.get('{:url("admin/Shoper/Querysince")}',function(data) {
-                    var data = JSON.parse(data).msg.list;
+                    var data = data.msg.list;
                     self.sinall = data
                 })
             },
@@ -212,7 +212,7 @@
                 var self = this;
                 var form = $('#faleedit').serialize();
                 $.post('{:url("admin/Shoper/getedit")}',form,function(data) {
-                    var data = JSON.parse(data);
+                    var data = data;
                     self.$Message.config({
                         top: 80,
                         duration: 3
@@ -233,7 +233,7 @@
                     top: 80,
                 });
                 $.post('{:url("admin/Shoper/Receiving")}',{id:self.checkall},function(data) {
-                    var data = JSON.parse(data);
+                    var data = data;
                     if(data.status == 0){
                         self.$Message.error(data.msg);
                     }else{

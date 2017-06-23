@@ -14,6 +14,23 @@ class Gift extends Base{
 	// 自提点
 	public function Giftlist(){
 		$list = db('handtake_place')->where('status',1)->where('address','not null')->select();
+		// 赠品
+		$where['is_del'] = 0;
+		$where['gift'] = 1;
+		foreach ($list as $key => &$value) {
+			if($value['shoudan']){
+				$data = unserialize($value['shoudan']);
+				$where['id'] = array('in',$data);
+				$querygift = Model('Product')->where($where)->field('name')->select();
+				foreach ($querygift as $key1 => $value1) {
+					$allgit[] = $value1['name'];
+				}
+				$value['giftshop'] = implode(',',$allgit);
+				unset($allgit);
+			}else{
+				$value['giftshop'] = '暂时没有';
+			}
+		}
 		$this->assign('list',$list);
 		return $this->fetch();
 	}
@@ -23,7 +40,7 @@ class Gift extends Base{
 		$get = $this->reqdata;
 		$where['is_del'] = 0;
 		$where['gift'] = 1;
-		$cxsince = db('handtake_place')->where('id',$get['id'])->field('shoudan')->find();
+		$cxsince = db('handtake_place')->where('id',$get['id'])->field('shoudan,name')->find();
 		if($cxsince['shoudan']){
 			$morenshop = unserialize($cxsince['shoudan']);
 			$morenshop = implode(",",$morenshop);
@@ -36,6 +53,7 @@ class Gift extends Base{
 			$cxclass = db('product_classify')->where('id',$value['cid'])->field('title')->find();
 			$value['class'] = $cxclass['title'];
 		}
+		$this->assign('sincename',$cxsince['name']);
 		$this->assign('id',$get['id']);
 		$this->assign('list',json_encode($list));
 		return $this->fetch();
@@ -48,7 +66,7 @@ class Gift extends Base{
 		$info = db('product')->where($where)->field('id,shotcut,name,cid,price,createtime,store')->find();
 		$cxclass = db('product_classify')->where('id',$info['cid'])->field('title')->find();
 		$info['class'] = $cxclass['title'];
-		make_json(1,['info'=>$info]);
+		return make_json(1,['info'=>$info]);
 	}
 
 	// 已选赠品
@@ -69,7 +87,7 @@ class Gift extends Base{
 			$list = null;
 		}
 		
-		make_json(1,['info'=>$list]);
+		return make_json(1,['info'=>$list]);
 		
 	}
 
@@ -84,15 +102,23 @@ class Gift extends Base{
 		}
 		$editsince = db('handtake_place')->where($where)->update($data);
 		if($editsince){
-			make_json(1,'更新成功');
+			return make_json(1,'更新成功');
 		}else{
-			make_json(0,'更新失败');
+			return make_json(0,'更新失败');
 		}
 	}
 
 	// 满就送列表
 	public function maxgift(){
-		$list = db('since_maxgift')->field('maxmoney,id')->select();
+		$list = db('since_maxgift')->field('maxmoney,id,useshop')->select();
+		foreach ($list as $key => &$value) {
+			$value['sincesum'] = unserialize($value['useshop']);
+			if($value['sincesum'] == false){
+				$value['sincesum'] = 0;
+			}else{
+				$value['sincesum'] = count($value['sincesum']);
+			}
+		}
 		$this->assign('list',$list);
 		return $this->fetch();
 	}
@@ -123,9 +149,9 @@ class Gift extends Base{
 				$oksince = db('since_maxgift')->insert($data);
 			}
 			if($oksince){
-				make_json(1,'更新成功');
+				return make_json(1,'更新成功');
 			}else{
-				make_json(0,'更新失败');
+				return make_json(0,'更新失败');
 			}
 		}else{
 			$cxsince = db('since_maxgift')->where('id',$get['id'])->field('shopid')->find();
@@ -163,7 +189,7 @@ class Gift extends Base{
 		}
 
 		// 查询全部自提点
-		$since = db('handtake_place')->where('address','not null')->where('status',1)->field('id,name')->select();
+		$since = db('handtake_place')->where('address','not null')->field('id,name')->select();
 
 		// 把所有自提点ID筛选出来给全选用
 		foreach ($since as $key1 => $value1) {
@@ -176,6 +202,12 @@ class Gift extends Base{
 		$maxmoney = $maxgift['maxmoney'];
 		$maxgift = unserialize($maxgift['useshop']);
 		if(!empty($maxgift)){
+			foreach ($maxgift as $key3 => $value3) {
+				$querysince = db('handtake_place')->where('id',$value3)->find();
+				if(!$querysince){
+					unset($maxgift[$key3]);
+				}
+			}
             $maxgift = implode(',',$maxgift);
         }else{
             $maxgift = null;
@@ -205,16 +237,16 @@ class Gift extends Base{
 			$cxclass = db('product_classify')->where('id',$value['cid'])->field('title')->find();
 			$value['class'] = $cxclass['title'];
 		}
-		make_json(1,['info'=>$list]);
+		return make_json(1,['info'=>$list]);
 	}
 
 	public function maxdel(){
 		$post = $this->postdata;
 		$deldata = db('since_maxgift')->where('id',$post['id'])->delete();
 		if($deldata){
-			make_json(1,'删除成功');
+			return make_json(1,'删除成功');
 		}else{
-			make_json(0,'删除失败');
+			return make_json(0,'删除失败');
 		}
 	}
 }

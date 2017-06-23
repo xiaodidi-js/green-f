@@ -43,9 +43,9 @@ class Sale extends Base
             $update['name'] = $post['name'];
             $edit = Model('sale')->editsale($update,$post['id']);
             if ($edit) {
-                make_json(1, '编辑成功');
+                return make_json(1, '编辑成功');
             } else {
-                make_json(0, '编辑失败');
+                return make_json(0, '编辑失败');
             }
         } else {
             if (empty($post['stime']) || empty($post['etime']) || empty($post['name'])) {
@@ -63,9 +63,9 @@ class Sale extends Base
             $data['createtime'] = time();
             $add = db('sale')->insert($data);
             if ($add) {
-                make_json(1, '新增成功');
+                return make_json(1, '新增成功');
             } else {
-                make_json(0, '新增失败');
+                return make_json(0, '新增失败');
             }
         }
     }
@@ -89,6 +89,8 @@ class Sale extends Base
     {
         $request = Request::instance();
         $get = $request->route();
+        $info = Model('sale')->field('name')->find();
+        $this->assign('name',$info['name']);
         $this->assign('id', $get['id']);
         return $this->fetch();
     }
@@ -110,7 +112,9 @@ class Sale extends Base
             if ($SaleShop) {
                 foreach ($SaleShop as $key2 => $value2) {
                     $SaleShop = Model('product')->SaleConfigOriginalShop($value2);
-                    $SaleOriginalShop[] = $SaleShop;
+                    if($SaleShop){
+                        $SaleOriginalShop[] = $SaleShop;
+                    }
                 }
                 foreach ($SaleOriginalShop as $key1 => &$value1) {
                     $ClickClass = Model('product_classify')->SaleConfigShopClass($value1['cid']);
@@ -127,9 +131,9 @@ class Sale extends Base
                 $ClickClass = Model('product_classify')->SaleConfigShopClass($value['cid']);
                 $value['class'] = $ClickClass['title'];
             }
-            make_json(1, ['OriginalShop_data' => $SaleOriginalShop, 'AllShop_data' => $SaleAllShop]);
+            return make_json(1, ['OriginalShop_data' => $SaleOriginalShop, 'AllShop_data' => $SaleAllShop]);
         } else{
-            make_json(0, '找不到这个限时抢购活动可能已被删除');
+            return make_json(0, '找不到这个限时抢购活动可能已被删除');
         }
     }
 
@@ -139,7 +143,7 @@ class Sale extends Base
         $request = Request::instance();
         $post = $request->post();
         $ClickShop = Model('product')->SaleClickOneShop($post['shop_id']);
-        make_json(1, ['AddOrDeleteShop_data' => $ClickShop]);
+        return make_json(1, ['AddOrDeleteShop_data' => $ClickShop]);
     }
 
     // 数据更新
@@ -149,9 +153,9 @@ class Sale extends Base
         $post = $request->post();
         $edit = Model('sale')->EditSaleConfig($post);
         if ($edit) {
-            make_json(1, '更新成功');
+            return make_json(1, '更新成功');
         } else {
-            make_json(0, '您没有作出更改');
+            return make_json(0, '您没有作出更改');
         }
     }
 }

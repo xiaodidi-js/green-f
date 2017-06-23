@@ -281,13 +281,12 @@ function judgeWechatVersion($header=''){
  * @param  string $url    [description]
  * @return [type]         [description]
  */
-function make_json($status, $data , $url = ''){
-    $arr['status'] =$status;
-    $arr['msg'] = $data;
-    $arr['url'] = $url;
-    echo json_encode($arr);
-    die;
+function make_json($status=0,$info='',$others=[]){
+    $base = ['status'=>$status,'msg'=>$info];
+    return think\Response::create($base,'json')->code('200');
 }
+
+
 
 // 判断是否可以配送和活动
 function CommonProduct($data){
@@ -320,9 +319,10 @@ function CommonProduct($data){
     $querysale = Model('Sale')->query($nowtime,$data['id']);
     if($querysale){
         $fanhui['activestu'] = 1;
-        $fanhui['activepay'] = $querysale['saledata'][0]['salepaynub'];
+        $fanhui['activepay'] = intval($querysale['saledata'][0]['salepaynub']);
         $fanhui['activeid'] = $querysale['saleid'];
         $fanhui['price'] = $querysale['saledata'][0]['saleprice'];
+        $fanhui['store'] = intval($querysale['saledata'][0]['salenub']);
     }
 
     // lzc-分享购买商品
@@ -342,7 +342,7 @@ function CommonProduct($data){
     if(empty($fanhui['activestu']) && empty($fanhui['activeid'])){
         $fanhui['activestu'] = 0;
         $fanhui['activeid'] = 0;
-        $fanhui['activepay'] = 0;
+        // $fanhui['activepay'] = 0;
     }
     return $fanhui;
 }

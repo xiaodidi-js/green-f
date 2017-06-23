@@ -2,19 +2,31 @@
 
 namespace app\admin\controller;
 use think\Controller,think\Request;
-
+use app\admin\controller\Excel;
 class Shouhou extends Base{
 	// 首单列表
 	public function shoudanlist(){
 		$request = Request::instance();
-		$get = $request->get();
-		if(empty($get['time'])){
+		$get = $request->param();
+		if(empty($get['stime'])){
 			$stime = strtotime(date('Y-m-d'.'00:00:00',time()));
-			$etime = strtotime(date('Y-m-d'.'23:59:59',time()));
-			$time = date('Y-m-d H:i:s',$stime);
+		}else{
+			$stime = strtotime($get['stime']);
 		}
-		$this->assign('time',$time);
-		return $this->fetch();
+		$time = date('Y-m-d H:i:s',$stime);
+		$etime = date('Y-m-d',$stime).'23:59:59';
+		$etime = strtotime($etime);
+		$list = Model('MemberOrders')->queryshoudan($stime,$etime);
+		if(empty($get['excel'])){
+			$this->assign('list',$list);
+			$this->assign('time',$time);
+			return $this->fetch();
+		}else{
+			$otime['stime'] = date('Y-m-d H:i:s',$stime);
+			$otime['etime'] = date('Y-m-d H:i:s',$etime);
+			$excel = new Excel();
+        	$result = $excel->shoudan($list,$otime);
+		}
 	}
 
 	// 未消费用户列表
@@ -24,28 +36,42 @@ class Shouhou extends Base{
 		if(empty($get['daytime'])){
             $get['daytime'] = 0;
         }
-		$queryorder = Model('member_orders')->querynopay($get);
+		$queryorder = Model('MemberOrders')->querynopay($get);
 		if($queryorder){
 			foreach ($queryorder as $key => $value) {
 				$alluserid[] = $value['uid'];
 			}
 			$alluserid = array_unique($alluserid);
 			$Uwhere['id'] = array('not in',$alluserid);
-			$queryuser = Model('member')->querynotid($Uwhere);
+			$queryuser = Model('Member')->querynotid($Uwhere);
 			foreach ($queryuser as $key1 => &$value1) {
 				$Qwhere['uid'] = $value1['id'];
 				$Qwhere['pay'] = 1;
-				$queryorderfind = Model('member_orders')->where($Qwhere)->order('createtime desc')->find();
+				$queryorderfind = Model('MemberOrders')->where($Qwhere)->order('createtime desc')->find();
 				$value1['endtime'] = $queryorderfind['createtime'];
 				$value1['sum'] = $queryorderfind['sum'];
 				$value1['money'] = $queryorderfind['money'];
 			}
 		}else{
-			$queryuser = null;
+			$queryuser = [];
 		}
-		$this->assign('daytime',$get['daytime']);
-		$this->assign('list',$queryuser);
-		return $this->fetch();
+		// 导出excel
+		if(empty($get['excel'])){
+			$this->assign('daytime',$get['daytime']);
+			$this->assign('list',$queryuser);
+			return $this->fetch();
+		}else{
+			if($get['daytime'] == 0){
+				$time = '三天前';
+			}elseif($get['daytime'] == 1){
+				$time = '一星期';
+			}else{
+				$time = '一个月';
+			}
+			$excel = new Excel();
+        	$result = $excel->weixiaofei($queryuser,$time);
+		}
+		
 	}
 
 	// 菜品消费清单

@@ -131,7 +131,7 @@
             ready:function(){
 //                var self = this
 //                $.post('{:url("admin/Gift/morenmaxshop")}',{id:},function(data) {
-//                    var data = JSON.parse(data).msg.info
+//                    var data = data.msg.info
 //                    for(i = 0; i < data.length; i++){
 //                        self.addinfo.push(data[i])
 //                        self.addinput.push(data[i]['id'])
@@ -146,7 +146,7 @@
                     }
                 }
                 $.get('{:url("admin/Gift/shopinfo")}',{id:id},function(data) {
-                    var data = JSON.parse(data).msg.info
+                    var data = data.msg.info
                     self.addinfo.push(data)
                     self.addinput.push(data['id'])
                     console.log(self.addinput)
@@ -160,7 +160,7 @@
                 self.addinput.splice(index, 1)
 //                 console.log(self.addinput)
                 $.get('{:url("admin/Gift/shopinfo")}',{id:id},function(data) {
-                    var data = JSON.parse(data).msg.info
+                    var data = data.msg.info
                     self.list.push(data)
                     self.list1.push(data)
                 })
@@ -172,7 +172,7 @@
                         top: 100,
                         duration: 3
                     });
-                    var data = JSON.parse(data)
+                    var data = data
                     if(data.status == '0'){
                         self.$Message.error(data.msg)
                     }else{

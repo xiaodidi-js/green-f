@@ -58,7 +58,7 @@
 				var form = $('#form').serialize()
 				console.log(form)
 				$.post("{:url('admin/shoper/addstaff',array('id'=>$id))}",form,function(data){
-					var data = JSON.parse(data)
+					var data = data
                     if(data.status == '0'){
                         self.$Message.error(data.msg)
                     }else{

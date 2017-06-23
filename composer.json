@@ -25,7 +25,8 @@
         "topthink/think-sae": "^1.0",
         "topthink/think-queue": "^1.0",
         "topthink/think-migration": "^1.0",
-        "phpoffice/phpexcel": "^1.8"
+        "phpoffice/phpexcel": "^1.8",
+        "overtrue/wechat": "~3.1"
     },
     "extra": {
         "think-path": "thinkphp"

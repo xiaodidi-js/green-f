@@ -12,6 +12,7 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">限时抢购管理</h3>
+                    <div style="color: red">不可出现重叠时段不同活动的限时抢购！正在进行中的活动,尽量不要去改动.</div>
                 </div>
                 <div class="box-body table-responsive">
                     <table class="table table-hover" id="example">
@@ -74,7 +75,7 @@
             delok:function(){
                 var self = this
                 $.post('{:url("admin/Sale/DelSale")}',{id:self.id},function(data) {
-                    var data = JSON.parse(data)
+                    var data = data
                     if(data.status == '0'){
                         self.$Message.error(data.msg)
                     }else{

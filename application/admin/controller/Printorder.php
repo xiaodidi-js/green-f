@@ -61,21 +61,39 @@ class Printorder extends Base{
 	// 打印查看
 	public function print(){
 		$request = Request::instance();
-		$get = $request->get();
-		$istime = $get['stime'];
-		$iftime = $get['etime'];
-		$sincename = $get['id'];
-		$this->assign('sincename',$sincename);
+		$get = $request->param();
+		if(!empty($get['stime'])){
+			$istime = $get['stime'];
+			$get['stime'] = strtotime($get['stime']);
+		}else{
+			$istime = date('Y-m-d').' 00:00:00';
+			$get['stime'] = strtotime(date('Y-m-d'));
+		}
+		if(!empty($get['etime'])){
+			$iftime = $get['etime'];
+			$get['etime'] = strtotime($get['etime']);
+		}else{
+			$iftime = date('Y-m-d').' 23:59:59';
+			$get['etime'] = strtotime($iftime);
+		}
 		$this->assign('istime',$istime);
 		$this->assign('iftime',$iftime);
-		$this->assign('printifok',$get['stu']);
-		$get['stime'] = strtotime($get['stime']);
-		$get['etime'] = strtotime($get['etime']);
-		$where['o.address'] = $get['id'];
         $where['o.is_del'] = 0;
         $where['o.pay'] = 1;
         $where['o.receive'] = 0;
         // $where['o.send'] = 0;
+        if(!empty($get['kuaidi'])){
+        	$where['o.stype'] = 'express';
+        	$this->assign('sincename','快递');
+        	$this->assign('kuaidi',1);
+        }else{
+			$sincename = $get['id'];
+        	$where['o.stype'] = 'parcel';
+			$where['o.address'] = $get['id'];
+			$this->assign('sincename',$sincename);
+			$this->assign('kuaidi',0);
+        }
+        $this->assign('printifok',$get['stu']);
         // $where['o.stype'] = 'parcel';
         $where['o.stime'] = array('between',[$get['stime'],$get['etime']]);
         if($get['stu'] == 0){
@@ -148,14 +166,14 @@ class Printorder extends Base{
 		$request = Request::instance();
 		$post = $request->post();
 		if(empty($post['orderid'])){
-			make_json(0, '没有找到订单');
+			return make_json(0, '没有找到订单');
 			exit();
 		}
 		$edit = Model('MemberOrders')->printeditok($post['orderid']);
 		if($edit){
-			make_json(1, '确认打印成功');
+			return make_json(1, '确认打印成功');
 		}else{
-			make_json(0, '确认打印失败');
+			return make_json(0, '确认打印失败');
 		}
 	}
 
@@ -199,9 +217,9 @@ class Printorder extends Base{
 			$update['tag'] = $post['id'];
 			$edit = db('product_classify')->where('id','in',$post['classid'])->update($update);
 			if($edit){
-				make_json(1, '配置成功');
+				return make_json(1, '配置成功');
 			}else{
-				make_json(0, '配置失败');
+				return make_json(0, '配置失败');
 			}
 		}
 	}
@@ -222,9 +240,9 @@ class Printorder extends Base{
 				$editoradd = db('classify_tag')->where('id',$route['id'])->update($data);
 			}
 			if($editoradd){
-				make_json(1,'保存成功');
+				return make_json(1,'保存成功');
 			}else{
-				make_json(0,'保存失败');
+				return make_json(0,'保存失败');
 			}
 		}else{
 			if(!empty($route['id'])){

@@ -22,7 +22,7 @@ class Diyindex extends Base{
 	public function uploadList(){
 		$cxuploadList = db('indexlayout')->order('id desc')->find();
 		$cxuploadList = unserialize($cxuploadList['data']);
-		make_json(1,['list' => $cxuploadList]);
+		return make_json(1,['list' => $cxuploadList]);
 	}
 
 	public function list(){
@@ -33,7 +33,7 @@ class Diyindex extends Base{
 		$maa['status'] = 1;
 		$ProductClassify = Model('ProductClassify');
 		$cx = $ProductClassify->where($maa)->select();
-		make_json(1,['class' => $cx]);
+		return make_json(1,['class' => $cx]);
 	}
 
 	public function img(){
@@ -44,7 +44,7 @@ class Diyindex extends Base{
 	        if($info){
 	        	$allimg['name'] = $info->getsaveName();
 	        	$allimg['url'] = '//'.$_SERVER['HTTP_HOST'].'/public/uploads/'.$info->getsaveName();
-	        	make_json(1,['img' => $allimg]);
+	        	return make_json(1,['img' => $allimg]);
 	            //保存数值可看$info对象数组
 		    }else{
 	            // 上传失败获取错误信息
@@ -60,9 +60,9 @@ class Diyindex extends Base{
 		$post['data'] = serialize($post['data']);
 		$add = db('indexlayout')->insert($post);
 		if($add){
-			make_json(1,'编辑成功');
+			return make_json(1,'编辑成功');
 		}else{
-			make_json(0,'编辑失败');
+			return make_json(0,'编辑失败');
 		}
 	}
 }

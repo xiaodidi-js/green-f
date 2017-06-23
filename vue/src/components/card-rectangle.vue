@@ -22,16 +22,14 @@
 							<template v-if="item.arr.length == 3">
 								<div style="width:33.3%;float:left;">
 									<a class="href-ui three-href" :href="'//'+item1.htmlurl">
-										<div v-lazy:background-image="item1.url" class="lazyUrl" v-link="{name:'detail',params:{pid:item1.shopid}}"></div>
-										<!--<img :src="item1.url" alt="" style="width:100%;" />-->
+										<div v-lazy:background-image="item1.url" class="lazyUrl"></div>
 									</a>
 								</div>
 							</template>
 							<template v-if="item.arr.length == 4">
 								<div style="width:25%;float:left;">
 									<a class="href-ui three-href" :href="'//'+item1.htmlurl">
-										<div v-lazy:background-image="item1.url" class="lazyUrl  lazyUrl-two" v-link="{name:'detail',params:{pid:item1.shopid}}"></div>
-										<!--<img :src="item1.url" alt="" style="width:100%;" />-->
+										<div v-lazy:background-image="item1.url" class="lazyUrl  lazyUrl-two"></div>
 									</a>
 								</div>
 							</template>

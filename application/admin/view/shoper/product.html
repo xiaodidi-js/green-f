@@ -55,10 +55,11 @@
 			<div class="col-md-12" style="margin:15px 0;">
 				<a class="btn bg-maroon" href="{:url('admin/shoper/product')}">返回列表页</a>
 				<a class="btn btn-warning" href="{:url('admin/shoper/addproduct')}">添加产品</a>
-				<a class="btn btn-info" href="{:url('admin/shoper/classify')}">查看产品分类</a>
-				<a class="btn btn-success" href="{:url('admin/shoper/productrepertory')}">查看产品仓库</a>
-				<a class="btn btn-primary" href="{:url('admin/shoper/format')}">查看产品规格</a>
-				<a class="btn bg-purple" href="{:url('admin/shoper/productgift')}">查看赠品商品</a>
+				<a class="btn btn-info" href="{:url('admin/shoper/classify')}">产品分类</a>
+				<a class="btn btn-success" href="{:url('admin/shoper/productrepertory')}">下架商品</a>
+				<a class="btn btn-primary" href="{:url('admin/shoper/format')}">产品规格</a>
+				<a class="btn bg-purple" href="{:url('admin/shoper/productgift')}">赠品商品</a>
+				<a class="btn bg-purple" href="{:url('admin/shoper/daochuproduct',array('excel'=>$is_sell))}">导出所有商品Excel</a>
 			</div>
 			<!-- /.col -->
 
@@ -201,7 +202,7 @@ $(document).ready(function() {
   			del:function(){
   				var self = this
   				$.post("{:url('admin/Shoper/alldel')}",{id:self.checkedNames},function(data){
-					var data = JSON.parse(data).msg
+					var data = data.msg
 					$('#myDialog .dialog-box').text(data);
 					$('#myDialog').modal();
 					for (var i = 0; i < self.checkedNames.length; i++) {
@@ -213,7 +214,7 @@ $(document).ready(function() {
   			downup:function(){
   				var self = this
   				$.post("{:url('admin/Shoper/alldownup')}",{id:self.checkedNames},function(data){
-					var data = JSON.parse(data).msg
+					var data = data.msg
 					$('#myDialog .dialog-box').text(data);
 					$('#myDialog').modal();
 					for (var i = 0; i < self.checkedNames.length; i++) {
@@ -256,11 +257,11 @@ $(document).ready(function() {
 	function editstore(id,store){
 		var kucun = store.value
 		$.post("{:url('admin/shoper/editstore')}",{id:id,store:kucun},function(data){
-			var data = JSON.parse(data).msg
-			console.log(kucun)
+			var data = data.msg
+			/*console.log(kucun)
 			if(kucun == 0){
 				$("#shuju"+id).hide()
-			}
+			}*/
 			$('#myDialog .dialog-box').text(data);
 			$('#myDialog').modal();
 		});

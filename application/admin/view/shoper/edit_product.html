@@ -81,7 +81,7 @@
 				              <input type="text" name="sn_code" class="form-control" placeholder="产品的唯一编码" value="{$info.sn_code}">
 				            </div>
 				            <div class="form-group">
-				              <label>产品名称</label>
+				              <label>产品名称及关键字</label>
 				              <input type="text" name="name" class="form-control" placeholder="产品的名称" value="{$info.name}">
 				            </div>
 				            <div class="form-group">
@@ -95,6 +95,10 @@
 				            <div class="form-group">
 				              <label>产品原价</label>
 				              <input type="text" name="starprice" class="form-control" placeholder="产品的销售原价" value="{$info.starprice}">
+				            </div>
+				            <div class="form-group">
+				              <label>限购份数(0为不限购)</label>
+				              <input type="text" name="limits" class="form-control" placeholder="限购份数" value="{$info.limits}">
 				            </div>
 							<div class="form-group">
 								<label>重量</label>
@@ -977,13 +981,13 @@
   			ready(){
   				var self = this
   				$.post("{:url('admin/Shoper/selectcaigou')}",{pid:1},function(data){
-  					self.fjz = JSON.parse(data).msg.shuju
+  					self.fjz = data.msg.shuju
   				})
   				$.post("{:url('admin/Shoper/selectcaigou')}",{pid:2},function(data){
-  					self.cgy = JSON.parse(data).msg.shuju
+  					self.cgy = data.msg.shuju
   				})
   				$.post("{:url('admin/Shoper/selectcaigou')}",{pid:3},function(data){
-  					self.gys = JSON.parse(data).msg.shuju
+  					self.gys = data.msg.shuju
   				})
   				var nr = self.off
   				if(nr == 0){
@@ -993,7 +997,7 @@
 		  			$('#taocanxz').show()
 		  			$('#taocankuan').show()
 		  			$.post("{:url('admin/Shoper/selectshop')}",function(data){
-		  				var data = JSON.parse(data).msg.shopmuen
+		  				var data = data.msg.shopmuen
 		  				self.shopmuen = data
 					})
 		  		}
@@ -1008,7 +1012,7 @@
 		  			$('#taocanxz').show()
 		  			$('#taocankuan').show()
 		  			$.post("{:url('admin/Shoper/selectshop')}",function(data){
-		  				var data = JSON.parse(data).msg.shopmuen
+		  				var data = data.msg.shopmuen
 		  				self.shopmuen = data
 					})
 		  		}
@@ -1019,7 +1023,7 @@
   				var id = $('#shuju').val()
   				$.post("{:url('admin/Shoper/infoshop')}",{id:id},function(data){
   					$('#taocanbig').empty()
-		  			var data = JSON.parse(data).msg.shopname
+		  			var data = data.msg.shopname
 		  			for (var k = 0; k < data.length; k++) {
 						$('#taocanbig').append('<span id="taocank'+k+'"><div class="taocank"><div class="wz">'+data[k]+'</div> <input type="text" name="pinzhong[]" class="input"><input type="hidden" name="pinzhongid[]" class="input" value="'+id[k]+'"><div style="float: left;margin-left: 5px;margin-top: 3px;" onclick="vm.delk('+k+')">删除</div></div></span>')
 					}

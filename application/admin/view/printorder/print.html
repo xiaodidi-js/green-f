@@ -149,7 +149,7 @@
             },
             querylist:function(){
                 var address = "{$sincename}";
-                window.location.href = "{:url('admin/printorder/print')}"+'?id='+address+'&stime='+this.stime+'&etime='+this.etime+'&stu='+this.printifok+'&tag='+this.tag;
+                window.location.href = "{:url('admin/printorder/print')}"+'?id='+address+'&stime='+this.stime+'&etime='+this.etime+'&stu='+this.printifok+'&tag='+this.tag+'&kuaidi={$kuaidi}';
             },
             PreviewMytable:function(){
                 var nub = {$nub};
@@ -174,7 +174,7 @@
                 });
                 var form = $("#form").serialize();
                 $.post('{:url("admin/printorder/printok")}',form,function(data) {
-                    var data = JSON.parse(data)
+                    var data = data
                     if(data.status == 1){
                         self.$Message.success(data.msg);
                         history.back(-1);

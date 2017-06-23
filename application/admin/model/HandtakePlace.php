@@ -34,4 +34,53 @@ class HandtakePlace extends Model{
         $list = $this->where($where)->select();
         return $list;
     }
+
+    // 自提点站点统计
+    public function tongjixiaoshou($get){
+        $stime = strtotime($get['stime']);
+        $etime = strtotime($get['etime']);
+        $where['a.address'] = array('neq','');
+        $list = $this
+            ->alias('a')
+            // ->join('member_orders o','a.name = o.person','LEFT')
+            ->join('member_sincestar u','a.id = u.sid','LEFT')
+            ->where($where)
+            ->field('a.name,COUNT(u.sid) as sid,a.status')
+            ->group('a.id')
+            ->select();
+        unset($where);
+        $where['createtime'] = array('between',[$stime,$etime]);
+        $where['pay'] = 1;
+        $where['is_del'] = 0;
+        foreach ($list as $key => &$value) {
+            if($value['status'] == 1){
+                $value['status'] = "启用";
+            }else{
+                $value['status'] = "关闭";
+            }
+            $where['person'] = $value['name'];
+            $queryorder = Model('MemberOrders')
+                ->where($where)
+                ->field('id,orderid,money')
+                ->select();
+            if($queryorder){
+                $all = 0;
+                foreach ($queryorder as $key1 => $value1) {
+                    $all = $all + $value1['money'];
+                }
+                $value['ordernum'] = count($queryorder);
+                $value['money'] = $all;
+                if($value['money'] == 0 || $value['ordernum'] == 0){
+                    $value['moneyhe'] = 0 ;
+                }else{
+                    $value['moneyhe'] = $value['ordernum'] / $all;
+                }
+            }else{
+                $value['ordernum'] = 0;
+                $value['money'] = 0;
+                $value['moneyhe'] = 0;
+            }
+        }
+        return $list;
+    }
 }

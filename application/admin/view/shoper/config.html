@@ -96,11 +96,10 @@
 
 	                <div class="col-md-8">
 	                	<div class="form-group">
-		                  <label style="display:block;">关于我们详情页内容:</label>
+		                  <label style="display:block; font-size: 18px;">《绿秧田商城使用协议》内容:</label>
 		                  <textarea id="detail" name="detail" style="width:100%;min-height:990px;">{$profile.detail|htmlspecialchars_decode}</textarea>
 		                </div>
 	                </div>
-
 	              </div>
 	              <!-- /.box-body -->
 
@@ -178,11 +177,11 @@
 				                </label>
 				            {/eq}
 				            </div>
-				            <div class="form-group">
-								<h4>货到付款配置</h4>
-							</div>
-							<div class="form-group">
-							{eq name="pay.facepay" value="1"}
+				            <!-- <div class="form-group">
+				            								<h4>货到付款配置</h4>
+				            							</div>
+				            							<div class="form-group">
+				            							{//eq name="pay.facepay" value="1"}
 				                <label>
 				                  <input type="radio" name="facepay" class="minimal" checked value="1">
 				                  &nbsp;启用
@@ -192,7 +191,7 @@
 				                  <input type="radio" name="facepay" class="minimal" value="0">
 				                  &nbsp;禁用
 				                </label>
-				            {else/}
+				            {//else/}
 				            	<label>
 				                  <input type="radio" name="facepay" class="minimal" value="1">
 				                  &nbsp;启用
@@ -202,67 +201,67 @@
 				                  <input type="radio" name="facepay" class="minimal" checked value="0">
 				                  &nbsp;禁用
 				                </label>
-				            {/eq}
-				            </div>
+				            {/*/eq*/}
+				            </div> -->
 		                </div>
 
-		                <div class="col-md-4">
+		                <!-- <div class="col-md-4">
 		                	<div class="form-group">
-								<h4>支付宝支付配置</h4>
-							</div>
-							<div class="form-group" style="margin-bottom:10px;">
-				            {eq name="pay.alipay" value="1"}
-				                <label>
-				                  <input type="radio" name="alipay" class="minimal" checked value="1">
-				                  &nbsp;启用
-				                </label>
-				                &nbsp;&nbsp;
-				                <label>
-				                  <input type="radio" name="alipay" class="minimal" value="0">
-				                  &nbsp;禁用
-				                </label>
-				            {else/}
-				            	<label>
-				                  <input type="radio" name="alipay" class="minimal" value="1">
-				                  &nbsp;启用
-				                </label>
-				                &nbsp;&nbsp;
-				                <label>
-				                  <input type="radio" name="alipay" class="minimal" checked value="0">
-				                  &nbsp;禁用
-				                </label>
-				            {/eq}
-				            </div>
-			                <div class="form-group">
-			                  <label>商户账号:</label>
-			                  <input type="text" class="form-control" name="partner" placeholder="输入支付宝商户账号" value="{$pay.partner}">
-			                </div>
-			                <div class="form-group">
-			                  <label>PID:</label>
-			                  <input type="text" class="form-control" name="pid" placeholder="输入支付宝合作者身份(PID)" value="{$pay.pid}">
-			                </div>
-			                <div class="form-group">
-			                  <label>KEY:</label>
-			                  <input type="text" class="form-control" name="ali_key" placeholder="输入支付宝密匙(KEY)" value="{$pay.ali_key}">
-			                </div>
-			                <div class="form-group">
-			                  <label style="display:block;">上传支付宝私钥:</label>
-			                  {if condition="$pay.rsa neq ''"}
-			                  		<button type="button" id="getFile" class="btn btn-primary" disabled>上传私钥</button>
-	                				<label id="flabel" style="display:inline-block;color:#aaa;font-size:12px;font-weight:normal;margin-left:5px;">已上传文件</label>
+		                								<h4>支付宝支付配置</h4>
+		                							</div>
+		                							<div class="form-group" style="margin-bottom:10px;">
+		                				            {eq name="pay.alipay" value="1"}
+		                				                <label>
+		                				                  <input type="radio" name="alipay" class="minimal" checked value="1">
+		                				                  &nbsp;启用
+		                				                </label>
+		                				                &nbsp;&nbsp;
+		                				                <label>
+		                				                  <input type="radio" name="alipay" class="minimal" value="0">
+		                				                  &nbsp;禁用
+		                				                </label>
+		                				            {else/}
+		                				            	<label>
+		                				                  <input type="radio" name="alipay" class="minimal" value="1">
+		                				                  &nbsp;启用
+		                				                </label>
+		                				                &nbsp;&nbsp;
+		                				                <label>
+		                				                  <input type="radio" name="alipay" class="minimal" checked value="0">
+		                				                  &nbsp;禁用
+		                				                </label>
+		                				            {/eq}
+		                				            </div>
+		                			                <div class="form-group">
+		                			                  <label>商户账号:</label>
+		                			                  <input type="text" class="form-control" name="partner" placeholder="输入支付宝商户账号" value="{$pay.partner}">
+		                			                </div>
+		                			                <div class="form-group">
+		                			                  <label>PID:</label>
+		                			                  <input type="text" class="form-control" name="pid" placeholder="输入支付宝合作者身份(PID)" value="{$pay.pid}">
+		                			                </div>
+		                			                <div class="form-group">
+		                			                  <label>KEY:</label>
+		                			                  <input type="text" class="form-control" name="ali_key" placeholder="输入支付宝密匙(KEY)" value="{$pay.ali_key}">
+		                			                </div>
+		                			                <div class="form-group">
+		                			                  <label style="display:block;">上传支付宝私钥:</label>
+		                			                  {if condition="$pay.rsa neq ''"}
+		                			                  		<button type="button" id="getFile" class="btn btn-primary" disabled>上传私钥</button>
+		                	                				<label id="flabel" style="display:inline-block;color:#aaa;font-size:12px;font-weight:normal;margin-left:5px;">已上传文件</label>
 		                			<div id="fcross" class="fcross" style="display:inline-block;">x</div>
-				        			<input type="hidden" id="fileurl" name="rsa" value="{$pay.rsa}">
-			                  {else/}
-			                  		<button type="button" id="getFile" class="btn btn-primary">上传私钥</button>
-			                  		<label id="flabel" style="display:inline-block;color:#aaa;font-size:12px;font-weight:normal;margin-left:5px;">未上传文件</label>
+		                				        			<input type="hidden" id="fileurl" name="rsa" value="{$pay.rsa}">
+		                			                  {else/}
+		                			                  		<button type="button" id="getFile" class="btn btn-primary">上传私钥</button>
+		                			                  		<label id="flabel" style="display:inline-block;color:#aaa;font-size:12px;font-weight:normal;margin-left:5px;">未上传文件</label>
 		                			<div id="fcross" class="fcross">x</div>
-				        			<input type="hidden" id="fileurl" name="rsa" value="">
-			                  {/if}
-			                  
-			                  <p class="help-block text-red" style="font-size:10px;margin-top:5px;">(注意:公/私钥需要手动生成.)</p>
-			                </div>
+		                				        			<input type="hidden" id="fileurl" name="rsa" value="">
+		                			                  {/if}
+		                			                  
+		                			                  <p class="help-block text-red" style="font-size:10px;margin-top:5px;">(注意:公/私钥需要手动生成.)</p>
+		                			                </div>
 		                </div>
-
+		                 -->
 		                <div class="col-md-4">
 		                	<div class="form-group">
 								<h4>微信支付配置</h4>

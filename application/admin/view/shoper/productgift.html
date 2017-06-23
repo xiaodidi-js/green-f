@@ -181,7 +181,7 @@ $(document).ready(function() {
   			del:function(){
   				var self = this
   				$.post("{:url('admin/Shoper/alldel')}",{id:self.checkedNames},function(data){
-					var data = JSON.parse(data).msg
+					var data = data.msg
 					$('#myDialog .dialog-box').text(data);
 					$('#myDialog').modal();
 					for (var i = 0; i < self.checkedNames.length; i++) {
@@ -193,7 +193,7 @@ $(document).ready(function() {
   			downup:function(){
   				var self = this
   				$.post("{:url('admin/Shoper/alldownup')}",{id:self.checkedNames},function(data){
-					var data = JSON.parse(data).msg
+					var data = data.msg
 					$('#myDialog .dialog-box').text(data);
 					$('#myDialog').modal();
 					for (var i = 0; i < self.checkedNames.length; i++) {
@@ -236,7 +236,7 @@ $(document).ready(function() {
 	function editstore(id,store){
 		var kucun = store.value
 		$.post("{:url('admin/shoper/editstore')}",{id:id,store:kucun},function(data){
-			var data = JSON.parse(data).msg
+			var data = data.msg
 			console.log(kucun)
 			if(kucun == 0){
 				$("#shuju"+id).hide()

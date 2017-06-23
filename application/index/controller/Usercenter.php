@@ -366,6 +366,29 @@ class Usercenter extends RestBase
                 }
             }
         }
+    }
 
+    // 用户关注自提点入口
+    public function sincestar(){
+        $request = Request::instance();
+        $post = $request->post();
+        if(empty($post['openid']) || empty($post['sinceid'])){
+            $result = makeResult(0,'没有传入openid或自提点id');
+            return $this->response($result,'json',200);
+        }
+        $where['id'] = $post['sinceid'];
+        $querysince = db('handtake_place')->where($where)->field('id')->count();
+        $querystar = db('member_sincestar')->where('openid',$post['openid'])->field('id')->count();
+        if($querystar != 0 && $querysince == 0){
+            $data['createtime'] = time();
+            $data['openid'] = $post['openid'];
+            $data['sid'] = $post['sinceid'];
+            $add = db('member_sincestar')->insert($data);
+            $result = makeResult(1,'成功关注');
+            return $this->response($result,'json',200);
+        }else{
+            $result = makeResult(0,'该用户已关注,或没有找到这个自提点');
+            return $this->response($result,'json',200);
+        }
     }
 }

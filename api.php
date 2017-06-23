@@ -12,7 +12,7 @@ if (!$key) {
 }
 define('APIKEY', trim($key));
 define('API_URL', 'http://task.quguonet.com/Home/Index/index');
-
+define('TOKEN', 'lvyangtian');
 $data = $_GET;
 
 if ($data['action'] != 'webhook') {
@@ -55,14 +55,17 @@ if ($data['action'] != 'webhook') {
 			file_put_contents('webhook.txt', '分支不匹配（'.$ref.','.$ref_conf.')'."\n", FILE_APPEND);
 			exit();
 		}
-		$commit = 'sudo /usr/bin/git checkout -- .';
+		$commit = '/usr/bin/git checkout -- .';
 		exec($commit);
-		$commit = 'sudo /usr/bin/git pull';
+		$commit = '/usr/bin/git pull';
 		exec($commit);
-		$commit = 'sudo /usr/bin/git checkout -b '. $ref_conf .' remotes/origin/'.$ref_conf;
+
+		$commit = '/usr/bin/git checkout -b '. $ref_conf .' remotes/origin/'.$ref_conf;
 		exec($commit);
-		$commit = 'sudo /usr/bin/git checkout '.$ref_conf;
+		$commit = '/usr/bin/git checkout '.$ref_conf;
 		exec($commit);
+				//$commit = 'sudo chown -R www:www .';
+		//exec($commit);
 		exit();
 	}
 

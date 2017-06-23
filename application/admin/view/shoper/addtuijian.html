@@ -16,6 +16,7 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">{$name}</h3>
+                    <div class="ivu-btn ivu-btn-error" @click="daochu">导出表格</div>
                 </div>
                 <div class="box-body table-responsive">
                 查询
@@ -56,7 +57,7 @@
                             <tr>
                                 <th>商品名称</th>
                                 <th>图片</th>
-                                <th>排序</th>
+                                <!-- <th>排序</th> -->
                                 <th>点击量</th>
                                 <th>销量</th>
                                 <th>价格</th>
@@ -67,7 +68,7 @@
                             <tr id="{{ item.id }}">
                                 <td>{{ item.name }}</td>
                                 <td><img :src="item.shotcut" width="100" height="100"></td>
-                                <td><input type="text" v-model="addinput[index].sort" style="width: 60px;"></td>
+                                <!-- <td><input type="text" v-model="addinput[index].sort" style="width: 60px;"></td> -->
                                 <td>{{ addinput[index].rate }}</td>
                                 <td>{{ addinput[index].pay }}</td>
                                 <td>{{ item.price }}</td>
@@ -116,13 +117,13 @@
             ready:function(){
                 var self = this
                 $.post('{:url("admin/shoper/tuijianmoren")}',{id:{$id}},function(data) {
-                    var data = JSON.parse(data).msg.info
+                    var data = data.msg.info
                     for(i = 0; i < data.length; i++){
                         self.addinfo.push(data[i])
                         if(self.addinput == ''){
                             self.addinput = [];
                         }
-                        self.addinput.push({id:data[i]['id'],sort:data[i]['sort'],rate:data[i]['rate'],pay:data[i]['pay'],price:data[i]['price'],createtime:data[i]['createtime']})
+                        self.addinput.push({id:data[i]['id'],/*sort:data[i]['sort'],*/rate:data[i]['rate'],pay:data[i]['pay'],price:data[i]['price'],createtime:data[i]['createtime']})
                     }
                 })
             },
@@ -134,12 +135,12 @@
                     }
                 }
                 $.get('{:url("admin/Gift/shopinfo")}',{id:id},function(data) {
-                    var data = JSON.parse(data).msg.info
+                    var data = data.msg.info
                     self.addinfo.push(data)
                     if(self.addinput == ""){
                         self.addinput = [];
                     }
-                    self.addinput.push({id:data['id'],sort:0,rate:0,pay:0,price:data['price'],createtime:data['createtime']})
+                    self.addinput.push({id:data['id'],/*sort:0,*/rate:0,pay:0,price:data['price'],createtime:data['createtime']})
                 })
             },
             delok:function(index,id){
@@ -153,7 +154,7 @@
                 self.addinfo.splice(self.jianzhi, 1)
                 self.addinput.splice(self.jianzhi, 1)
                 $.get('{:url("admin/Gift/shopinfo")}',{id:this.shujuid},function(data) {
-                    var data = JSON.parse(data).msg.info
+                    var data = data.msg.info
                     self.list.push(data)
                     self.list1.push(data)
                 })
@@ -165,7 +166,7 @@
                         top: 100,
                         duration: 3
                     });
-                    var data = JSON.parse(data)
+                    var data = data
                     if(data.status == '0'){
                         self.$Message.error(data.msg)
                     }else{
@@ -173,6 +174,9 @@
                         location.href = '{:url("admin/shoper/shoptuijian")}'
                     }
                 })
+            },
+            daochu:function(){
+                window.location.href = '{:url("admin/shoper/daochutuijian")}'+'?id={$id}';
             }
         },
         computed:{

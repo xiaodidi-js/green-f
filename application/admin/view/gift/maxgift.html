@@ -18,6 +18,7 @@
                         <thead>
                             <tr>
                                 <th>满就送金额</th>
+                                <th>已选自提点</th>
                                 <th>编辑</th>
                             </tr>
                         </thead>
@@ -25,6 +26,7 @@
                             {foreach name="list" item="vo" }
                             <tr id="tr{$vo.id}">
                                 <td>{$vo.maxmoney}</td>
+                                <td>{$vo.sincesum}</td>
                                 <td>
                                     <a class="ivu-btn ivu-btn-info" href="{:url('admin/gift/editmaxgift',array('id'=>$vo.id))}">配置满就送赠品</a>
                                     <i-button type="error" @click="del({$vo.id})">删除</i-button>
@@ -40,9 +42,7 @@
             v-model="delmodel"
             title="是否删除"
             @on-ok="delok">
-            <p>对话框内容</p>
-            <p>对话框内容</p>
-            <p>对话框内容</p>
+            <p>是否确认删除该满赠送</p>
         </Modal>
     </div>
     <a href="{:url('admin/gift/addmaxgift',array('id'=>0))}" class="btn btn-block btn-primary btn-lg" >添加满就送</a>
@@ -65,7 +65,7 @@
             delok(){
                 var self = this
                 $.post('{:url("admin/Gift/maxdel")}',{id:self.id},function(data) {
-                    var data = JSON.parse(data)
+                    var data = data
                     if(data.status == '0'){
                         self.$Message.error(data.msg)
                     }else{

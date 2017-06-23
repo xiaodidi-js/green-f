@@ -174,7 +174,7 @@
                     duration: 3
                 });
 				$.post('{:url("admin/shoper/fahuook")}',{id:self.checkall,time:self.time,miao:self.miao},function(data){
-					var data = JSON.parse(data)
+					var data = data
                     if(data.status == '0'){
                         self.$Message.error(data.msg)
                     }else{

@@ -8,7 +8,7 @@ use think\Validate;
 class Product extends Validate{
 
 	protected $rule = [
-		'sn_code|产品编码' => 'require|unique:product|checkCode:/^[\s\S]{1,50}$/',
+		// 'sn_code|产品编码' => 'require|unique:product|checkCode:/^[\s\S]{1,50}$/',
 		'name|产品名称' => 'require|checkName:/^[\s\S]{1,100}$/',
 		'description|产品描述' => 'require|checkDesc:/^[\s\S]{1,150}$/',
 		'price|产品价格' => 'require|number',

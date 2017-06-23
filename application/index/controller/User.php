@@ -815,7 +815,7 @@ class User extends RestBase
                 }
                 $order['statext'] = '待支付';
                 //获取购买商品列表
-                $products = db('member_orderlist')->alias('l')->join('product p','l.pid = p.id','LEFT')->join('member_orders k','l.oid = k.orderid')->where('l.uid',$id)->where('l.oid',$order['orderid'])->order('l.id desc')->field('p.id,p.name,p.shotcut,l.price,l.amount as nums,l.fname as formatName,p.deliverytime,k.stime,l.activity')->select();
+                $products = db('member_orderlist')->alias('l')->join('product p','l.pid = p.id','LEFT')->join('member_orders k','l.oid = k.orderid')->where('l.uid',$id)->where('l.oid',$order['orderid'])->order('l.id desc')->field('p.id,p.name,p.shotcut,l.price,l.amount as nums,l.fname as formatName,p.deliverytime,k.stime,l.activity,p.gift')->select();
 
                 //构造订单状态条数据
                 $status = [];
@@ -874,11 +874,6 @@ class User extends RestBase
                 foreach($products as $k=>&$v){
                     $products[$k]['price'] = floatval($v['price']/$v['nums']);
                     // 清单判断是否属于赠品
-                    if($v['activity'] < 0 || $v['activity'] > 0){
-                        $v['gift'] = 1;
-                    }else{
-                        $v['gift'] = 0;
-                    }
                 }
                 
                 //返回数据
@@ -895,7 +890,6 @@ class User extends RestBase
                 $id = intval($data['uid']);
                 $gtoken = trim($data['token']);
                 $openid = trim($data['openid']);
-                // $openid = '123';
                 $data['paytype'] = intval($data['paytype']);
                 //token验证
                 if(!$data){
@@ -964,7 +958,7 @@ class User extends RestBase
                     $orderData['address'] = $addressInfo['address'];
                     // $orderData['tel'] = $addressInfo['tel'];
                     // lzc-编辑订单再也不保存自提点的手机号码,现在保存用户号码
-                    $user = db('member')->where('id',$id)->field('utel,id')->find();
+                    $user = db('member')->where('id',$id)->field('utel,id,score')->find();
                     $orderData['tel'] = $user['utel'];
                     
                     $aid = 0;
@@ -985,7 +979,8 @@ class User extends RestBase
                 //处理积分
                 
                 if($data['score']){
-                    $orderData['score'] = intval($user['score'])/100;
+                    $queryjifen = db('jifen')->field('duihuan')->find();
+                    $orderData['score'] = intval($user['score']) * $queryjifen['duihuan'];
                 }else{
                     $orderData['score'] = 0;
                 }
@@ -1039,7 +1034,7 @@ class User extends RestBase
                     unset($data['products'][$pk]['shotcut']);
                     unset($data['products'][$pk]['store']);
                     //获取商品库存、价格和运费等信息
-                    $getField = 'p.deliverytime,p.id,p.name,p.price,p.is_promote,p.promote_price,p.promote_start,p.promote_end,p.store,p.is_sell,p.is_del,form.format,form.price as fprice,form.store as fstore,freight.freight,form.id as formatid,p.gift';
+                    $getField = 'p.deliverytime,p.id,p.name,p.price,p.is_promote,p.promote_price,p.promote_start,p.promote_end,p.store,p.is_sell,p.is_del,form.format,form.price as fprice,form.store as fstore,freight.freight,form.id as formatid,p.gift,p.limits';
                     $productInfo = $productDb->alias('p')
                                             ->join('product_formlist as form','(p.id = form.pid) AND form.format = "'.$pv['format'].'"','LEFT')
                                             ->join('product_freight freight','(p.id = freight.pid) AND freight.aid = '.$aid,'LEFT')
@@ -1052,7 +1047,6 @@ class User extends RestBase
                         $result = makeResult(0,'不能单买赠品哦，你太坏了！');
                         return $this->response($result,'json',200);
                     }
-
                     if(empty($pv['activestu'])){
                         $pv['activestu'] = 0;
                     }elseif($pv['activestu'] == '1'){
@@ -1090,7 +1084,22 @@ class User extends RestBase
                         $shareid = 0;
                         $qrcodeid = 1;
                     }
-
+                    // 限购数值只有限时商品作出单独限制,分享购买和二维码都是根据商品填写的限制.
+                    if(($pv['activestu'] == 0 || $pv['activestu'] == 3) && $productInfo['limits'] > 0){
+                        // 限量购买
+                        $tiaojianstime = strtotime(date('Ymd'));
+                        $tiaojianetime = strtotime(date('Ymd'))+86400;
+                        $tiaojian['o.createtime'] = array('between',[$tiaojianstime,$tiaojianetime]);
+                        $tiaojian['o.pay'] = 0;
+                        $tiaojian['o.status'] = array('eq',0);
+                        $tiaojian['o.tel'] = $user['utel'];
+                        $tiaojian['l.pid'] = $productInfo['id'];
+                        $querynum = db('member_orders o')->join('member_orderlist l','l.oid = o.orderid')->where($tiaojian)->field('id')->count();
+                        if($productInfo['limits'] < $pv['nums'] || $querynum > $productInfo['limits']){
+                            $result = makeResult(0,$productInfo['name'].'商品每人每日只可以下单'.$productInfo['limits'].'份');
+                            return $this->response($result,'json',200);
+                        }
+                    }
                     // 配送时间
                     if($pv['deliverytime'] == 0){
                         $intime = $NowTimeStamp+86400;
@@ -1407,9 +1416,9 @@ class User extends RestBase
                     // 分享返回库存
                     if($v['share'] != 0){
                         $queryshare = db('product_share')->where('id',$v['share'])->field('data')->find();
-                        $sharedata = unserialize($querysale['data']);
+                        $sharedata = unserialize($queryshare['data']);
                         foreach ($sharedata as $key1 => &$value1) {
-                            if($value1['shopid'] == $v['pid']){
+                            if($value1['id'] == $v['pid']){
                                 $value1['sharestore'] = $value1['sharestore'] + $v['amount'];
                             }
                             $shdata[] = $value1;
@@ -1633,7 +1642,7 @@ class User extends RestBase
                     $plistDb = db('member_orderlist');
                     $productDb = db('product');
                     //查询产品图
-                    foreach($list as $k=>$v){
+                    foreach($list as $k=> $v){
                         $list[$k]['imgs'] = [];
                         $list[$k]['createtime'] = date('Y/m/d H:i:s',$v['createtime']);
                         $img = $plistDb->where('uid',$id)->where('oid',$v['orderid'])->column('pid');
@@ -1641,6 +1650,15 @@ class User extends RestBase
                             $list[$k]['imgs'] = $productDb->where('id','in',$img)->limit(4)->column('shotcut');
                         }else{
                             $list[$k]['imgs'] = null;
+                        }
+                        $panduan['oid'] = $list[$k]['id'];
+                        $panduan['pid'] = $img[0]['pid'];
+
+                        $querypinlun = db('product_comments')->where($panduan)->field('id')->find();
+                        if($querypinlun){
+                            $list[$k]['pinlun'] = 1;
+                        }else{
+                            $list[$k]['pinlun'] = 0;
                         }
                         // unset($list[$k]['orderid']);
                     }
@@ -2026,12 +2044,17 @@ class User extends RestBase
             $where['is_del'] = 0;
             $where['is_sell'] = 1;
             $where['gift'] = 0;
-            $datashop = db('product')->where($where)->field('id,name,price,starprice,shotcut,deliverytime,qrcode')->find();
+            $datashop = db('product')->where($where)->field('id,name,price,starprice,shotcut,deliverytime,qrcode,store,limits as activepay')->find();
             $peizhidata = CommonProduct($datashop);
             if($peizhidata){
                 $datashop['activestu'] = $peizhidata['activestu'];
-                $datashop['activepay'] = $peizhidata['activepay'];
+                if(!empty($peizhidata['activepay'])){
+                    $datashop['activepay'] = $peizhidata['activepay'];
+                }
                 $datashop['activeid'] = $peizhidata['activeid'];
+                if(!empty($peizhidata['store'])){
+                    $datashop['store'] = $peizhidata['store'];
+                }
                 if(!empty($peizhidata['price'])){
                     $datashop['price'] = $peizhidata['price'];
                 }
@@ -2073,7 +2096,7 @@ class User extends RestBase
         $where['is_del'] = 0;
         $where['uid'] = $id;
         $shoudan = db('member_orders')->where($where)->field('id')->count();
-        if(!$shoudan){
+        if($shoudan > 0){
             $result = makeResult(0,'你不是首单用户');
             return $this->response($result,'json',200);
         }else{
@@ -2084,6 +2107,7 @@ class User extends RestBase
             if($shoudanshop){
                 $where2['is_sell'] = 1;
                 $where2['gift'] = 1;
+                $where2['store'] = array('gt',0);
                 $where2['is_del'] = 0;
                 foreach ($shoudanshop as $key => $value) {
                     $where2['id'] = $value;
@@ -2125,24 +2149,40 @@ class User extends RestBase
         $money = 5;
         $id = 14;*/
         // 满足价格排序 由高到低
-        $sincemax = db('since_maxgift')->where('maxmoney','<=',$money)->order('maxmoney desc')->find();
-        $sinceall = unserialize($sincemax['useshop']);
-        $click = in_array($since,$sinceall);
-        if($click == true){
-            foreach (unserialize($sincemax['shopid']) as $key => $value) {
-                $where['id'] = $value;
-                $where['is_sell'] = 1;
-                $where['gift'] = 1;
-                $where['is_del'] = 0;
-                $cxshop = db('product')->where($where)->field('id,name,price,shotcut,store')->find();
-                $cxshop['giftid'] = $sincemax['id'];
-                $bigshop[] = $cxshop;
+        $sincemax = db('since_maxgift')->where('maxmoney','<=',$money)->order('maxmoney desc')->select();
+        foreach ($sincemax as $key => $play) {
+            $sinceall = unserialize($play['useshop']);
+            if($sinceall){
+                // 看看相关价格的配置有没有和选择的自提点相配
+                $click = in_array($since,$sinceall);
+                if($click == true){
+                    // 存储满就送价格后作判断
+                    $verybignum[] = $play['maxmoney'];
+                    foreach (unserialize($play['shopid']) as $key => $value) {
+                        $where['id'] = $value;
+                        $where['is_sell'] = 1;
+                        $where['store'] = array('gt',0);
+                        $where['gift'] = 1;
+                        $where['is_del'] = 0;
+                        $cxshop = db('product')->where($where)->field('id,name,price,shotcut,store')->find();
+                        $cxshop['giftid'] = $play['id'];
+                        $cxshop['maxmoney'] = $play['maxmoney'];
+                        $bigshop[] = $cxshop;
+                    } 
+
+                }
             }
-        }else{
-            $bigshop = null;
         }
-        if($bigshop){
-            $result = makeResult(1,'ok',['maxmoney'=>$bigshop]);
+        if(!empty($bigshop)){
+            // 拿出最高价
+            $vuerynum = max($verybignum);
+            // 筛选出重复商品和符合最高价
+            foreach ($bigshop as $key => $star) {
+                if($vuerynum == $star['maxmoney']){
+                    $newbigshop[$star['id']] = $star;
+                }
+            }
+            $result = makeResult(1,'ok',['maxmoney'=>$newbigshop]);
             return $this->response($result,'json',200);
         }else{
             $result = makeResult(0,'该自提点没有赠品');
@@ -2152,17 +2192,9 @@ class User extends RestBase
 
 
     public function test(){
-        $redis = new \Redis();
-        $redis->connect('127.0.0.1', 6379);
-        $work['job'] = 'Work';
-        $time = time();
-        $work['id'] = md5($time);
-        $work['attempts'] = $time;
-        $ids[3] = 1;
-        $ids[4] = time() + (60 * 15);
-        $work['data'] = $ids;
-        $work = json_encode($work);
-        echo $redis->zAdd('queues:default:delayed', $time, $work);
+        /*$where['id'] = array('neq',0);
+        db('product')->where($where)->update(['sale'=>0]);*/
+        echo "as";
     }
 
 
@@ -2171,7 +2203,7 @@ class User extends RestBase
         $NowTimeStamp = time();
         $queryactive = Model('Sale')->queryshop($NowTimeStamp);
         if(empty($queryactive)){
-            $result['error'] = makeResult(0,'您参与的活动已结束,请重新放入购物车下单!');
+            $result['error'] = makeResult(0,$productInfo['name'].'参与的活动已结束,请重新放入购物车下单!');
             return $Activedata = $result;
         }
         if($queryactive['datashop']){
@@ -2181,17 +2213,17 @@ class User extends RestBase
                     $Active['saleprice'] = $Value['saledata'][0]['saleprice'];
                     $Active['salenub'] = $Value['saledata'][0]['salenub'];
                     $Active['salepaynub'] = $Value['saledata'][0]['salepaynub'];
-                    $Active['salekucunnub'] = $Value['saledata'][0]['salekucunnub'];
+                    $Active['salekucunnub'] = $Active['salenub'];
                     $Active['id'] = $queryactive['id'];
                     $Active['shopid'] = $Value['shopid'];
                     // 判断库存
                     if($Active['salekucunnub'] == 0){
-                        $result['error'] = makeResult(0,'已售完');
+                        $result['error'] = makeResult(0,$productInfo['name'].'已售完');
                         return $Activedata = $result;
                     }else{
                         $shuliang = $Active['salekucunnub'] - $num;
                         if($shuliang < 0){
-                            $result['error'] = makeResult(0,'现在库存只有'.$Active['salekucunnub'].'份');
+                            $result['error'] = makeResult(0,$productInfo['name'].'现在库存只有'.$Active['salekucunnub'].'份');
                             return $Activedata = $result;
                         }
                     }
@@ -2199,13 +2231,13 @@ class User extends RestBase
                     $baocun = $queryactive['datashop'][$key];
                     $baocun['saledata'][0]['salekucunnub'] = $baocun['saledata'][0]['salekucunnub'] - $num;
                     // 检查名额
-                    $where['o.pay'] = 1;
+                    $where['o.pay'] = 0;
                     $where['o.tel'] = $user['utel'];
                     $where['l.pid'] = $Active['shopid'];
                     $where['l.sale'] = $Active['id'];
                     $querysalenum = db('member_orders o')->join('member_orderlist l','l.oid = o.orderid')->where($where)->field('id')->count();
-                    if($Active['salepaynub'] <= $querysalenum){
-                        $result['error'] = makeResult(0,'该商品限时抢购只可买'.$Active['salepaynub'].'份');
+                    if($Active['salepaynub'] != 0 && ($Active['salepaynub'] <= $querysalenum || $num > $Active['salepaynub'])){
+                        $result['error'] = makeResult(0,$productInfo['name'].'商品限时抢购只可买'.$Active['salepaynub'].'份');
                         return $Activedata = $result;
                     }
                 }
@@ -2235,7 +2267,7 @@ class User extends RestBase
         $NowTimeStamp = time();
         $queryactive = Model('ProductShare')->queryshop($NowTimeStamp);
         if(empty($queryactive)){
-            $result['error'] = makeResult(0,'您参与的活动已结束,请重新放入购物车下单!');
+            $result['error'] = makeResult(0,$productInfo['name'].'参与的活动已结束,请重新放入购物车下单!');
             return $Activedata = $result;
         }
         if($queryactive['datashop']){
@@ -2244,18 +2276,18 @@ class User extends RestBase
                 if($Value['id'] == $productInfo['id']){
                     $Active['price'] = $Value['shareprice'];
                     $Active['nub'] = $Value['sharestore'];
-                    $Active['paynub'] = 1;
+                    $Active['paynub'] = $productInfo['limits'];
                     // $Active['salekucunnub'] = $Value['saledata'][0]['salekucunnub'];
                     $Active['id'] = $queryactive['id'];
                     $Active['shopid'] = $Value['id'];
                     // 判断库存
                     if($Active['nub'] == 0){
-                        $result['error'] = makeResult(0,'已售完');
+                        $result['error'] = makeResult(0,$productInfo['name'].'已售完');
                         return $Activedata = $result;
                     }else{
                         $shuliang = $Active['nub'] - $num;
                         if($shuliang < 0){
-                            $result['error'] = makeResult(0,'现在库存只有'.$Active['nub'].'份');
+                            $result['error'] = makeResult(0,$productInfo['name'].'现在库存只有'.$Active['nub'].'份');
                             return $Activedata = $result;
                         }
                     }
@@ -2263,13 +2295,17 @@ class User extends RestBase
                     $baocun = $queryactive['datashop'][$key];
                     $baocun['sharestore'] = $baocun['sharestore'] - $num;
                     // 检查名额
-                    $where['o.pay'] = 1;
+                    $stime = strtotime(date('Ymd'));
+                    $etime = strtotime(date('Ymd'))+86400;
+                    $where['o.createtime'] = array('between',[$stime,$etime]);
+                    $where['o.status'] = array('eq',0);
+                    $where['o.pay'] = 0;
                     $where['o.tel'] = $user['utel'];
                     $where['l.pid'] = $Active['shopid'];
                     $where['l.share'] = $Active['id'];
                     $querynum = db('member_orders o')->join('member_orderlist l','l.oid = o.orderid')->where($where)->field('id')->count();
-                    if($Active['paynub'] <= $querynum){
-                        $result['error'] = makeResult(0,'该分享抢购商品只可买'.$Active['paynub'].'份');
+                    if($Active['paynub'] != 0 && ($Active['paynub'] <= $querynum || $num > $Active['paynub'])){
+                        $result['error'] = makeResult(0,$productInfo['name'].'分享抢购商品只可买'.$Active['paynub'].'份');
                         return $Activedata = $result;
                     }
                 }
@@ -2277,7 +2313,7 @@ class User extends RestBase
         }
         $queryshareok = Model('ProductSharelist')->queryuser($user,$Active['id'],$Active['shopid']);
         if(empty($queryshareok)){
-            $result['error'] = makeResult(0,'你没有分享该商品');
+            $result['error'] = makeResult(0,$productInfo['name'].'没有分享该商品');
             return $Activedata = $result;
         }
         if(empty($Active)){
@@ -2299,6 +2335,7 @@ class User extends RestBase
         return $Activedata;
     }
 
+    // 订单监听
     public function RedisOrderQueue($data){
         $redis = new \Redis();
         $redis->connect('127.0.0.1', 6379);
@@ -2313,5 +2350,49 @@ class User extends RestBase
         $work['data'] = $ids;
         $work = json_encode($work);
         return $redis->zAdd('queues:default:delayed', $time, $work);
+    }
+
+    // 推荐组合
+    public function tuijianzuhe(){
+        $request = Request::instance();
+        $id = intval($request->param('pid'));
+        if(!$id){
+            return makeResult(0,'没有商品id');
+        }
+        $product = Model('Product');
+        $info = $product->alias('p')->join('product_addition a','p.id = a.pid','RIGHT')->where('p.id',$id)->field('p.id,p.name,a.commend')->find();
+        if(!empty($info['commend'])){
+            $ids = explode(',', $info['commend']);
+            $where['id'] = array('in',$ids);
+            $where['is_del'] = 0;
+            $where['is_sell'] = 1;
+            $where['gift'] = 0;
+            $where['qrcode'] = 0;
+            $subs = $product->where($where)->field('id,name,price,store,deliverytime,qrcode,shotcut,limits as activepay')->select();
+            foreach ($subs as $key => $value) {
+                $peizhidata = CommonProduct($value);
+                if($peizhidata){
+                    $value['activestu'] = $peizhidata['activestu'];
+                    if(!empty($peizhidata['activepay'])){
+                        $value['activepay'] = $peizhidata['activepay'];
+                    }
+                    $value['activeid'] = $peizhidata['activeid'];
+                    if(!empty($peizhidata['store'])){
+                        $value['store'] = $peizhidata['store'];
+                    }
+                    if(!empty($peizhidata['price'])){
+                        $value['price'] = $peizhidata['price'];
+                    }
+                    $value['peisongok'] = $peizhidata['peisongok'];
+                }
+            }
+            $info['commend'] = $subs;
+        }
+        if($info){
+            $result = makeResult(1,['data'=>$info['commend']]);
+        }else{
+            $result = makeResult(0,'该商品没有推荐组合');
+        }
+        return $this->response($result,'json',200);
     }
 }

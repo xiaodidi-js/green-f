@@ -7,7 +7,8 @@ class Excel extends Controller
         parent::__construct();
     }
 
-	public function sincewriter($cart,$cxsince) {
+    // 自提点清单
+	public function sincewriter($cart,$cxsince,$time) {
         $obj = new \PHPExcel();
         $obj->getProperties()->setCreator("JAMES")
             ->setLastModifiedBy("JAMES")
@@ -47,10 +48,10 @@ class Excel extends Controller
             $obj->getActiveSheet()->setCellValue("A2", "提货站点：" . $cxsince[$key]['name']);
 
             $obj->getActiveSheet()->mergeCells('E2:H2');
-            $obj->getActiveSheet()->setCellValue("E2", "出货时间：" . date("Y-m-d"));
+            $obj->getActiveSheet()->setCellValue("E2", "出货时间：" . $time);
 
             $obj->getActiveSheet()->mergeCells('A3:H3');
-            $obj->getActiveSheet()->setCellValue("A4", "本次物品签收表");
+            $obj->getActiveSheet()->setCellValue("A3", $cxsince[$key]['address']);
 
             $obj->getActiveSheet()->setCellValue("A4", "序号");
             $obj->getActiveSheet()->setCellValue("B4", "订单号");
@@ -113,6 +114,7 @@ class Excel extends Controller
         $objWriter->save('php://output');
     }
 
+    // 表格循环
     public function excel_foreach($from, $row, $name, $actSheet){
         $num = count($name);
         $n = 0;
@@ -210,7 +212,11 @@ class Excel extends Controller
             $taocanWeight = $vo['amount']['taocan_weight'];
             $weight = $vo['amount']['amount'] * $vo['weight'];
             $allweight = $taocanWeight + $weight;
-            $allnub = $allweight / $vo['weight'];
+            if(!empty($vo['weight'])){
+                $allnub = $allweight / $vo['weight'];
+            }else{
+                $allnub = '商品没有重量';
+            }
             if($vo['unit'] == '斤'){
                 $arrWeight = $allweight / 500;
             }else{
@@ -307,6 +313,7 @@ class Excel extends Controller
 
     }
 
+    // 公司销售表
     public function xiaoshou($orderdata,$time){
         $obj = new \PHPExcel();
         $obj->getProperties()->setCreator("JAMES")
@@ -382,7 +389,7 @@ class Excel extends Controller
         $sum = 0;
         foreach ($orderdata['data'] as $vo) {
                 $title3 = array($key, $vo['title'], 
-                $vo['supplier'], 
+                $vo['suppliername'], 
                 $vo['sn_code'], 
                 $vo['name'], 
                 $vo['amount'],
@@ -408,4 +415,390 @@ class Excel extends Controller
         $objWriter->save('php://output');
     }
 
+    // 站点销售表
+    public function sincexiaoshou($orderdata,$time){
+        $obj = new \PHPExcel();
+        $obj->getProperties()->setCreator("JAMES")
+            ->setLastModifiedBy("JAMES")
+            ->setTitle("zltrans")
+            ->setSubject("Dorder")
+            ->setDescription("Dorder List")
+            ->setKeywords("Dorder")
+            ->setCategory("Test result file");
+
+        $obj->getDefaultStyle()->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $obj->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        //相关行高
+        $obj->getActiveSheet()->getRowDimension('2')->setRowHeight(40);
+
+        //标题
+        $obj->getActiveSheet()->mergeCells('A1:G1');
+        $obj->getActiveSheet()->setCellValue("A1", $time['stime'].'至'.$time['etime'].'提货点销售日报表/月报表');
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setSize(14);
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+        $title1 = array('序号', '自提点', '状态','注册客户数', '出货订单数', '出货总金额', '均客单价');
+        $this->excel_foreach('A', 2, $title1, $obj->getActiveSheet());
+        $len = 3;
+        foreach ($orderdata as $key => $value) {
+            $title2 = array(
+                $key+1, 
+                $value['name'],
+                $value['status'],
+                $value['sid'],
+                $value['ordernum'],
+                $value['money'],
+                round($value['moneyhe'],2)
+            );
+            $this->excel_foreach('A', $len, $title2, $obj->getActiveSheet());
+            $obj->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('B')->setWidth(45);
+            $obj->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+        
+            $len++;
+        }
+        $obj->getActiveSheet()->getStyle('A1:G' . $len)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+        Vendor("phpexcel.PHPExcel.IOFactory");
+        $name = $time['stime'].'至'.$time['etime'].'站点销售表';
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $name . '.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter = \PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+        $objWriter->save('php://output');
+    }
+
+    // 评价统计
+    public function comment($data){
+        $obj = new \PHPExcel();
+        $obj->getProperties()->setCreator("JAMES")
+            ->setLastModifiedBy("JAMES")
+            ->setTitle("zltrans")
+            ->setSubject("Dorder")
+            ->setDescription("Dorder List")
+            ->setKeywords("Dorder")
+            ->setCategory("Test result file");
+
+        $obj->getDefaultStyle()->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $obj->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        //相关行高
+        $obj->getActiveSheet()->getRowDimension('2')->setRowHeight(40);
+
+        //标题
+        $obj->getActiveSheet()->mergeCells('A1:E1');
+        $obj->getActiveSheet()->setCellValue("A1",'商品评价统计');
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setSize(14);
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+        $title1 = array('序号', '商品名称', '好评','中评', '差评');
+        $this->excel_foreach('A', 2, $title1, $obj->getActiveSheet());
+        $len = 3;
+        foreach ($data as $key => $value) {
+            $title2 = array(
+                $key+1, 
+                $value['name'],
+                $value['cha'],
+                $value['zhong'],
+                $value['hao'],
+            );
+            $this->excel_foreach('A', $len, $title2, $obj->getActiveSheet());
+            $obj->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('B')->setWidth(45);
+            $obj->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+            $len++;
+        }
+        $obj->getActiveSheet()->getStyle('A1:E' . $len)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+        Vendor("phpexcel.PHPExcel.IOFactory");
+        $name = date('Y-m-d H:i:s').'商品评价统计';
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $name . '.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter = \PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+        $objWriter->save('php://output');
+    }
+
+    // 商品推荐
+    public function tuijian($data,$name){
+        $obj = new \PHPExcel();
+        $obj->getProperties()->setCreator("JAMES")
+            ->setLastModifiedBy("JAMES")
+            ->setTitle("zltrans")
+            ->setSubject("Dorder")
+            ->setDescription("Dorder List")
+            ->setKeywords("Dorder")
+            ->setCategory("Test result file");
+
+        $obj->getDefaultStyle()->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $obj->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        //相关行高
+        $obj->getActiveSheet()->getRowDimension('2')->setRowHeight(40);
+
+        //标题
+        $obj->getActiveSheet()->mergeCells('A1:G1');
+        $obj->getActiveSheet()->setCellValue("A1",$name.'商品推荐');
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setSize(14);
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+        $title1 = array('序号', '商品名称', '价格','商品编码', '排序', '点击量', '销量');
+        $this->excel_foreach('A', 2, $title1, $obj->getActiveSheet());
+        $len = 3;
+        foreach ($data as $key => $value) {
+            $title2 = array(
+                $key+1, 
+                $value['name'],
+                $value['price'],
+                $value['sn_code'],
+                $value['sort'],
+                $value['rate'],
+                $value['pay'],
+            );
+            $this->excel_foreach('A', $len, $title2, $obj->getActiveSheet());
+            $obj->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('B')->setWidth(45);
+            $obj->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+            $len++;
+        }
+        $obj->getActiveSheet()->getStyle('A1:G' . $len)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+        Vendor("phpexcel.PHPExcel.IOFactory");
+        $name = date('Y-m-d H:i:s').$name.'商品推荐';
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $name . '.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter = \PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+        $objWriter->save('php://output');
+    }
+
+    // 商品导出
+    public function product($data){
+        $obj = new \PHPExcel();
+        $obj->getProperties()->setCreator("JAMES")
+            ->setLastModifiedBy("JAMES")
+            ->setTitle("zltrans")
+            ->setSubject("Dorder")
+            ->setDescription("Dorder List")
+            ->setKeywords("Dorder")
+            ->setCategory("Test result file");
+
+        $obj->getDefaultStyle()->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $obj->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        //相关行高
+        $obj->getActiveSheet()->getRowDimension('2')->setRowHeight(40);
+
+        //标题
+        $obj->getActiveSheet()->mergeCells('A1:H1');
+        $obj->getActiveSheet()->setCellValue("A1",'商品表');
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setSize(14);
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+        $title1 = array('序号', '商品名称', '分类','价格', '库存', '销量', '排序');
+        $this->excel_foreach('A', 2, $title1, $obj->getActiveSheet());
+        $len = 3;
+        foreach ($data as $key => $value) {
+            $title2 = array(
+                $key+1, 
+                $value['sn_code'],
+                $value['name'],
+                $value['title'],
+                $value['price'],
+                $value['store'],
+                $value['sale'],
+                $value['sort'],
+            );
+            $this->excel_foreach('A', $len, $title2, $obj->getActiveSheet());
+            $obj->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('B')->setWidth(45);
+            $obj->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('D')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+            $obj->getActiveSheet()->getColumnDimension('H')->setWidth(15);
+            $len++;
+        }
+        $obj->getActiveSheet()->getStyle('A1:H' . $len)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+        Vendor("phpexcel.PHPExcel.IOFactory");
+        $name = date('Y-m-d H:i:s').'商品表';
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $name . '.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter = \PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+        $objWriter->save('php://output');
+    }
+
+    // 首单用户Excel
+    public function shoudan($data,$time){
+        $obj = new \PHPExcel();
+        $obj->getProperties()->setCreator("JAMES")
+            ->setLastModifiedBy("JAMES")
+            ->setTitle("zltrans")
+            ->setSubject("Dorder")
+            ->setDescription("Dorder List")
+            ->setKeywords("Dorder")
+            ->setCategory("Test result file");
+
+        $obj->getDefaultStyle()->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $obj->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        //相关行高
+        $obj->getActiveSheet()->getRowDimension('2')->setRowHeight(40);
+
+        //标题
+        $obj->getActiveSheet()->mergeCells('A1:G1');
+        $obj->getActiveSheet()->setCellValue("A1",$time['stime'].'至'.$time['etime'].'首单用户');
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setSize(14);
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+        $title1 = array('序号', '订单编号', '联系电话','下单时间', '总金额', '实际支付金额', '发货时间');
+        $this->excel_foreach('A', 2, $title1, $obj->getActiveSheet());
+        $len = 3;
+        foreach ($data as $key => $value) {
+            $title2 = array(
+                $key+1, 
+                $value['orderid'],
+                $value['tel'],
+                date('Y-m-d H:i:s',$value['createtime']),
+                $value['sum'],
+                $value['money'],
+                date('Y-m-d H:i:s',$value['stime']),
+            );
+            $this->excel_foreach('A', $len, $title2, $obj->getActiveSheet());
+            $obj->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('E')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('F')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+            $len++;
+        }
+        $obj->getActiveSheet()->getStyle('A1:G' . $len)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+        Vendor("phpexcel.PHPExcel.IOFactory");
+        $name = $time['stime'].'至'.$time['etime'].'首单用户';
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $name . '.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter = \PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+        $objWriter->save('php://output');
+    }
+
+    // 指定日数未消费用户Excel
+    public function weixiaofei($data,$time){
+        $obj = new \PHPExcel();
+        $obj->getProperties()->setCreator("JAMES")
+            ->setLastModifiedBy("JAMES")
+            ->setTitle("zltrans")
+            ->setSubject("Dorder")
+            ->setDescription("Dorder List")
+            ->setKeywords("Dorder")
+            ->setCategory("Test result file");
+
+        $obj->getDefaultStyle()->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $obj->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        //相关行高
+        $obj->getActiveSheet()->getRowDimension('2')->setRowHeight(40);
+
+        //标题
+        $obj->getActiveSheet()->mergeCells('A1:F1');
+        $obj->getActiveSheet()->setCellValue("A1",$time.'未消费用户');
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setSize(14);
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+        $title1 = array('序号', '用户名','联系电话','最后消费记录', '总金额', '实际支付金额');
+        $this->excel_foreach('A', 2, $title1, $obj->getActiveSheet());
+        $len = 3;
+        foreach ($data as $key => $value) {
+            if($value['endtime']){
+                $endtime = date('Y-m-d H:i:s',$value['endtime']);
+            }else{
+                $endtime = '此用户没在商城消费记录';
+            }
+            $title2 = array(
+                $key+1, 
+                $value['uname'],
+                $value['utel'],
+                $endtime,
+                $value['sum'],
+                $value['money'],
+            );
+            $this->excel_foreach('A', $len, $title2, $obj->getActiveSheet());
+            $obj->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('D')->setWidth(30);
+            $obj->getActiveSheet()->getColumnDimension('E')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('F')->setWidth(20);
+            $len++;
+        }
+        $obj->getActiveSheet()->getStyle('A1:F' . $len)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+        Vendor("phpexcel.PHPExcel.IOFactory");
+        $name = $time.'未消费用户';
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $name . '.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter = \PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+        $objWriter->save('php://output');
+    }
+
+    // 会员表导出
+    public function huiyuan($data){
+        $obj = new \PHPExcel();
+        $obj->getProperties()->setCreator("JAMES")
+            ->setLastModifiedBy("JAMES")
+            ->setTitle("zltrans")
+            ->setSubject("Dorder")
+            ->setDescription("Dorder List")
+            ->setKeywords("Dorder")
+            ->setCategory("Test result file");
+
+        $obj->getDefaultStyle()->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $obj->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        //相关行高
+        $obj->getActiveSheet()->getRowDimension('2')->setRowHeight(40);
+
+        //标题
+        $obj->getActiveSheet()->mergeCells('A1:H1');
+        $obj->getActiveSheet()->setCellValue("A1",'会员名单');
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setSize(14);
+        $obj->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+        $title1 = array('序号', '账号名称', '手机号码','性别', '生日', '累计消费金额', '商城积分','注册时间');
+        $this->excel_foreach('A', 2, $title1, $obj->getActiveSheet());
+        $len = 3;
+        foreach ($data as $key => $value) {
+            if($value['sex'] == 0){
+                $sex = '男';
+            }else{
+                $sex = '女';
+            }
+            $title2 = array(
+                $key+1, 
+                $value['uname'],
+                $value['utel'],
+                $sex,
+                $value['birthday'],
+                $value['money'],
+                $value['score'],
+                date('Y-m-d H:i:s',$value['createtime']),
+            );
+            $this->excel_foreach('A', $len, $title2, $obj->getActiveSheet());
+            $obj->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('E')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('F')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+            $obj->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+            $len++;
+        }
+        $obj->getActiveSheet()->getStyle('A1:H' . $len)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
+        Vendor("phpexcel.PHPExcel.IOFactory");
+        $name = '会员名单';
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $name . '.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter = \PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+        $objWriter->save('php://output');
+    }
 }

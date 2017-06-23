@@ -28,7 +28,8 @@
                         </div>
                     </div>
                     <div style="margin-top: 30px;">
-                        <div class="ivu-btn ivu-btn-success" @click="daochu">导出销售表</div>
+                        <div class="ivu-btn ivu-btn-success" @click="daochu">导出公司销售表</div>
+                        <div class="ivu-btn ivu-btn-success" @click="sincedaochu">导出站点销售表</div>
                     </div>
                 </div>
             </div>
@@ -52,6 +53,9 @@
             daochu:function () {
                 window.location.href = '{:url("admin/Excelcenter/xiaoshoudaochu")}'+'?stime='+this.stime+'&etime='+this.etime;
             },
+            sincedaochu:function(){
+                window.location.href = '{:url("admin/Excelcenter/sincexiaoshoudaochu")}'+'?stime='+this.stime+'&etime='+this.etime;
+            }
         }
     })
 </script>

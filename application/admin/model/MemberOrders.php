@@ -144,21 +144,40 @@ class MemberOrders extends Model{
     public function tongjiorder($get){
         $stime = strtotime($get['stime']);
         $etime = strtotime($get['etime']);
-        $field = 'p.id,p.money,o.cid,o.name,o.sn_code,k.title,i.amount,i.pid,o.weight,o.unit,o.price,o.supplier,o.gift,i.price as listprice';
+        $field = 'p.id,SUM(round(i.price,2)) as listprice,p.orderid,i.pid,SUM(i.amount) as amount,o.name,o.weight,o.sn_code,o.price,o.unit,c.title,b.name as suppliername,o.gift';
         $where['p.createtime'] = array('between',[$stime,$etime]);
         $where['p.pay'] = 1;
         $list = $this
             ->alias('p')
-            ->join('member_orderlist i','p.orderid = i.oid')
-            ->join('product o','i.pid = o.id')
-            ->join('product_classify k','k.id = o.cid')
+            ->join('member_orderlist i','p.orderid = i.oid','LEFT')
+            ->join('product o','i.pid = o.id','LEFT')
+            ->join('product_classify c','o.cid = c.id','LEFT')
+            ->join('buyer b','o.supplier = b.id','LEFT')
             ->where($where)
             ->field($field)
+            ->group('i.pid')
             ->select();
-        foreach ($list as $key => &$value) {
-            $querybuyer = db('buyer')->where('id',$value['supplier'])->field('name')->find();
-            $value['supplier'] = $querybuyer['name'];
-        }
+        return $list;
+    }
+
+    // 统计订单数
+    public function tongji($get){
+        $stime = strtotime($get['stime']);
+        $etime = strtotime($get['etime']);
+        $where['createtime'] = array('between',[$stime,$etime]);
+        $where['pay'] = 1;
+        $count = $this->where($where)->field('id')->count();
+        return $count;
+    }
+
+    // 查询首单
+    public function queryshoudan($stime,$etime){
+        $where['m.createtime'] = array('between',[$stime,$etime]);
+        $where['m.pay'] = 1;
+        $where['m.is_del'] = 0;
+        $where['o.activity'] = -1;
+        $field = 'm.id,m.orderid,m.money,m.sum,m.tel,m.stime,m.createtime';
+        $list = $this->alias('m')->join('member_orderlist o','m.orderid = o.oid','RIGHT')->where($where)->field($field)->select();
         return $list;
     }
 }

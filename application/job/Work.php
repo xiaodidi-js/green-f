@@ -42,7 +42,6 @@ class Work{
 	public function OrderExpire($data){
 		$nowtime = time();
 		if($data['endtime'] <= $nowtime){
-			$update['status'] = '-1';
 			$MemberOrders = new MemberOrders;
 			$editorder = $MemberOrders->OrderExpire($data);
 			$stu = $editorder;

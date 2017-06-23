@@ -304,7 +304,7 @@
   				self.modal1 = true
   				console.log(self.modal1)
   				$.get('{:url("admin/shop/orderxx")}',{id:id},function(data) {
-  					var data = JSON.parse(data).msg.info
+  					var data = data.msg.info
   					self.orderid = data.orderid
   					self.createtime = data.createtime
   					self.tel = data.tel
@@ -372,7 +372,7 @@
 				var id = self.delid
   				$.get('{:url("admin/shop/delorder")}',{id:id},function(data) {
   					$('#tr'+id).hide()
-  					var data = JSON.parse(data)
+  					var data = data
 	                // setTimeout(() => {
                     self.modal2 = false;
                     self.$Message.config({
@@ -391,13 +391,13 @@
   				self.modal3 = true
   				self.id = id
   				$.get('{:url("admin/shop/getedit")}',{id:id},function(data) {
-  					var data = JSON.parse(data).msg.info
+  					var data = data.msg.info
   					self.send = data.send
   					self.pay = data.pay
   					self.addressid = data.addressid
 				})
 				$.get('{:url("admin/shop/selectztd")}',function(data) {
-					var data = JSON.parse(data).msg.list
+					var data = data.msg.list
 					self.ztd = data
 				})
   			},
@@ -405,7 +405,7 @@
   				var self = this
   				var form = $('#kjedit').serialize()
   				$.post('{:url("admin/shop/getedit")}',form,function(data) {
-  					var data = JSON.parse(data)
+  					var data = data
   					self.$Message.config({
 					    top: 80,
 					});

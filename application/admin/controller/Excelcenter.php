@@ -29,6 +29,7 @@ class Excelcenter extends Base{
         $where['o.reject'] = 0;
         $where['o.send'] = 0;
         $where['o.stime'] = array('between',[$get['stime'], $get['etime']]);
+        $where['p.is_del'] = 0;
         $field = 'o.orderid,name,sum,l.amount,o.stime,o.createtime,o.address';
         $QueryNowOrder = DB::table('qgs_member_orders o')->join('qgs_member_orderlist l','l.oid=o.orderid')->join('qgs_product p','p.id = l.pid','left')->where($where)->field($field)->select();
         if(empty($QueryNowOrder)){
@@ -157,11 +158,11 @@ class Excelcenter extends Base{
         $post = $request->post();
         $querycaigou = Model('caigou')->queryday($post);
         if($querycaigou){
-            make_json(0,'今天已经提交过完成采购了');
+            return make_json(0,'今天已经提交过完成采购了');
         }else{
             $add = Model('caigou')->addcaigouok($post);
             if($add){
-                make_json(1,'成功提交完成采购');
+                return make_json(1,'成功提交完成采购');
             }
         }
     }
@@ -172,9 +173,9 @@ class Excelcenter extends Base{
         $get = $request->get();
         $querycaigou = Model('caigou')->queryday($get);
         if($querycaigou){
-            make_json(1,'你选择的日期已完成采购');
+            return make_json(1,'你选择的日期已完成采购');
         }else{
-            make_json(0,'你选择的日期还未完成采购');
+            return make_json(0,'你选择的日期还未完成采购');
         }
     }
 
@@ -196,6 +197,7 @@ class Excelcenter extends Base{
         return $this->fetch();
     }
 
+    // 公司销售表导出
     public function xiaoshoudaochu(){
         $request = Request::instance();
         $get = $request->get();
@@ -208,14 +210,9 @@ class Excelcenter extends Base{
                 $value['listprice'] = 0;
                 $value['price'] = 0;
             }
-            if(empty($allok[$value['pid']])){
-                $allok[$value['pid']] = $value;
-            }else{
-                $allok[$value['pid']]['listprice'] = $allok[$value['pid']]['listprice'] + $value['listprice'];
-                $allok[$value['pid']]['amount'] = $allok[$value['pid']]['amount'] + $value['amount'];
-            }
             $all[] = $value['listprice'];
         }
+        $queryordercount = Model('MemberOrders')->tongji($get);
         $money = array_sum($all);
         if($ordernum != 0 || $money != 0){
             $zonghe = $ordernum / $money;
@@ -223,15 +220,25 @@ class Excelcenter extends Base{
         }else{
             $zonghe = 0;
         }
-        $data['ordernum'] = $ordernum;
+        $data['ordernum'] = $queryordercount;
         $data['money'] = $money;
         $data['zonghe'] = $zonghe;
-        $data['data'] = $allok;
+        $data['data'] = $queryorder;
         $excel = new Excel();
         $time['stime'] = $get['stime'];
         $time['etime'] = $get['etime'];
         $result = $excel->xiaoshou($data,$time);
     }
 
+    // 站点销售点导出
+    public function sincexiaoshoudaochu(){
+        $request = Request::instance();
+        $get = $request->get();
+        $tongji = Model('HandtakePlace')->tongjixiaoshou($get);
+        $excel = new Excel();
+        $time['stime'] = $get['stime'];
+        $time['etime'] = $get['etime'];
+        $result = $excel->sincexiaoshou($tongji,$time);
+    }
 
 }

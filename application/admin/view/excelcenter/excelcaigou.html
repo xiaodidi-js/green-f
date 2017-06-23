@@ -129,7 +129,7 @@
             ready:function(){
                 var self = this
                 $.get('{:url("admin/Excelcenter/querycaigouook")}',{stime: self.caigoutime,miao:self.miao},function(data) {
-                    var data = JSON.parse(data)
+                    var data = data
                     if(data.status == 0){
                         self.yescaigou = 0;
                     }else{
@@ -157,7 +157,7 @@
                 });
                 self.caigoutime = date;
                 $.get('{:url("admin/Excelcenter/querycaigouook")}',{stime: self.caigoutime,miao:self.miao},function(data) {
-                    var data = JSON.parse(data)
+                    var data = data
                     if(data.status == '0'){
                         self.$Message.info(data.msg)
                         self.yescaigou = 0;
@@ -177,7 +177,7 @@
                         top: 100,
                         duration: 3
                     });
-                    var data = JSON.parse(data)
+                    var data = data
                     if(data.status == '0'){
                         self.$Message.error(data.msg)
                     }else{
@@ -189,7 +189,7 @@
             miaook:function(){
                 var self = this
                 $.get('{:url("admin/Excelcenter/querycaigouook")}',{stime: self.caigoutime,miao:self.miao},function(data) {
-                    var data = JSON.parse(data)
+                    var data = data
                     if(data.status == 0){
                         self.yescaigou = 0;
                     }else{

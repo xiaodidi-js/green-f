@@ -47,33 +47,42 @@ class MemberOrders extends Model{
                     // 退还限时抢购库存
                     if($v['sale'] != 0){
                         $querysale = db('sale')->where('id',$v['sale'])->field('data')->find();
-                        $saledata = unserialize($querysale['data']);
-                        foreach ($saledata as $key => &$value) {
-                            if($value['shopid'] == $v['pid']){
-                                $value['saledata'][0]['salenub'] = $value['saledata'][0]['salenub'] + $v['amount'];
+                        if(!empty($querysale['data'])){
+                            $saledata = unserialize($querysale['data']);
+                            if($saledata){
+                                foreach ($saledata as $key => &$value) {
+                                    if($value['shopid'] == $v['pid']){
+                                        $value['saledata'][0]['salenub'] = $value['saledata'][0]['salenub'] + $v['amount'];
+                                    }
+                                    $sldata[] = $value;
+                                }
+                                $sldata = serialize($sldata);
+                                $slupdate['data'] = $sldata;
+                                $edit = db('sale')->where('id',$v['sale'])->update($slupdate);
+                                unset($slupdate);
                             }
-                            $sldata[] = $value;
                         }
-                        $sldata = serialize($sldata);
-                        $slupdate['data'] = $sldata;
-                        $edit = db('sale')->where('id',$v['sale'])->update($slupdate);
-                        unset($slupdate);
+                        
                     }
 
                     // 分享返回库存
                     if($v['share'] != 0){
                         $queryshare = db('product_share')->where('id',$v['share'])->field('data')->find();
-                        $sharedata = unserialize($querysale['data']);
-                        foreach ($sharedata as $key1 => &$value1) {
-                            if($value1['shopid'] == $v['pid']){
-                                $value1['sharestore'] = $value1['sharestore'] + $v['amount'];
+                        if(!empty($queryshare['data'])){
+                            $sharedata = unserialize($queryshare['data']);
+                            if($sharedata){
+                                foreach ($sharedata as $key1 => &$value1) {
+                                    if($value1['id'] == $v['pid']){
+                                        $value1['sharestore'] = $value1['sharestore'] + $v['amount'];
+                                    }
+                                    $shdata[] = $value1;
+                                }
+                                $shdata = serialize($shdata);
+                                $shupdate['data'] = $shdata;
+                                $edit = db('product_share')->where('id',$v['share'])->update($shupdate);
+                                unset($shupdate); 
                             }
-                            $shdata[] = $value1;
                         }
-                        $shdata = serialize($shdata);
-                        $shupdate['data'] = $shdata;
-                        $edit = db('product_share')->where('id',$v['share'])->update($shupdate);
-                        unset($shupdate);
                     }
                 }
             }

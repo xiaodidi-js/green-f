@@ -18,7 +18,7 @@ class Base extends \app\common\controller\AuthCheck{
 		if(!session("aid")||!session("aname")||!session("atype")){
 			$this->redirect('admin/login/index');
 		}
-
+		
 		//获取系统信息
 		$sysinfo = getSysInfo();
 		$this->assign('sysinfo',$sysinfo);
