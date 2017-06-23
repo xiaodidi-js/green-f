@@ -231,7 +231,7 @@
 	.wrapper-search .ui_box .img {
 		position: relative;
 		width:100%;
-		height:16rem;
+		height: auto;
 	}
 
 	.wrapper-search .ui_box .img .qing {
@@ -245,7 +245,7 @@
 		background: rgba(0,0,0,0.5);
 		line-height: 16rem;
 		color:#fff;
-		z-index: 100;
+		z-index: 1;
 	}
 
 	.wrapper-search .ui_box .img .shotcut {

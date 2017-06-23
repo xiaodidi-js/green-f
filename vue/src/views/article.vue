@@ -1,8 +1,7 @@
-
-
 <template>
 	<div id="article-body">
 		<div class="lyt-logo">
+			<div class=""></div>
 			<img src="../images/logo_lv.png" alt="" style="width:40px;height:40px;float:left;" />
 			<span id="product">{{ list.title }}</span>
 		</div>

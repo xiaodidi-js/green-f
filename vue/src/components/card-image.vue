@@ -62,6 +62,14 @@
 		    message () {
 				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
+                var content = this;
+                if(ustore == null) {
+                    alert("没有登录，请先登录！");
+                    setTimeout(function () {
+                        content.$router.go({name: 'login'});
+                    }, 800);
+                    return false;
+				}
                 axios({
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/index/productinfo/uid/' + ustore.id + '/pid/' + this.$route.query.pid,

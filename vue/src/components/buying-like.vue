@@ -233,7 +233,7 @@
         font-size:24px;
         line-height: 110px;
         color:#fff;
-        z-index: 100;
+        z-index: 1;
     }
 
     .list_value{

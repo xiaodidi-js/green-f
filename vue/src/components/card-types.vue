@@ -399,6 +399,7 @@
 		position: absolute;
 		top:0px;
 		left:0px;
+		z-index: 1;
 		background: rgba(0,0,0,0.5);
 	}
 

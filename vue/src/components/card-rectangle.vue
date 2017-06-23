@@ -21,15 +21,17 @@
 							</template>
 							<template v-if="item.arr.length == 3">
 								<div style="width:33.3%;float:left;">
-									<a class="href-ui" :href="'//'+item1.htmlurl">
-										<img :src="item1.url" alt="" style="width:100%;" />
+									<a class="href-ui three-href" :href="'//'+item1.htmlurl">
+										<div v-lazy:background-image="item1.url" class="lazyUrl" v-link="{name:'detail',params:{pid:item1.shopid}}"></div>
+										<!--<img :src="item1.url" alt="" style="width:100%;" />-->
 									</a>
 								</div>
 							</template>
 							<template v-if="item.arr.length == 4">
 								<div style="width:25%;float:left;">
-									<a class="href-ui" :href="'//'+item1.htmlurl">
-										<img :src="item1.url" alt="" style="width:100%;" />
+									<a class="href-ui three-href" :href="'//'+item1.htmlurl">
+										<div v-lazy:background-image="item1.url" class="lazyUrl  lazyUrl-two" v-link="{name:'detail',params:{pid:item1.shopid}}"></div>
+										<!--<img :src="item1.url" alt="" style="width:100%;" />-->
 									</a>
 								</div>
 							</template>
@@ -300,6 +302,29 @@
 		height:100%;
 	}
 
+	.index-conten .content_main .three-href {
+		width:100%;
+		height:100%;
+		display:block;
+	}
+
+
+	.index-conten .content_main .three-href .lazyUrl {
+		width: 100%;
+		padding-top: 75%;
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+
+	.index-conten .content_main .three-href .lazyUrl-two {
+		width: 100%;
+		padding-top: 100%;
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+
 	.content_main .box{
 		/*width:100%;*/
 		height: auto;
@@ -378,7 +403,7 @@
 		line-height: 11.5rem;
 		font-size: 23px;
 		color: #fff;
-		z-index: 999;
+		z-index: 1;
 		background: rgba(0,0,0,0.5);
 	}
 
