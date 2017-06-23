@@ -42,7 +42,7 @@
 		},
 		route: {
 			data(transition) {
-				this.$http.get(localStorage.apiDomain+'public/index/index/columninfo/id/'+this.$route.params.cid).then((response)=>{
+				this.$http.get(localStorage.apiDomain + 'public/index/index/columninfo/id/' + this.$route.params.cid).then((response)=>{
 					transition.next({
 						data: response.data
 					});

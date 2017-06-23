@@ -19,7 +19,6 @@
             <a href="javascript:void(0)" class="txt-service" @click="goPage"></a>
         </div>
     </div>
-
     <swiper :list="banners" :show-desc-mask="false" :aspect-ratio="650/1242" dots-position="center"
             auto dots-class="dots-my" style="width: 100%;clear:both;top:50px;"></swiper>
 </template>

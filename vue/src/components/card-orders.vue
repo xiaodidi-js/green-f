@@ -13,8 +13,9 @@
 				<div class="status" v-if="item.reject == 1">已退货</div>
 			</div>
 			<div class="mid-line" v-link="{name:'order-detail',params:{oid:item.id}}">
-				<div class="imgs" v-for="img in item.imgs"> <!--  v-lazy:background-image="img" -->
+				<div class="imgs" v-for="img in item.imgs">
 					<img :src="img" style="width:100%;height:100%;" alt="" />
+					<!--<div v-lazy:background-image="img" class="payment"></div>-->
 				</div>
 				<div class="arrow"></div>
 			</div>
@@ -307,6 +308,14 @@
 		background-repeat:no-repeat;
 		background-position:center;
 		background-size:cover;
+	}
+
+	.card-box .mid-line .imgs .payment {
+		width:100%;
+		padding-top:100%;
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
 	}
 
 	.card-box .mid-line .imgs:last-child{

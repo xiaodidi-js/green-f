@@ -1,114 +1,3 @@
-<style>
-
-	.wrapper-search{
-		width:100%;
-		font-size:0;
-		margin-bottom:25px;
-		overflow: hidden;
-	}
-
-	.wrapper-search.nopadding{
-		padding-bottom: 0;
-	}
-
-	.wrapper-search .title{
-		display:block;
-		margin:0.5rem 0rem 1rem 0rem;
-		font-size:1.4rem;
-		color:#F9AD0C;
-		font-weight:normal;
-		letter-spacing:1px;
-		border-left:#F9AD0C solid 5px;
-		padding-left:0.8rem;
-	}
-
-	.wrapper-search .ui_box {
-		width: 48%;
-		height: auto;
-		background-color: #fff;
-		display: block;
-		float:left;
-		font-size: 1.6rem;
-		margin: 4px 2.9px;
-		color: #333;
-		box-shadow: 1px 1px 2px #e2e2e2;
-	}
-
-	.wrapper-search .ui_box:nth-child(even){
-		margin-right:0%;
-	}
-
-	.wrapper-search .ui_box:nth-last-child(2),.wrapper-search .ui_box:last-child{
-		/*margin-bottom:3%;*/
-	}
-
-	.parent{
-		width:100%;
-		height:auto;
-		margin:0;
-		padding:0;
-	}
-
-
-	.wrapper-search .ui_box .mes{
-		padding:0.7rem 0.5rem;
-
-	}
-
-	.wrapper-search .ui_box .mes .name{
-		font-size:1.4rem;
-		color:#333;
-		line-height:1.8rem;
-		max-height:3.6rem;
-		height:3.6rem;
-		overflow:hidden;
-		text-overflow:ellipsis;
-		display:-webkit-box;
-		-webkit-line-clamp:2;
-		-webkit-box-orient:vertical;
-		word-wrap:break-word;
-		font-weight:600;
-	}
-
-	.wrapper-search .ui_box .money{
-		font-size:1.6rem;
-		color:#F9AD0C;
-		width: 40%;
-		float: left;
-	}
-
-	.mes .money .unit{
-		font-size:1.2rem;
-		margin-right:0.2rem;
-		float:left;
-	}
-
-	.wrapper-search .ui_box .scar {
-		width: 2.5rem;
-		float: right;
-	}
-
-	.wrapper-search .ui_box .img {
-		position: relative;
-		width:100%;
-		height:16rem;
-	}
-
-	.wrapper-search .ui_box .img .qing {
-		position: absolute;
-		top:0px;
-		left:0px;
-		width:100%;
-		height: 100%;
-		text-align:center;
-		font-size:3rem;
-		background: rgba(0,0,0,0.5);
-		line-height: 16rem;
-		color:#fff;
-	}
-
-</style>
-
 <template>
 	<div class="wrapper-search" style="padding:50px 0px 20px;">
 		<template v-for="item in list">
@@ -116,10 +5,10 @@
 				<div v-link="{name:'detail',params:{pid:item.id}}">
 					<div class="img" v-if="item.store == 0">
 						<div class="qing">已售罄</div>
-						<img :src="item.shotcut" style="width:100%;height:100%;" />
+						<div class="shotcut" v-lazy:background-image="item.shotcut"></div>
 					</div>
 					<div class="img" v-else>
-						<img :src="item.shotcut" style="width:100%;height:100%;" />
+						<div class="shotcut" v-lazy:background-image="item.shotcut"></div>
 					</div>
 					<div class="mes">
 						<div class="name">{{ item.name }}</div>
@@ -249,3 +138,121 @@
 		}
 	}
 </script>
+
+<style>
+	.wrapper-search{
+		width:100%;
+		font-size:0;
+		margin-bottom:25px;
+		overflow: hidden;
+	}
+
+	.wrapper-search.nopadding{
+		padding-bottom: 0;
+	}
+
+	.wrapper-search .title{
+		display:block;
+		margin:0.5rem 0rem 1rem 0rem;
+		font-size:1.4rem;
+		color:#F9AD0C;
+		font-weight:normal;
+		letter-spacing:1px;
+		border-left:#F9AD0C solid 5px;
+		padding-left:0.8rem;
+	}
+
+	.wrapper-search .ui_box {
+		width: 48%;
+		height: auto;
+		background-color: #fff;
+		display: block;
+		float:left;
+		font-size: 1.6rem;
+		margin: 4px 2.9px;
+		color: #333;
+		box-shadow: 1px 1px 2px #e2e2e2;
+	}
+
+	.wrapper-search .ui_box:nth-child(even){
+		margin-right:0%;
+	}
+
+	.wrapper-search .ui_box:nth-last-child(2),.wrapper-search .ui_box:last-child{
+		/*margin-bottom:3%;*/
+	}
+
+	.parent{
+		width:100%;
+		height:auto;
+		margin:0;
+		padding:0;
+	}
+
+
+	.wrapper-search .ui_box .mes{
+		padding:0.7rem 0.5rem;
+
+	}
+
+	.wrapper-search .ui_box .mes .name{
+		font-size:1.4rem;
+		color:#333;
+		line-height:1.8rem;
+		max-height:3.6rem;
+		height:3.6rem;
+		overflow:hidden;
+		text-overflow:ellipsis;
+		display:-webkit-box;
+		-webkit-line-clamp:2;
+		-webkit-box-orient:vertical;
+		word-wrap:break-word;
+		font-weight:600;
+	}
+
+	.wrapper-search .ui_box .money{
+		font-size:1.6rem;
+		color:#F9AD0C;
+		width: 40%;
+		float: left;
+	}
+
+	.mes .money .unit{
+		font-size:1.2rem;
+		margin-right:0.2rem;
+		float:left;
+	}
+
+	.wrapper-search .ui_box .scar {
+		width: 2.5rem;
+		float: right;
+	}
+
+	.wrapper-search .ui_box .img {
+		position: relative;
+		width:100%;
+		height:16rem;
+	}
+
+	.wrapper-search .ui_box .img .qing {
+		position: absolute;
+		top:0px;
+		left:0px;
+		width:100%;
+		height: 100%;
+		text-align:center;
+		font-size:3rem;
+		background: rgba(0,0,0,0.5);
+		line-height: 16rem;
+		color:#fff;
+		z-index: 100;
+	}
+
+	.wrapper-search .ui_box .img .shotcut {
+		width: 100%;
+		padding-top: 100%;
+		background-size: 100%;
+		background-repeat: no-repeat;
+	}
+
+</style>

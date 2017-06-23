@@ -2,7 +2,8 @@
 	<div class="wrapper cardImage">
 		<!--<label class="title" v-if="articles.title">{{ articles.title }}</label>-->
 		<div class="card-box" style="width:95%;" v-for="item in list" v-link="{name:'article',params:{cid:item.id}}">
-			<img :src="item.img" class="img" alt="{{ item.title }}" />
+			<div class="img" v-lazy:background-image="item.img"></div>
+			<!--<img :src="item.img" class="img" alt="{{ item.title }}" />-->
 			<div class="mes">
 				<div class="words">
 					<div class="name">{{ item.title }}</div>
@@ -113,8 +114,8 @@
 
 	.card-box .img{
 		width:100%;
-		max-width:100%;
 		height:auto;
+		padding-top: 100%;
 		margin-bottom:0.5rem;
 		background-color:#eee;
 		background-repeat:no-repeat;

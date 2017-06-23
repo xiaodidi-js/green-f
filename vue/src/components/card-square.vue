@@ -9,10 +9,12 @@
 					<div v-link="{name:'detail',params:{pid:item.id}}">
 						<div class="img" v-if="item.store == 0">
 							<div class="qing">已售罄</div>
-							<img :src="item.src" alt="" style="width:100%;height:100%;" />
+							<div v-lazy:background-image="item.src" class="lazyImg"></div>
+							<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
 						</div>
 						<div class="img" v-else>
-							<img :src="item.src" alt="" style="width:100%;height:100%;" />
+							<div v-lazy:background-image="item.src" class="lazyImg"></div>
+							<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
 						</div>
 						<div class="mes">
 							<div class="name">{{ item.title }}</div>
@@ -220,6 +222,14 @@
 		position: relative;
 	}
 
+	.wrapper .ui_box .img .lazyImg {
+		width: 100%;
+		padding-top:100%;
+		background-size: 100%;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+
 	.wrapper .ui_box .img .qing {
 		position: absolute;
 		top: 0;
@@ -230,6 +240,7 @@
 		line-height: 200px;
 		color: #fff;
 		text-align: center;
+		z-index: 100;
 		background: rgba(0,0,0,0.5);
 	}
 

@@ -13,7 +13,7 @@
 								</div>
 							</template>
 							<template v-if="item.arr.length == 2">
-								<div style="width:50%;float:left;">
+								<div style="width:50%;float:left;height:auto;">
 									<a class="href-ui" :href="'//'+item1.htmlurl">
 										<img :src="item1.url" alt="" style="width:100%;" />
 									</a>
@@ -28,7 +28,7 @@
 							</template>
 							<template v-if="item.arr.length == 4">
 								<div style="width:25%;float:left;">
-									<a class="href-ui" :href="'//'+item1.htmlurl" > <!-- :href="'//'+item1.htmlurl"  -->
+									<a class="href-ui" :href="'//'+item1.htmlurl">
 										<img :src="item1.url" alt="" style="width:100%;" />
 									</a>
 								</div>
@@ -42,10 +42,10 @@
 							<div class="shop-item">
 								<div style="width:100%;" class="over-img" v-if="item1.store == 0">
 									<div class="order_over" v-link="{name:'detail',params:{pid:item1.shopid}}" >已售罄</div>
-									<img :src="item1.shopshotcut" style="width: 100%;height:100%;" />
+									<div v-lazy:background-image="item1.shopshotcut" class="lazyImg"></div>
 								</div>
 								<div style="width:100%;" class="over-img" v-else>
-									<img :src="item1.shopshotcut" style="width: 100%;height:100%;" v-link="{name:'detail',params:{pid:item1.shopid}}" />
+									<div v-lazy:background-image="item1.shopshotcut" class="lazyImg" v-link="{name:'detail',params:{pid:item1.shopid}}"></div>
 								</div>
 								<p class="shop-name" style="">{{ item1.shopname }}</p>
 								<p class="box-money" style="float:left;">
@@ -300,7 +300,6 @@
 		height:100%;
 	}
 
-
 	.content_main .box{
 		/*width:100%;*/
 		height: auto;
@@ -361,16 +360,25 @@
 		position: relative;
 	}
 
+	.shop-item .over-img .lazyImg {
+		width: 100%;
+		padding-top: 100%;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+
 	.shop-item .over-img .order_over {
 		position: absolute;
 		top: 0px;
 		left: 0px;
 		width: 100%;
 		height: 100%;
-		text-align:center;
+		text-align: center;
 		line-height: 11.5rem;
-		font-size:23px;
-		color:#fff;
+		font-size: 23px;
+		color: #fff;
+		z-index: 999;
 		background: rgba(0,0,0,0.5);
 	}
 

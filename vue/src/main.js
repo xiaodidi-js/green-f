@@ -2,7 +2,7 @@
  * Created by samhong on 16/6/20.
  */
 import Vue from 'vue';
-// import VueLazy from 'vue-lazyload';
+import VueLazy from 'vue-lazyload';
 import VueResource from 'vue-resource';
 import VueRouter from 'vue-router';
 import App from 'components/app.vue';
@@ -15,13 +15,14 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import ElementDefault from 'element-theme-default'
 
-// Vue.use(VueLazy,{
-// 	preLoad:1.2,
-// 	error:'dist/assets/error.png',
-// 	loading:'dist/assets/loading.svg',
-// 	attempt:3
-// });
+Vue.use(VueLazy,{
+	preLoad:1.2,
+	error:'dist/assets/error.png',
+	loading:'dist/assets/loading.svg',
+	attempt:2
+});
 
+Vue.use(ElementUI);
 Vue.use(VueResource);
 Vue.use(VueRouter);
 
@@ -89,7 +90,7 @@ router.beforeEach((transition) => {
     }else{
         transition.next();
     }
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 });
 
 router.afterEach((transition) => {
@@ -100,7 +101,7 @@ router.afterEach((transition) => {
             let shareData = {
                 title:getSession.title,
                 desc:getSession.desc,
-                link:'http://' + window.location.host + '/index_prod.html',
+                link:'http://'+window.location.host+'/index_prod.html',
                 imgUrl:getSession.imgurl
             };
             WxJssdk.config({

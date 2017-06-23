@@ -32,7 +32,7 @@
 						</template>
 						<div class="main-des">{{ list.name }}</div>
 						<div style="width:90%;margin:7px auto;">
-							<img :src="list.shotcut" style="width:100%;height:100%;" />
+							<div class="price-img" v-lazy:background-image="list.shotcut"></div>
 						</div>
 					</div>
 				</template>
@@ -299,6 +299,13 @@
 		float: left;
 		text-align: center;
 		margin: 5px 2.1px;
+	}
+
+	.box-list .price-img {
+		width:100%;
+		padding-top:100%;
+		background-size: 100%;
+		background-repeat: no-repeat;
 	}
 	.content .box-list .main-title {
 		color:#ff1d25;

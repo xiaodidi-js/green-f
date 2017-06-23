@@ -353,119 +353,127 @@
 						WxJssdk.onMenuShareWeibo(shareData);
 						WxJssdk.onMenuShareQZone(shareData);
 						WxJssdk.onMenuShareQQ(shareData);
-					});
 
-                    // 分享好友
-                    WxJssdk.onMenuShareAppMessage({
-                        title: this.data.name, // 分享标题
-                        link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
-                        imgUrl: this.data.shotcut, // 分享图标
-                        success: function () {
-                            axios({
-                                method: 'get',
-                                url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
-                            }).then((response) => {
-                                if(response.data.status == 1) {
-                                    alert(response.data.info);
-                                    _self.setCart(cartObj);
-                                    _self.$router.go({name:'cart'});
+                        if (_self.data.is_sell == 0) {
+                            _self.toastMessage = "商品已下架";
+                            _self.toastShow = true;
+                            return false;
+                        } else {
+							// 分享好友
+                            WxJssdk.onMenuShareAppMessage({
+                                title: this.data.name, // 分享标题
+                                link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
+                                imgUrl: this.data.shotcut, // 分享图标
+                                success: function () {
+                                    axios({
+                                        method: 'get',
+                                        url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
+                                    }).then((response) => {
+                                        if(response.data.status == 1) {
+                                            alert(response.data.info);
+                                            _self.setCart(cartObj);
+                                            _self.$router.go({name:'cart'});
+                                        }
+                                    });
+                                },
+                                cancel: function() {
+                                    alert("已取消分享");
+                                },
+                            });
+
+
+                            // 分享朋友圈
+                            WxJssdk.onMenuShareTimeline({
+                                title: this.data.name, // 分享标题
+                                link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
+                                imgUrl: this.data.shotcut, // 分享图标
+                                success: function () {
+                                    axios({
+                                        method: 'get',
+                                        url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
+                                    }).then((response) => {
+                                        if(response.data.status == 1) {
+                                            alert(response.data.info);
+                                            _self.setCart(cartObj);
+                                            _self.$router.go({name:'cart'});
+                                        }
+                                    });
+                                },
+                                cancel: function() {
+                                    alert("已取消分享");
                                 }
                             });
-                        },
-                        cancel: function() {
-                            alert("已取消分享");
-                        },
-                    });
 
-                    // 分享朋友圈
-                    WxJssdk.onMenuShareTimeline({
-                        title: this.data.name, // 分享标题
-                        link:'http://'+window.location.host + '/index_prod.html#!/detail/' + this.data.id,
-                        imgUrl: this.data.shotcut, // 分享图标
-                        success: function () {
-                            axios({
-                                method: 'get',
-                                url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
-                            }).then((response) => {
-                                if(response.data.status == 1) {
-                                    alert(response.data.info);
-                                    _self.setCart(cartObj);
-                                    _self.$router.go({name:'cart'});
-                                }
+                            // 分享QQ
+                            WxJssdk.onMenuShareQQ({
+                                title: this.data.name, // 分享标题
+                                link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
+                                imgUrl: this.data.shotcut, // 分享图标
+                                success: function () {
+                                    axios({
+                                        method: 'get',
+                                        url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
+                                    }).then((response) => {
+                                        if(response.data.status == 1) {
+                                            alert(response.data.info);
+                                            _self.setCart(cartObj);
+                                            _self.$router.go({name:'cart'});
+                                        }
+                                    });
+                                },
+                                cancel: function() {
+                                    alert("已取消分享");
+                                },
                             });
-                        },
-                        cancel: function() {
-                            alert("已取消分享");
-                        }
-                    });
 
-                    // 分享QQ
-                    WxJssdk.onMenuShareQQ({
-                        title: this.data.name, // 分享标题
-                        link:'http://'+window.location.host + '/index_prod.html#!/detail/' + this.data.id,
-                        imgUrl: this.data.shotcut, // 分享图标
-                        success: function () {
-                            axios({
-                                method: 'get',
-                                url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
-                            }).then((response) => {
-                                if(response.data.status == 1) {
-                                    alert(response.data.info);
-                                    _self.setCart(cartObj);
-                                    _self.$router.go({name:'cart'});
-                                }
+                            // 分享到腾讯微博
+                            WxJssdk.onMenuShareWeibo({
+                                title: this.data.name, // 分享标题
+                                link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
+                                imgUrl: this.data.shotcut, // 分享图标
+                                success: function () {
+                                    axios({
+                                        method: 'get',
+                                        url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
+                                    }).then((response) => {
+                                        if(response.data.status == 1) {
+                                            alert(response.data.info);
+                                            _self.setCart(cartObj);
+                                            _self.$router.go({name:'cart'});
+                                        }
+                                    });
+                                },
+                                cancel: function() {
+                                    alert("已取消分享");
+                                },
                             });
-                        },
-                        cancel: function() {
-                            alert("已取消分享");
-                        },
-                    });
 
-                    // 分享到腾讯微博
-                    WxJssdk.onMenuShareWeibo({
-                        title: this.data.name, // 分享标题
-                        link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
-                        imgUrl: this.data.shotcut, // 分享图标
-                        success: function () {
-                            axios({
-                                method: 'get',
-                                url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
-                            }).then((response) => {
-                                if(response.data.status == 1) {
-                                    alert(response.data.info);
-                                    _self.setCart(cartObj);
-                                    _self.$router.go({name:'cart'});
-                                }
+                            // 分享QQ空间
+                            WxJssdk.onMenuShareQZone({
+                                title: this.data.name, // 分享标题
+                                link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
+                                imgUrl: this.data.shotcut, // 分享图标
+                                success: function () {
+                                    axios({
+                                        method: 'get',
+                                        url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
+                                    }).then((response) => {
+                                        if(response.data.status == 1) {
+                                            alert(response.data.info);
+                                            _self.setCart(cartObj);
+                                            _self.$router.go({name:'cart'});
+                                        }
+                                    });
+                                },
+                                cancel: function() {
+                                    alert("已取消分享");
+                                },
                             });
-                        },
-                        cancel: function() {
-                            alert("已取消分享");
-                        },
-                    });
+                            WxJssdk.error(function(res){
+                                console.log(res.errMsg);
+                            });
+						}
 
-                    // 分享QQ空间
-                    WxJssdk.onMenuShareQZone({
-                        title: this.data.name, // 分享标题
-                        link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
-                        imgUrl: this.data.shotcut, // 分享图标
-                        success: function () {
-                            axios({
-                                method: 'get',
-                                url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
-                            }).then((response) => {
-                                if(response.data.status == 1) {
-                                    alert(response.data.info);
-                                    _self.setCart(cartObj);
-                                    _self.$router.go({name:'cart'});
-                                }
-                            });
-                        },
-                        cancel: function() {
-                            alert("已取消分享");
-                        },
-                    });
-					WxJssdk.error(function(res){
-                        console.log(res.errMsg);
 					});
 				},(response)=>{
 					console.log('get wx share failed.');
@@ -502,9 +510,7 @@
                         }
 					} catch(e) {
 						console.log(e);
-					} finally {
-
-                    }
+					} finally {}
 //                    document.getElementsByClassName('ms-item')[2].innerHTML = this.data.detail;
 				});
 			},(response)=>{
@@ -513,7 +519,6 @@
 			});
 		},
 		computed: {
-
 			makeFreight: function(){
 				let fmoney = parseFloat(this.data.freight);
 				if(isNaN(fmoney)){
@@ -765,7 +770,11 @@
                     this.toastMessage = '购买数量超过库存数量';
                     this.toastShow = true;
                     return false;
-                }
+                } else if (this.data.is_sell == 0) {
+					this.toastMessage = "商品已下架";
+					this.toastShow = true;
+					return false;
+				}
                 let cartObj = {};
                 let cartFormat = this.guige.length > 0 ? this.guige.join(',') : '';
                 let cartFormatName = this.guige.length > 0 ? this.guigeName.join('-') : '';
@@ -829,6 +838,10 @@
                     return false;
                 } else if (this.buyNums > this.proNums) {
                     this.toastMessage = '购买数量超过库存数量';
+                    this.toastShow = true;
+                    return false;
+                } else if (this.data.is_sell == 0) {
+                    this.toastMessage = "商品已下架";
                     this.toastShow = true;
                     return false;
                 }

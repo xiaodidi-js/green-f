@@ -1,117 +1,3 @@
-<style>
-    .shopcar_youlike{
-        width: 100%;
-        height: auto;
-        box-sizing:border-box;
-        padding:0px 1%;
-        padding-bottom: 65px;
-    }
-    .youlike_title{
-        width: 100%;
-        height: 4rem;
-        line-height: 4rem;
-        font-size: 1.6rem;
-        color: #4D4D4D;
-        margin-bottom: 0.9rem;
-    }
-
-    .youlike_title .list-icon {
-        display:block;
-        width: 0.5rem;
-        height:2.3rem;
-        margin-top:8px;
-        float:left;
-        margin-right:10px;
-        background: #81c429;
-    }
-
-    .youlike_list {
-        width: 100%;
-    }
-
-    .youlike_list ul li{
-        display: block;
-        width: 32.5%;
-        float: left;
-        height: 100%;
-        background-color: #fff;
-        margin-bottom: 0.7rem;
-    }
-    .youlike_list ul li:nth-of-type(1),
-    .youlike_list ul li:nth-of-type(2){
-        margin-right:0.39rem;
-    }
-    .list_pirture {
-        position:relative;
-    }
-    .list_pirture img{
-        width: 100%;
-        height: 10.556rem;
-    }
-
-    .list_pirture .qing {
-        position:absolute;
-        top:0px;
-        left:0px;
-        width:100%;
-        height:100%;
-        background: rgba(0,0,0,0.5);
-        text-align:center;
-        font-size:24px;
-        line-height: 110px;
-        color:#fff;
-    }
-
-    .list_value{
-        width: 100%;
-        height: 30px;
-        line-height: 14px;
-        margin-top: 0.2rem;
-        box-sizing: border-box;
-        padding: 0px 5px;
-        font-size: 12px;
-        color: #333;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        text-align:left;
-    }
-    .list_footer {
-        width: 65%;
-        height:2.806rem;
-        box-sizing:border-box;
-        padding:0px 5px;
-        float:left;
-    }
-    .footer_money {
-        width: 50%;
-        height: 2.806rem;
-        font-size: 16px;
-        color: #F9B21C;
-        line-height: 3.22rem;
-        float: left;
-    }
-    .footer_shopcar{
-        width: 25%;
-        height: 1.806rem;
-        float: right;
-        text-align:right;
-    }
-    .footer_shopcar{
-        margin-top: 5px;
-    }
-    .footer_shopcar img{
-        width: 2.3rem;
-        height: 1.7rem;
-    }
-    @media screen and (max-width: 320px){
-        .list_value{margin-top:0.1rem;}
-    }
-</style>
-
-
 <template>
     <!-- <猜你喜欢> -->
     <div class="shopcar_youlike">
@@ -125,10 +11,10 @@
                     <div v-link="{name:'detail',params:{pid:item.id}}">
                         <div class="list_pirture" v-if="item.store == 0">
                             <div class="qing">已售罄</div>
-                            <img :src="item.shotcut" />
+                            <div v-lazy:background-image="item.shotcut" class="lazyImg"></div>
                         </div>
                         <div class="list_pirture" v-else>
-                            <img :src="item.shotcut"/>
+                            <div v-lazy:background-image="item.shotcut" class="lazyImg"></div>
                         </div>
                         <div class="list_value">{{ item.name }}</div>
                         <div class="list_footer">
@@ -280,3 +166,121 @@
         }
     }
 </script>
+
+<style>
+    .shopcar_youlike{
+        width: 100%;
+        height: auto;
+        box-sizing:border-box;
+        padding:0px 1%;
+        padding-bottom: 65px;
+    }
+    .youlike_title{
+        width: 100%;
+        height: 4rem;
+        line-height: 4rem;
+        font-size: 1.6rem;
+        color: #4D4D4D;
+        margin-bottom: 0.9rem;
+    }
+
+    .youlike_title .list-icon {
+        display:block;
+        width: 0.5rem;
+        height:2.3rem;
+        margin-top:8px;
+        float:left;
+        margin-right:10px;
+        background: #81c429;
+    }
+
+    .youlike_list {
+        width: 100%;
+    }
+
+    .youlike_list ul li{
+        display: block;
+        width: 32.5%;
+        float: left;
+        height: 100%;
+        background-color: #fff;
+        margin-bottom: 0.7rem;
+    }
+    .youlike_list ul li:nth-of-type(1),
+    .youlike_list ul li:nth-of-type(2){
+        margin-right:0.39rem;
+    }
+    .list_pirture {
+        position:relative;
+    }
+
+    .list_pirture .lazyImg {
+        width:100%;
+        padding-top:100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .list_pirture .qing {
+        position:absolute;
+        top:0px;
+        left:0px;
+        width:100%;
+        height:100%;
+        background: rgba(0,0,0,0.5);
+        text-align:center;
+        font-size:24px;
+        line-height: 110px;
+        color:#fff;
+        z-index: 100;
+    }
+
+    .list_value{
+        width: 100%;
+        height: 30px;
+        line-height: 14px;
+        margin-top: 0.2rem;
+        box-sizing: border-box;
+        padding: 0px 5px;
+        font-size: 12px;
+        color: #333;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        text-align:left;
+    }
+    .list_footer {
+        width: 65%;
+        height:2.806rem;
+        box-sizing:border-box;
+        padding:0px 5px;
+        float:left;
+    }
+    .footer_money {
+        width: 50%;
+        height: 2.806rem;
+        font-size: 16px;
+        color: #F9B21C;
+        line-height: 3.22rem;
+        float: left;
+    }
+    .footer_shopcar{
+        width: 25%;
+        height: 1.806rem;
+        float: right;
+        text-align:right;
+    }
+    .footer_shopcar{
+        margin-top: 5px;
+    }
+    .footer_shopcar img{
+        width: 2.3rem;
+        height: 1.7rem;
+    }
+    @media screen and (max-width: 320px){
+        .list_value{margin-top:0.1rem;}
+    }
+</style>

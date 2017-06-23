@@ -8,10 +8,10 @@
 		<div class="maininfo">
 			<div class="img"  v-link="{name:'detail',params:{pid:pid}}"  v-if="store == 0"> <!-- v-lazy:background-image="img" -->
 				<div class="overtext">已售罄</div>
-				<img :src="img" style="width:100%;height:100%;" alt=""/>
+				<div v-lazy:background-image="img" class="lazyImg"></div>
 			</div>
 			<div class="img"  v-link="{name:'detail',params:{pid:pid}}" v-else> <!-- v-lazy:background-image="img" -->
-				<img :src="img" style="width:100%;height:100%;" alt=""/>
+				<div v-lazy:background-image="img" class="lazyImg"></div>
 			</div>
 			<div class="mes">
 				<div class="name">{{ pname }}</div>
@@ -250,13 +250,21 @@
 		display:inline-block;
 		vertical-align:middle;
 		width:33%;
-		height: 8.4rem;
+		height: auto;
 		margin-right:2%;
 		background-color:#eee;
 		background-repeat:no-repeat;
 		background-position:center;
 		background-size:cover;
 		position: relative;
+	}
+
+	.card-box .maininfo .img .lazyImg {
+		width:100%;
+		padding-top:100%;
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
 	}
 
 	.card-box .maininfo .img .overtext {
@@ -270,6 +278,7 @@
 		left:0px;
 		font-size:16px;
 		color:#fff;
+		z-index: 100;
 	}
 
 	.card-box .maininfo .mes{

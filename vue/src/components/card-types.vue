@@ -20,11 +20,11 @@
 
 								<div class="shotcut" v-if="item.store == 0">
 									<div class="qing">已售罄</div>
-									<img :src="item.src" alt="{{ item.title }}" class="shotcut-img" style="width:100%;height:100%;" />
+									<div class="shotcut-img" v-lazy:background-image="item.src"></div>
 								</div>
 
 								<div class="shotcut" v-else>
-									<img :src="item.src" alt="{{ item.title }}" class="shotcut-img" style="width:100%;height:100%;" />
+									<div class="shotcut-img" v-lazy:background-image="item.src"></div>
 								</div>
 
 								<div class="shotcut-txt">
@@ -370,17 +370,18 @@
 
 	.cla-message .main {
 		width: 95%;
-		height: 87px;
-		margin: 10px auto;
+		height: 100%;
+		margin: 0px auto;
 		border-bottom: 1px solid #ccc;
 		clear: both;
 		display: table;
 		position: relative;
+		padding: 10px 0px 10px;
 	}
 
 	.cla-message .main .shotcut {
 		width: 33%;
-		height: 76px;
+		height: 100%;
 		background-color: #EFEFEF;
 		background-size: cover;
 		overflow: hidden;
@@ -402,8 +403,14 @@
 	}
 
 	.cla-message .main .shotcut .shotcut-img {
-		width:100%;
-		height:100%;
+		width: 100%;
+		padding-top:100%;
+
+
+
+
+		background-repeat: no-repeat;
+		background-size: 100%;
 	}
 
 	.shotcut-txt {

@@ -41,10 +41,10 @@
 			}
 		},
 		methods: {
-            goBack() {
+			"goBack": function(){
 				window.history.back();
 			},
-            goSearch() {
+			"goSearch": function(){
 				this.searchKey = this.searchKey.replace(/(^\s*)|(\s*$)/g,'');
 				if(this.searchKey.length<=0){
 					return false;

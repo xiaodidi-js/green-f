@@ -2,7 +2,7 @@
 	<div class="wrapper" v-for="item in rushproducts">
 		<template v-for="list in item.arr">
 			<div class="card-box" v-link="{name:'detail',params:{pid:list.shopid}}" v-if="item.nowsale == 0">
-				<div class="img" :style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
+				<div class="img" v-lazy:background-image="list.shotcut"></div>
 				<!-- 即将开始 -->
 				<div class="mes">
 					<div class="name">{{ list.name }}</div>
