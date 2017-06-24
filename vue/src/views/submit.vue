@@ -486,7 +486,7 @@
                         this.deliverType = key;
                         this.deliverName = key === 'express' ? this.data.deliver.express : this.data.deliver.parcel;
                         this.freight = response.data.freight;
-                        if(typeof response.data.address!=='undefined'){
+                        if(typeof response.data.address !== 'undefined'){
                             this.data.address = response.data.address;
                             this.address = this.data.address.id;
                         }else{

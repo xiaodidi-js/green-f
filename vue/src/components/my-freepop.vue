@@ -153,7 +153,7 @@
             },
             downpop () {
                 $(".option-list").show().animate({
-                    "bottom":"-250px"
+                    "bottom":"-253px"
                 },100);
                 this.popdown = false;
                 this.tansform('icon-sanjiao', 'rotate(0deg)');

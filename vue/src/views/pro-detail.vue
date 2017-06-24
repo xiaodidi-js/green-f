@@ -317,13 +317,13 @@
 				} else if(_self.data.activestu == 1) {
                     _self.seckillShow = true;
 				}
-                if(cart != null) {
-                    for(var i in cart) {
-                        if(cart[i].nums == this.data.store) {
-                            $(".buyButton").attr("disabled","true");
-                        }
-                    }
-				}
+//                if(cart != null) {
+//                    for(var i in cart) {
+//                        if(cart[i].nums == this.data.store) {
+//                            $(".buyButton").attr("disabled","true");
+//                        }
+//                    }
+//				}
                 //微信分享
 				this.$http.get(localStorage.apiDomain+'public/index/index/wxshare').then((response)=>{
 					let getSession = response.data;

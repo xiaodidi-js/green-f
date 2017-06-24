@@ -43,12 +43,15 @@
 				}
 			}
 		},
+        ready() {
+            this.line();
+        },
 		data() {
 			return {
                 timeline: [],
 				showbar: '',
-                number: 0,
-                times: null,
+                number: 0,		//已抢购
+                times: null,	//时间
 			}
 		},
         filters: {
@@ -64,15 +67,20 @@
             }
         },
         methods: {
+		    //抢购进度
             line: function() {
-                var salenub = $(".salenub").html();
-                console.log(salenub);
-				var content = this, i = 0;
+                var content = this, saleNumber = {}, progNumber = 0;
+                for(var i in this.products[0].arr) {
+                    saleNumber = this.products[0].arr[i].saledata;
+                    for(var y in saleNumber) {
+                        progNumber = saleNumber[y].salenub;
+                        console.log(saleNumber[y].salenub);
+					}
+                }
                 if(this.number <= 100) {
                     content.times = setInterval(progress,50);
                     function progress() {
-                        content.number++;
-                        i++;
+                        content.number++ , i++;
                         $(".progress-bar").val(i);
                         if(content.number >= 100) {
                             clearInterval(content.times);
@@ -81,10 +89,7 @@
                     progress();
                 }
             }
-        },
-        ready() {
-			this.line();
-        },
+        }
 	}
 </script>
 

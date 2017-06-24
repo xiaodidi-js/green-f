@@ -62,6 +62,15 @@
                 gotimeline: [],
             }
         },
+        ready() {
+            this.timeline();
+           	console.log(this.salelist);
+        },
+        watch: {
+            "index": function(nval,oval){
+                this.changeTapCard();
+            }
+        },
         props: {
             endTime: {
                 type: String,
@@ -112,12 +121,11 @@
             timeline: function() {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                var _this = this;
+                var content = this;
                 this.$http.get(localStorage.apiDomain+'public/index/sale/SaleTimeSolt/uid').then((response) => {
                     if(response.data.status === 1) {
-                        this.gotimeline = response.data.SaleTimeSolt;
-                        console.log(this.gotimeline[0].arr[0].saledata);
-                        console.log(this.gotimeline);
+                        content.gotimeline = response.data.SaleTimeSolt;
+                        console.log(content.gotimeline);
                     } else if(response.data.status===-1) {
                         this.toastMessage = response.data.info;
                         this.toastShow = true;
@@ -137,14 +145,6 @@
                     this.toastShow = true;
                 });
 			}
-        },
-        ready() {
-			this.timeline();
-        },
-        watch: {
-            "index": function(nval,oval){
-                this.changeTapCard();
-            }
         }
     }
 </script>

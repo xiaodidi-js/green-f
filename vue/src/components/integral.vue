@@ -175,6 +175,10 @@
         font-family: 'PingFang';
         text-align: center;
         display: block;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: 100%;
+        height: 74px;
     }
     .integral-head .integral-h5{
         color:#999;
@@ -243,7 +247,7 @@
         width: 100%;
     }
     .integral-body .body-list ul li .all-date{
-        width:60%;
+        width:41%;
         float:left;
         font-size:14.5px;
         margin-top: 5px;

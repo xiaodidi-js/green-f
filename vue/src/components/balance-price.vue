@@ -98,7 +98,7 @@
 				let getSum = (this.sum + this.freight) - (this.coupon + this.score);
 				if(getSum <= 0) {
 					getSum = 1;
-					this.sum = this.scfee;
+                    this.scfee = this.sum;
 				}
 				return getSum.toFixed(2);
 			}
