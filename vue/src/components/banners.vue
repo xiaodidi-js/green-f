@@ -13,7 +13,8 @@
         </div>
         <div class="search" style="width:65%;position:relative;left:12px;">
             <input type="text" placeholder="请输入您要搜索的商品" v-model="searchKey" @keydown="breakSearch()" />
-            <input type="button" class="order-search-btn" @click="goSearch()" value="搜索" />
+            <a href="javascript:void();" class="order-search-btn" style="display:block;" @click="goSearch()">搜索</a>
+            <!--<input type="button" class="order-search-btn" @click="goSearch()" value="搜索" />-->
         </div>
         <div class="customer">
             <a href="javascript:void(0)" class="txt-service" @click="goPage"></a>
@@ -169,6 +170,7 @@
         color: #81c429;
         background: #f7f7f7;
         font-size: 14px;
+        text-align: center;
         -webkit-appearance: none;
         -moz-appearance: none;
         -ms-appearance: none;

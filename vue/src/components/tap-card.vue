@@ -30,7 +30,7 @@
 				</label>
 			</div>
 			<!-- 产品列表 -->
-			<card-rush :rushproducts="gotimeline"></card-rush>
+			<card-rush :products="gotimeline"></card-rush>
 		</template>
 	</div>
 </template>
@@ -116,6 +116,7 @@
                 this.$http.get(localStorage.apiDomain+'public/index/sale/SaleTimeSolt/uid').then((response) => {
                     if(response.data.status === 1) {
                         this.gotimeline = response.data.SaleTimeSolt;
+                        console.log(this.gotimeline[0].arr[0].saledata);
                         console.log(this.gotimeline);
                     } else if(response.data.status===-1) {
                         this.toastMessage = response.data.info;

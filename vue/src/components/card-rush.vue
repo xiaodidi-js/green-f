@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper" v-for="item in rushproducts">
+	<div class="wrapper" v-for="item in products">
 		<template v-for="list in item.arr">
 			<div class="card-box" v-link="{name:'detail',params:{pid:list.shopid}}" v-if="item.nowsale == 0">
 				<div class="img" v-lazy:background-image="list.shotcut"></div>
@@ -22,6 +22,10 @@
 					<div class="money" v-for="money in list.saledata">
 						<label class="unit">¥</label>{{ money.saleprice }}
 						<a class="rush">马上抢</a>
+						<div style="font-size: 12px;">
+							<span>库存:</span>
+							<span class="salenub">{{ money.salenub }}</span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -32,7 +36,7 @@
 <script>
 	export default{
 		props: {
-			rushproducts: {
+			products: {
 				type: Array,
 				default() {
 					return []
@@ -43,7 +47,8 @@
 			return {
                 timeline: [],
 				showbar: '',
-				number: 0
+                number: 0,
+                times: null,
 			}
 		},
         filters: {
@@ -59,10 +64,26 @@
             }
         },
         methods: {
-
+            line: function() {
+                var salenub = $(".salenub").html();
+                console.log(salenub);
+				var content = this, i = 0;
+                if(this.number <= 100) {
+                    content.times = setInterval(progress,50);
+                    function progress() {
+                        content.number++;
+                        i++;
+                        $(".progress-bar").val(i);
+                        if(content.number >= 100) {
+                            clearInterval(content.times);
+                        }
+                    }
+                    progress();
+                }
+            }
         },
         ready() {
-
+			this.line();
         },
 	}
 </script>
@@ -70,7 +91,7 @@
 <style scoped>
 	.wrapper{
 		width:100%;
-		padding:0rem 0rem 1rem 0rem;
+		padding-bottom: 8rem;
 		font-size:0;
 	}
 
@@ -139,8 +160,8 @@
 
 	.card-box .mes .desc,.card-box .mes .pre-desc{
 		width:70%;
-		font-size:1.2rem;
-		color:#999999;
+		font-size:1.6rem;
+		color:#333;
 		margin-top:0.5rem;
 		white-space:nowrap;
 		text-overflow:ellipsis;

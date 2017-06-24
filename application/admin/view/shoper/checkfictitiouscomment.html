@@ -1,0 +1,120 @@
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"}
+<!-- Main content -->
+<section class="content">
+	<div class="row" id="app">
+		<div class="col-xs-12">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">商品评价列表</h3>
+					<div>
+						<div class="ivu-btn ivu-btn-info" @click="addpinjia">添加评价</div>
+					</div>
+				</div>
+				<div class="box-body no-padding">
+					<div class="table-responsive mailbox-messages">
+						<table class="table table-hover table-striped">
+							<tbody>
+									<tr>
+									<th>订单号</th>
+									<th>评价产品</th>
+									<th>下单时间</th>
+									<th>评分星级</th>
+									<th>评价内容</th>
+									<th>显示状态</th>
+									<th>提交时间</th>
+									<th>操作</th>
+								</tr>
+									 {foreach name="list" item="vo"}
+									<tr>
+									{if condition="!empty($vo.orderid)"}
+										<td class="mailbox-name">{$vo.orderid}</td>
+									{else/}
+										<td>自主评价</td>
+									{/if}
+										<td class="mailbox-name">{$vo.name}</td>
+										<td class="mailbox-name">{$vo.createtime|date="Y-m-d H:i:s",###}</td>
+										<td class="mailbox-name">
+											{if condition="$vo['stars'] > 0"}
+													{php}for($i=1;$i<=$vo['stars'];$i++){{/php}
+															<i class="fa fa-star text-yellow"></i>
+													{php}}{/php}
+											{else/}
+													<i class="fa fa-star text-gray"></i>
+											{/if}
+										</td>
+										<td class="mailbox-name">
+											{$vo.content}
+										</td>
+										<td class="mailbox-name">
+											{eq name="vo.status" value="1"}
+												显示
+											{else/}
+												屏蔽
+											{/eq}
+										</td>
+										<td class="mailbox-name">{$vo.createtime|date="Y-m-d H:i:s",###}</td>
+										<td class="mailbox-name">
+											<div class="btn-group">
+												<a class="btn btn-default btn-xs" href="{:url('admin/shoper/replycomment',array('id'=>$vo['id']))}"><i class="fa fa-list"></i>&nbsp;回复评价</a>
+												<a class="btn btn-default btn-xs" href="{:url('admin/shoper/editcomment',array('id'=>$vo['id']))}"><i class="fa fa-list"></i>&nbsp;编辑</a>
+												{eq name="vo.status" value="1"}
+														<button type="button" class="btn btn-default btn-xs" onclick="delItem('{$vo.id}',0);"><i class="fa fa-eye-slash"></i>&nbsp;屏蔽</button>
+												{else/}
+														<button type="button" class="btn btn-default btn-xs" onclick="delItem('{$vo.id}',1);"><i class="fa fa-eye"></i>&nbsp;显示</button>
+												{/eq}
+											</div>
+										</td>
+									</tr>
+							{/foreach}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="box-footer clearfix">
+					{$list->render()}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{include file="public/dialog" /}
+<script>
+	$('#myDialog').on('hidden.bs.modal',function(){
+			var sta = $(this).find('#dialogSta').val();
+			if(sta==1){
+					window.location.reload();
+			}
+		});
+	function delItem(id,type=0){
+		if(!id){
+			return false;
+		}
+		$.post('{:url("admin/shoper/delcomment")}',{did:id,tp:type},function(data){
+					if(data.status==1){
+						window.location.reload();
+					}else{
+						$('#myDialog .dialog-box').text(data.info);
+						$('#myDialog #dialogSta').val(data.status);
+						$('#myDialog').modal();
+					}
+		},'json');
+	}
+</script>
+<script type="text/javascript">
+	new Vue({
+        el: '#app',
+        data: {
+        	id:{$id},
+        },
+        methods:{
+            addpinjia:function(){
+                window.location.href = "{:url('admin/shoper/addfictitiouscomment')}"+'?id='+this.id;
+            }
+        }
+    })
+</script>

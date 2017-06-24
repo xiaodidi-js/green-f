@@ -119,17 +119,17 @@
 
 		<!-- 其他选项 -->
 		<my-cell>
-			<my-cell-item @click="showCou">
-				<div class="line-con zero-font">
-					<div class="l-icon coupon"></div>
-					<div class="l-tit">优惠券</div>
-					<div class="l-desc" v-show="coupon == 0">未使用</div>
-					<div class="l-desc" v-else>已选择1张优惠券<a class="scross" @click="cancelCoupon">x</a></div>
-					<div class="l-arr">
-						<img src="../images/arrow.png" />
-					</div>
-				</div>
-			</my-cell-item>
+			<!--<my-cell-item @click="showCou">-->
+				<!--<div class="line-con zero-font">-->
+					<!--<div class="l-icon coupon"></div>-->
+					<!--<div class="l-tit">优惠券</div>-->
+					<!--<div class="l-desc" v-show="coupon == 0">未使用</div>-->
+					<!--<div class="l-desc" v-else>已选择1张优惠券<a class="scross" @click="cancelCoupon">x</a></div>-->
+					<!--<div class="l-arr">-->
+						<!--<img src="../images/arrow.png" />-->
+					<!--</div>-->
+				<!--</div>-->
+			<!--</my-cell-item>-->
 
 			<my-cell-item style="margin:0px;" v-if="score == 0">
 				<div class="line-con zero-font" style="font-size:14px;">没有可用积分</div>
@@ -329,6 +329,7 @@
             });
         },
         computed: {
+
             list: function(){
                 return this.$store.state.giftList
 			},
@@ -367,7 +368,7 @@
             },
             lastPaySum: function() {
                 let lastMoney = parseFloat(this.paySum)+parseFloat(this.freight) - parseFloat(this.scoreMoney.makePrice) - parseFloat(this.couponMoney);
-                if(lastMoney <= 0) lastMoney = 0.01;
+                if(lastMoney <= 0) lastMoney = 1;
                 return lastMoney.toFixed(2);
             }
         },
@@ -584,7 +585,6 @@
                         pshonse:this.shonse,
                         gift:{'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                     };
-                    console.log(pdata.paysum);
                     this.$http.post(localStorage.apiDomain + 'public/index/user/getSubmitOrder',pdata).then((response)=>{
                         if(response.data.status === 1) {
                             this.clearSel();

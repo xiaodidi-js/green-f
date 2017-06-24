@@ -1,5 +1,6 @@
 <template>
 	<div class="type-bg" keep-alive>
+
 		<div type="popup" class="cla-wrapper" id="left_Menu" style="float: left;">
 			<div id="scroller">
 				<div class="menu-left">
@@ -11,6 +12,7 @@
 				</div>
 			</div>
 		</div>
+
 		<div type="popup" class="cla-message" id="right_Menu">
 			<div id="scroller2">
 				<div class="ele-fixed">
@@ -57,7 +59,6 @@
     import Toast from 'vux/src/components/toast'
     import axios from 'axios'
     import qs from 'qs'
-    import 'element-ui/lib/theme-default/index.css'
 
 	export default{
 
@@ -77,6 +78,11 @@
                     return []
                 }
             }
+        },
+        components: {
+            Scroller,
+            formatPop,
+            Toast,
         },
         data() {
             return {
@@ -116,11 +122,6 @@
             });
             this.onToure();
         },
-        components: {
-            Scroller,
-            formatPop,
-            Toast
-		},
         methods: {
             onToure:function() {
                 var myScroll_left;

@@ -1,0 +1,62 @@
+{css href="__STATIC__/lvyangtian/app.css"}
+<!-- 引入Vue -->
+{js href="//cdn.quguonet.com/iview.rc13/vue2.24.js"}
+<!-- 引入样式 -->
+{css href="//cdn.quguonet.com/iview.rc13/iview.css"}
+<!-- 引入组件库 -->
+{js href="//cdn.quguonet.com/iview.rc13/iview.min.js"}
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box" id="app">
+				<div class="box-header" style="border-bottom: 1px solid #F4F4F4">
+					<h3 class="box-title">编辑评论</h3>
+				</div>
+				<form id="form">
+					<div style="width: 95%; margin: 0 auto; padding-bottom: 30px;">
+						
+						<div class="form-group">
+							<label>编辑评论内容</label>
+							<textarea name="content" class="form-control" placeholder="请输入评论" >{$info.content}</textarea>
+						</div>
+						<div class="form-group">
+							<div>星级(5星最高)</div>
+							<input type="text" name="stars" value="{$info.stars}" class="form-control" style="width: 250px;">
+						</div>
+						<input type="hidden" name="id" value="{$id}" >
+						<input type="" class="btn btn-block btn-warning btn-lg" style="width: 500px;" v-on:click="tijiao" value="提交"></Button>
+					</div>
+				</form>
+			</div>	
+		</div>
+	</div>
+</section>
+<script>
+	new Vue({
+	el: '#app',
+		data: {
+		},
+		methods:{
+			tijiao(){
+				var self = this
+				var form = $('#form').serialize()
+				console.log(form)
+				$.post("{:url('admin/shoper/editcomment')}",form,function(data){
+					self.$Message.config({
+                        top: 100,
+                        duration: 3
+                    });
+                    var data = data
+                    if(data.status == '0'){
+                        self.$Message.error(data.msg)
+                    }else{
+                        self.$Message.success(data.msg)
+                        history.back(-1);
+                    }
+				});
+			},
+			
+		}
+	})
+</script>

@@ -113,13 +113,11 @@
             myConfirmClcik: function(id) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                console.log(1);
                 switch(this.clickType) {
                     case 1:
                         let d = {uid:ustore.id,token:ustore.token,oid:id};
                         this.$http.delete(localStorage.apiDomain + 'public/index/user/getsubmitorder/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + id).then((response)=>{
                             if(response.data.status === 1) {
-                                console.log(response.data + '1');
                                 this.data.order.statext = '用户取消';
                                 this.data.order.status = -1;
                                 this.btnStatus = false;

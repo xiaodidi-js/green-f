@@ -285,7 +285,7 @@
 		width:100%;
 		clear:both;
 		background: #fff;
-		padding-bottom: 35px;
+		padding-bottom: 90px;
 	}
 
 	.index-conten .content_main{

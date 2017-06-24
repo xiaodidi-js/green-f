@@ -128,10 +128,11 @@
 
 	.nothings {
 		height: 60px;
-		line-height: 45px;
+		line-height: 120px;
 		text-align: center;
-		font-size: 14px;
-		color: #808080;
+		font-size: 1.6rem;
+		color: #333;
+		margin-bottom: 27.5%;
 	}
 
 	.card-box{

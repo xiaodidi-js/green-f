@@ -13,7 +13,6 @@
                 <div class="sel-bg">
                     <div class="select-add" id="selectTitle" @click="onChonse()">全部</div>
                     <i class="iconfont icon-sanjiao icon-sanjiao" id="icon-sanjiao"></i>
-
                 </div>
             </div>
         </div>
@@ -125,7 +124,6 @@
         ready() {
             this.selList();
             this.onToureEle();
-            console.log(123123);
         },
         created() {
 

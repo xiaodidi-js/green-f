@@ -58,11 +58,11 @@
 		},
 		data() {
 			return {
-				
+
 			}
 		},
 		ready() {
-			
+
 		},
 		computed: {
 			sfee: function() {
@@ -97,7 +97,8 @@
 			    //getSum = (总价 + 快递费) - (优惠券 + 积分)
 				let getSum = (this.sum + this.freight) - (this.coupon + this.score);
 				if(getSum <= 0) {
-					getSum = 0.01;
+					getSum = 1;
+					this.sum = this.scfee;
 				}
 				return getSum.toFixed(2);
 			}
