@@ -16,20 +16,22 @@
 				<div class="img" :style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
 				<!-- 正在抢购/抢购完毕 -->
 				<div class="mes">
-					<div class="name">{{ list.name }}</div>
-					<progress class="progress-bar" max="100" value="10"></progress>
-					<div class="desc">已抢购{{ number }}%</div>
-					<div class="money" v-for="money in list.saledata">
-						<div style="float:left;">
-							<label class="unit">¥</label>
-							<span>{{ money.saleprice }}</span>
+					<template  v-for="money in list.saledata">
+						<div class="name">{{ list.name }}</div>
+						<progress class="progress-bar" max="100" :value="100 - money.salenub"></progress>
+						<div class="desc">已抢购{{ 100 - money.salenub }}%</div>
+						<div class="money">
+							<div style="float:left;">
+								<label class="unit">¥</label>
+								<span>{{ money.saleprice }}</span>
+							</div>
+							<div class="salenub-div">
+								<span>库存:</span>
+								<span class="salenub">{{ money.salenub }}</span>
+							</div>
+							<a class="rush">马上抢</a>
 						</div>
-						<div class="salenub-div">
-							<span>库存:</span>
-							<span class="salenub">{{ money.salenub }}</span>
-						</div>
-						<a class="rush">马上抢</a>
-					</div>
+					</template>
 				</div>
 			</div>
 		</template>
@@ -47,7 +49,7 @@
 			}
 		},
         ready() {
-            this.line();
+
         },
 		data() {
 			return {
@@ -70,27 +72,7 @@
             }
         },
         methods: {
-		    //抢购进度
-            line: function() {
-                var content = this, saleNumber = {}, progNumber = {};
-                for(var i in this.products[0].arr) {
-                    saleNumber = this.products[0].arr[i].saledata;
-                    for(var y in saleNumber) {
-                        progNumber = progNumber[y];
-                        if(this.number <= saleNumber[y]) {
-                            content.times = setInterval(progress,50);
-                            function progress() {
-                                content.number++;
-                                $(".progress-bar").val(content.number);
-                                if(content.number >= progNumber[y]) {
-                                    clearInterval(content.times);
-                                }
-                            }
-                            progress();
-                        }
-					}
-                };
-            }
+
         }
 	}
 </script>
