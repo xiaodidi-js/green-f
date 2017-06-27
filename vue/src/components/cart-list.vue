@@ -18,7 +18,8 @@
 				<div class="format" v-if="pfname == ''">&nbsp;</div>
 				<div class="format" v-else>{{ pfname }}</div>
 				<div class="money">
-					<label class="unit">¥</label>{{ pprice }}
+					<label class="unit">¥</label>
+					<label>{{ pprice }}</label>
 				</div>
 				<div class="del" v-show="mode === 1" @click.stop="setDel()"></div>
 				<div class="status">

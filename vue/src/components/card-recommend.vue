@@ -26,7 +26,7 @@
 		</div>
 	</template>
 	<div class="nothings" v-else>
-		<span>—————&nbsp;&nbsp;暂时没有推荐商品&nbsp;&nbsp;—————</span>
+		<span>暂时没有推荐商品~~~</span>
 	</div>
 </template>
 
@@ -233,3 +233,4 @@
 	}
 
 </style>
+

@@ -40,7 +40,7 @@
 		</div>
 	</div>
 	<!-- 回到顶部 -->
-	<div class="goto" @click="todo()"></div>
+	<div class="goto-type" @click="todo()"></div>
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
 </template>
@@ -122,7 +122,9 @@
         },
         methods: {
             todo() {
-				$(".cla-message").scrollTop(0);
+				$(".cla-message").css({
+                    "transition": "0.5s",
+                }).scrollTop(0);
 			},
             onToure:function() {
                 var content = this;
@@ -172,6 +174,9 @@
                 this.dtype = type;
                 sessionStorage.setItem('number',this.dtype);
                 this.menuIndex = type;
+                $(".cla-message").css({
+					"transition": "0.5s",
+				}).scrollTop(0);
             },
             filters: {
 
@@ -632,13 +637,13 @@
 		-webkit-transition:background .5s;
 	}
 
-	.goto {
+	.goto-type {
 		width:3.7rem;
 		height:3.7rem;
 		background: url(../images/img13.png) no-repeat;
 		background-size: 100%;
 		position: fixed;
-		right:10px;
+		right: 25px;
 		bottom: 6.5rem;
 		z-index:1000;
 		display:block;

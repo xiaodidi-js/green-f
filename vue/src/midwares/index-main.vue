@@ -61,12 +61,12 @@
             this.main();
             $(window).scroll(function() {
                 if($(window).scrollTop() >= 350) {
-                    $(".goto_top").fadeIn(500);
+                    $(".goto").fadeIn(500);
                 } else {
-                    $(".goto_top").stop(true,true).fadeOut(500);
+                    $(".goto").stop(true,true).fadeOut(500);
                 }
             });
-            $(".goto_top").click(function(){
+            $(".goto").click(function(){
                 $("html,body").animate({
                     scrollTop:0
                 },200);

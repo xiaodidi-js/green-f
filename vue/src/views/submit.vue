@@ -581,16 +581,21 @@
                         scoreNumber: this.scoreNumber,
                         paysum:this.lastPaySum,
                         tips:this.memo,
-                        openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
+						openid: 'os0CqxBBANhLuBLTsViL3C0zDlNs',//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                         pshonse:this.shonse,
                         gift:{'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                     };
+                    console.log(pdata);
                     this.$http.post(localStorage.apiDomain + 'public/index/user/getSubmitOrder',pdata).then((response)=>{
+                        console.log(response.data);
                         if(response.data.status === 1) {
                             this.clearSel();
                             this.$router.replace('order/detail/' + response.data.oid);
                             this.loadingShow = false;
-                        }else if(response.data.status === -1) {
+                        } else if (response.data.status == 0) {
+							alert(response.data.info);
+							this.$router.go({name:'cart'});
+						} else if(response.data.status === -1) {
                             this.loadingShow = false;
                             this.toastMessage = response.data.info;
                             this.toastShow = true;

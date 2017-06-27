@@ -60,12 +60,10 @@
 				<template style="clear: both;"></template>
 			</template>
 		</div>
-
-		<div class="footer-list">
-			—————&nbsp;&nbsp;我是有底线的!&nbsp;&nbsp;—————
-        </div>
-
 	</div>
+	<div class="footer-list">
+		—————&nbsp;&nbsp;我是有底线的!&nbsp;&nbsp;—————
+    </div>
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
 
@@ -290,7 +288,6 @@
 		width:100%;
 		clear:both;
 		background: #fff;
-		padding-bottom: 50px;
 	}
 
 	.index-conten .content_main{
@@ -544,6 +541,7 @@
 		color: #bfbfbf;
 		text-align: center;
 		background: #eee;
+		margin-bottom: 50px;
 	}
 
 	/* footer-list end */

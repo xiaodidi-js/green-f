@@ -612,5 +612,35 @@ const routers = {
             require(['./components/card-coupon.vue'], resolve);
         }
     },
+    '/integral-tmpl' : {
+        name:'integral-tmpl',
+        header:true,
+        footer:true,
+        title:'活动',
+        position:3,
+        component (resolve) {
+            require(['./components/integral-tmpl.vue'], resolve);
+        }
+    },
+    '/integral-qiandao' : {
+        name:'integral-qiandao',
+        header:true,
+        footer:true,
+        title:'活动',
+        position:3,
+        component (resolve) {
+            require(['./components/integral-qiandao.vue'], resolve);
+        }
+    },
+    '/integral-arr' : {
+        name:'integral-arr',
+        header:true,
+        footer:true,
+        title:'活动',
+        position:3,
+        component (resolve) {
+            require(['./components/integral-arr.vue'], resolve);
+        }
+    },
 };
 export default routers;

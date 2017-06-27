@@ -12,27 +12,21 @@
     </div>
     <div class="integral-tab">
         <ul id="card">
-            <li class="active" @click="main()">全部积分</li>
-            <li @click="main()">签到积分</li>
-            <li @click="main()">消费积分</li>
+            <li class="active" @click="main('orders')">全部积分</li>
+            <li @click="main('qiandao')">签到积分</li>
+            <li @click="main('orders')">消费积分</li>
         </ul>
     </div>
     <div class="integral-body" id="content">
-        <!-- 全部积分 -->
-        <template v-for="item in allList">
-            <div class="body-list">
-                <ul>
-                    <li>
-                        <div class="all-date">
-                            <p v-if="item.type == 'orders'">消费积分</p>
-                            <p v-else>签到积分</p>
-                            <p>{{ item.createtime | time }}</p>
-                        </div>
-                        <div class="add-number">{{ item.amount }}</div>
-                    </li>
-                </ul>
-            </div>
-        </template>
+        <div><!-- 所有积分 -->
+            <arr :list="allList"></arr>
+        </div>
+        <div><!-- 签到积分 -->
+            <qiandao :list="allList"></qiandao>
+        </div>
+        <div><!-- 消费积分 -->
+            <orders :list="allList"></orders>
+        </div>
     </div>
 </template>
 
@@ -40,13 +34,20 @@
     import {formatDate} from '../filters/date.js';
     import axios from 'axios'
     import qs from 'qs'
+    import orders from 'components/integral-tmpl'
+    import qiandao from 'components/integral-qiandao'
+    import arr from 'components/integral-arr'
 
     export default{
         vuex: {
             actions: {
+
             }
         },
         components: {
+            orders,
+            qiandao,
+            arr
         },
         data() {
             return {
@@ -57,6 +58,7 @@
                 qiandaoList: [],
                 number: 0,
                 qiandaoOK: '点我签到',
+                dtype: '',
             }
         },
         route: {
@@ -83,7 +85,12 @@
             }
         },
         methods: {
-            main: function() {
+            main: function(type) {
+
+                if(this.dtype == type && this.allList) {
+                    return true;
+                }
+                this.dtype = type;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
                 axios({
@@ -235,7 +242,6 @@
     /* integral-body start */
     .integral-body{
         width:100%;
-        margin: 0px 0px 50px;
     }
     .integral-body .body-list{
         margin:10px 10px 0;
@@ -247,7 +253,7 @@
         width: 100%;
     }
     .integral-body .body-list ul li .all-date{
-        width:41%;
+        width:50%;
         float:left;
         font-size:14.5px;
         margin-top: 5px;
@@ -259,10 +265,17 @@
         /*padding:10px 0px;*/
     }
     .integral-body .body-list ul li .add-number{
-        font-size: 28px;
-        float:right;
-        color:#81c429;
-        margin-top: 8px;
+        font-size: 25px;
+        float: right;
+        color: #81c429;
+        width: 43%;
+        overflow: hidden;
+
+
+
+        line-height: 61px;
+        text-align: right;
+        text-overflow: ellipsis;
     }
     #sign{
         display:none;
