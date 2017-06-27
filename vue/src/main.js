@@ -11,9 +11,8 @@ import Env from './config/env';
 import WxJssdk from 'weixin-js-sdk'
 import fetchGet from './libs/util.js'
 import fetchPost from './libs/util.js'
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
-import ElementDefault from 'element-theme-default'
+// import ElementUI from 'element-ui'
+// import 'element-ui/lib/theme-default/index.css'
 
 Vue.use(VueLazy,{
 	preLoad:1.2,
@@ -22,7 +21,7 @@ Vue.use(VueLazy,{
 	attempt:2
 });
 
-Vue.use(ElementUI);
+// Vue.use(ElementUI);
 Vue.use(VueResource);
 Vue.use(VueRouter);
 

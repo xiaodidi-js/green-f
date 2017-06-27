@@ -336,7 +336,7 @@ export default{
 							this.data.order.statext = '用户取消';
 							this.data.order.status = -1;
 							this.btnStatus = false;
-                            document.location.reload();
+                            location.reload();
 						}else if(response.data.status === -1) {
 							this.btnStatus = false;
 							this.toastMessage = response.data.info;

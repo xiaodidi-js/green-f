@@ -17,15 +17,18 @@
 				<!-- 正在抢购/抢购完毕 -->
 				<div class="mes">
 					<div class="name">{{ list.name }}</div>
-					<progress class="progress-bar" max="100" value="30"></progress>
+					<progress class="progress-bar" max="100" value="10"></progress>
 					<div class="desc">已抢购{{ number }}%</div>
 					<div class="money" v-for="money in list.saledata">
-						<label class="unit">¥</label>{{ money.saleprice }}
-						<a class="rush">马上抢</a>
-						<div style="font-size: 12px;">
+						<div style="float:left;">
+							<label class="unit">¥</label>
+							<span>{{ money.saleprice }}</span>
+						</div>
+						<div class="salenub-div">
 							<span>库存:</span>
 							<span class="salenub">{{ money.salenub }}</span>
 						</div>
+						<a class="rush">马上抢</a>
 					</div>
 				</div>
 			</div>
@@ -69,25 +72,24 @@
         methods: {
 		    //抢购进度
             line: function() {
-                var content = this, saleNumber = {}, progNumber = 0;
+                var content = this, saleNumber = {}, progNumber = {};
                 for(var i in this.products[0].arr) {
                     saleNumber = this.products[0].arr[i].saledata;
                     for(var y in saleNumber) {
-                        progNumber = saleNumber[y].salenub;
-                        console.log(saleNumber[y].salenub);
-					}
-                }
-                if(this.number <= 100) {
-                    content.times = setInterval(progress,50);
-                    function progress() {
-                        content.number++ , i++;
-                        $(".progress-bar").val(i);
-                        if(content.number >= 100) {
-                            clearInterval(content.times);
+                        progNumber = progNumber[y];
+                        if(this.number <= saleNumber[y]) {
+                            content.times = setInterval(progress,50);
+                            function progress() {
+                                content.number++;
+                                $(".progress-bar").val(content.number);
+                                if(content.number >= progNumber[y]) {
+                                    clearInterval(content.times);
+                                }
+                            }
+                            progress();
                         }
-                    }
-                    progress();
-                }
+					}
+                };
             }
         }
 	}
@@ -133,19 +135,22 @@
 		vertical-align:top;
 		width:63%;
 		font-size:1.4rem;
+		position: relative;
+		padding-top: 10%;
 	}
 
 	.card-box .mes .name{
 		color: #4D4D4D;
 		line-height: 1.6rem;
 		height: 3.2rem;
-		max-height: 4.2rem;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 		font-weight: normal;
+		position: absolute;
+		top: 0px;
 	}
 
 	.card-box .mes .progress-bar{
@@ -177,10 +182,18 @@
 		color:#FF7486;
 	}
 
-	.card-box .mes .money{
+	.card-box .mes .money {
 		font-size: 2.6rem;
 		color: #F9AD0C;
 		position: relative;
+		width: 100%;
+		height: auto;
+	}
+
+	.card-box .mes .money .salenub-div {
+		font-size: 12px;
+		float:left;
+		margin: 16px 0px 0px 10px;
 	}
 
 	.card-box .mes .money .unit{
@@ -189,9 +202,6 @@
 	}
 
 	.card-box .mes .money .rush{
-		position:absolute;
-		bottom:0;
-		right:0;
 		width:6.2rem;
 		height:2.7rem;
 		font-size:1.2rem;
@@ -200,6 +210,9 @@
 		background: #81c429;
 		border-radius:0.3rem;
 		text-align:center;
+		display: block;
+		float: right;
+		margin-top: 8px;
 	}
 
 	.card-box .mes .money .rush:active{

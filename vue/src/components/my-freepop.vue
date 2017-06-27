@@ -505,7 +505,7 @@
         position: fixed;
         border: 1px solid #ccc;
         left: -1px;
-        bottom: -250px;
+        bottom: -253px;
         overflow-y: auto;
         display: block;
         -webkit-overflow-scrolling: touch;

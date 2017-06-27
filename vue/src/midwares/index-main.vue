@@ -8,7 +8,8 @@
 		<card-rectangle :testarr="data.index_data"></card-rectangle>
 	</div>
 	<!-- 回到顶部 -->
-	<div class="goto_top"></div>
+	<div class="goto"></div>
+
     <!-- toast提示框 -->
     <toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
 </template>
@@ -58,7 +59,6 @@
 		},
         ready() {
             this.main();
-            window.scrollTo(0,0);
             $(window).scroll(function() {
                 if($(window).scrollTop() >= 350) {
                     $(".goto_top").fadeIn(500);
@@ -146,7 +146,7 @@
 </script>
 
 <style scoped>
-	.goto_top {
+	.goto {
 		width:3.7rem;
 		height:3.7rem;
 		background: url(../images/img13.png) no-repeat;

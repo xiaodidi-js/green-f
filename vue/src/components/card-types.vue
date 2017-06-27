@@ -1,6 +1,5 @@
 <template>
 	<div class="type-bg" keep-alive>
-
 		<div type="popup" class="cla-wrapper" id="left_Menu" style="float: left;">
 			<div id="scroller">
 				<div class="menu-left">
@@ -12,23 +11,19 @@
 				</div>
 			</div>
 		</div>
-
-		<div type="popup" class="cla-message" id="right_Menu">
-			<div id="scroller2">
+		<div type="popup" class="cla-message">
+			<div style="overflow-y:auto;">
 				<div class="ele-fixed">
 					<template v-for="item in pdata">
 						<div class="main">
-							<div v-link="{name:'detail',params:{pid:item.id}}">
-
+							<div v-link="{name:'detail',params:{pid:item.id}}"> <!-- v-link="{name:'detail',params:{pid:item.id}}" -->
 								<div class="shotcut" v-if="item.store == 0">
 									<div class="qing">已售罄</div>
 									<div class="shotcut-img" v-lazy:background-image="item.src"></div>
 								</div>
-
 								<div class="shotcut" v-else>
 									<div class="shotcut-img" v-lazy:background-image="item.src"></div>
 								</div>
-
 								<div class="shotcut-txt">
 									<p style="height:35px;width:100%;overflow: hidden;text-overflow: ellipsis;">{{ item.title }}</p>
 									<p class="relative">
@@ -44,14 +39,13 @@
 			</div>
 		</div>
 	</div>
-
+	<!-- 回到顶部 -->
+	<div class="goto" @click="todo()"></div>
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
-
 </template>
 
 <script>
-
     import Scroller from 'vux/src/components/scroller'
     import { setCartStorage,clearAll } from 'vxpath/actions'
     import { cartNums } from 'vxpath/getters'
@@ -96,7 +90,11 @@
                 buyNums: 1,
                 toastMessage: '',
                 toastShow: false,
-                activestu:0
+                activestu:0,
+                intervalTime_left: null,
+                intervalTime_right: null,
+                myScroll_left: null,
+                myScroll_right: null,
             }
         },
         created () {
@@ -123,45 +121,46 @@
             this.onToure();
         },
         methods: {
+            todo() {
+				$(".cla-message").scrollTop(0);
+			},
             onToure:function() {
-                var myScroll_left;
-                var myScroll_right;
-                var intervalTime_left = null , intervalTime_right = null;
+                var content = this;
                 try {
-                    intervalTime_left = setInterval(function() {
+                    content.intervalTime_left = setInterval(function() {
                         var resultContentH = $("#left_Menu").height();
                         if (resultContentH > 0) {
                             $("#left_Menu").height(resultContentH);
                             setTimeout(function () {
-                                clearInterval(intervalTime_left);
-                                myScroll_left = new IScroll('#left_Menu', {
+                                clearInterval(content.intervalTime_left);
+                                content.myScroll_left = new IScroll('#left_Menu', {
                                     vScroll: true,
                                     mouseWheel: true,
                                     vScrollbar: false,
                                     probeType: 2,
                                     click: true
                                 });
-                                myScroll_left.refresh();
+                                content.myScroll_left.refresh();
                             }, 100);
                         }
                     } ,10);
-                    intervalTime_right = setInterval(function() {
-                        var resultContentH = $("#left_Menu").height();
-                        if (resultContentH > 0) {
-                            $("#left_Menu").height(resultContentH);
-                            setTimeout(function () {
-                                clearInterval(intervalTime_right);
-                                myScroll_right = new IScroll('#right_Menu', {
-                                    vScroll: true,
-                                    mouseWheel: true,
-                                    vScrollbar: false,
-                                    probeType: 2,
-                                    click: true
-                                });
-                                myScroll_right.refresh();
-                            }, 100);
-                        }
-                    } ,10);
+//                    content.intervalTime_right = setInterval(function() {
+//                        var resultContentH = $("#left_Menu").height();
+//                        if (resultContentH > 0) {
+//                            $("#left_Menu").height(resultContentH);
+//                            setTimeout(function () {
+//                                clearInterval(content.intervalTime_right);
+//                                content.myScroll_right = new IScroll('#right_Menu', {
+//                                    vScroll: true,
+//                                    mouseWheel: true,
+//                                    vScrollbar: false,
+//                                    probeType: 2,
+//                                    click: true
+//                                });
+//                                content.myScroll_right.refresh();
+//                            }, 100);
+//                        }
+//                    } ,10);
 				} catch (e) {
                     throw e;
 				}
@@ -185,14 +184,14 @@
                     if (response.data.status == 1) {
                         sessionStorage.setItem("pdata",JSON.stringify(response.data.info.list));
                         this.pdata = JSON.parse(sessionStorage.getItem("pdata"));
-                        console.log(this.pdata);
                     }
+                    $("#scroller2").css({
+						"transform" : "translate(0px, 0px)"
+					});
+
                 }).catch(function(e) {
                     console.log(e);
 				});
-            },
-            comfirmFun: function (cid) {
-
             },
             goCart: function(data) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
@@ -361,12 +360,9 @@
 	.cla-message .ele-fixed {
 		width: 100%;
 		height: calc(100% - 100px);
-		overflow:hidden;
-		overflow-y:  auto;
+		/*overflow:hidden;*/
+		/*overflow-y:  auto;*/
 		margin-bottom: 112px;
-		transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1);
-		transition-duration: 0ms;
-		transform: translate(0px, 0px) translateZ(0px);
 	}
 
 	.cla-message .main {
@@ -634,6 +630,18 @@
 		display:block;
 		transition:background .5s;
 		-webkit-transition:background .5s;
+	}
+
+	.goto {
+		width:3.7rem;
+		height:3.7rem;
+		background: url(../images/img13.png) no-repeat;
+		background-size: 100%;
+		position: fixed;
+		right:10px;
+		bottom: 6.5rem;
+		z-index:1000;
+		display:block;
 	}
 
 </style>

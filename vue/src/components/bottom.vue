@@ -28,7 +28,6 @@
 				<div class="name public-color">个人中心</div>
 			</div>
 		</div>
-		<input type="color" />
 	</div>
 </template>
 
@@ -111,6 +110,11 @@
 		left:0;
 		bottom:0;
 		z-index:10;
+		background-color: #fff;
+		box-shadow: 0 0 10px 0 rgba(155,143,143,0.6);
+		-webkit-box-shadow: 0 0 10px 0 rgba(155,143,143,0.6);
+		-moz-box-shadow: 0 0 10px 0 rgba(155,143,143,0.6);
+
 	}
 
 	.wrapper .group-cart{
