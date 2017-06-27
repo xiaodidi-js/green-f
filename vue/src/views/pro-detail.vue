@@ -359,6 +359,9 @@
                             _self.toastShow = true;
                             return false;
                         } else {
+
+
+
 							// 分享好友
                             WxJssdk.onMenuShareAppMessage({
                                 title: this.data.name, // 分享标题

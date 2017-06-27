@@ -20,27 +20,35 @@
 		</div>
 
 		<div class="content">
-			<template  v-for="item in columns">
-				<template v-if="item.nowsale == 1">
-					<div class="box-list" v-for="list in item.arr" v-link="{name:'detail',params:{pid:list.shopid}}">
-						<p class="main-title">秒杀价</p>
-						<template v-for="mon in list.saledata">
-							<p class="main-price">
-								<i style="font-size: 1.2rem;">￥</i>
-								<i style="font-size: 2.3rem;">{{ mon.saleprice }}</i>
-							</p>
+			<div style="width:1850px;">
+				<div type="popup" class="cla-wrapper" id="menu" style="float: left;">
+					<div id="scroller">
+						<template  v-for="item in columns">
+							<template v-if="item.nowsale == 1">
+								<div class="box-list" v-for="list in item.arr" v-link="{name:'detail',params:{pid:list.shopid}}">
+									<p class="main-title">秒杀价</p>
+									<template v-for="mon in list.saledata">
+										<p class="main-price">
+											<i style="font-size: 1.2rem;">￥</i>
+											<i style="font-size: 2.3rem;">{{ mon.saleprice }}</i>
+										</p>
+									</template>
+									<div class="main-des">{{ list.name }}</div>
+									<div style="width:90%;margin:7px auto;">
+										<div class="price-img" v-lazy:background-image="list.shotcut"></div>
+									</div>
+								</div>
+							</template>
 						</template>
-						<div class="main-des">{{ list.name }}</div>
-						<div style="width:90%;margin:7px auto;">
-							<div class="price-img" v-lazy:background-image="list.shotcut"></div>
-						</div>
 					</div>
-				</template>
-			</template>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
 <script>
+
+    import Scroller from 'vux/src/components/scroller'
 
     export default{
         props: {
@@ -65,7 +73,7 @@
             }
         },
         components: {
-
+            Scroller
 		},
         ready() {
             let _self = this;
@@ -79,6 +87,7 @@
                     }
                 }
             });
+            this.onToure();
         },
         methods: {
             setTime:function() {
@@ -90,6 +99,30 @@
                         _self.$router.go({name:'index'});
                     }
                 },1000);
+            },
+            onToure:function() {
+                var timer, myScroll;
+                try {
+                    timer = setInterval(function() {
+                        var result = $("#menu").width();
+                        if (result > 0) {
+                            $("#menu").width(result);
+                            setTimeout(function () {
+                                clearInterval(timer);
+                                myScroll = new IScroll('#menu', {
+                                    hScroll: true,
+                                    mouseWheel: true,
+                                    vScrollbar: false,
+                                    probeType: 2,
+                                    click: true
+                                });
+                                myScroll.refresh();
+                            }, 100);
+                        }
+                    } ,10);
+                } catch (e) {
+                    throw e;
+                }
             }
         },
         computed: {
@@ -291,9 +324,17 @@
 		height: 100%;
 		background: #f5f9ea;
 		clear: both;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		-moz-overflow-scrolling: touch;
+		-ms-overflow-scrolling: touch;
+		-o-overflow-scrolling: touch;
+		overflow-scrolling: touch;
 	}
 	.content .box-list {
-		width: 32%;
+		width: 102px;
+
+
 		height: auto;
 		background: #fff;
 		float: left;

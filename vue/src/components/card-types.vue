@@ -174,9 +174,9 @@
                 this.dtype = type;
                 sessionStorage.setItem('number',this.dtype);
                 this.menuIndex = type;
-                $(".cla-message").css({
-					"transition": "0.5s",
-				}).scrollTop(0);
+//                $(".cla-message").css({
+//					"transition": "0.5s",
+//				}).scrollTop(0);
             },
             filters: {
 
