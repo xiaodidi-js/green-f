@@ -1,5 +1,3 @@
-
-
 <template>
 	<div class="addresses_table">
 		<ul id="card">
@@ -11,7 +9,6 @@
 			</li>
 		</ul>
 	</div>
-
 	<div id="content">
 		<!-- 自提地址 -->
 		<div id="ziti">
@@ -185,15 +182,15 @@
 			},
             //自提点选择
             setChosen: function(obj){
-                if(typeof obj==='object'){
+                if(typeof obj==='object') {
                     let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                     ustore = JSON.parse(ustore);
                     let pids = '';
-                    if(this.$parent.cartIds.length>0){
+                    if(this.$parent.cartIds.length > 0) {
                         pids = this.$parent.cartIds.join(',');
                     }
                     let pdata = {uid:ustore.id,token:ustore.token,type:this.$parent.deliverType,ids:pids,area:obj.area};
-                    this.$http.post(localStorage.apiDomain+'public/index/user/addresschosen',pdata).then((response)=>{
+                    this.$http.post(localStorage.apiDomain + 'public/index/user/addresschosen',pdata).then((response)=>{
                         if(response.data.status === 1) {
                             this.chosen = obj.id;
                             this.$parent.data.address = obj;
@@ -257,9 +254,8 @@
                 ustore = JSON.parse(ustore);
                 let pdata = {uid:ustore.id,token:ustore.token,state:0,addressid:id};
                 var _this = this;
-                this.$http.put(localStorage.apiDomain+'public/index/Usercenter/addressmoren',pdata).then((response) => {
+                this.$http.put(localStorage.apiDomain + 'public/index/Usercenter/addressmoren',pdata).then((response) => {
                     if(response.data.status === 1) {
-                        console.log(response.data);
                         for(let i = 0;i < this.chosens.length; i++) {
                             if(i != index && this.chosens[i].is_default != 0) {
                                 this.chosens[i].is_default = 0;

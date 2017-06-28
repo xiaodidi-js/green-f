@@ -350,6 +350,7 @@
                     };
                     this.$http.post(localStorage.apiDomain + 'public/index/user/addresschosen', pdata).then((response) => {
                         if (response.data.status === 1) {
+                            console.log(response.data);
                             this.chosen = obj.id;
                             this.$parent.data.address = obj;
                             this.$parent.data.tmp_address = obj;

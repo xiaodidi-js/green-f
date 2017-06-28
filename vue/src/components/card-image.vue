@@ -45,10 +45,8 @@
 		},
 		ready () {
 			this.message();
-
 			$(window).scroll(function() {
                 var top = $(".cardImage").scrollTop(150);
-                console.log(top);
 			});
 
 		},

@@ -21,7 +21,7 @@
         </div>
     </div>
     <swiper :list="banners" :show-desc-mask="false" :aspect-ratio="650/1242" dots-position="center"
-            auto dots-class="dots-my" style="width: 100%;clear:both;top:50px;"></swiper>
+            auto dots-class="dots-my" style="width: 100%;clear:both;top:36px;"></swiper>
 </template>
 
 <script>
@@ -30,6 +30,8 @@
     import Scroller from 'vux/src/components/scroller'
     import Toast from 'vux/src/components/toast'
     import { myActive,mySearch,commitData } from 'vxpath/actions'
+    import axios from 'axios'
+    import qs from 'qs'
 
     export default{
         props: {
@@ -61,9 +63,12 @@
         },
         methods: {
             ban: function () {
-                this.$http.get(localStorage.apiDomain + 'public/index/index/mainInfo').then((response)=>{
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/index/mainInfo',
+                }).then((response) => {
                     this.banners = response.data.banners;
-                },(response)=>{
+                },(response) => {
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                 });
@@ -76,8 +81,10 @@
                 }
             },
             goSearch () {
-                var _self = this;
-                this.$http.get(localStorage.apiDomain + 'public/index/index/searchshop?shopname=' + this.searchKey).then((response)=>{
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/index/searchshop?shopname=' + this.searchKey,
+                }).then((response) => {
                     if(response.data.status == 1) {
                         this.$router.go({
                             name:'search',
@@ -89,8 +96,7 @@
                         alert(response.data.info);
                         this.searchKey = '';
                     }
-
-                },(response)=>{
+                },(response) => {
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                 });

@@ -702,23 +702,26 @@
 				this.guige.$set(index,id);
 				this.guigeName.$set(index,name);
 				if(!this.checkGuige()) return;
-				this.$http.get(localStorage.apiDomain+'public/index/index/propertyprice/pid/'+this.$route.params.pid+'/val/'+this.guige.join(',')).then((response)=>{
-					if(response.data.status === 1) {
-						if(this.data.is_promote) {
-							this.data.promote_price = response.data.price;
-						} else {
-							this.data.price = response.data.price;
-						}
-						this.proNums = response.data.store;
-						this.buyNums = 1;
-					}else{
-						this.toastMessage = response.data.info;
-						this.toastShow = true;
-					}
-				},(response)=>{
-					this.toastMessage = '商品信息获取失败';
-					this.toastShow = true;
-				});
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain+'public/index/index/propertyprice/pid/'+this.$route.params.pid+'/val/'+this.guige.join(','),
+                }).then((response) => {
+                    if(response.data.status === 1) {
+                        if(this.data.is_promote) {
+                            this.data.promote_price = response.data.price;
+                        } else {
+                            this.data.price = response.data.price;
+                        }
+                        this.proNums = response.data.store;
+                        this.buyNums = 1;
+                    }else{
+                        this.toastMessage = response.data.info;
+                        this.toastShow = true;
+                    }
+                },(response) => {
+                    this.toastMessage = '商品信息获取失败~';
+                    this.toastShow = true;
+                });
 			},
 			addNums: function(){
 			    if(this.data.activepay == 0) {

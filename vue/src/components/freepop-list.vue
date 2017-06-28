@@ -100,7 +100,6 @@
 		},
 		methods: {
 			changeActive: function(evt){
-//                this.oneGift(this.choseId,this.sumMoney);
 			    this.ischonse = true;
 				evt.preventDefault();
 				evt.stopPropagation();

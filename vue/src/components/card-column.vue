@@ -332,9 +332,7 @@
 		overflow-scrolling: touch;
 	}
 	.content .box-list {
-		width: 102px;
-
-
+		width: 120px;
 		height: auto;
 		background: #fff;
 		float: left;

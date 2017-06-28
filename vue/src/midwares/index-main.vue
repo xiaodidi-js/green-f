@@ -1,7 +1,14 @@
 <template>
+
+	<div class="post">
+		<div class="loading" v-if="loading">
+			Loading...
+		</div>
+	</div>
+
 	<!-- 轮播图 -->
 	<banners></banners>
-	<div class="sub-content" style="position:relative;top:50px;">
+	<div class="sub-content" style="position:relative;top:36px;">
 		<!-- 显示抢购 -->
 		<card-column :columns="maincolumns" keep-alive></card-column>
 		<!-- 热销产品排行榜 -->
@@ -54,13 +61,16 @@
                 maincolumns:[],
                 searchKey: '',
 				arr: {},
-				tuijian: 1
+				tuijian: 1,
+				loading: false,
 			}
 		},
         ready() {
             this.main();
+		    var content = this;
             $(window).scroll(function() {
                 if($(window).scrollTop() >= 350) {
+                    content.commitData({ target: 'scroll', data: $(window).scrollTop() });
                     $(".goto").fadeIn(500);
                 } else {
                     $(".goto").stop(true,true).fadeOut(500);
@@ -72,6 +82,9 @@
                 },200);
             });
         },
+        mounted: {
+
+		},
         filters: {
             timeline: function (value) {
                 let d = new Date(parseInt(value) * 1000);
@@ -85,8 +98,16 @@
             this.follow();
             this.timeline();
     	},
-        computed:{
+        computed: {
 
+		},
+		watch: {
+//		    '$route' : function() {
+//                let content = this;
+//                if(localStorage.getItem("iData")) {
+//                    content.data = JSON.parse(localStorage.getItem("iData"));
+//                };
+//			}
 		},
         methods: {
 		    main () {
@@ -94,6 +115,7 @@
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/index',
                 }).then((response) => {
+                    this.loading = true;
                     localStorage.setItem("iData",JSON.stringify(response.data));
                     if(localStorage.getItem("iData") != '') {
                         this.data = JSON.parse(localStorage.getItem("iData"));
