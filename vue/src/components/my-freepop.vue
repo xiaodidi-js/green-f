@@ -23,6 +23,7 @@
         <div class="btn" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</div>
     </div>
 
+    <!-- 弹出选择层 -->
     <div class="popdown" v-show="popdown" @click="downpop"></div>
     <div class="option-list" id="left_Menu">
         <div class="scroll" id="scroller">
@@ -45,7 +46,6 @@
     <toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
     <!-- loading加载框 -->
     <loading :show="loadingShow" :text="loadingMessage"></loading>
-
 </template>
 
 <script>
@@ -176,7 +176,10 @@
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
                 var _this = this;
-                this.$http.get(localStorage.apiDomain + 'public/index/Usercenter/myaddress/uid/' + ustore.id + '/token/' + ustore.token + '/state/0/sinceid/' + id).then((response) => {
+                axios({
+                    method: 'get',
+                    url: localStorage.apiDomain + 'public/index/Usercenter/myaddress/uid/' + ustore.id + '/token/' + ustore.token + '/state/0/sinceid/' + id,
+                }).then((response) => {
                     if (response.data.status === 1) {
                         var tmp = this.address.filter(function (item) {
                             return item.pid == id;
@@ -203,7 +206,7 @@
                         this.toastMessage = response.data.info;
                         this.toastShow = true;
                     }
-                }, (response) => {
+                },(response) => {
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                 });
@@ -334,27 +337,45 @@
         },
         events: {
             setChosen: function (obj) {
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), pids = '', pdata = {};
+                ustore = JSON.parse(ustore);
                 if (typeof obj === 'object') {
-                    let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                    ustore = JSON.parse(ustore);
-                    let pids = '';
                     if (this.$parent.cartIds.length > 0) {
                         pids = this.$parent.cartIds.join(',');
                     }
-                    let pdata = {
+                    pdata = {
                         uid: ustore.id,
                         token: ustore.token,
                         type: this.$parent.deliverType,
                         ids: pids,
-                        area: obj.area
+                        area: obj.area,
+                        is_default: obj.is_default
                     };
                     this.$http.post(localStorage.apiDomain + 'public/index/user/addresschosen', pdata).then((response) => {
                         if (response.data.status === 1) {
-                            console.log(response.data);
+                            if(obj.is_default != 0) {
+                                obj.is_default = 0;
+                            }
+                            obj.is_default = 1;
                             this.chosen = obj.id;
                             this.$parent.data.address = obj;
                             this.$parent.data.tmp_address = obj;
                             this.$parent.freight = response.data.freight;
+
+                            let odata = {uid:ustore.id,token:ustore.token,state:0,addressid:obj.id};
+                            this.$http.put(localStorage.apiDomain + 'public/index/Usercenter/addressmoren',odata).then((response) => {
+                                if(response.data.status === 1) {
+                                    if(obj.is_default != 0) {
+                                        obj.is_default = 0;
+                                        console.log(131);
+                                    }
+                                    obj.is_default = 1;
+                                    console.log(131);
+                                }
+                            },(response)=>{
+                                this.$dispatch('showMes','网络开小差了~');
+                            });
+
                         } else if (response.data.status === -1) {
                             this.$parent.toastMessage = response.data.info;
                             this.$parent.toastShow = true;

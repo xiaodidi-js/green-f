@@ -5,7 +5,7 @@
 		</div>
 		<div class="addcon" @click="changeActive()" v-if="$parent.getType=='express'">
 			<div class="name nowrap">
-				<div class="default" v-if="obj.is_default === 1">默认</div>
+				<!--<div class="default" v-if="obj.is_default === 1">默认</div>-->
 				<p style="line-height: 22px;">
 					<span class="address-left">地址:</span>
 					<span>{{ obj.name }}</span>
@@ -21,7 +21,7 @@
 		</div>
 		<div class="addcon noicon" @click="changeActive" v-else>
 			<div class="name nowrap">
-				<div class="default" v-if="obj.is_default === 1">默认</div>
+				<!--<div class="default" v-if="obj.is_default === 1">默认</div>-->
 				<p style="line-height: 22px;">
 					<span class="address-left">地址:</span>
 					<span>{{ obj.name }}</span>

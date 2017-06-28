@@ -25,10 +25,10 @@
 								<label class="unit">¥</label>
 								<span>{{ money.saleprice }}</span>
 							</div>
-							<div class="salenub-div">
-								<span>库存:</span>
-								<span class="salenub">{{ money.salenub }}</span>
-							</div>
+							<!--<div class="salenub-div">-->
+								<!--<span>库存:</span>-->
+								<!--<span class="salenub">{{ money.salenub }}</span>-->
+							<!--</div>-->
 							<a class="rush">马上抢</a>
 						</div>
 					</template>

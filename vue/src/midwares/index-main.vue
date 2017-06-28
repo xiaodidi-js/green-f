@@ -75,6 +75,11 @@
                 } else {
                     $(".goto").stop(true,true).fadeOut(500);
                 }
+
+                if($(window).scrollTop() == 0) {
+                    $(window).scrollTop(this.$store.state.scroll);
+                }
+
             });
             $(".goto").click(function(){
                 $("html,body").animate({

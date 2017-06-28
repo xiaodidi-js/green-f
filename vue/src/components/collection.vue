@@ -167,9 +167,9 @@
 				}
 			},
 			setMulitpleDel: function(){
-				if(this.editMode!==1){
+				if(this.editMode !== 1) {
 					return false;
-				}else if(this.choseArr.length<=0){
+				}else if(this.choseArr.length <= 0) {
 					return false;
 				}
 				this.confirmShow = true;
@@ -178,23 +178,24 @@
 				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 				ustore = JSON.parse(ustore);
 				let durl = '';
-				if(this.delItem>0){
-					durl = localStorage.apiDomain+'public/index/user/usercollection/uid/'+ustore.id+'/token/'+ustore.token+'/type/0/cid/'+this.delItem;
+				if(this.delItem > 0) {
+					durl = localStorage.apiDomain + 'public/index/user/usercollection/uid/' + ustore.id + '/token/' + ustore.token + '/type/0/cid/' + this.delItem;
 				}else{
-					durl = localStorage.apiDomain+'public/index/user/usercollection/uid/'+ustore.id+'/token/'+ustore.token+'/type/1/cid/'+this.choseArr.join(',');
+					durl = localStorage.apiDomain + 'public/index/user/usercollection/uid/' + ustore.id + '/token/' + ustore.token + '/type/1/cid/' + this.choseArr.join(',');
 				}
 				this.$http.delete(durl).then((response)=>{
-					if(response.data.status===1){
-						if(this.delItem>0){
+					if(response.data.status === 1) {
+						if(this.delItem > 0) {
 							this.$dispatch('delData',this.delItem);
 						}else{
 							this.$dispatch('delData',this.choseArr);
 							this.choseArr = [];
 						}
 						this.delItem = 0;
-					}else if(response.data.status===-1){
+					} else if(response.data.status === -1) {
 						this.delItem = 0;
-						this.$dispatch('showMes',response.data.info);
+//						this.$dispatch('showMes',response.data.info);
+						alert(response.data.info);
 						let context = this;
 						setTimeout(function(){
 							context.clearAll();

@@ -175,7 +175,7 @@
 			}
 		},
 		events: {
-			setChosen: function(obj){
+			setChosen: function(obj) {
 				if(typeof obj === 'object') {
 					this.chosen = obj.id;
 					this.$parent.couponObj = obj;
@@ -189,7 +189,7 @@
 					ustore = JSON.parse(ustore);
 					this.$http.get(localStorage.apiDomain+'public/index/user/couponlist/uid/'+ustore.id+'/token/'+ustore.token+'/price/'+this.getPrice).then((response)=>{
 						if(response.data.status===1){
-							if(response.data.coupon.length<=0){
+							if(response.data.coupon.length <= 0) {
 								this.showTips = '暂无可用优惠券';
 							}else{
 								this.showStatus = false;

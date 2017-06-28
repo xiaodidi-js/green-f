@@ -1,3 +1,99 @@
+
+<template>
+	<div class="card-box" @click="changeActive" :class="className" v-link="{name:'detail',params:{pid:pid}}">
+		<div class="img">
+			<img :src="img" alt="" style="width:100%;height: 100%;" />
+		</div>
+		<div class="mes">
+			<div class="name">{{ pname }}</div>
+			<div class="money">
+				<label class="unit">¥</label>{{ pprice }}
+			</div>
+			<div class="status">
+				<label v-if="pstore>=1">有货</label><label v-else>缺货</label>
+				<div class="del" v-show="mode !== 1" @click="setDel"></div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+	export default{
+		props: {
+			mode: {
+				type: Number,
+				required: true
+			},
+			chosen: {
+				type: Array,
+				twoWay: true,
+				required: true
+			},
+			cid: {
+				type: Number,
+				required: true
+			},
+			pid: {
+				type: Number,
+				required: true
+			},
+			img: {
+				type: String,
+				required: true
+			},
+			pname: {
+				type: String,
+				required: true
+			},
+			pprice: {
+				type: [Number,String],
+				required: true
+			},
+			pstore: {
+				type: Number,
+				default: 0
+			}
+		},
+		data() {
+			return {
+				
+			}
+		},
+		computed: {
+			className: function(){
+				const obj = {};
+				if(this.chosen.length>0&&this.chosen.indexOf(this.cid)>=0&&this.mode===1){
+					obj['active'] = true;
+				}else{
+					obj['active'] = false;
+				}
+				return obj;
+			}
+		},
+		methods: {
+			changeActive: function(evt){
+				if(this.mode!==1){
+					return false;
+				}
+				evt.preventDefault();
+				evt.stopPropagation();
+				let getIndex = this.chosen.indexOf(this.cid);
+				if(getIndex>=0){
+					this.chosen.splice(getIndex,1);
+				}else{
+					this.chosen.push(this.cid);
+				}
+			},
+			setDel: function(evt){
+				evt.preventDefault();
+				evt.stopPropagation();
+				this.$dispatch('setDel',this.cid);
+			}
+		}
+	}
+</script>
+
+
 <style scoped>
 	.card-box{
 		width:90%;
@@ -103,97 +199,3 @@
 		background-repeat:no-repeat;
 	}
 </style>
-
-<template>
-	<div class="card-box" @click="changeActive" :class="className" v-link="{name:'detail',params:{pid:pid}}">
-		<div class="img">
-			<img :src="img" alt="" style="width:100%;height: 100%;" />
-		</div>
-		<div class="mes">
-			<div class="name">{{ pname }}</div>
-			<div class="money">
-				<label class="unit">¥</label>{{ pprice }}
-			</div>
-			<div class="status">
-				<label v-if="pstore>=1">有货</label><label v-else>缺货</label>
-				<div class="del" v-show="mode !== 1" @click="setDel"></div>
-			</div>
-		</div>
-	</div>
-</template>
-
-<script>
-	export default{
-		props: {
-			mode: {
-				type: Number,
-				required: true
-			},
-			chosen: {
-				type: Array,
-				twoWay: true,
-				required: true
-			},
-			cid: {
-				type: Number,
-				required: true
-			},
-			pid: {
-				type: Number,
-				required: true
-			},
-			img: {
-				type: String,
-				required: true
-			},
-			pname: {
-				type: String,
-				required: true
-			},
-			pprice: {
-				type: [Number,String],
-				required: true
-			},
-			pstore: {
-				type: Number,
-				default: 0
-			}
-		},
-		data() {
-			return {
-				
-			}
-		},
-		computed: {
-			className: function(){
-				const obj = {};
-				if(this.chosen.length>0&&this.chosen.indexOf(this.cid)>=0&&this.mode===1){
-					obj['active'] = true;
-				}else{
-					obj['active'] = false;
-				}
-				return obj;
-			}
-		},
-		methods: {
-			changeActive: function(evt){
-				if(this.mode!==1){
-					return false;
-				}
-				evt.preventDefault();
-				evt.stopPropagation();
-				let getIndex = this.chosen.indexOf(this.cid);
-				if(getIndex>=0){
-					this.chosen.splice(getIndex,1);
-				}else{
-					this.chosen.push(this.cid);
-				}
-			},
-			setDel: function(evt){
-				evt.preventDefault();
-				evt.stopPropagation();
-				this.$dispatch('setDel',this.cid);
-			}
-		}
-	}
-</script>

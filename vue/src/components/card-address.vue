@@ -13,30 +13,28 @@
 		<!-- 自提地址 -->
 		<div id="ziti">
 			<div class="main_ziti" id="Ele-chonse">
-				<div class="address" :class="{'isActive':item.is_default === 1}" v-for="item in chosens">
-					<ul class="address_list" style="width: 85%;" @click="isDefault($index,item.id)">
-						<li>
-							<span class="left-title">自提点：</span>
-							<span class="right-title">{{ item.name }}</span>
-						</li>
-						<li>
-							<span class="left-title">电话:</span>
-							<span class="right-title">{{ item.tel }}</span>
-						</li>
-						<li>
-							<span class="left-title">收货地址：</span>
-							<span class="right-title">{{ item.address  }}</span>
-						</li>
-						<li>
-							<span class="left-title">服务范围：</span>
-							<span class="right-title">{{ item.address  }}</span>
-						</li>
-					</ul>
-					<div class="yuan">
-						<icon type="success" v-show="item.is_default === 1"></icon>
-						<icon type="circle" v-show="item.is_default !== 1"></icon>
+				<template v-for="item in chosens">
+					<div class="address" :class="{'isActive':item.is_default === 1}">
+						<ul class="address_list" style="width: 85%;" @click="isDefault($index,item.id)">
+							<li>
+								<span class="left-title">自提点：</span>
+								<span class="right-title">{{ item.name }}</span>
+							</li>
+							<li>
+								<span class="left-title">电话:</span>
+								<span class="right-title">{{ item.tel }}</span>
+							</li>
+							<li>
+								<span class="left-title">收货地址：</span>
+								<span class="right-title">{{ item.address  }}</span>
+							</li>
+						</ul>
+						<div class="yuan">
+							<icon type="success" v-show="item.is_default === 1"></icon>
+							<icon type="circle" v-show="item.is_default !== 1"></icon>
+						</div>
 					</div>
-				</div>
+				</template>
 			</div>
 			<div class="comfire-chonse">
 				<x-button text="确认"></x-button>
@@ -92,9 +90,6 @@
 			XButton,
 			Confirm
 		},
-        computed : {
-
-		},
 		props: {
 			addresses: {
 				type: Array,
@@ -118,22 +113,14 @@
 		ready() {
 			this.siblingsDom();
 			this.chosenfun();
-//			var act = $("#card").find("li").eq(0).attr('class');
-//			if(act == 'active') {
-//				$("#card").find("li").eq(0).removeClass("active");
-//			} else {
-//                $("#card").find("li").eq(1).addClass(this.$store.state.text);
-//			}
 		},
 		methods: {
 			isActiveFun: function() {
-				var ele = document.getElementById("Ele-chonse");
-				var eleAddress = ele.children;
-				var _this = this;
-				for(let i = 0; i < eleAddress.length; i++) {
+				var ele = document.getElementById("Ele-chonse"), eleAddress = ele.children, _this = this, i;
+				for(i = 0; i < eleAddress.length; i++) {
 					eleAddress[i].index = i;
 					eleAddress[i].onclick = function(){
-						this.className = "isActive";
+						this.className = "address isActive";
 						//同辈元素互斥
 						_this.siblings(this,function(){
 							this.className = "address";
@@ -143,10 +130,9 @@
 			},
 		    //自提点
 			chosenfun: function() {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), _this = this;
                 ustore = JSON.parse(ustore);
                 this.getType = this.$parent.deliverType;
-                var _this = this;
                 this.$http.get(localStorage.apiDomain+'public/index/user/addresschosen/uid/' + ustore.id + '/token/' + ustore.token + '/type/' + this.getType).then((response)=>{
                     if(response.data.status === 1) {
                         console.log(response.data);
@@ -250,10 +236,9 @@
                 }
             },
             isDefault: function(index,id) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), _this = this;
                 ustore = JSON.parse(ustore);
                 let pdata = {uid:ustore.id,token:ustore.token,state:0,addressid:id};
-                var _this = this;
                 this.$http.put(localStorage.apiDomain + 'public/index/Usercenter/addressmoren',pdata).then((response) => {
                     if(response.data.status === 1) {
                         for(let i = 0;i < this.chosens.length; i++) {
@@ -261,8 +246,8 @@
                                 this.chosens[i].is_default = 0;
                             }
                         }
-                        _this.isActiveFun();
                         this.chosens[index].is_default = 1;
+                        _this.isActiveFun();
                     }else if(response.data.status === -1) {
                         this.$dispatch('showMes',response.data.info);
                         let context = this;
@@ -535,6 +520,7 @@
 	}
 
 	#ziti .main_ziti .address{
+		padding:10px 0px;
 		width:98%;
 		height:auto;
 		background:#FEFEFE;
