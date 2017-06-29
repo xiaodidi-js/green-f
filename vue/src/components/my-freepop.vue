@@ -361,7 +361,7 @@
                             this.$parent.data.address = obj;
                             this.$parent.data.tmp_address = obj;
                             this.$parent.freight = response.data.freight;
-
+                            /* 设置默认 */
                             let odata = {uid:ustore.id,token:ustore.token,state:0,addressid:obj.id};
                             this.$http.put(localStorage.apiDomain + 'public/index/Usercenter/addressmoren',odata).then((response) => {
                                 if(response.data.status === 1) {

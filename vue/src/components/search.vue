@@ -66,6 +66,11 @@
 		ready() {
 
 		},
+        watch: {
+            $route() {
+                $(window).scrollTop(sessionStorage.getItem("scrolltop"));
+            }
+        },
 		computed: {
 
 		},

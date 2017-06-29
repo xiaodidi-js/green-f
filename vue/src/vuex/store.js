@@ -36,6 +36,7 @@ const mutations = {
     },
     commitData (state, params) {
     	state[params.target] = params.data;
+        sessionStorage.setItem("scrolltop",JSON.stringify(state.scroll));
 	},
     myGift (state,giftList) {	//自提点ID
         state.giftList = giftList;

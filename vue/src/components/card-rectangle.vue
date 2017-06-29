@@ -41,11 +41,15 @@
 						<template v-for='item1 in item.arr'>
 							<div class="shop-item">
 								<div style="width:100%;" class="over-img" v-if="item1.store == 0">
-									<div class="order_over" v-link="{name:'detail',params:{pid:item1.shopid}}" >已售罄</div>
-									<div v-lazy:background-image="item1.shopshotcut" class="lazyImg"></div>
+									<a v-link="{name:'detail',params:{pid:item1.shopid}}">
+										<div class="order_over">已售罄</div>
+										<div v-lazy:background-image="item1.shopshotcut" class="lazyImg"></div>
+									</a>
 								</div>
 								<div style="width:100%;" class="over-img" v-else>
-									<div v-lazy:background-image="item1.shopshotcut" class="lazyImg" v-link="{name:'detail',params:{pid:item1.shopid}}"></div>
+									<a v-link="{name:'detail',params:{pid:item1.shopid}}">
+										<div v-lazy:background-image="item1.shopshotcut" class="lazyImg"></div>
+									</a>
 								</div>
 								<p class="shop-name" style="">{{ item1.shopname }}</p>
 								<p class="box-money" style="float:left;">
@@ -106,6 +110,11 @@
             },
             actions: {
                 setCart: setCartStorage
+            }
+        },
+        watch: {
+            $route() {
+                $(window).scrollTop(sessionStorage.getItem("scrolltop"));
             }
         },
 		ready() {

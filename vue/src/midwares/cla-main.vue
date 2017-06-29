@@ -23,6 +23,11 @@ import Toast from 'vux/src/components/toast'
 				data:[]
 			}
 		},
+		vuex: {
+            actions: {
+
+            }
+        },
 		components: {
 			CardTypes,
 			Toast
@@ -30,7 +35,13 @@ import Toast from 'vux/src/components/toast'
 		route: {
 
 		},
+        watch: {
+            $route() {
+                $(".cla-message").scrollTop(sessionStorage.getItem("scrolltop"));
+            }
+        },
 		ready() {
+			var content = this;
 			this.$http.get(localStorage.apiDomain + 'public/index/index/columns').then((response)=>{
 				localStorage.setItem("classify",JSON.stringify(response.data.classify));
 				this.data = JSON.parse(localStorage.getItem("classify"));

@@ -1,14 +1,7 @@
 <template>
-
-	<div class="post">
-		<div class="loading" v-if="loading">
-			Loading...
-		</div>
-	</div>
-
 	<!-- 轮播图 -->
 	<banners></banners>
-	<div class="sub-content" style="position:relative;top:36px;">
+	<div class="sub-content" style="position:relative;top:50px;">
 		<!-- 显示抢购 -->
 		<card-column :columns="maincolumns" keep-alive></card-column>
 		<!-- 热销产品排行榜 -->
@@ -16,7 +9,6 @@
 	</div>
 	<!-- 回到顶部 -->
 	<div class="goto"></div>
-
     <!-- toast提示框 -->
     <toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
 </template>
@@ -62,7 +54,6 @@
                 searchKey: '',
 				arr: {},
 				tuijian: 1,
-				loading: false,
 			}
 		},
         ready() {
@@ -71,15 +62,11 @@
             $(window).scroll(function() {
                 if($(window).scrollTop() >= 350) {
                     content.commitData({ target: 'scroll', data: $(window).scrollTop() });
+                    console.log(content.$store.state.scroll);
                     $(".goto").fadeIn(500);
                 } else {
                     $(".goto").stop(true,true).fadeOut(500);
                 }
-
-                if($(window).scrollTop() == 0) {
-                    $(window).scrollTop(this.$store.state.scroll);
-                }
-
             });
             $(".goto").click(function(){
                 $("html,body").animate({
@@ -87,9 +74,6 @@
                 },200);
             });
         },
-        mounted: {
-
-		},
         filters: {
             timeline: function (value) {
                 let d = new Date(parseInt(value) * 1000);
@@ -106,21 +90,12 @@
         computed: {
 
 		},
-		watch: {
-//		    '$route' : function() {
-//                let content = this;
-//                if(localStorage.getItem("iData")) {
-//                    content.data = JSON.parse(localStorage.getItem("iData"));
-//                };
-//			}
-		},
         methods: {
 		    main () {
                 axios({
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/index',
                 }).then((response) => {
-                    this.loading = true;
                     localStorage.setItem("iData",JSON.stringify(response.data));
                     if(localStorage.getItem("iData") != '') {
                         this.data = JSON.parse(localStorage.getItem("iData"));

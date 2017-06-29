@@ -62,7 +62,7 @@
 		computed: {
 			className: function(){
 				const obj = {};
-				if(this.chosen.length>0&&this.chosen.indexOf(this.cid)>=0&&this.mode===1){
+				if(this.chosen.length > 0 && this.chosen.indexOf(this.cid) >= 0 && this.mode === 1) {
 					obj['active'] = true;
 				}else{
 					obj['active'] = false;
@@ -78,7 +78,7 @@
 				evt.preventDefault();
 				evt.stopPropagation();
 				let getIndex = this.chosen.indexOf(this.cid);
-				if(getIndex>=0){
+				if(getIndex >= 0) {
 					this.chosen.splice(getIndex,1);
 				}else{
 					this.chosen.push(this.cid);

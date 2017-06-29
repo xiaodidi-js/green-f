@@ -71,7 +71,7 @@
 			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 			ustore = JSON.parse(ustore);
 			this.$http.get(localStorage.apiDomain+'public/index/user/userinfo/uid/'+ustore.id+'/token/'+ustore.token).then((response)=>{
-				if(response.data.status===1){
+				if(response.data.status === 1) {
 					this.uname = response.data.uname;
 					this.uscore = response.data.score;
 					if(response.data.shotcut!==null){
@@ -138,7 +138,7 @@
 			},
 			getImage: function(){
 				let file = document.getElementById('himg');
-				if(typeof file.files[0]==='undefined'){
+				if(typeof file.files[0] === 'undefined') {
 					return false;
 				}
 				this.upsta = 1;

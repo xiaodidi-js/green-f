@@ -353,15 +353,11 @@
 						WxJssdk.onMenuShareWeibo(shareData);
 						WxJssdk.onMenuShareQZone(shareData);
 						WxJssdk.onMenuShareQQ(shareData);
-
                         if (_self.data.is_sell == 0) {
                             _self.toastMessage = "商品已下架";
                             _self.toastShow = true;
                             return false;
                         } else {
-
-
-
 							// 分享好友
                             WxJssdk.onMenuShareAppMessage({
                                 title: this.data.name, // 分享标题
@@ -383,7 +379,6 @@
                                     alert("已取消分享");
                                 },
                             });
-
 
                             // 分享朋友圈
                             WxJssdk.onMenuShareTimeline({
@@ -607,9 +602,7 @@
                     url: localStorage.apiDomain + 'public/index/sale/SaleTimeSolt/uid',
                 }).then((response) => {
                     if(response.data.status == 1) {
-                        console.log(response.data);
                         this.gotimeline = response.data.SaleTimeSolt;
-                        console.log(this.gotimeline);
                     } else if(response.data.status === -1) {
                         this.toastMessage = response.data.info;
                         this.toastShow = true;

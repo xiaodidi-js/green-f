@@ -27,6 +27,7 @@
     import CardSquare from 'components/card-square'
     import Toast from 'vux/src/components/toast'
     import Separator from 'components/separator'
+    import { commitData } from 'vxpath/actions'
 
     export default {
         data() {
@@ -54,9 +55,20 @@
         route: {
 
         },
+        vuex: {
+            actions: {
+                commitData,
+            }
+        },
         ready() {
             this.getData('');
+            var content = this;
         },
+		watch: {
+            $route() {
+                $(window).scrollTop(sessionStorage.getItem("scrolltop"));
+			}
+		},
         methods: {
             getData: function(sk){
                 let url = '';

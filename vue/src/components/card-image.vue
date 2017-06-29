@@ -1,25 +1,31 @@
 <template>
-	<div class="wrapper cardImage">
-		<!--<label class="title" v-if="articles.title">{{ articles.title }}</label>-->
-		<div class="card-box" style="width:95%;" v-for="item in list" v-link="{name:'article',params:{cid:item.id}}">
-			<div class="img" v-lazy:background-image="item.img"></div>
-			<!--<img :src="item.img" class="img" alt="{{ item.title }}" />-->
-			<div class="mes">
-				<div class="words">
-					<div class="name">{{ item.title }}</div>
-					<!--<div class="desc">-->
+	<div class="wrapper-ele" style="">
+		<div class="wrapper cardImage">
+			<!--<label class="title" v-if="articles.title">{{ articles.title }}</label>-->
+			<div class="card-box" style="width:95%;" v-for="item in list" v-link="{name:'article',params:{cid:item.id}}">
+
+				<div class="img" v-lazy:background-image="item.img"></div>
+				<!--<img :src="item.img" class="img" alt="{{ item.title }}" />-->
+				<div class="mes">
+					<div class="words">
+						<div class="name">{{ item.title }}</div>
+						<!--<div class="desc">-->
 						<!--{{ item.sdesc }}-->
-					<!--</div>-->
-					<!--<div class="proname">-->
+						<!--</div>-->
+						<!--<div class="proname">-->
 						<!--{{ item.proname }}<label>¥{{ item.proprice }}</label>-->
-					<!--</div>-->
-				</div>
-				<div class="reading">
-					<span>{{ item.createtime | time }}</span>
-					<!--<span>阅读量</span>-->
-					<!--<span>{{ item.reading }}</span>-->
+						<!--</div>-->
+					</div>
+					<div class="reading">
+						<span>{{ item.createtime | time }}</span>
+						<!--<span>阅读量</span>-->
+						<!--<span>{{ item.reading }}</span>-->
+					</div>
 				</div>
 			</div>
+
+			<div class="card-box"></div>
+
 		</div>
 	</div>
 </template>
@@ -45,10 +51,6 @@
 		},
 		ready () {
 			this.message();
-			$(window).scroll(function() {
-                var top = $(".cardImage").scrollTop(150);
-			});
-
 		},
         filters: {
             time: function (value) {
@@ -60,6 +62,11 @@
                 var minutes = d.getMinutes();
                 var seconds = d.getSeconds();
                 return years + "-" + month + "-" + days;
+            }
+        },
+        watch: {
+            $route() {
+                $(window).scrollTop(sessionStorage.getItem("scrolltop"));
             }
         },
 		methods: {
@@ -78,26 +85,46 @@
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/index/productinfo/uid/' + ustore.id + '/pid/' + this.$route.query.pid,
                 }).then((response) => {
-                    localStorage.setItem("articles",JSON.stringify(response.data.articles.list));
-                    this.list = JSON.parse(localStorage.getItem("articles"));
-                    console.log(this.list);
+                    console.log(response.data);
+                    if(typeof(response.data.articles) == 'undefined') {
+						$(".card-box").html("<div>暂时没有活动!</div>").css({
+                            "lineHeight" : "30px",
+							"fontSize" : "16px",
+							"color" : "#81c429",
+							"textAlign" : "center",
+							"margin" : "150px auto",
+						});
+					} else {
+                        localStorage.setItem("articles",JSON.stringify(response.data.articles.list));
+                        this.list = JSON.parse(localStorage.getItem("articles"));
+                        $(window).scrollTop(sessionStorage.getItem("scrolltop"));
+					}
                 });
 			}
 		}
 	}
-</script>
+	</script>
 
 <style scoped>
+
+	.wrapper-ele {
+		background: #fff;
+		width: 100%;
+		height: 100%;
+		position: relative;
+		top: 45px;
+	}
+
 	.wrapper{
 		width:100%;
-		/*padding:0rem 0rem 1rem 0rem;*/
 		font-size:0;
 	}
 
 	.cardImage {
-		margin: 50px 0px 0px;
-		padding-bottom: 30px;
 		background: #fff;
+		position: absolute;
+		top: 50px;
+		padding-bottom: 70px;
 	}
 
 	.title{
@@ -114,7 +141,6 @@
 	.card-box{
 		width:90%;
 		height:auto;
-		/*margin:0% 3% 2% 3%;*/
 		display:block;
 		padding:2%;
 		text-align:center;

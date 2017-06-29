@@ -16,7 +16,7 @@
 				<div class="ele-fixed">
 					<template v-for="item in pdata">
 						<div class="main">
-							<div v-link="{name:'detail',params:{pid:item.id}}"> <!-- v-link="{name:'detail',params:{pid:item.id}}" -->
+							<a style="display:block" v-link="{name:'detail',params:{pid:item.id}}">
 								<div class="shotcut" v-if="item.store == 0">
 									<div class="qing">已售罄</div>
 									<div class="shotcut-img" v-lazy:background-image="item.src"></div>
@@ -25,13 +25,13 @@
 									<div class="shotcut-img" v-lazy:background-image="item.src"></div>
 								</div>
 								<div class="shotcut-txt">
-									<p style="height:35px;width:100%;overflow: hidden;text-overflow: ellipsis;">{{ item.title }}</p>
+									<p class="item-title" style="">{{ item.title }}</p>
 									<p class="relative">
 										<i>￥</i>
 										<span class="money">{{item.price}}</span>
 									</p>
 								</div>
-							</div>
+							</a>
 							<div class="icon-card" @click="goCart(item)"></div>
 						</div>
 					</template>
@@ -47,7 +47,7 @@
 
 <script>
     import Scroller from 'vux/src/components/scroller'
-    import { setCartStorage,clearAll } from 'vxpath/actions'
+    import { setCartStorage,clearAll,myClassScroll } from 'vxpath/actions'
     import { cartNums } from 'vxpath/getters'
 	import formatPop from 'components/format-pop'
     import Toast from 'vux/src/components/toast'
@@ -55,14 +55,14 @@
     import qs from 'qs'
 
 	export default{
-
         vuex: {
             getters: {
                 cartNums
             },
             actions: {
                 setCart: setCartStorage,
-                clearAll
+                clearAll,
+                myClassScroll
             }
         },
         props: {
@@ -98,6 +98,7 @@
             }
         },
         created () {
+
 		},
         ready() {
             this.dtype = sessionStorage.getItem('number');
@@ -146,23 +147,6 @@
                             }, 100);
                         }
                     } ,10);
-//                    content.intervalTime_right = setInterval(function() {
-//                        var resultContentH = $("#left_Menu").height();
-//                        if (resultContentH > 0) {
-//                            $("#left_Menu").height(resultContentH);
-//                            setTimeout(function () {
-//                                clearInterval(content.intervalTime_right);
-//                                content.myScroll_right = new IScroll('#right_Menu', {
-//                                    vScroll: true,
-//                                    mouseWheel: true,
-//                                    vScrollbar: false,
-//                                    probeType: 2,
-//                                    click: true
-//                                });
-//                                content.myScroll_right.refresh();
-//                            }, 100);
-//                        }
-//                    } ,10);
 				} catch (e) {
                     throw e;
 				}
@@ -189,11 +173,10 @@
                     if (response.data.status == 1) {
                         sessionStorage.setItem("pdata",JSON.stringify(response.data.info.list));
                         this.pdata = JSON.parse(sessionStorage.getItem("pdata"));
+                        $("#scroller2").css({
+                            "transform" : "translate(0px, 0px)"
+                        });
                     }
-                    $("#scroller2").css({
-						"transform" : "translate(0px, 0px)"
-					});
-
                 }).catch(function(e) {
                     console.log(e);
 				});
@@ -424,6 +407,14 @@
 		text-align: left;
 		margin-left: 10px;
 		position: relative;
+	}
+
+	.item-title {
+		height:35px;
+		width:100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		color:#333;
 	}
 
 	.shotcut-txt .money {

@@ -48,6 +48,10 @@
 	background-color:#F3C76A !important;	
 }
 
+.weui_cell {
+	padding: 12px 15px;
+}
+
 .tabmain{position:relative;}
 .tabmain .user_icon{position: absolute;
 	left: 20px;

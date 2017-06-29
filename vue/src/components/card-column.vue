@@ -25,18 +25,20 @@
 					<div id="scroller">
 						<template  v-for="item in columns">
 							<template v-if="item.nowsale == 1">
-								<div class="box-list" v-for="list in item.arr" v-link="{name:'detail',params:{pid:list.shopid}}">
-									<p class="main-title">秒杀价</p>
-									<template v-for="mon in list.saledata">
-										<p class="main-price">
-											<i style="font-size: 1.2rem;">￥</i>
-											<i style="font-size: 2.3rem;">{{ mon.saleprice }}</i>
-										</p>
-									</template>
-									<div class="main-des">{{ list.name }}</div>
-									<div style="width:90%;margin:7px auto;">
-										<div class="price-img" v-lazy:background-image="list.shotcut"></div>
-									</div>
+								<div class="box-list" v-for="list in item.arr">
+									<a class="display:block;" v-link="{name:'detail',params:{pid:list.shopid}}">
+										<p class="main-title">秒杀价</p>
+										<template v-for="mon in list.saledata">
+											<p class="main-price">
+												<i style="font-size: 1.2rem;">￥</i>
+												<i style="font-size: 2.3rem;">{{ mon.saleprice }}</i>
+											</p>
+										</template>
+										<div class="main-des">{{ list.name }}</div>
+										<div style="width:90%;margin:7px auto;">
+											<div class="price-img" v-lazy:background-image="list.shotcut"></div>
+										</div>
+									</a>
 								</div>
 							</template>
 						</template>

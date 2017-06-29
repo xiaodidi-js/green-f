@@ -36,7 +36,12 @@ export default{
 	},
 	events: {
 
-	}
+	},
+    watch: {
+        $route() {
+            $(".wrapper").scrollTo(sessionStorage.getItem("scrolltop"));
+        }
+    }
 }
 
 </script>

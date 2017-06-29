@@ -1,10 +1,9 @@
 <template>
 	<separator :set-height="9.1"></separator>
-
 	<!-- 订单状态 -->
 	<div class="bl-info-box status">
 		<div class="icon">
-			<img src="../images/ordersgray.png" />
+			<img src="../images/wuliu.png" style="width:100%;height:100%;"/>
 		</div>
 		<div class="content">
 			<div class="sta-line">
@@ -19,12 +18,11 @@
 			</div>
 		</div>
 	</div>
-
 	<!-- 物流信息 -->
 	<div class="express-box">
 		<div class="line-info">
 			<div class="icon first">
-				<img src="../images/expos.png" />
+				<img src="../images/epoint.png" />
 			</div>
 			<div class="con-box">
 				<div class="ebtit">
@@ -36,45 +34,6 @@
 			</div>
 		</div>
 		<div class="line-info">
-			<div class="icon">
-				<img src="../images/expoint.png" />
-			</div>
-			<div class="con-box">
-				<div class="ebtit">
-					佛山市[签收]佛山市【顺德大良B站】，李代已签收
-				</div>
-				<div class="ebtime">
-					2016-07-04 18:20:59
-				</div>
-			</div>
-		</div>
-		<div class="line-info">
-			<div class="icon">
-				<img src="../images/expoint.png" />
-			</div>
-			<div class="con-box">
-				<div class="ebtit">
-					佛山市[签收]佛山市【顺德大良B站】，李代已签收
-				</div>
-				<div class="ebtime">
-					2016-07-04 18:20:59
-				</div>
-			</div>
-		</div>
-		<div class="line-info">
-			<div class="icon">
-				<img src="../images/expoint.png" />
-			</div>
-			<div class="con-box">
-				<div class="ebtit">
-					佛山市[签收]佛山市【顺德大良B站】，李代已签收
-				</div>
-				<div class="ebtime">
-					2016-07-04 18:20:59
-				</div>
-			</div>
-		</div>
-		<div class="line-info" v-for="item in 10">
 			<div class="icon">
 				<img src="../images/expoint.png" />
 			</div>
@@ -130,9 +89,11 @@
 	}
 
 	.bl-info-box.status .icon{
-		width:8%;
-		margin-right:2%;
-		text-align:center;
+		width: 23%;
+		height: 70px;
+		margin-right: 2%;
+		text-align: center;
+		float: left;
 	}
 
 	.bl-info-box.status .icon>img{
@@ -141,7 +102,8 @@
 	}
 
 	.bl-info-box.status .content{
-		width:90%;
+		width: 75%;
+		float: right;
 	}
 
 	.bl-info-box.status .content .sta-line{
@@ -168,9 +130,10 @@
 	}
 
 	.express-box{
-		width:93%;
-		padding-left:7%;
-		padding-top:3%;
+		width: 93%;
+		padding: 5% 0% 32% 6%;
+		position: relative;
+		top: 40px;
 	}
 
 	.express-box .line-info{
@@ -218,8 +181,13 @@
 
 	.express-box .line-info .icon.first{
 		vertical-align:top;
-		animation:jump 1.5s linear infinite normal;
-		-webkit-animation:jump 1.5s linear infinite normal;
+
+		animation: zoom 2.5s linear infinite normal;
+		-webkit-animation: zoom 2.5s linear infinite normal;
+
+		/*animation:jump 1.5s linear infinite normal;*/
+		/*-webkit-animation:jump 1.5s linear infinite normal;*/
+
 	}
 
 	.express-box .line-info .icon.first>img{
@@ -229,10 +197,9 @@
 	}
 
 	.express-box .line-info .con-box{
-		width:92%;
-		border-bottom:#ccc solid 0.1rem;
-		padding-right:3%;
-		padding-bottom:3%;
+		width: 87%;
+		border-bottom: #ccc solid 0.1rem;
+		padding: 0% 3% 3% 1%;
 	}
 
 	.express-box .line-info .con-box .ebtit{
