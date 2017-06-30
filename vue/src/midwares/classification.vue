@@ -1,3 +1,112 @@
+<template>
+    <!-- ification-nav start -->
+    <div class="ification-nav" id="wrapper">
+        <scroller v-ref:scroller lock-y :scrollbar-x="false" style="height: 100%;overflow:visible;">
+            <div id="scroller">
+                <ul id="card">
+                    <li class="activeification-show" :class="{'active':dtype == 0}" @click="getData(0)">全部</li>
+                    <li class="ification-show" :class="{'active':dtype == 1}" @click="getData(1)">待付款</li>
+                    <li class="ification-show" :class="{'active':dtype == 2}" @click="getData(2)">待发货</li>
+                    <li class="ification-show" :class="{'active':dtype == 3}" @click="getData(3)">待收货</li>
+                    <li class="ification-show" :class="{'active':dtype == 4}" @click="getData(4)">评价</li>
+                </ul>
+            </div>
+        </scroller>
+    </div>
+    <!-- ification-nav end -->
+    <div class="content" id="content">
+        <payment :orders="data"></payment>
+    </div>
+</template>
+
+<script>
+    import CardOrders from 'components/card-orders'
+    import Separator from 'components/separator'
+    import Toast from 'vux/src/components/toast'
+    import Badge from 'vux/src/components/badge'
+    import { clearAll } from 'vxpath/actions'
+    import Swiper from 'vux/src/components/swiper'
+    import SwiperItem from 'vux/src/components/swiper-item'
+    import payment from 'components/order-payment'
+    import Scroller from 'vux/src/components/scroller'
+
+    export default{
+        vuex: {
+            actions: {
+                clearAll
+            }
+        },
+        components: {
+            CardOrders,
+            Separator,
+            Toast,
+            Badge,
+            payment,
+            Swiper,
+            SwiperItem,
+            Scroller
+        },
+        data() {
+            return {
+                toastShow: false,
+                toastMessage: '',
+                dtype:-1,
+                count:{
+                    unpay: 0,
+                    unsend: 0,
+                    unreceive: 0,
+                    uncomment: 0,
+                    service: 0
+                },
+                data:[],
+                btnStatus:false,
+                confirmShow:false,
+                confirmTitle:'',
+                confirmText:'',
+            }
+        },
+        route: {
+
+        },
+        ready() {
+            this.getData(0);
+        },
+        methods: {
+            getData: function(type = 0) {
+                if(this.dtype == type) {
+                    return true;
+                }
+                this.dtype = type;
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                ustore = JSON.parse(ustore);
+                this.$http.get(localStorage.apiDomain+'public/index/user/orderselection/uid/'+ustore.id+'/token/'+ustore.token+'/type/'+type).then((response)=> {
+                    if(response.data.status === 1) {
+                        document.body.scrollTop = 0;
+                        this.count = response.data.count;
+                        this.data = response.data.list;
+                    } else if (response.data.status === -1) {
+                        this.toastMessage = response.data.info;
+                        this.toastShow = true;
+                        let context = this;
+                        setTimeout(function(){
+                            context.clearAll();
+                            sessionStorage.removeItem('userInfo');
+                            localStorage.removeItem('userInfo');
+                            context.$router.go({name:'login'});
+                        },800);
+                    }else{
+                        this.toastMessage = response.data.info;
+                        this.toastShow = true;
+                    }
+                },(response)=>{
+                    this.toastMessage = '网络开小差了~';
+                    this.toastShow = true;
+                });
+            }
+        }
+    }
+</script>
+
 <style>
 
     .vux-header {
@@ -205,115 +314,3 @@
     /* ification-wrapper end */
 
 </style>
-
-
-<template>
-    <!-- ification-nav start -->
-    <div class="ification-nav" id="wrapper">
-        <scroller v-ref:scroller lock-y :scrollbar-x="false" style="height: 100%;overflow:visible;">
-            <div id="scroller">
-                <ul id="card">
-                    <li class="activeification-show" :class="{'active':dtype == 0}" @click="getData(0)">全部</li>
-                    <li class="ification-show" :class="{'active':dtype == 1}" @click="getData(1)">待付款</li>
-                    <li class="ification-show" :class="{'active':dtype == 2}" @click="getData(2)">待发货</li>
-                    <li class="ification-show" :class="{'active':dtype == 3}" @click="getData(3)">待收货</li>
-                    <li class="ification-show" :class="{'active':dtype == 4}" @click="getData(4)">评价</li>
-                </ul>
-            </div>
-        </scroller>
-    </div>
-
-    <!-- ification-nav end -->
-    <div class="content" id="content">
-        <payment :orders="data"></payment>
-    </div>
-
-</template>
-
-<script>
-    import CardOrders from 'components/card-orders'
-    import Separator from 'components/separator'
-    import Toast from 'vux/src/components/toast'
-    import Badge from 'vux/src/components/badge'
-    import { clearAll } from 'vxpath/actions'
-    import Swiper from 'vux/src/components/swiper'
-    import SwiperItem from 'vux/src/components/swiper-item'
-    import payment from 'components/order-payment'
-    import Scroller from 'vux/src/components/scroller'
-
-    export default{
-        vuex: {
-            actions: {
-                clearAll
-            }
-        },
-        components: {
-            CardOrders,
-            Separator,
-            Toast,
-            Badge,
-            payment,
-            Swiper,
-            SwiperItem,
-            Scroller
-        },
-        data() {
-            return {
-                toastShow: false,
-                toastMessage: '',
-                dtype:-1,
-                count:{
-                    unpay: 0,
-                    unsend: 0,
-                    unreceive: 0,
-                    uncomment: 0,
-                    service: 0
-                },
-                data:[],
-                btnStatus:false,
-                confirmShow:false,
-                confirmTitle:'',
-                confirmText:'',
-            }
-        },
-        route: {
-
-        },
-        ready() {
-            this.getData(0);
-        },
-        methods: {
-            getData: function(type = 0) {
-                if(this.dtype == type) {
-                    return true;
-                }
-                this.dtype = type;
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                this.$http.get(localStorage.apiDomain+'public/index/user/orderselection/uid/'+ustore.id+'/token/'+ustore.token+'/type/'+type).then((response)=> {
-                    if(response.data.status === 1) {
-                        document.body.scrollTop = 0;
-                        this.count = response.data.count;
-                        this.data = response.data.list;
-                    } else if (response.data.status === -1) {
-                        this.toastMessage = response.data.info;
-                        this.toastShow = true;
-                        let context = this;
-                        setTimeout(function(){
-                            context.clearAll();
-                            sessionStorage.removeItem('userInfo');
-                            localStorage.removeItem('userInfo');
-                            context.$router.go({name:'login'});
-                        },800);
-                    }else{
-                        this.toastMessage = response.data.info;
-                        this.toastShow = true;
-                    }
-                },(response)=>{
-                    this.toastMessage = '网络开小差了~';
-                    this.toastShow = true;
-                });
-            }
-        }
-    }
-</script>

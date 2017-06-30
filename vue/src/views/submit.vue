@@ -1,5 +1,5 @@
 <template>
-	<div class="bal-wrapper" style="margin-top:47px;">
+	<div class="bal-wrapper">
 		{{ demo | json}}
 		<!-- 发货方式 -->
 		<my-cell title="到店自提" @click="showAction" :class="deliverType">

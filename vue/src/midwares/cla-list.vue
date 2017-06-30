@@ -17,6 +17,9 @@
 		<card-square style="padding-bottom: 100px;" :info="data" :no-padding="true"></card-square>
 		<!-- toast提示框 -->
 		<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
+		<loading :show="loadingShow" text="正在加载..."></loading>
+		<!-- 回到顶部 -->
+		<div class="goto" style="right:3.2rem;"></div>
 	</div>
 </template>
 <script>
@@ -28,6 +31,7 @@
     import Toast from 'vux/src/components/toast'
     import Separator from 'components/separator'
     import { commitData } from 'vxpath/actions'
+    import Loading from 'vux/src/components/loading'
 
     export default {
         data() {
@@ -63,6 +67,18 @@
         ready() {
             this.getData('');
             var content = this;
+            $(window).scroll(function() {
+                if($(window).scrollTop() >= 400) {
+                    $(".goto").fadeIn(500);
+                } else {
+                    $(".goto").stop(true,true).fadeOut(500);
+                }
+            });
+            $(".goto").click(function(){
+                $("html,body").animate({
+                    scrollTop:0
+                },200);
+            });
         },
 		watch: {
             $route() {

@@ -56,9 +56,12 @@
 				</ul>
 			</template>
 		</div>
-
 		<!--<separator :set-height="11.5"></separator>-->
-		<div class="list" style="margin-top:120px;">
+		<div class="list list-nothing" v-if="data == '' ">
+			<img src="../images/cart.png" style="width:100%;height: 100%" alt="" />
+			<p class="nothing-order not-text">暂时没有商品</p>
+		</div>
+		<div class="list" style="margin-top: 130px;" v-else>
 			<card-orders :orders="data"></card-orders>
 		</div>
 	</div>
@@ -147,11 +150,13 @@
 			},
 			getData: function(type) {
 		        if(type === 5) {
-                    this.$id("customer").style.display = "block"
+                    this.$id("customer").style.display = "block";
 					$("#cardOrder").css("display","none");
+					$(".list-nothing").css("display","none");
 				} else {
                     this.$id("customer").style.display = "none";
                     $("#cardOrder").css("display","block");
+                    $(".list-nothing").css("display","block");
 				}
                 if(this.dtype == type && this.data){
                     return true;
@@ -196,6 +201,20 @@
 		border-bottom:#ccc solid 1px;
 		position:relative;
 	}
+
+	.list-nothing {
+		width: 95px;
+		height: 80px;
+		margin: 155px auto 30px;
+	}
+
+	.list .not-text {
+		font-size: 14px;
+		line-height: 3.5rem;
+		width: 100%;
+		height: 3.5rem;
+	}
+
 	.list-all-order{
 		width:100%;
 	}
@@ -213,14 +232,14 @@
 		border-bottom:none;
 	}
 	.all-title{
-		height:35px;
-		line-height:35px;
-		border-bottom:1px solid #ccc;
+		height: 4rem;
+		line-height: 4rem;
+		border-bottom: 1px solid #ccc;
 		position: relative;
 	}
 	.all-title .title{
 		font-size: 14px;
-		line-height: 3.5rem;
+		line-height: 4rem;
 		color: #333;
 		text-align: left;
 		text-indent: 1em;
@@ -381,7 +400,7 @@
 	
 	#customer{
 		display:none;
-		padding-top: 120px;
+		padding-top: 125px;
 	}
 
 	.sub-content-tab{

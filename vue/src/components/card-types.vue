@@ -47,7 +47,7 @@
 
 <script>
     import Scroller from 'vux/src/components/scroller'
-    import { setCartStorage,clearAll,myClassScroll } from 'vxpath/actions'
+    import { setCartStorage,clearAll } from 'vxpath/actions'
     import { cartNums } from 'vxpath/getters'
 	import formatPop from 'components/format-pop'
     import Toast from 'vux/src/components/toast'
@@ -62,7 +62,6 @@
             actions: {
                 setCart: setCartStorage,
                 clearAll,
-                myClassScroll
             }
         },
         props: {
@@ -95,6 +94,11 @@
                 intervalTime_right: null,
                 myScroll_left: null,
                 myScroll_right: null,
+            }
+        },
+        watch: {
+            $route() {
+                $(".cla-message").scrollTop(sessionStorage.getItem("scrolltop"));
             }
         },
         created () {
@@ -400,7 +404,7 @@
 	}
 
 	.shotcut-txt {
-		width: 55%;
+		width: 62%;
 		float: left;
 		line-height: 18px;
 		font-size: 14px;
@@ -433,7 +437,7 @@
 		background: url(../images/gouwuche.png) no-repeat;
 		background-size: 100%;
 		position: absolute;
-		top:52px;
+		top: 60px;
 		right:0px;
 	}
 

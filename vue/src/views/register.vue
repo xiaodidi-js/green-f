@@ -1,7 +1,7 @@
 <style scoped>
 .btn-wrapper{
 	width:80%;
-	margin:10% 10% 0% 10%;
+	margin: 20% 10% 0% 10%;
 }
 
 .btn-wrapper .link-box{
@@ -87,7 +87,7 @@
 
 <template>
 	<!-- 输入内容 -->
-	<group>
+	<group style="margin-top: 46px;">
 		<x-input :show-clear="true" placeholder="请输入您的手机号码" type="number" :value.sync="data.tel"></x-input>
 		<x-input :show-clear="false" placeholder="请输入验证码" type="number" class="weui_vcode" :value.sync="data.ucode">
 	        <x-button slot="right" type="primary" :text="codeText" :disabled="codeDis" @click="getCode"></x-button>
@@ -118,6 +118,7 @@ import XInput from 'vux/src/components/x-input'
 import BottomCheck from 'components/bottom-check'
 import XButton from 'vux/src/components/x-button'
 import Toast from 'vux/src/components/toast'
+import toastMsg from 'components/toast-msg'
 
 export default{
 	data() {
@@ -143,7 +144,8 @@ export default{
 		XInput,
 		BottomCheck,
 		XButton,
-		Toast
+		Toast,
+        toastMsg
 	},
 	route: {
 		

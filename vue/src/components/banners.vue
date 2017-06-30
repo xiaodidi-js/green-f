@@ -11,7 +11,7 @@
         <div class="logo" style="background: none;width:50px;float:left;">
             <img src="../images/logo_lv.png" alt="" style="width:40px;height:40px;margin: 5px 15px;" />
         </div>
-        <div class="search" style="width:65%;position:relative;left:12px;">
+        <div class="search" style="width:66%;position:relative;left:12px;">
             <input type="text" placeholder="请输入您要搜索的商品" v-model="searchKey" @keydown="breakSearch()" />
             <a href="javascript:void();" class="order-search-btn" style="display:block;" @click="goSearch()">搜索</a>
             <!--<input type="button" class="order-search-btn" @click="goSearch()" value="搜索" />-->
@@ -125,9 +125,12 @@
     }
 
     .order-search .search{
-        font-size: 14px;width: 70%;
-        height: 35px;margin: 0px auto;
-        position: relative;top: 8px;
+        font-size: 14px;
+        width: 70%;
+        height: 40px;
+        margin: 0px auto;
+        position: relative;
+        top: 5px;
         background: url("../images/search-1.png") no-repeat #fff left;
         background-size: 20px 20px;
         background-position-x: 6px;
@@ -135,7 +138,7 @@
 
     .order-search .search input[type='text']{
         margin: 5px 0px 0px 29px;
-        height: 25px;
+        height: 30px;
         border: none;
         width: 67%;
     }
@@ -170,9 +173,9 @@
         position: absolute;
         right: 0px;
         top: 0px;
-        line-height: 35px;
+        line-height: 40px;
         width: 18%;
-        height: 35px;
+        height: 40px;
         color: #81c429;
         background: #f7f7f7;
         font-size: 14px;

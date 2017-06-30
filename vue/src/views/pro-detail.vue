@@ -497,7 +497,7 @@
                         if(scaleBox === '') {
                             itemEle.innerHTML = "暂时没有详情图~~~";
                             itemEle.style.paddingTop = "10px";
-                            itemEle.style.height = "150px";
+                            itemEle.style.height = "100%";
                             itemEle.style.lineHeight = "150px";
                         } else {
                             itemEle.innerHTML = scaleBox;
@@ -639,9 +639,11 @@
                     var _this = this;
                     liDomes[i].onclick = function(){
                         this.className = "active";
+                        this.style.fontSize = 15 + "px";
                         //同辈元素互斥
                         _this.siblings(this,function(){
                             this.className = "";
+                            this.style.fontSize = 14 + "px";
                         });
                         //把对应的选项卡的内容显示出来
                         var tabDom = document.getElementById("content").children[this.index];

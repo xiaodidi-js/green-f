@@ -11,6 +11,7 @@
 	<div class="goto"></div>
     <!-- toast提示框 -->
     <toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
+	<loading :show="loadingShow" text="正在加载..."></loading>
 </template>
 
 <script>
@@ -24,6 +25,7 @@
     import { myActive,mySearch,commitData } from 'vxpath/actions'
     import axios from 'axios'
     import qs from 'qs'
+    import Loading from 'vux/src/components/loading'
 
 	export default{
 		components: {
@@ -32,7 +34,8 @@
 			CardImage,
 			Toast,
             Swiper,
-            banners
+            banners,
+            Loading
 		},
         vuex: {
             actions: {
@@ -96,20 +99,23 @@
                     method: 'get',
                     url: localStorage.apiDomain + 'public/index/index',
                 }).then((response) => {
-                    localStorage.setItem("iData",JSON.stringify(response.data));
-                    if(localStorage.getItem("iData") != '') {
-                        this.data = JSON.parse(localStorage.getItem("iData"));
-					}
-                    var data = this.data;
-                    for (var i = 0; i < data.index_data.length; i++) {
-                        if(data.index_data[i].type == 4) {
-                            var l = data.index_data[i].arr.length;
-                            for (var k = 0; k < l; k++) {
-                                data.index_data[i].arr[k].img = data.index_data[i].arr[k].url;
-                                data.index_data[i].arr[k].url = data.index_data[i].arr[k].htmlurl;
+                    if(response.data.status = 1) {
+                        this.loadingShow = true;
+                        localStorage.setItem("iData",JSON.stringify(response.data));
+                        if(localStorage.getItem("iData") != '') {
+                            this.data = JSON.parse(localStorage.getItem("iData"));
+                        }
+                        var data = this.data;
+                        for (var i = 0; i < data.index_data.length; i++) {
+                            if(data.index_data[i].type == 4) {
+                                var l = data.index_data[i].arr.length;
+                                for (var k = 0; k < l; k++) {
+                                    data.index_data[i].arr[k].img = data.index_data[i].arr[k].url;
+                                    data.index_data[i].arr[k].url = data.index_data[i].arr[k].htmlurl;
+                                }
                             }
                         }
-                    }
+					}
                 });
 			},
             follow () {
@@ -146,17 +152,3 @@
 		}
 	}
 </script>
-
-<style scoped>
-	.goto {
-		width:3.7rem;
-		height:3.7rem;
-		background: url(../images/img13.png) no-repeat;
-		background-size: 100%;
-		position: fixed;
-		right:10px;
-		bottom: 6.5rem;
-		z-index:1000;
-		display:none;
-	}
-</style>

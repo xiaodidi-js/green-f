@@ -87,10 +87,11 @@
                 }).then((response) => {
                     console.log(response.data);
                     if(typeof(response.data.articles) == 'undefined') {
-						$(".card-box").html("<div>暂时没有活动!</div>").css({
+						$(".card-box").html("" +
+							"<div>暂时没有活动!</div>").css({
                             "lineHeight" : "30px",
-							"fontSize" : "16px",
-							"color" : "#81c429",
+							"fontSize" : "26px",
+							"color" : "#333",
 							"textAlign" : "center",
 							"margin" : "150px auto",
 						});

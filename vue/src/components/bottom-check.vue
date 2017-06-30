@@ -1,10 +1,10 @@
 <style scoped>
 	.wrapper{
-		width:92%;
-		height:auto;
-		margin:4%;
-		text-align:left;
-		font-size:0;
+		width: 93%;
+		height: auto;
+		margin: 5% auto 1%;
+		text-align: left;
+		font-size: 0;
 	}
 
 	.wrapper .cbox,.wrapper .wbox{

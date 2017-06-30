@@ -1,5 +1,3 @@
-
-
 <template>
 	<!-- 输入内容 -->
 	<div class="input-wrapper">
@@ -252,12 +250,14 @@ export default{
 	}
 
 	.input-wrapper .list{
-		width:100%;
-		height:auto;
-		margin-bottom:0.8rem;
-		font-size:0;
-		line-height:2.5rem;
-		position:relative;
+		width: 100%;
+		height: auto;
+		margin: 0rem 0rem 0.8rem 0rem;
+		font-size: 0;
+		padding: 0rem 0rem 0.5rem 0rem;
+		line-height: 2.5rem;
+		position: relative;
+		/* border-bottom: 1px solid #ccc; */
 	}
 
 	.input-wrapper .list:last-child{
@@ -321,16 +321,14 @@ export default{
 	}
 
 	.input-wrapper .list.pwd input{
-		width:90%;
-		height:3.5rem;
-		text-align:left;
-		background-color:transparent;
-		margin-bottom:0.8rem;
+		width: 100%;
+		height: 4.5rem;
+		text-align: left;
+		background-color: transparent;
+		margin-bottom: 0.8rem;
 		border-bottom: 1px solid #ccc;
 		font-size: 14px;
 	}
-
-
 
 </style>
 

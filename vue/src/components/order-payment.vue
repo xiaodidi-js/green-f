@@ -1,5 +1,3 @@
-
-
 <template>
     <div class="wrapper" id="cardOrder" style="margin: 5px auto 0px;width: 97%;">
         <div class="card-box" v-for="item in orders">

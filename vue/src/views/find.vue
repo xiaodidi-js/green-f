@@ -28,18 +28,18 @@
 <style>
 
 .weui_cells{
-	margin-top:45px !important;
+	margin-top:0px !important;
 }
 
 .weui_btn_default{
 	font-family:'Microsoft YaHei';
-	background-color:#81c429 !important;
+	background: #81c429 !important;
 	color:#fff !important;
 	font-size:16px;
 }
 
 .weui_btn_default:active{
-	background-color:#DE9A08 !important;
+	background: #3cc51f !important;
 }
 
 .weui_btn_disabled.weui_btn_default{
@@ -71,8 +71,9 @@
 </style>
 
 <template>
+
 	<!-- 输入内容 -->
-	<group title="">
+	<group title="" style="margin-top: 46px;">
 		<x-input :show-clear=true placeholder="请输入您的手机号码" type="number" :value.sync="data.tel"></x-input>
 		<x-input :show-clear=false placeholder="请输入验证码" type="number" class="weui_vcode" :value.sync="data.ucode">
 	        <x-button slot="right" type="primary" :text="codeText" :disabled="codeDis" @click="getCode"></x-button>

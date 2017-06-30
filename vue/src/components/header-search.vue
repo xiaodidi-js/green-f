@@ -73,9 +73,11 @@
 	}
 
 	.search-header>div.left{
-		width:20%;
-		text-align:center;
-		font-size:0;
+		width: 20%;
+		text-align: center;
+		font-size: 0;
+		position: relative;
+		top: -2px;
 	}
 
 	.search-header>div.left .arrow{
@@ -90,12 +92,14 @@
 	}
 
 	.search-header>div.center{
-		width:60%;
-		text-align:left;
-		font-size:0;
-		background-color:#FFF;
-		border-radius:0.1rem;
-		overflow:hidden;
+		width: 60%;
+		text-align: left;
+		font-size: 0;
+		background-color: #FFF;
+		border-radius: 0.1rem;
+		overflow: hidden;
+		position: relative;
+		top: -2px;
 	}
 
 	.search-header>div.center img{
@@ -113,7 +117,7 @@
 		width:84.7%;
 		height:24px;
 		line-height:24px;
-		padding:3px 2%;
+		padding: 5px 2%;
 		border:none;
 		background-color:transparent;
 		font-size:1.4rem;
@@ -121,8 +125,10 @@
 	}
 
 	.search-header>div.right{
-		width:20%;
-		text-align:center;
+		width: 20%;
+		text-align: center;
+		position: relative;
+		top: -2px;
 	}
 
 	.search-header.fixed{

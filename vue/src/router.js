@@ -271,7 +271,7 @@ const routers = {
     },
     '/submit': {
         name:'submit',
-        header:true,
+        header:false,
         footer:false,
         title:'订单结算',
         position:3,
@@ -640,6 +640,16 @@ const routers = {
         position:3,
         component (resolve) {
             require(['./components/integral-arr.vue'], resolve);
+        }
+    },
+    '/toast-msg' : {
+        name:'toast-msg',
+        header:false,
+        footer:false,
+        title:'',
+        position:3,
+        component (resolve) {
+            require(['./components/toast-msg.vue'], resolve);
         }
     },
 };

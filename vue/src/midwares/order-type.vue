@@ -1,27 +1,3 @@
-<style type="text/css">
-    .classif {
-        width:100%;
-        height:4rem;
-        background: #fff;
-        font-size:14px;
-        margin-top:46px;
-        z-index: 99;
-    }
-
-    .classif .list .tap-type {
-        float: left;
-        width: 20%;
-        height: 100%;
-        line-height: 3.7rem;
-        text-align: center;
-    }
-
-    .classif .list .active {
-        border-bottom:3px solid #81c429;
-    }
-
-</style>
-
 <template>
     <div class="classif">
         <div class="list licon fixed justify">
@@ -43,19 +19,14 @@
             </div>
         </div>
     </div>
-
-    <!--<tab default-color="#333" active-color="#81c429" :line-width="5" class="fixed-tab" style="top:46px;position:fixed;left:0px;width:100%;">-->
-        <!--<tab-item :selected="{'active':dtype == 0}" @click="getViewData(0)">全部</tab-item>-->
-        <!--<tab-item :selected="{'active':dtype == 1}" @click="getViewData(1)">待付款</tab-item>-->
-        <!--<tab-item :selected="{'active':dtype == 2}" @click="getViewData(2)">待发货</tab-item>-->
-        <!--<tab-item :selected="{'active':dtype == 3}" @click="getViewData(3)">待收货</tab-item>-->
-        <!--<tab-item :selected="{'active':dtype == 4}" @click="getViewData(4)">评价</tab-item>-->
-    <!--</tab>-->
-
-    <payment :orders="data"></payment>
-
+    <div class="payment">
+        <payment :orders="data"></payment>
+    </div>
+    <div class="payment" style="width:40%;height:20%;margin:150px auto;" v-if="data == '' ">
+        <img src="../images/cart.png" style="width:100%;height: 100%" alt="" />
+        <p class="nothing-order">暂时没有商品</p>
+    </div>
 </template>
-
 
 <script>
 
@@ -97,7 +68,6 @@
                 this.$http.get(localStorage.apiDomain + 'public/index/user/orderselection/uid/'+ustore.id+'/token/'+ustore.token+'/type/'+type).then((response)=>{
                     if(response.data.status===1){
                         this.data = response.data.list;
-                        console.log(this.data);
                     }else if(response.data.status === -1){
                         this.toastMessage = response.data.info;
                         this.toastShow = true;
@@ -120,3 +90,35 @@
         }
     }
 </script>
+
+<style type="text/css">
+    .classif {
+        width: 100%;
+        height: 4.5rem;
+        background: #fff;
+        font-size: 14px;
+        margin-top: 46px;
+        z-index: 99;
+    }
+
+    .classif .list .tap-type {
+        float: left;
+        width: 20%;
+        height: 100%;
+        line-height: 4.2rem;
+        text-align: center;
+    }
+
+    .classif .list .active {
+        border-bottom:3px solid #81c429;
+    }
+
+    .nothing-order {
+        font-size: 16px;
+        color: rgb(204,204,204);
+        text-align: center;
+        line-height: 3.5rem;
+        font-weight: bold;
+    }
+
+</style>

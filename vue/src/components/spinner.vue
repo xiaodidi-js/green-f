@@ -4,6 +4,7 @@
 		width: 20px;
 		height: 20px;
 		position: relative;
+		top: 75px;
 	}
 
 	.container1 > div, .container2 > div, .container3 > div {
