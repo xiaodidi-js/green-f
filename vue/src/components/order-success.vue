@@ -1,5 +1,4 @@
 <!-- 订单支付成功 -->
-
 <style type="text/css">
     .icon-pay{
         width:60%;

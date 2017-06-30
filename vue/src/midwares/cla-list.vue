@@ -19,7 +19,7 @@
 		<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
 		<loading :show="loadingShow" text="正在加载..."></loading>
 		<!-- 回到顶部 -->
-		<div class="goto" style="right:3.2rem;"></div>
+		<div class="goto"></div>
 	</div>
 </template>
 <script>
@@ -81,8 +81,15 @@
             });
         },
 		watch: {
-            $route() {
-                $(window).scrollTop(sessionStorage.getItem("scrolltop"));
+            $route(to,from) {
+                let toStr = to.fullPath, fromStr = from.fullPath;
+                if(!toStr.includes('./per-default')) {
+                    this.$refs.infiniteLoading.isLoading = true
+                    $(window).scrollTop(sessionStorage.getItem("scrolltop"));
+				} else {
+                    this.$refs.infiniteLoading.isLoading = false;
+                    $(window).scrollTop(sessionStorage.getItem("scrolltop"));
+				}
 			}
 		},
         methods: {

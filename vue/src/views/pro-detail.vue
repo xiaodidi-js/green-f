@@ -50,7 +50,7 @@
 						<!--</div>-->
 					<!--</div>-->
 				</div>
-				<div class="preferential">
+				<div class="preferential" style="display:none;">
 					<ul>
 						<li class="free">
 							<i class="icon-tick"></i>

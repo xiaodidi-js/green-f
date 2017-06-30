@@ -6,8 +6,11 @@
 			<x-input :show-clear=true placeholder="手机号码" type="number" :value.sync="data.uname" class="login-ipt"></x-input>
 		</div>
 		<div class="tabmain">
-			<i class="iconfont user_icon icon-mima"></i>
-			<x-input :show-clear=true placeholder="账号密码" type="password" :value.sync="data.pwd" class="login-ipt"></x-input>
+			<div style="float:left;">
+				<i class="iconfont user_icon icon-mima"></i>
+				<x-input :show-clear=true placeholder="账号密码" type="password" :value.sync="data.pwd" class="login-ipt pwd-input"></x-input>
+			</div>
+			<span class="checkbtn" @click="checkbtnShow()"></span>
 		</div>
 	</group>
 	<!-- 底部选择 -->
@@ -68,6 +71,13 @@ export default{
         this.data.auto = true;
 	},
 	methods: {
+        checkbtnShow () {
+            if($(".weui_input").eq(1).attr("type") == 'text') {
+                $(".weui_input").eq(1).attr("type","password");
+			} else {
+                $(".weui_input").eq(1).attr("type","text");
+			}
+		},
 		checkBefore: function(){
 			if(this.un.length <= 0 || this.up.length <= 0) {
 				return false;
@@ -218,6 +228,21 @@ export default{
 		right:0;
 		top:0;
 	}
+
+	.pwd-input {
+		width: 100%;
+	}
+
+	.checkbtn {
+		float: right;
+		width: 2.5rem;
+		height: 1.5rem;
+		display: block;
+		margin: 19px 10px 0px 0px;
+		background: url("../images/hide_password.png") no-repeat;
+		background-size: cover;
+	}
+
 </style>
 
 <style>
