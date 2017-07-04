@@ -11,10 +11,12 @@
                     <div v-link="{name:'detail',params:{pid:item.id}}">
                         <div class="list_pirture" v-if="item.store == 0">
                             <div class="qing">已售罄</div>
-                            <div v-lazy:background-image="item.shotcut" class="lazyImg"></div>
+                            <!--<div v-lazy:background-image="item.shotcut" class="lazyImg"></div>-->
+                            <img :src="item.shotcut" alt="" style="width:100%;height:100%" />
                         </div>
                         <div class="list_pirture" v-else>
-                            <div v-lazy:background-image="item.shotcut" class="lazyImg"></div>
+                            <!--<div v-lazy:background-image="item.shotcut" class="lazyImg"></div>-->
+                            <img :src="item.shotcut" alt="" style="width:100%;height:100%" />
                         </div>
                         <div class="list_value">{{ item.name }}</div>
                         <div class="list_footer">
@@ -269,16 +271,16 @@
     }
     .footer_shopcar{
         width: 25%;
-        height: 1.806rem;
+        height: 2.806rem;
         float: right;
-        text-align:right;
+        text-align: right;
     }
     .footer_shopcar{
         margin-top: 5px;
     }
     .footer_shopcar img{
         width: 2.3rem;
-        height: 1.7rem;
+        height: 2rem;
     }
     @media screen and (max-width: 320px){
         .list_value{margin-top:0.1rem;}

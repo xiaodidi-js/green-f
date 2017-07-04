@@ -8,17 +8,17 @@
 		</div>
 		<div id="card">
 			<!-- 选项卡一 -->
-			<div class="group" :class="{'active':$route.position === 1}" v-link="{name:'index'}">
+			<div class="group" :class="{'active':$route.position === 1}" @click="goPage('index')">
 				<i class="icons icon-home"></i>
 				<div class="name public-color">首页</div>
 			</div>
 			<!-- 选项卡二 -->
-			<div class="group" :class="{'active':$route.position === 2}" style="position: relative;left: -15px;" v-link="{name:'classify'}">
+			<div class="group" :class="{'active':$route.position === 2}" style="position: relative;left: -15px;" @click="goPage('classify')">
 				<i class="icons icon-zizhuxiadan"></i>
 				<div class="name public-color">下单</div>
 			</div>
 			<!-- 选项卡三 -->
-			<div class="group" :class="{'active':$route.position === 3}" style="position: relative;left: 15px;" v-link="{name:'card-image'}">
+			<div class="group" :class="{'active':$route.position === 3}" style="position: relative;left: 15px;" @click="goPage('card-image')">
 				<i class="icons icon-huodong"></i>
 				<div class="name public-color">活动</div>
 			</div>
@@ -57,6 +57,9 @@
 
 		},
         methods: {
+            goPage(name) {
+				this.$router.go({name : name});
+			},
 		    goConter: function() {
                 let openid = sessionStorage.getItem("openid");
                 this.$http.get(localStorage.apiDomain+'public/index/index/guanzhu?openid='+ openid).then((response)=>{

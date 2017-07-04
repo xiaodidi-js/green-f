@@ -19,10 +19,12 @@
 							<a style="display:block" v-link="{name:'detail',params:{pid:item.id}}">
 								<div class="shotcut" v-if="item.store == 0">
 									<div class="qing">已售罄</div>
-									<div class="shotcut-img" v-lazy:background-image="item.src"></div>
+									<img :src="item.src" alt="" style="width:100%;height:100%;" />
+									<!--<div class="shotcut-img" v-lazy:background-image="item.src"></div>-->
 								</div>
 								<div class="shotcut" v-else>
-									<div class="shotcut-img" v-lazy:background-image="item.src"></div>
+									<!--<div class="shotcut-img" v-lazy:background-image="item.src"></div>-->
+									<img :src="item.src" alt="" style="width:100%;height:100%;" />
 								</div>
 								<div class="shotcut-txt">
 									<p class="item-title" style="">{{ item.title }}</p>
@@ -97,9 +99,7 @@
             }
         },
         watch: {
-            $route() {
-                $(".cla-message").scrollTop(sessionStorage.getItem("scrolltop"));
-            }
+
         },
         created () {
 
@@ -371,7 +371,6 @@
 	.cla-message .main .shotcut {
 		width: 33%;
 		height: 100%;
-		background-color: #EFEFEF;
 		background-size: cover;
 		overflow: hidden;
 		position: relative;

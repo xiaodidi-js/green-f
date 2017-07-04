@@ -431,15 +431,6 @@ const routers = {
             require(['./components/seckill-floor.vue'], resolve);
         }
     },
-    'buying': {
-        name:'buying',
-        header:false,
-        footer:true,
-        title:'限时抢购',
-        component (resolve) {
-            require(['./midwares/buying.vue'], resolve);
-        }
-    },
     'buying-like': {
         name:'buyinglike',
         header:false,

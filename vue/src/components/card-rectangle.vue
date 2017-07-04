@@ -7,29 +7,30 @@
 						<template v-for='item1 in item.arr'>
 							<template v-if="item.arr.length == 1">
 								<div style="width:100%;float:left;">
-									<a class="href-ui" :href="'//'+item1.htmlurl">
+									<a class="href-ui" @click='listclick(item1.htmlurl)'>
 										<img :src="item1.url" alt="" style="width:100%;" />
 									</a>
 								</div>
 							</template>
 							<template v-if="item.arr.length == 2">
 								<div style="width:50%;float:left;height:auto;">
-									<a class="href-ui" :href="'//'+item1.htmlurl">
+									<a class="href-ui" @click='listclick(item1.htmlurl)'>
 										<img :src="item1.url" alt="" style="width:100%;" />
 									</a>
 								</div>
 							</template>
 							<template v-if="item.arr.length == 3">
 								<div style="width:33.3%;float:left;">
-									<a class="href-ui three-href" :href="'//'+item1.htmlurl">
-										<div v-lazy:background-image="item1.url" class="lazyUrl"></div>
+									<a class="href-ui three-href" @click='listclick(item1.htmlurl)'>
+										<img :src="item1.url" alt="" style="width:100%;" />
+										<!--<div v-lazy:background-image="item1.url" class="lazyUrl"></div>-->
 									</a>
 								</div>
 							</template>
 							<template v-if="item.arr.length == 4">
 								<div style="width:25%;float:left;">
-									<a class="href-ui three-href" :href="'//'+item1.htmlurl">
-										<div v-lazy:background-image="item1.url" class="lazyUrl  lazyUrl-two"></div>
+									<a class="href-ui three-href" @click='listclick(item1.htmlurl)' >
+										<img :src="item1.url" alt="" style="width:100%;" />
 									</a>
 								</div>
 							</template>
@@ -41,14 +42,17 @@
 						<template v-for='item1 in item.arr'>
 							<div class="shop-item">
 								<div style="width:100%;" class="over-img" v-if="item1.store == 0">
-									<a v-link="{name:'detail',params:{pid:item1.shopid}}">
+									<a v-link="{name:'detail',params:{pid:item1.shopid}}" style="display:block;width:100%;height:100%;">
 										<div class="order_over">已售罄</div>
-										<div v-lazy:background-image="item1.shopshotcut" class="lazyImg"></div>
+										<img :src="item1.shopshotcut" alt="" style="width:100%;height:100%;"/>
+										<!--<div v-lazy:background-image="item1.shopshotcut" class="lazyImg"></div>-->
 									</a>
 								</div>
 								<div style="width:100%;" class="over-img" v-else>
-									<a v-link="{name:'detail',params:{pid:item1.shopid}}">
-										<div v-lazy:background-image="item1.shopshotcut" class="lazyImg"></div>
+									<!--<img v-lazy:background-image="item1.shopshotcut" class="lazyImg" v-link="{name:'detail',params:{pid:item1.shopid}}" />-->
+									<a v-link="{name:'detail',params:{pid:item1.shopid}}" style="display:block;width:100%;height:100%;">
+										<img :src="item1.shopshotcut" alt="" style="width:100%;height:100%;" />
+										<!--<div v-lazy:background-image="item1.shopshotcut" class="lazyImg"></div>-->
 									</a>
 								</div>
 								<p class="shop-name" style="">{{ item1.shopname }}</p>
@@ -68,6 +72,7 @@
 	<div class="footer-list">
 		—————&nbsp;&nbsp;我是有底线的!&nbsp;&nbsp;—————
     </div>
+	<div></div>
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
 
@@ -114,7 +119,7 @@
         },
         watch: {
             $route() {
-                $(window).scrollTop(sessionStorage.getItem("scrolltop"));
+
             }
         },
 		ready() {
@@ -125,6 +130,9 @@
             Toast
         },
         methods: {
+            listclick(url) {
+                this.$router.go(url);
+			},
             gocart: function (data) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);

@@ -3,12 +3,13 @@
 	<banners></banners>
 	<div class="sub-content" style="position:relative;top:50px;">
 		<!-- 显示抢购 -->
-		<card-column :columns="maincolumns" keep-alive></card-column>
+		<card-column :columns="maincolumns"></card-column>
 		<!-- 热销产品排行榜 -->
-		<card-rectangle :testarr="data.index_data"></card-rectangle>
+		<card-rectangle :testarr="data"></card-rectangle>
 	</div>
 	<!-- 回到顶部 -->
 	<div class="goto"></div>
+	<ceshi></ceshi>
     <!-- toast提示框 -->
     <toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
 	<loading :show="loadingShow" text="正在加载..."></loading>
@@ -26,6 +27,7 @@
     import axios from 'axios'
     import qs from 'qs'
     import Loading from 'vux/src/components/loading'
+    import ceshi from 'components/ceshi'
 
 	export default{
 		components: {
@@ -35,7 +37,8 @@
 			Toast,
             Swiper,
             banners,
-            Loading
+            Loading,
+            ceshi
 		},
         vuex: {
             actions: {
@@ -57,20 +60,11 @@
                 searchKey: '',
 				arr: {},
 				tuijian: 1,
+				scroll: ''
 			}
 		},
         ready() {
-            this.main();
-		    var content = this;
-            $(window).scroll(function() {
-                if($(window).scrollTop() >= 350) {
-                    content.commitData({ target: 'scroll', data: $(window).scrollTop() });
-                    console.log(content.$store.state.scroll);
-                    $(".goto").fadeIn(500);
-                } else {
-                    $(".goto").stop(true,true).fadeOut(500);
-                }
-            });
+			this.main();
             $(".goto").click(function(){
                 $("html,body").animate({
                     scrollTop:0
@@ -90,33 +84,27 @@
             this.follow();
             this.timeline();
     	},
+        mouted() {
+
+		},
         computed: {
 
 		},
         methods: {
-		    main () {
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/index',
-                }).then((response) => {
-                    if(response.data.status = 1) {
-                        this.loadingShow = true;
-                        localStorage.setItem("iData",JSON.stringify(response.data));
-                        if(localStorage.getItem("iData") != '') {
-                            this.data = JSON.parse(localStorage.getItem("iData"));
-                        }
-                        var data = this.data;
-                        for (var i = 0; i < data.index_data.length; i++) {
-                            if(data.index_data[i].type == 4) {
-                                var l = data.index_data[i].arr.length;
-                                for (var k = 0; k < l; k++) {
-                                    data.index_data[i].arr[k].img = data.index_data[i].arr[k].url;
-                                    data.index_data[i].arr[k].url = data.index_data[i].arr[k].htmlurl;
-                                }
+		    main() {
+                this.$getData('/index/index').then((res) => {
+                    this.loadingShow = true;
+                    this.data = res.index_data;
+                    for (var i = 0; i < this.data.length; i++) {
+                        if(this.data[i].type == 4) {
+                            var l = this.data[i].arr.length;
+                            for (var k = 0; k < l; k++) {
+                                this.data[i].arr[k].img = this.data[i].arr[k].url;
+                                this.data[i].arr[k].url = this.data[i].arr[k].htmlurl;
                             }
                         }
-					}
-                });
+                    }
+                })
 			},
             follow () {
                 let url = '' , openid = sessionStorage.getItem("openid");

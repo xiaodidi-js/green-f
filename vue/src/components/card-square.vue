@@ -1,20 +1,18 @@
-
-
 <template>
 	<template v-if="info.title">
 		<div class="wrapper" style="padding-bottom: 100px;" :class="{'nopadding':noPadding}" >
 			<label class="title">{{ info.title }}</label>
 			<div class="parent">
 				<div class="ui-box" v-for="item in info.list">
-					<div v-link="{name:'detail',params:{pid:item.id}}">
+					<div @click="goPage('detail', {pid:item.id})">
 						<div class="img" v-if="item.store == 0">
 							<div class="qing">已售罄</div>
-							<div v-lazy:background-image="item.src" class="lazyImg"></div>
-							<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
+							<!--<div v-lazy:background-image="item.src" class="lazyImg"></div>-->
+							<img :src="item.src" alt="" style="width:100%;height:100%;" />
 						</div>
 						<div class="img" v-else>
-							<div v-lazy:background-image="item.src" class="lazyImg"></div>
-							<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
+							<!--<div v-lazy:background-image="item.src" class="lazyImg"></div>-->
+							<img :src="item.src" alt="" style="width:100%;height:100%;" />
 						</div>
 						<div class="mes">
 							<div class="name">{{ item.title }}</div>
@@ -35,15 +33,15 @@
 	<template v-else>
 		<div class="wrapper" :class="{'nopadding':noPadding}" >
 			<div class="ui_box" v-for="item in info.list">
-				<div v-link="{name:'detail',params:{pid:item.id}}">
+				<div @click="goPage('detail', {pid:item.id})">
 					<div class="img" v-if="item.store == 0">
 						<div class="qing">已售罄</div>
-						<div v-lazy:background-image="item.src" class="lazyImg"></div>
-						<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
+						<!--<div v-lazy:background-image="item.src" class="lazyImg"></div>-->
+						<img :src="item.src" alt="" style="width:100%;height:100%;" />
 					</div>
 					<div class="img" v-else>
-						<div v-lazy:background-image="item.src" class="lazyImg"></div>
-						<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
+						<!--<div v-lazy:background-image="item.src" class="lazyImg"></div>-->
+						<img :src="item.src" alt="" style="width:100%;height:100%;" />
 					</div>
 					<div class="mes">
 						<div class="name">{{ item.title }}</div>
@@ -70,6 +68,9 @@
     import qs from 'qs'
 
 	export default{
+        ready() {
+
+		},
 		props: {
 			info: {
 				type: Object,
@@ -93,6 +94,9 @@
 			}
 		},
 		methods: {
+            goPage(name,params) {
+                this.$router.go({name:name,params:params});
+			},
             addCart (data) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);

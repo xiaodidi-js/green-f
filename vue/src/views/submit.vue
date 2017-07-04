@@ -228,8 +228,9 @@
                 couponObj:null,
                 payType:0,
                 score:0,
-                scoreSwitch:false,
+                scoreSwitch: false,
                 scoreNumber: 0,
+                sNumber: 0,	//积分 0/1
                 deliverType:'',
                 deliverName:'',
                 freight:0,
@@ -349,9 +350,20 @@
                 if(this.scoreSwitch) {
                     this.scoreNumber = 1;
                     obj['makePrice'] = obj['showText'];
+                    axios({
+                        method: 'get',
+                        url: localStorage.apiDomain + 'public/index/index/jifenmoney'
+                    }).then((response) => {
+                        if(response.data.status == 1) {
+                            this.sNumber = parseInt(response.data.info.jifen);
+							console.log(this.sNumber,response.data.info);
+						}
+                    });
                 }else{
                     this.scoreNumber = 2;
+                    this.sNumber = 0;
                     obj['makePrice'] = 0;
+
                 }
                 return obj;
             },
@@ -577,11 +589,11 @@
                         stype:this.deliverType,
                         address:this.address,
                         coupon:this.coupon,
-                        score:this.scoreSwitch,
+                        score:this.sNumber,
                         scoreNumber: this.scoreNumber,
                         paysum:this.lastPaySum,
                         tips:this.memo,
-						openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
+						openid: 'os0CqxBBANhLuBLTsViL3C0zDlNs',//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                         pshonse:this.shonse,
                         gift:{'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                     };

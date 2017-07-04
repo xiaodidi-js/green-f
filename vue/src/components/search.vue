@@ -5,10 +5,12 @@
 				<div v-link="{name:'detail',params:{pid:item.id}}">
 					<div class="img" v-if="item.store == 0">
 						<div class="qing">已售罄</div>
-						<div class="shotcut" v-lazy:background-image="item.shotcut"></div>
+						<img :src="item.shotcut" alt="" style="width:100%;height:100%;" />
+						<!--<div class="shotcut" v-lazy:background-image="item.shotcut"></div>-->
 					</div>
 					<div class="img" v-else>
-						<div class="shotcut" v-lazy:background-image="item.shotcut"></div>
+						<img :src="item.shotcut" alt="" style="width:100%;height:100%;" />
+						<!--<div class="shotcut" v-lazy:background-image="item.shotcut"></div>-->
 					</div>
 					<div class="mes">
 						<div class="name">{{ item.name }}</div>
@@ -27,6 +29,7 @@
 	</div>
 	<!-- toast提示框 -->
 	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
+	<div class="goto"></div>
 </template>
 
 <script>
@@ -64,12 +67,16 @@
 			}
 		},
 		ready() {
-
+            $(".goto").click(function(){
+                $("html,body").animate({
+                    scrollTop:0
+                },200);
+            });
 		},
         watch: {
-            $route() {
-                $(window).scrollTop(sessionStorage.getItem("scrolltop"));
-            }
+//            $route() {
+//                $(window).scrollTop(sessionStorage.getItem("scrolltop"));
+//            }
         },
 		computed: {
 

@@ -1,80 +1,19 @@
-<style scoped>
-.btn-wrapper{
-	width:80%;
-	margin:20% 10% 0% 10%;
-}
-
-.btn-wrapper .link-box{
-	width:100%;
-	position:relative;
-	margin-top:0.8rem;
-	font-size:1.2rem;
-	color:#B3B3B3;
-}
-
-.btn-wrapper .link-box .left{
-	position:absolute;
-	left:0;
-	top:0;
-}
-
-.btn-wrapper .link-box .right{
-	position:absolute;
-	right:0;
-	top:0;
-}
-</style>
-
-<style>
-.weui_cells{
-	margin-top:0 !important;
-}
-
-.weui_btn_default{
-	background-color:#F9AD0C !important;
-	color:#fff !important;
-}
-
-.weui_btn_default:active{
-	background-color:#DE9A08 !important;
-}
-
-.weui_btn_disabled.weui_btn_default{
-	background-color:#F3C76A !important;
-}
-
-.weui_cell_ft{
-	text-align:left !important;
-}
-
-.weui_cell_ft span{
-	color:#A9A9A9;
-}
-
-.weui_cell_ft span.vux-popup-picker-value{
-	color:#000;
-}
-
-.vux-popup-picker-header{
-	color:#F9AD0C !important;
-}
-</style>
-
 <template>
-	<!-- 输入内容 -->
-	<group title="">
-		<x-input :show-clear=true placeholder="收货人姓名" type="text" :value.sync="aname"></x-input>
-		<x-input :show-clear=true placeholder="手机号码" type="text" :value.sync="atel"></x-input>
-		<x-input :show-clear=true placeholder="邮政编码" type="text" :value.sync="acode"></x-input>
-		<address placeholder="省，市，区" title="" :list="addressData" :value.sync="aprovince"></address>
-		<x-textarea :rows="3" placeholder="详细地址" :value.sync="address"></x-textarea>
-	</group>
-	<!-- 底部按钮 -->
-	<div class="btn-wrapper">
-		<x-button :text="btnText" :disabled="btnDis" @click="postData"></x-button>
+	<div style="margin-top: 50px;">
+		<!-- 输入内容 -->
+		<group title="">
+			<x-input :show-clear=true placeholder="收货人姓名" type="text" :value.sync="aname"></x-input>
+			<x-input :show-clear=true placeholder="手机号码" type="text" :value.sync="atel"></x-input>
+			<x-input :show-clear=true placeholder="邮政编码" type="text" :value.sync="acode"></x-input>
+			<address placeholder="省，市，区" title="" :list="addressData" :value.sync="aprovince"></address>
+			<x-textarea :rows="3" placeholder="详细地址" :value.sync="address"></x-textarea>
+		</group>
+		<!-- 底部按钮 -->
+		<div class="btn-wrapper">
+			<x-button :text="btnText" :disabled="btnDis" @click="postData"></x-button>
+		</div>
+		<!-- 输入内容 -->
 	</div>
-	<!-- 输入内容 -->
-
 	<!-- toast提示框 -->
 	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
 </template>
@@ -266,3 +205,65 @@ export default{
 }
 
 </script>
+
+<style scoped>
+	.btn-wrapper{
+		width:80%;
+		margin:20% 10% 0% 10%;
+	}
+
+	.btn-wrapper .link-box{
+		width:100%;
+		position:relative;
+		margin-top:0.8rem;
+		font-size:1.2rem;
+		color:#B3B3B3;
+	}
+
+	.btn-wrapper .link-box .left{
+		position:absolute;
+		left:0;
+		top:0;
+	}
+
+	.btn-wrapper .link-box .right{
+		position:absolute;
+		right:0;
+		top:0;
+	}
+</style>
+
+<style>
+	.weui_cells{
+		margin-top:0 !important;
+	}
+
+	.weui_btn_default{
+		background-color:#F9AD0C !important;
+		color:#fff !important;
+	}
+
+	.weui_btn_default:active{
+		background-color:#DE9A08 !important;
+	}
+
+	.weui_btn_disabled.weui_btn_default{
+		background-color:#F3C76A !important;
+	}
+
+	.weui_cell_ft{
+		text-align:left !important;
+	}
+
+	.weui_cell_ft span{
+		color:#A9A9A9;
+	}
+
+	.weui_cell_ft span.vux-popup-picker-value{
+		color:#000;
+	}
+
+	.vux-popup-picker-header{
+		color:#F9AD0C !important;
+	}
+</style>

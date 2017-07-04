@@ -120,8 +120,8 @@ export default{
 		},
 		exitLogin: function(){
 			this.clearAll();
+            localStorage.removeItem('userInfo');
 			sessionStorage.removeItem('userInfo');
-			localStorage.removeItem('userInfo');
 			localStorage.removeItem('openid');
 			sessionStorage.removeItem('openid');
 			this.$router.go({name:'index'});
@@ -171,7 +171,7 @@ export default{
 			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 			ustore = JSON.parse(ustore);
 			let pdata = {id:ustore.id,token:ustore.token,utel:this.data.tel,uname:this.data.name,opwd:this.uopwd,upwd:this.unpwd,cpwd:this.ucpwd,sex:this.data.sex,birthday:this.data.birthday};
-			this.$http.put(localStorage.apiDomain+'public/index/login/useredit',pdata).then((response)=>{
+			this.$http.put(localStorage.apiDomain + 'public/index/login/useredit',pdata).then((response)=>{
 				if(response.data.status===1){
 					let getData = response.data;
 					if(getData.id&&getData.token&&getData.time){

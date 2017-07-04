@@ -36,19 +36,15 @@ import Toast from 'vux/src/components/toast'
 
 		},
         watch: {
-            $route() {
-                $(".cla-message").scrollTop(sessionStorage.getItem("scrolltop"));
-            }
+
         },
 		ready() {
-			var content = this;
-			this.$http.get(localStorage.apiDomain + 'public/index/index/columns').then((response)=>{
-				localStorage.setItem("classify",JSON.stringify(response.data.classify));
-				this.data = JSON.parse(localStorage.getItem("classify"));
-			},(response)=>{
-				this.toastMessage = "网络开小差啦~";
-				this.toastShow = true;
-			})
+		    this.$getData('/index/index/columns').then((res) => {
+		        this.data = res.classify;
+            },(response)=>{
+                this.toastMessage = "网络开小差啦~";
+                this.toastShow = true;
+            });
 		}
 	}
 

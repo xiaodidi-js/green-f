@@ -272,13 +272,13 @@ export default{
 			WeixinJSBridge.invoke(
 				'getBrandWCPayRequest',
 				context.data.payment,
-				function(res){
-					if(res.err_msg == "get_brand_wcpay_request:ok"){
+				function(res) {
+					if(res.err_msg == "get_brand_wcpay_request:ok") {
 						let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 						ustore = JSON.parse(ustore);
 						let opid = sessionStorage.getItem('openid');
 						let pdata = {uid:ustore.id,token:ustore.token,oid:context.$route.params.oid,opid:opid,paysuccess:1};
-						context.$http.put(localStorage.apiDomain+'public/index/user/getsubmitorder',pdata).then((response)=>{
+						context.$http.put(localStorage.apiDomain + 'public/index/user/getsubmitorder',pdata).then((response)=>{
 							context.toastMessage = response.data.info;
 							context.toastShow = true;
 							if(response.data.status === 1) {
@@ -330,8 +330,8 @@ export default{
 			switch(this.clickType){
 				case 1:
 					//取消订单
-					this.$http.delete(localStorage.apiDomain+'public/index/user/getsubmitorder/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+this.$route.params.oid).then((response)=>{
-						if(response.data.status===1){
+					this.$http.delete(localStorage.apiDomain + 'public/index/user/getsubmitorder/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+this.$route.params.oid).then((response)=>{
+						if(response.data.status === 1) {
 						    console.log(response.data + '1');
 							this.data.order.statext = '用户取消';
 							this.data.order.status = -1;

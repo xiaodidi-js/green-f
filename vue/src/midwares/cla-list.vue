@@ -14,7 +14,7 @@
 		</tab>
 		<!--<separator :set-height="90" unit="px"></separator>-->
 		<!-- 分类列表 -->
-		<card-square style="padding-bottom: 100px;" :info="data" :no-padding="true"></card-square>
+		<card-square style="padding-bottom: 100px;" :info="data" :no-padding="true" keep-alive></card-square>
 		<!-- toast提示框 -->
 		<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
 		<loading :show="loadingShow" text="正在加载..."></loading>
@@ -65,7 +65,6 @@
             }
         },
         ready() {
-            this.getData('');
             var content = this;
             $(window).scroll(function() {
                 if($(window).scrollTop() >= 400) {
@@ -80,17 +79,16 @@
                 },200);
             });
         },
+		created() {
+            this.getData('');
+		},
 		watch: {
             $route(to,from) {
-                let toStr = to.fullPath, fromStr = from.fullPath;
-                if(!toStr.includes('./per-default')) {
-                    this.$refs.infiniteLoading.isLoading = true
-                    $(window).scrollTop(sessionStorage.getItem("scrolltop"));
-				} else {
-                    this.$refs.infiniteLoading.isLoading = false;
-                    $(window).scrollTop(sessionStorage.getItem("scrolltop"));
-				}
+                $(window).scrollTop(sessionStorage.getItem("scrolltop"));
 			}
+		},
+        mounted: {
+
 		},
         methods: {
             getData: function(sk){
@@ -114,6 +112,7 @@
                             this.data.list = response.data.info.list;
                             this.data.img = response.data.info.img;
                             this.data.background = response.data.info.background;
+                            $(window).scrollTop(sessionStorage.getItem("scrolltop"));
                         }
 					} else if(response.data.status = 0) {
                         this.$router.go({name : 'index'});

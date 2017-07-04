@@ -6,11 +6,11 @@
 			<x-input :show-clear=true placeholder="手机号码" type="number" :value.sync="data.uname" class="login-ipt"></x-input>
 		</div>
 		<div class="tabmain">
-			<div style="float:left;">
+			<div>
 				<i class="iconfont user_icon icon-mima"></i>
 				<x-input :show-clear=true placeholder="账号密码" type="password" :value.sync="data.pwd" class="login-ipt pwd-input"></x-input>
 			</div>
-			<span class="checkbtn" @click="checkbtnShow()"></span>
+			<!--<span class="checkbtn" @click="checkbtnShow()"></span>-->
 		</div>
 	</group>
 	<!-- 底部选择 -->
@@ -230,7 +230,7 @@ export default{
 	}
 
 	.pwd-input {
-		width: 100%;
+		width: 90%;
 	}
 
 	.checkbtn {

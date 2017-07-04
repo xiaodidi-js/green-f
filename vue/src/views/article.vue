@@ -110,7 +110,7 @@
 
 	#article-body {
 		width: 100%;
-		height: auto;
+		height: 100%;
 		background: #fff;
 		margin-top:46px;
 	}

@@ -400,7 +400,7 @@
 	
 	#customer{
 		display:none;
-		padding-top: 125px;
+		padding-top: 116px;
 	}
 
 	.sub-content-tab{

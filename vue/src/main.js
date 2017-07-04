@@ -9,8 +9,7 @@ import App from 'components/app.vue';
 import Routers from './router';
 import Env from './config/env';
 import WxJssdk from 'weixin-js-sdk'
-import fetchGet from './libs/util.js'
-import fetchPost from './libs/util.js'
+import { fetchGet,fetchPost } from './libs/util.js'
 
 Vue.use(VueLazy,{
 	preLoad:1.2,
@@ -22,10 +21,15 @@ Vue.use(VueLazy,{
 Vue.use(VueResource);
 Vue.use(VueRouter);
 
+Vue.prototype.$getData = fetchGet;
+Vue.prototype.$postData = fetchPost;
+
 // 开启debug模式
 Vue.config.debug = true;
 //设置请求域名
-localStorage.setItem('apiDomain','http://green-f.cn/'); /* http://newshop.com/ */
+
+localStorage.setItem('apiDomain', 'http://green-f.cn/');
+/* http://newshop.com/ */
 
 // 路由配置
 let router = new VueRouter({
@@ -43,13 +47,11 @@ let router = new VueRouter({
 });
 
 router.map(Routers);
-router.map(fetchGet);
-router.map(fetchPost);
 
 router.beforeEach((transition) => {
     if(Env == 'production') {
         //微信openid检测
-        if(!sessionStorage.getItem('openid')){
+        if(!sessionStorage.getItem('openid')) {
             let query = transition.to.query;
             let since = sessionStorage.setItem('since',query.sinceid); //自提点关注检测
             location.reload();
@@ -61,7 +63,7 @@ router.beforeEach((transition) => {
                 if(typeof query.opid !== 'undefined' && query.opid != '') {
                     localStorage.setItem('openid',query.opid);
                 } else {
-                    location.href = localStorage.getItem('apiDomain')+'public/index/home/index?back=' + encodeURI(transition.to.path);
+                    location.href = localStorage.getItem('apiDomain') + 'public/index/home/index?back=' + encodeURI(transition.to.path);
                     return true;
                 }
             }
@@ -87,6 +89,15 @@ router.beforeEach((transition) => {
         transition.next();
     }
     window.scrollTo(0, 0);
+
+    //  窗体滚动事件
+    $(window).scroll(function() {
+        if($(window).scrollTop() >= 350) {
+            $(".goto").fadeIn(500);
+        } else {
+            $(".goto").stop(true,true).fadeOut(500);
+        }
+    });
 });
 
 router.afterEach((transition) => {

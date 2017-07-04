@@ -2,6 +2,9 @@
  * Created by aresn on 16/7/18.
  */
 
+import axios from 'axios'
+import qs from 'qs'
+
 export const fetchGet = (target, data) => {
     if (data) {
         var params = [];
@@ -13,7 +16,7 @@ export const fetchGet = (target, data) => {
     }
     return new Promise((resolve, reject) => {
         axios({
-            url: localStorage.apiDomain + target,
+            url: localStorage.apiDomain + 'public' + target,
             method: 'get',
             withCredentials: false
         }).then(function (response) {

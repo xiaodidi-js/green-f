@@ -23,7 +23,7 @@ export default{
 	},
     components: {
         Toast,
-        Loading
+        Loading,
     },
 	route: {
 		
@@ -38,9 +38,7 @@ export default{
 
 	},
     watch: {
-        $route() {
-            $(".wrapper").scrollTo(sessionStorage.getItem("scrolltop"));
-        }
+
     }
 }
 

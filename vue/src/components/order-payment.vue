@@ -14,7 +14,8 @@
             </div>
             <div class="mid-line" v-link="{name:'order-detail',params:{oid:item.id}}">
                 <div class="imgs" v-for="img in item.imgs"> <!--  v-lazy:background-image="img" -->
-                    <div v-lazy:background-image="img" class="payment"></div>
+                    <!--<div v-lazy:background-image="img" class="payment"></div>-->
+                    <img :src="img" style="width:100%;height:100%;" alt="" />
                 </div>
                 <div class="arrow"></div>
             </div>
@@ -59,7 +60,7 @@
             </div>
             <!-- 确定弹框 -->
             <confirm :show.sync="confirmShow" :title="confirmTitle" confirm-text="确定" cancel-text="取消"
-                     @on-confirm="myConfirmClcik(item.id)" @on-cancel="cancelClick">
+                     @on-confirm="myConfirmClick(item.id)" @on-cancel="cancelClick">
                 <p style="text-align:center;">{{ confirmText }}</p>
             </confirm>
         </div>
@@ -118,18 +119,18 @@
 
         },
         methods: {
-            myConfirmClcik: function(id) {
+            myConfirmClick: function(id) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
                 switch(this.clickType) {
                     case 1:
                         let pdata = {uid:ustore.id,token:ustore.token,oid:id};
-                        this.$http.put(localStorage.apiDomain + 'public/index/user/orderoperation',pdata).then((response)=>{
+                        this.$http.put(localStorage.apiDomain + '/public/index/user/orderoperation',pdata).then((response)=>{
                             location.reload();
                         });
                     case 2:
                         let d = {uid:ustore.id,token:ustore.token,oid:id};
-                        this.$http.delete(localStorage.apiDomain + 'public/index/user/getsubmitorder/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + id).then((response)=>{
+                        this.$http.delete(localStorage.apiDomain + '/public/index/user/getsubmitorder/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + id).then((response)=>{
                             if(response.data.status === 1) {
                                 this.data.order.statext = '用户取消';
                                 this.data.order.status = -1;
@@ -165,7 +166,7 @@
                 this.loadingShow = true;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                this.$http.get(localStorage.apiDomain+'public/index/user/orderoperation/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+oid).then((response)=>{
+                this.$http.get(localStorage.apiDomain + 'public/index/user/orderoperation/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+oid).then((response)=>{
                     this.loadingShow = false;
                     this.btnStatus = false;
                     if(response.data.status===1) {
@@ -213,7 +214,6 @@
                 this.clickType = 0;
                 this.confirmTitle = '';
                 this.confirmText = '';
-                console.log();
             },
         }
     }

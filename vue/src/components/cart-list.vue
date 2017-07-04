@@ -8,10 +8,12 @@
 		<div class="maininfo">
 			<div class="img"  v-link="{name:'detail',params:{pid:pid}}"  v-if="store == 0"> <!-- v-lazy:background-image="img" -->
 				<div class="overtext">已售罄</div>
-				<div v-lazy:background-image="img" class="lazyImg"></div>
+				<!--<div v-lazy:background-image="img" class="lazyImg"></div>-->
+				<img :src="img" alt="" style="width:100%;height:100%;" />
 			</div>
 			<div class="img"  v-link="{name:'detail',params:{pid:pid}}" v-else> <!-- v-lazy:background-image="img" -->
-				<div v-lazy:background-image="img" class="lazyImg"></div>
+				<!--<div v-lazy:background-image="img" class="lazyImg"></div>-->
+				<img :src="img" alt="" style="width:100%;height:100%;" />
 			</div>
 			<div class="mes">
 				<div class="name">{{ pname }}</div>
