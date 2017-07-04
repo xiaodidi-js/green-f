@@ -144,10 +144,7 @@
                     }, 800);
                     return false;
 				} else if (ustore != null) {
-                    axios({
-                        method: 'get',
-                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.shopid,
-                    }).then((response) => {
+                    this.$getData('/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.shopid).then((response) => {
                         obj = {
                             id: data.shopid,
                             name: data.shopname,
@@ -155,7 +152,7 @@
                             shotcut: data.shopshotcut,
                             deliverytime: data.deliverytime,
                             nums:this.buyNums,
-                            store:this.proNums = response.data.store,
+                            store:this.proNums = response.store,
                             activeid: data.activeid,
                             activestu: data.activestu,
                             activepay: data.activepay,
@@ -178,7 +175,7 @@
                         } else if (data.store == 0) {
                             alert("已售罄");
                             return false;
-						}
+                        }
                         if(sessionStorage.getItem("myCart") != '') {
                             for(var y in cart) {
                                 if (cart[y]["deliverytime"] != data.deliverytime) {
@@ -195,6 +192,11 @@
                         this.setCart(obj);
                         alert("加入购物车成功！");
                     });
+
+//                    axios({
+//                        method: 'get',
+//                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.shopid,
+//                    })
 				}
             }
 		}

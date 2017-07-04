@@ -93,8 +93,8 @@
                 var _this = this;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                this.$http.get(localStorage.apiDomain + 'public/index/user/cainixihuan/uid/' + ustore.id + '/token/' + ustore.token).then((response)=>{
-                    this.likedata = response.data.tuijian_shop;
+                this.$getData('/index/user/cainixihuan/uid/' + ustore.id + '/token/' + ustore.token).then((response)=>{
+                    this.likedata = response.tuijian_shop;
                 },(response)=>{
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
@@ -112,10 +112,7 @@
                     }, 800);
                     return false;
                 } else if (ustore != null) {
-                    axios({
-                        method: 'get',
-                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
-                    }).then((response) => {
+                    this.$getData('/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id).then((response)=>{
                         obj = {
                             id:data.id,
                             name:data.name,
@@ -125,7 +122,7 @@
                             peisongok:data.peisongok,
                             activestu:data.activestu,
                             nums:this.buyNums,
-                            store:this.proNums = response.data.store,
+                            store:this.proNums = response.store,
                             format:'',
                             formatName:'',
                         };
@@ -162,6 +159,9 @@
                         obj = {};
                         alert("成功加入购物车!");
                         this.$router.go({name : "cart"});
+                    },(response)=>{
+                        this.toastMessage = '网络开小差了~';
+                        this.toastShow = true;
                     });
                 }
             }

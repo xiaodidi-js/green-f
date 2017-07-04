@@ -62,8 +62,8 @@
 			},
 		    goConter: function() {
                 let openid = sessionStorage.getItem("openid");
-                this.$http.get(localStorage.apiDomain+'public/index/index/guanzhu?openid='+ openid).then((response)=>{
-                    if(response.data.status == 0) {
+                this.$getData('/index/index/guanzhu?openid=' + openid).then((response)=>{
+                    if(response.status == 0) {
                         this.$router.go({name: 'sao'});
                         return;
                     }
@@ -73,8 +73,8 @@
 			},
             goCart: function() {
                 let openid = sessionStorage.getItem("openid");
-                this.$http.get(localStorage.apiDomain+'public/index/index/guanzhu?openid='+ openid).then((response)=>{
-                    if(response.data.status == 0) {
+                this.$getData('/index/index/guanzhu?openid=' + openid).then((response)=>{
+                    if(response.status == 0) {
                         this.$router.go({name: 'sao'});
                         return;
                     }

@@ -9,8 +9,7 @@
 		<div id="scroller" class="ms-scroller" style="transform:translate3d(0px,0px,0px)">
 			<div class="ms-item">
 				<!-- 头部滚动图 -->
-				<swiper :list="data.gallery" loop auto dots-position="center"
-						:show-desc-mask="false"
+				<swiper :list="data.gallery" loop auto dots-position="center" :show-desc-mask="false"
 						:aspect-ratio="480/480" dots-class="dots-my-orange" @touchstart.stop @touchend.stop></swiper>
 				<!-- 产品信息 -->
 				<div class="pro-mes">
@@ -251,26 +250,25 @@
             SeckillFloor
 		},
 		route: {
-			data(transition) {
 
-			}
-		},
-		watch: {
-		    '$route'(to,from) {
-                parseInt(to.params.pid);
-				if(parseInt(to.params.pid) !== this.data.id && to.name === 'detail') {
-					this.fetchData();
-                    this.share();
-					console.log(parseInt(to.params.pid),this.data.id);
-				}
-            }
 		},
 		ready() {
-            this.fetchData();
 		    //选项卡
 			this.siblingsDom();
 			this.timeline();
 		},
+		created() {
+            this.fetchData();
+		},
+        watch: {
+            '$route'(to,from) {
+                if(parseInt(to.params.pid) !== this.data.id && to.name === 'detail') {
+                    this.fetchData();
+                    this.share();
+                    console.log(parseInt(to.params.pid),this.data.id);
+                }
+            }
+        },
 		computed: {
 			makeFreight: function(){
 				let fmoney = parseFloat(this.data.freight);
@@ -397,10 +395,7 @@
                 let getUrl = '',context = this;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid,
-                }).then((response) => {
+                this.$getData('/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid).then((response) => {
                     if(response.data.status == 1) {
                         alert(response.data.info);
                         _self.setCart(cartObj);
@@ -418,77 +413,75 @@
                     getUrl = '/index/index/productdetail/uid/0/pid/' + this.$route.params.pid;
                 }
                 var _self = this, cart = JSON.parse(localStorage.getItem("myCart"));
-                this.$getData(getUrl).then((response)=>{
-                    this.data = response;
-                    console.log(response);
-                    context.share();
-                    //判断是否分享商品
-                    if(this.data.activestu == 2) {
-                        _self.showShare = true;
-                        $(".buyButton").css({
-                            "display":"none"
-                        });
-                    } else {
-                        _self.showShare = false
-                    }
-                    for(var i in cart) {
-                        if(cart[i].id == _self.data.id) {
-                            console.log(cart[i].id + "--" + _self.data.id);
+                try {
+                    this.$getData(getUrl).then((response)=>{
+                        this.data = response;
+                        console.log(this.data);
+                        context.share();
+                        //判断是否分享商品
+                        if(this.data.activestu == 2) {
+                            _self.showShare = true;
+                            $(".buyButton").css({
+                                "display":"none"
+                            });
                         } else {
-                            console.log(cart[i].id + "--" + _self.data.id);
+                            _self.showShare = false
                         }
-                    }
-                    var cartObj = {
-                        id:this.$route.params.pid,
-                        shotcut:this.data.shotcut,
-                        name:this.data.name,
-                        price:this.data.price,
-                        deliverytime:this.data.deliverytime,
-                        peisongok:this.data.peisongok,
-                        activestu:this.data.activestu,
-                        activeid:this.data.activeid,
-                        activepay:this.data.activepay,
-                        format: '',
-                        formatName: '',
-                        nums:this.buyNums,
-                        store:this.proNums = response.store,
-                        activestu:this.data.activestu,
-                    };
-                    if(!this.data.format){
-                        this.proNums = this.data.store;
-                    }
-                    //判断是否活动商品
-                    if(_self.data.activestu == 0 && _self.data.activestu == 2) {
-                        _self.seckillShow = false
-                    } else if(_self.data.activestu == 1) {
-                        _self.seckillShow = true;
-                    }
-                    this.$nextTick(()=>{
-                        var scaleBox = this.data.content;
-                        var itemEle = document.getElementsByClassName('ms-item')[1];
-                        // 处理异常
-                        try {
-                            if(scaleBox === '') {
-                                itemEle.innerHTML = "暂时没有详情图~~~";
-                                itemEle.style.paddingTop = "10px";
-                                itemEle.style.height = "100%";
-                                itemEle.style.lineHeight = "150px";
-                            } else {
-                                itemEle.innerHTML = scaleBox;
-                                var chil = itemEle.getElementsByTagName("img");
-                                for(var i in chil) {
-                                    chil[i].style.display = "block";
+                        var cartObj = {
+                            id:this.$route.params.pid,
+                            shotcut:this.data.shotcut,
+                            name:this.data.name,
+                            price:this.data.price,
+                            deliverytime:this.data.deliverytime,
+                            peisongok:this.data.peisongok,
+                            activestu:this.data.activestu,
+                            activeid:this.data.activeid,
+                            activepay:this.data.activepay,
+                            format: '',
+                            formatName: '',
+                            nums:this.buyNums,
+                            store:this.proNums = response.store,
+                            activestu:this.data.activestu,
+                        };
+                        if(!this.data.format){
+                            this.proNums = this.data.store;
+                        }
+                        //判断是否活动商品
+                        if(_self.data.activestu == 0 && _self.data.activestu == 2) {
+                            _self.seckillShow = false
+                        } else if(_self.data.activestu == 1) {
+                            _self.seckillShow = true;
+                        }
+                        this.$nextTick(()=>{
+                            var scaleBox = this.data.content;
+                            var itemEle = document.getElementsByClassName('ms-item')[1];
+                            // 处理异常
+                            try {
+                                if(scaleBox === '') {
+                                    itemEle.innerHTML = "暂时没有详情图~~~";
+                                    itemEle.style.paddingTop = "10px";
+                                    itemEle.style.height = "100%";
+                                    itemEle.style.lineHeight = "150px";
+                                } else {
+                                    itemEle.innerHTML = scaleBox;
+                                    var chil = itemEle.getElementsByTagName("img");
+                                    for(var i in chil) {
+                                        chil[i].style.display = "block";
+                                    }
                                 }
-                            }
-                        } catch(e) {
-                            console.log(e);
-                        } finally {}
-//                    document.getElementsByClassName('ms-item')[2].innerHTML = this.data.detail;
-                    });
-                },(response)=>{
-                    this.toastMessage = "网络开小差啦~";
-                    this.toastShow = true;
-                });
+                            } catch(e) {
+                                console.log(e);
+                            } finally {}
+                        });
+                    },(response)=>{
+                        this.toastMessage = "网络开小差啦~";
+                        this.toastShow = true;
+                    }).catch(function (error) {
+                        (error)
+                    })
+				} catch(e) {
+					console.log(e);
+				}
 			},
             goback () {
                 window.history.back();

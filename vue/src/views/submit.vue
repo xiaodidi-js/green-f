@@ -2,7 +2,7 @@
 	<div class="bal-wrapper">
 		{{ demo | json}}
 		<!-- 发货方式 -->
-		<my-cell title="到店自提" @click="showAction" :class="deliverType">
+		<my-cell :title="myCellTitle" @click="showAction" :class="deliverType">
 			<div class="l-arr cell-arr">
 				<img src="../images/arrow.png" />
 			</div>
@@ -217,25 +217,25 @@
             return {
                 loadingShow:false,
                 loadingMessage:'',
-                toastMessage:'',
-                toastShow:false,
-                actionShow:false,
-                popShow:false,
-                couShow:false,
-                alertShow:false,
-                address:0,
+                toastMessage:'',	//提示信息
+                toastShow:false,	//开关
+                actionShow:false,	//开关
+                popShow:false,		//开关
+                couShow:false,		//开关
+                alertShow:false,	//开关
+                address:0,			//快递地址
                 coupon:0,
                 couponObj:null,
-                payType:0,
-                score:0,
-                scoreSwitch: false,
-                scoreNumber: 0,
-                sNumber: 0,	//积分 0/1
+                payType:0,			//支付方式
+                score:0,			//积分
+                scoreSwitch: false, //积分开关
+                scoreNumber: 0,		//积分
+                sNumber: 0,			//积分 0/1
                 deliverType:'',
                 deliverName:'',
                 freight:0,
-                memo:'',
-                data: {
+                memo:'',			//订单说明
+                data: {				//数据
                     deliver:{},
                     address:null,
                     pay:[]
@@ -249,6 +249,7 @@
                 openpop: false,
                 description: "",
                 lastPaySum: 0,
+                myCellTitle: ''
             }
         },
         components: {
@@ -278,7 +279,6 @@
             }
         },
         ready() {
-            console.log(this.list);
             this.isRadio();
             let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
             ustore = JSON.parse(ustore);
@@ -302,6 +302,10 @@
                         this.deliverType = 'parcel';
                         this.deliverName = this.data.deliver.parcel;
                     }
+
+                    //	判断有没有快递配送
+                    typeof(response.data.address) == '' ? this.myCellTitle = '到店自提' : this.myCellTitle = '请选择配送方式'
+
                     this.data.pay = response.data.pay;
                     this.payType = this.data.pay[0].ptype;
                     this.data.address = response.data.address;
@@ -330,7 +334,6 @@
             });
         },
         computed: {
-
             list: function(){
                 return this.$store.state.giftList
 			},

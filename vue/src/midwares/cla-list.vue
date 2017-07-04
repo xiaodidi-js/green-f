@@ -65,27 +65,19 @@
             }
         },
         ready() {
-            var content = this;
-            $(window).scroll(function() {
-                if($(window).scrollTop() >= 400) {
-                    $(".goto").fadeIn(500);
-                } else {
-                    $(".goto").stop(true,true).fadeOut(500);
-                }
-            });
+            this.getData('');
             $(".goto").click(function(){
                 $("html,body").animate({
                     scrollTop:0
                 },200);
             });
         },
-		created() {
-            this.getData('');
-		},
 		watch: {
-            $route(to,from) {
-                $(window).scrollTop(sessionStorage.getItem("scrolltop"));
-			}
+            '$route'(to,from) {
+                if(parseInt(to.params.cid) && to.name === 'cla-list') {
+//                    this.getData('');
+                }
+            }
 		},
         mounted: {
 
@@ -94,10 +86,11 @@
             getData: function(sk){
                 let url = '';
 				if(this.$route.query.tuijian == 0) {
-                    url = localStorage.apiDomain+'public/index/index/classifylist/cid/' + this.$route.params.cid + '/action/' + this.column;
+                    url = localStorage.apiDomain +'public/index/index/classifylist/cid/' + this.$route.params.cid + '/action/' + this.column;
 				}else{
-                    url = localStorage.apiDomain+'public/index/index/tuijianclass?id=' + this.$route.params.cid + '&action=' + this.column;
+                    url = localStorage.apiDomain +'public/index/index/tuijianclass?id=' + this.$route.params.cid + '&action=' + this.column;
 				}
+
                 if(sk.length > 0) {
                     url += '/search/' + sk;
                 }
@@ -105,14 +98,11 @@
 				    if(response.data.status = 1) {
                         if(response.data.info.list == "") {
                             alert("商品为空！");
-//                        this.$router.go({name : 'cla-list'});
-//                        location.reload();
                             return false;
                         } else {
                             this.data.list = response.data.info.list;
                             this.data.img = response.data.info.img;
                             this.data.background = response.data.info.background;
-                            $(window).scrollTop(sessionStorage.getItem("scrolltop"));
                         }
 					} else if(response.data.status = 0) {
                         this.$router.go({name : 'index'});

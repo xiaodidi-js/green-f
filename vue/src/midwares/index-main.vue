@@ -64,7 +64,6 @@
 			}
 		},
         ready() {
-			this.main();
             $(".goto").click(function(){
                 $("html,body").animate({
                     scrollTop:0
@@ -81,6 +80,7 @@
             }
         },
         created () {
+            this.main();
             this.follow();
             this.timeline();
     	},

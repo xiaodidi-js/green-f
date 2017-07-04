@@ -15,6 +15,9 @@
 	</div>
 	<!-- toast提示框 -->
 	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
+	<!-- 回到顶部 -->
+	<div class="goto"></div>
+
 </template>
 
 <script>
@@ -34,6 +37,15 @@
 			}
 		},
 		ready() {
+
+            $(".goto").click(function(){
+                $("html,body").animate({
+                    scrollTop:0
+                },200);
+            });
+
+
+
             this.$http.get(localStorage.apiDomain + 'public/index/index/articledetail/cid/' + this.$route.params.cid).then((response)=>{
                 if(response.data.status === 1) {
                     this.$id("article").innerHTML = response.data.content.content;
@@ -60,7 +72,9 @@
             }
         },
 		methods: {
-
+			$id(id) {
+			    return document.getElementById(id);
+			}
 		}
 	}
 </script>
@@ -110,9 +124,10 @@
 
 	#article-body {
 		width: 100%;
-		height: 100%;
+		height: auto;
 		background: #fff;
-		margin-top:46px;
+		margin-top: 46px;
+		clear: both;
 	}
 
 	div#article.article{

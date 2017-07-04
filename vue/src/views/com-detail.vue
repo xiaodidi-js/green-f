@@ -78,13 +78,13 @@ export default{
 	ready() {
 		let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 		ustore = JSON.parse(ustore);
-		this.$http.get(localStorage.apiDomain+'public/index/user/commentdetail/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+this.$route.params.oid).then((response)=>{
-			if(response.data.status === 1) {
-				this.data.createtime = response.data.createtime;
-				this.data.list = response.data.list;
+		this.$getData('/index/user/commentdetail/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + this.$route.params.oid).then((response)=>{
+			if(response.status === 1) {
+				this.data.createtime = response.createtime;
+				this.data.list = response.list;
 				console.log(this.data.createtime);
-			}else if(response.data.status === -1) {
-				this.toastMessage = response.data.info;
+			}else if(response.status === -1) {
+				this.toastMessage = response.info;
 				this.toastShow = true;
 				let context = this;
 				setTimeout(function(){
@@ -94,7 +94,7 @@ export default{
 					context.$router.go({name:'login'});
 				},800);
 			}else{
-				this.toastMessage = response.data.info;
+				this.toastMessage = response.info;
 				this.toastShow = true;
 			}
 		},(response)=>{

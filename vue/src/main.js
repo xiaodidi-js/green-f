@@ -108,7 +108,7 @@ router.afterEach((transition) => {
             let shareData = {
                 title:getSession.title,
                 desc:getSession.desc,
-                link:'http://'+window.location.host+'/index_prod.html',
+                link:'http://'+window.location.host+'/index.html',
                 imgUrl:getSession.imgurl
             };
             WxJssdk.config({
