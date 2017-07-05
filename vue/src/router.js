@@ -70,6 +70,13 @@ const routers = {
         title:'商品分类',
         position:2,
         saveScrollPosition: true,
+        scrollBehavior (to, from, savedPosition) {
+            if (to.hash) {
+                return {
+                    selector: to.hash
+                }
+            }
+        },
         component (resolve) {
             require(['./views/classify.vue'], resolve);
         },

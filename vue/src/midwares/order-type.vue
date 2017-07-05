@@ -26,6 +26,8 @@
         <img src="../images/cart.png" style="width:100%;height: 100%" alt="" />
         <p class="nothing-order">暂时没有商品</p>
     </div>
+    <!-- 回到顶部 -->
+    <div class="goto"></div>
 </template>
 
 <script>
@@ -56,6 +58,11 @@
         },
         ready() {
             this.getViewData(0);
+            $(".goto").click(function(){
+                $("html,body").animate({
+                    scrollTop:0
+                },200);
+            });
         },
         methods: {
             getViewData: function(type) {

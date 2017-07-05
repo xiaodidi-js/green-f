@@ -99,9 +99,7 @@
             }
         },
         watch: {
-            $route(to,from) {
-				console.log(to);
-			}
+
         },
         created () {
 
@@ -112,10 +110,10 @@
                 this.chooseSort(26);
                 this.getChonse(26);
                 this.$router.go({name:'classify'});
-			} else {
+            } else {
                 this.chooseSort(this.dtype);
                 this.getChonse(this.dtype);
-			}
+            }
             $(function() {
                 //菜单框架自动获取高度
                 var doc_H = $(document).height();

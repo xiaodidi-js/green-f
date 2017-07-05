@@ -406,7 +406,8 @@ export default{
         oneGift: function (oid,money) {
             let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
             ustore = JSON.parse(ustore);
-            this.$http.get(localStorage.apiDomain + 'public/index/user/manjiusong/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + oid + '/money/' + money).then((response)=>{
+
+            this.$getData('/index/user/manjiusong/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + oid + '/money/' + money).then((response)=>{
                 if(response.data.status === 1) {
                     this.showGive = true;
                     this.listGift = response.data.maxmoney;
