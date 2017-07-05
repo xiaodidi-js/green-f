@@ -119,15 +119,14 @@
 //                }
             },
             timeline: function() {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), content = this;
                 ustore = JSON.parse(ustore);
-                var content = this;
-                this.$http.get(localStorage.apiDomain+'public/index/sale/SaleTimeSolt/uid').then((response) => {
-                    if(response.data.status === 1) {
-                        content.gotimeline = response.data.SaleTimeSolt;
+                this.$getData('/index/sale/SaleTimeSolt/uid').then((res) => {
+                    if(res.status === 1) {
+                        content.gotimeline = res.SaleTimeSolt;
                         console.log(content.gotimeline);
-                    } else if(response.data.status===-1) {
-                        this.toastMessage = response.data.info;
+                    } else if(res.status === -1) {
+                        this.toastMessage = res.info;
                         this.toastShow = true;
                         let context = this;
                         setTimeout(function(){
@@ -137,10 +136,10 @@
                             context.$router.go({name:'login'});
                         },800);
                     } else {
-                        this.toastMessage = response.data.info;
+                        this.toastMessage = res.info;
                         this.toastShow = true;
                     }
-                },(response)=>{
+                },(res)=>{
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                 });

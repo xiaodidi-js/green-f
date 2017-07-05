@@ -37,24 +37,20 @@
 			}
 		},
 		ready() {
-
             $(".goto").click(function(){
                 $("html,body").animate({
                     scrollTop:0
                 },200);
             });
-
-
-
-            this.$http.get(localStorage.apiDomain + 'public/index/index/articledetail/cid/' + this.$route.params.cid).then((response)=>{
-                if(response.data.status === 1) {
-                    this.$id("article").innerHTML = response.data.content.content;
-                    this.list = response.data.content;
+            this.$getData('/index/index/articledetail/cid/' + this.$route.params.cid).then((res)=>{
+                if(res.status === 1) {
+                    this.$id("article").innerHTML = res.content.content;
+                    this.list = res.content;
                 }else{
-                    this.toastMessage = response.data.info;
+                    this.toastMessage = res.info;
                     this.toastShow = true;
                 }
-            },(response)=>{
+            },(res)=>{
                 this.toastMessage = "网络开小差啦~";
                 this.toastShow = true;
             });
@@ -65,9 +61,6 @@
                 var years = d.getFullYear();
                 var month = d.getMonth() + 1;
                 var days = d.getDate();
-                var hours = d.getHours();
-                var minutes = d.getMinutes();
-                var seconds = d.getSeconds();
                 return years + "-" + month + "-" + days;
             }
         },

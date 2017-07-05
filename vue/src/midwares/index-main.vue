@@ -124,15 +124,11 @@
             timeline () {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/sale/SaleTimeSolt/uid',
-                }).then((response) => {
-                    if(response.data.status === 1) {
-                        localStorage.setItem("salesolt",JSON.stringify(response.data.SaleTimeSolt));
-                        this.maincolumns = JSON.parse(localStorage.getItem("salesolt"));
+                this.$getData('/index/sale/SaleTimeSolt/uid').then((res) => {
+                    if(res.status === 1) {
+                        this.maincolumns = res.SaleTimeSolt;
                     } else {
-                        this.toastMessage = response.data.info;
+                        this.toastMessage = res.info;
                         this.toastShow = true;
                     }
                 });

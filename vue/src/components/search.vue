@@ -20,7 +20,7 @@
 					<div class="money">
 						<label class="unit">¥</label>{{ item.price }}
 					</div>
-					<div class="scar" @click="addCartShop(item)">
+					<div class="scar" @click="addCart(item)">
 						<img src="../images/shopcar_youlike.png" style="width:100%;height:100%;"/>
 					</div>
 				</div>
@@ -30,6 +30,10 @@
 	<!-- toast提示框 -->
 	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
 	<div class="goto"></div>
+	<!-- 弹出提示框 -->
+	<alert :show.sync="alertShow" title="" button-text="知道了">
+		<p>加入购物车成功!</p>
+	</alert>
 </template>
 
 <script>
@@ -39,10 +43,12 @@
     import { cartNums } from 'vxpath/getters'
     import axios from 'axios'
     import qs from 'qs'
+    import Alert from 'vux/src/components/alert'
 
 	export default{
 		components: {
 			Toast,
+            Alert
 		},
         vuex: {
             actions: {
@@ -64,6 +70,7 @@
                 activestu:0,
                 buyNums:1,
                 proNums:1,
+                alertShow: false,	//	弹窗开关
 			}
 		},
 		ready() {
@@ -82,9 +89,9 @@
 
 		},
 		methods: {
-            addCartShop (data){
+            addCart (data){
                 //购物车缓存
-                var date = new Date(), hours = date.getHours(), minute = date.getMinutes(), seconds = date.getSeconds();
+                var date = new Date(), hours = date.getHours();
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 var cart = JSON.parse(localStorage.getItem("myCart")) , obj = {} , self = this;
                 ustore = JSON.parse(ustore);
@@ -96,10 +103,7 @@
                     }, 800);
                     return false;
 				} else if (ustore != null) {
-                    axios({
-                        method: 'get',
-                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
-                    }).then((response) => {
+                    this.$getData('/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id).then((res) => {
                         if(data.peisongok == 0 && data.deliverytime == 1) {
                             alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                             return false;
@@ -109,7 +113,7 @@
                         } else if (data.store == 0) {
                             alert("已售罄");
                             return false;
-						} else if (data.activeid == 1) {
+                        } else if (data.activeid == 1) {
                             alert("这是限时抢购商品！");
                             return false;
                         } else if (data.activestu == 2) {
@@ -138,13 +142,13 @@
                             peisongok:data.peisongok,
                             activestu:data.activestu,
                             nums:this.buyNums,
-                            store:this.proNums = response.data.store,
+                            store:this.proNums = res.store,
                             format:'',
                             formatName:'',
                         }
                         this.setCart(obj);
-                        alert("加入购物车成功!");
-                    });
+                        this.alertShow = true;
+					});
 				}
 			}
 		}

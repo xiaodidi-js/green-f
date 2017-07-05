@@ -22,7 +22,6 @@
         </div>
         <div class="btn" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</div>
     </div>
-
     <!-- 弹出选择层 -->
     <div class="popdown" v-show="popdown" @click="downpop"></div>
     <div class="option-list" id="left_Menu">
@@ -124,6 +123,8 @@
         ready() {
             this.selList();
             this.onToureEle();
+
+
         },
         created() {
 
@@ -173,29 +174,24 @@
                 }
             },
             onOnlyAddress: function (id) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), content = this;
                 ustore = JSON.parse(ustore);
-                var _this = this;
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/Usercenter/myaddress/uid/' + ustore.id + '/token/' + ustore.token + '/state/0/sinceid/' + id,
-                }).then((response) => {
-                    if (response.data.status === 1) {
+                this.$getData('/index/Usercenter/myaddress/uid/' + ustore.id + '/token/' + ustore.token + '/state/0/sinceid/' + id).then((res)  => {
+                    if (res.status === 1) {
                         var tmp = this.address.filter(function (item) {
                             return item.pid == id;
                         });
-                        this.tmp_address = tmp;
-                        this.data = tmp;
+                        content.tmp_address = tmp;
+                        content.data = tmp;
                         $(".double-list ul li").click(function() {
                             var values = $(this).text();
                             $(".select-add").text(values);
                         });
-                        this.isChonse = false;
-                        _this.tansform('icon-sanjiao','rotate(0deg)');
-                    } else if (response.data.status === -1) {
-                        this.toastMessage = response.data.info;
-                        this.toastShow = true;
-                        let context = this;
+                        content.isChonse = false;
+                        content.tansform('icon-sanjiao','rotate(0deg)');
+                    } else if (res.status === -1) {
+                        content.toastMessage = response.data.info;
+                        content.toastShow = true;
                         setTimeout(function () {
                             context.clearAll();
                             sessionStorage.removeItem('userInfo');
@@ -203,10 +199,10 @@
                             context.$router.go({name: 'login'});
                         }, 800);
                     } else {
-                        this.toastMessage = response.data.info;
+                        this.toastMessage = res.info;
                         this.toastShow = true;
                     }
-                },(response) => {
+                },(res) => {
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                 });
@@ -255,51 +251,43 @@
                 }
             },
             oneGift: function (id,money) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), content = this, options = {};
                 ustore = JSON.parse(ustore);
-                var content = this;
-                axios({
-                    method: 'post',
-                    url: localStorage.apiDomain + 'public/index/user/manjiusong',
-                    data: qs.stringify({
-                        uid:ustore.id,
-                        token:ustore.token,
-                        sinceid:id,
-                        money:money
-                    })
-                }).then((response) => {
-                    if(response.data.status == 1) {
+                options = {
+                    uid:ustore.id,
+                    token:ustore.token,
+                    sinceid:id,
+                    money:money
+                };
+                this.$postData('/index/user/manjiusong',options).then((res) => {
+                    if(res.status == 1) {
                         content.openpop = true;
                         content.showGive = true;
-                        this.lists = response.data.maxmoney;
+                        this.lists = res.maxmoney;
                         for(var i in this.lists) {
                             this.mySong('请选择满'+ this.lists[i].maxmoney +'元赠品');
-                            console.log(this.lists[i].maxmoney);
                         }
-                        this.commitData({target: 'giftList', data: response.data.maxmoney});
+                        this.commitData({target: 'giftList', data: res.maxmoney});
                         this.commitData({target: 'giftstu', data: 1});
                         this.commitData({target: 'visibleEle', data: true});
-                    } else if(response.data.status == 0) {
+                    } else if(res.status == 0) {
                         this.commitData({target: 'visibleEle', data: false});
-                        axios({
-                            method: 'post',
-                            url: localStorage.apiDomain + 'public/index/user/shoudan',
-                            data: qs.stringify({
-                                uid:ustore.id,
-                                token:ustore.token,
-                                sinceid:this.chosen,
-                                money:this.money
-                            })
-                        }).then((response) => {
-                            if(response.data.status == 1) {
+                        var jsons = {
+                            uid:ustore.id,
+                            token:ustore.token,
+                            sinceid:this.chosen,
+                            money:this.money
+                        };
+                        this.$postData('/index/user/shoudan',jsons).then((res) => {
+                            if(res.status == 1) {
                                 this.commitData({target: 'visibleEle', data: true});
                                 this.mySong('请选择首单用户赠品');
                                 content.showGive = true;
                                 this.myGift(this.lists);
-                                this.lists = response.data.shoduan_data;
-                                this.commitData({target: 'giftList', data: response.data.shoudan_data})
+                                this.lists = res.shoduan_data;
+                                this.commitData({target: 'giftList', data: res.shoudan_data})
                                 this.commitData({target: 'giftstu', data: 2});
-                            } else if(response.data.status === 0) {
+                            } else if(res.status === 0) {
                                 this.commitData({target: 'visibleEle', data: false});
                             }
                         });

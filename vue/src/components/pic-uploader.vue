@@ -1,99 +1,3 @@
-<style scoped>
-
-	.img-area{
-		width:100%;
-		height:auto;
-		font-size:0;
-		text-align:center;
-	}
-
-	.img-area .image{
-		display:inline-block;
-		vertical-align:middle;
-		width:22%;
-		padding-top:22%;
-		margin-right:3%;
-		border:#D6D5D5 solid 1px;
-		background-image:url('../images/camera.png');
-		background-position:center;
-		background-size:40%;
-		background-repeat:no-repeat;
-		position:relative;
-		z-index:2;
-		box-sizing:border-box;
-		-webkit-box-sizing:border-box;
-	}
-
-	.img-area .image:first-child{
-		/*margin-left:1.5%;*/
-	}
-
-	.img-area .image:last-child{
-		margin-right:1.5%;
-	}
-
-	.img-area .image.unupload{
-		transition:all 300ms;
-		transform:scale(0);
-	}
-
-	.img-area .image.unupload.active{
-		transform:scale(1);
-	}
-
-	.img-area .image.unupload.active:active{
-		background-size:30%;
-		background-color:#F9F9F9;
-	}
-
-	.img-area .image.uploaded{
-		background-size:cover;
-	}
-
-	.img-area .image.loading{
-		background-image:none;
-		background-color:rgba(0,0,0,0.5);
-	}
-
-	.img-area .image>.vux-spinner{
-		display:none;
-	}
-
-	.img-area .image.loading>.vux-spinner{
-		display:inline-block;
-	}
-
-	.img-area .image>.cross{
-		width:1.4rem;
-		height:1.4rem;
-		font-size:1.3rem;
-		color:#ccc;
-		line-height:1.2rem;
-		position:absolute;
-		top:-0.7rem;
-		right:-0.7rem;
-		background-color:rgba(0,0,0,0.5);
-		border-radius:0.7rem;
-		display:none;
-	}
-
-	.img-area .image.uploaded>.cross{
-		display:block;
-	}
-
-	.img-area .image>input[type='file']{
-		display:none;
-	}
-
-	.white-spinner.vux-spinner{
-		stroke:#ccc;
-		fill:#ccc;
-		margin-top:-100%;
-		z-index:1;
-	}
-
-</style>
-
 <template>
 	<div class="img-area">
 		<div class="image" @click="addPic($index)"
@@ -251,3 +155,99 @@
 		}
 	}
 </script>
+
+<style scoped>
+
+	.img-area{
+		width:100%;
+		height:auto;
+		font-size:0;
+		text-align:center;
+	}
+
+	.img-area .image{
+		display:inline-block;
+		vertical-align:middle;
+		width:22%;
+		padding-top:22%;
+		margin-right:3%;
+		border:#D6D5D5 solid 1px;
+		background-image:url('../images/camera.png');
+		background-position:center;
+		background-size:40%;
+		background-repeat:no-repeat;
+		position:relative;
+		z-index:2;
+		box-sizing:border-box;
+		-webkit-box-sizing:border-box;
+	}
+
+	.img-area .image:first-child{
+		/*margin-left:1.5%;*/
+	}
+
+	.img-area .image:last-child{
+		margin-right:1.5%;
+	}
+
+	.img-area .image.unupload{
+		transition:all 300ms;
+		transform:scale(0);
+	}
+
+	.img-area .image.unupload.active{
+		transform:scale(1);
+	}
+
+	.img-area .image.unupload.active:active{
+		background-size:30%;
+		background-color:#F9F9F9;
+	}
+
+	.img-area .image.uploaded{
+		background-size:cover;
+	}
+
+	.img-area .image.loading{
+		background-image:none;
+		background-color:rgba(0,0,0,0.5);
+	}
+
+	.img-area .image>.vux-spinner{
+		display:none;
+	}
+
+	.img-area .image.loading>.vux-spinner{
+		display:inline-block;
+	}
+
+	.img-area .image>.cross{
+		width:1.4rem;
+		height:1.4rem;
+		font-size:1.3rem;
+		color:#ccc;
+		line-height:1.2rem;
+		position:absolute;
+		top:-0.7rem;
+		right:-0.7rem;
+		background-color:rgba(0,0,0,0.5);
+		border-radius:0.7rem;
+		display:none;
+	}
+
+	.img-area .image.uploaded>.cross{
+		display:block;
+	}
+
+	.img-area .image>input[type='file']{
+		display:none;
+	}
+
+	.white-spinner.vux-spinner{
+		stroke:#ccc;
+		fill:#ccc;
+		margin-top:-100%;
+		z-index:1;
+	}
+
+</style>

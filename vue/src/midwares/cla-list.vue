@@ -20,6 +20,12 @@
 		<loading :show="loadingShow" text="正在加载..."></loading>
 		<!-- 回到顶部 -->
 		<div class="goto"></div>
+
+		<!-- 弹出提示框 -->
+		<alert :show.sync="alertShow" title="" button-text="知道了">
+			<p>商品为空!</p>
+		</alert>
+
 	</div>
 </template>
 <script>
@@ -32,20 +38,22 @@
     import Separator from 'components/separator'
     import { commitData } from 'vxpath/actions'
     import Loading from 'vux/src/components/loading'
+    import Alert from 'vux/src/components/alert'
 
     export default {
         data() {
             return {
-                toastMessage:'',
-                toastShow:false,
-                column:'hot',
+                toastMessage: '',
+                toastShow: false,
+                column: 'hot',
                 data:{
                     title: '',
                     list: [],
 					img: '',
 					background: ''
                 },
-				tuijian: 1
+				tuijian: 1,
+                alertShow: false,
             }
         },
         components: {
@@ -54,7 +62,8 @@
             TabItem,
             CardSquare,
             Toast,
-            Separator
+            Separator,
+            Alert
         },
         route: {
 
@@ -74,9 +83,12 @@
         },
 		watch: {
             '$route'(to,from) {
-                console.log(to);
-                if(parseInt(to.params.cid) != this.colum && to.name === 'cla-list') {
-                    this.getData('');
+                var content = this;
+                console.log(content.data.list);
+                if(content.data.list == '') {
+                    $(".wrapper").html(123123);
+				} else if(parseInt(to.params.cid) != content.colum && to.name === 'cla-list') {
+                    content.getData('');
                 }
             }
 		},
@@ -84,28 +96,30 @@
             getData: function(sk){
                 let url = '';
 				if(this.$route.query.tuijian == 0) {
-                    url = localStorage.apiDomain +'public/index/index/classifylist/cid/' + this.$route.params.cid + '/action/' + this.column;
+                    url = '/index/index/classifylist/cid/' + this.$route.params.cid + '/action/' + this.column;
 				}else{
-                    url = localStorage.apiDomain +'public/index/index/tuijianclass?id=' + this.$route.params.cid + '&action=' + this.column;
+                    url = '/index/index/tuijianclass?id=' + this.$route.params.cid + '&action=' + this.column;
 				}
 
                 if(sk.length > 0) {
                     url += '/search/' + sk;
                 }
-                this.$http.get(url).then((response)=>{
-				    if(response.data.status = 1) {
-                        if(response.data.info.list == "") {
-                            alert("商品为空！");
+                this.$getData(url).then((res)=>{
+				    if(res.status = 1) {
+                        if(res.info.list == "") {
+                            this.alertShow = true;
+//                            this.$router.go({name : 'index'});
                             return false;
                         } else {
-                            this.data.list = response.data.info.list;
-                            this.data.img = response.data.info.img;
-                            this.data.background = response.data.info.background;
+                            this.alertShow = false;
+                            this.data.list = res.info.list;
+                            this.data.img = res.info.img;
+                            this.data.background = res.info.background;
                         }
 					} else if(response.data.status = 0) {
                         this.$router.go({name : 'index'});
 					}
-                },(response)=>{
+                },(res)=>{
                     this.toastMessage = "网络开小差啦~";
                     this.toastShow = true;
                 });

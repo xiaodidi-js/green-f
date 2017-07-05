@@ -8,9 +8,9 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var fs = require('fs');
 
-config.output.publicPath = './dist/';                        // 资源路径,根据需要可改为cdn地址
-config.output.filename = '[hash].js';                 // 带hash值的入口js名称
-config.output.chunkFilename = '[name].[hash].chunk.js';      // 带hash值的路由js名称
+config.output.publicPath = './dist/';                           // 资源路径,根据需要可改为cdn地址
+config.output.filename = '[hash].js';                           // 带hash值的入口js名称
+config.output.chunkFilename = '[name].[hash].chunk.js';         // 带hash值的路由js名称
 
 config.vue = {
     loaders: {

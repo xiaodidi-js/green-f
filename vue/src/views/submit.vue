@@ -7,7 +7,6 @@
 				<img src="../images/arrow.png" />
 			</div>
 		</my-cell>
-
 		<!-- 自提点地址/收货地址 -->
 		<div class="address-box" @click="showPop">
 			<div class="border-line"></div>
@@ -280,58 +279,7 @@
         },
         ready() {
             this.isRadio();
-            let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-            ustore = JSON.parse(ustore);
-            let pids = '' , content = this;
-            if(this.cartIds.length > 0) {
-                pids = this.cartIds.join(',');
-            }
-            var opid = sessionStorage.getItem('openid') , self = this;
-            if(!opid) {
-                opid = '';
-            } else {
-                opid = '/openid/' + opid;
-            }
-            this.$http.get(localStorage.apiDomain+'public/index/user/ordersubmission/uid/'+ustore.id+'/token/'+ustore.token+'/ids/'+pids+opid).then((response)=>{
-                if(response.data.status === 1) {
-                    this.data.deliver = response.data.deliver;
-                    if(typeof this.data.deliver.express !== 'undefined' && this.data.deliver.express !== '') {
-                        this.deliverType = 'express';
-                        this.deliverName = this.data.deliver.express;
-                    }else{
-                        this.deliverType = 'parcel';
-                        this.deliverName = this.data.deliver.parcel;
-                    }
-
-                    //	判断有没有快递配送
-                    typeof(response.data.address) == '' ? this.myCellTitle = '到店自提' : this.myCellTitle = '请选择配送方式'
-
-                    this.data.pay = response.data.pay;
-                    this.payType = this.data.pay[0].ptype;
-                    this.data.address = response.data.address;
-                    if(this.data.address){
-                        this.address = this.data.address.id;
-                    }
-                    this.score = response.data.score;
-                    this.freight = response.data.freight;
-                } else if(response.data.status === -1) {
-                    this.toastMessage = response.data.info;
-                    this.toastShow = true;
-                    let context = this;
-                    setTimeout(function() {
-                        context.clearAll();
-                        sessionStorage.removeItem('userInfo');
-                        localStorage.removeItem('userInfo');
-                        context.$router.go({name:'login'});
-                    },800);
-                }else{
-                    this.toastMessage = response.data.info;
-                    this.toastShow = true;
-                }
-            },(response)=>{
-                this.toastMessage = '网络开小差了~';
-                this.toastShow = true;
-            });
+            this.submitReady();
         },
         computed: {
             list: function(){
@@ -388,9 +336,65 @@
             }
         },
         watch: {
-
+			'$route'(to) {
+			    console.log(to);
+				if(to.name == 'submit') {
+                    this.submitReady();
+				}
+			}
 		},
         methods: {
+            submitReady() {
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), pids = '';
+                ustore = JSON.parse(ustore);
+                if(this.cartIds.length > 0) {
+                    pids = this.cartIds.join(',');
+                }
+                var opid = sessionStorage.getItem('openid');
+                if(!opid) {
+                    opid = '';
+                } else {
+                    opid = '/openid/' + opid;
+                }
+                this.$getData('/index/user/ordersubmission/uid/'+ustore.id+'/token/'+ustore.token+'/ids/'+pids+opid).then((res)=>{
+                    if(res.status === 1) {
+                        this.data.deliver = res.deliver;
+                        if(typeof this.data.deliver.express !== 'undefined' && this.data.deliver.express !== '') {
+                            this.deliverType = 'express';
+                            this.deliverName = this.data.deliver.express;
+                        }else{
+                            this.deliverType = 'parcel';
+                            this.deliverName = this.data.deliver.parcel;
+                        }
+                        //	判断有没有快递配送
+                        typeof(res.address) == '' ? this.myCellTitle = '到店自提' : this.myCellTitle = '请选择配送方式';
+                        this.data.pay = res.pay;
+                        this.payType = this.data.pay[0].ptype;
+                        this.data.address = res.address;
+                        if(this.data.address){
+                            this.address = this.data.address.id;
+                        }
+                        this.score = res.score;
+                        this.freight = res.freight;
+                    } else if(res.status === -1) {
+                        this.toastMessage = res.info;
+                        this.toastShow = true;
+                        let context = this;
+                        setTimeout(function() {
+                            context.clearAll();
+                            sessionStorage.removeItem('userInfo');
+                            localStorage.removeItem('userInfo');
+                            context.$router.go({name:'login'});
+                        },800);
+                    }else{
+                        this.toastMessage = res.info;
+                        this.toastShow = true;
+                    }
+                },(response)=>{
+                    this.toastMessage = '网络开小差了~';
+                    this.toastShow = true;
+                });
+			},
             isRadio: function() {
                 var date = new Date() , y = date.getFullYear() , m = date.getMonth() + 1 , d = date.getDate();
                 var radA = $(".label-radio").eq(0).text();
@@ -433,46 +437,31 @@
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
                 var content = this;
-                axios({
-                    method: 'post',
-                    url: localStorage.apiDomain + 'public/index/user/manjiusong',
-                    data: qs.stringify({
-                        uid:ustore.id,
-                        token:ustore.token,
-                        sinceid:id,
-                        money:money
-                    })
-                }).then((response) => {
-                    if(response.data.status == 1) {
-                        console.log(response.data);
+				var options = {
+                    uid:ustore.id,
+                    token:ustore.token,
+                    sinceid:id,
+                    money:money
+				};
+                this.$postData('/index/user/manjiusong',options).then((res) => {
+                    if(res.status == 1) {
                         this.description = '请选择满20元赠品';
                         this.showGive = true;
-                        this.list = response.data.maxmoney;
-                        console.log(this.list);
+                        this.list = res.maxmoney;
                         this.giftstu = 1;
-                    } else if(response.data.status == 0) {
+                    } else if(res.status == 0) {
                         content.openpop =  false;
-                        axios({
-                            method: 'post',
-                            url: localStorage.apiDomain + 'public/index/user/shoudan',
-                            data: qs.stringify({
-                                uid:ustore.id,
-                                token:ustore.token,
-                                sinceid:id,
-                                money:money
-                            })
-                        }).then((response) => {
-                            if(response.data.status == 1) {
+                        this.$postData('/index/user/shoudan',options).then((res) => {
+                            if(res.status == 1) {
                                 this.description = '请选择首单用户赠品';
                                 this.showGive = true;
-                                this.list = response.data.shoduan_data;
-                                console.log(this.list);
-                            } else if(response.data.status === 0) {
+                                this.list = res.shoduan_data;
+                            } else if(res.status === 0) {
                                 this.showGive = false;
                             }
-                        });
+						});
                     }
-                });
+				});
             },
             changePayType: function(tp){
                 this.payType = tp;
@@ -530,7 +519,6 @@
             },
             showPop: function(){
                 this.popShow = true;
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 this.openpop = true;
             },
             showCou: function(){
@@ -578,7 +566,6 @@
                     this.toastShow = true;
                     return false;
 				}
-				let _this = this;
                 for(let i = 0; i < this.cartInfo.length; i++) {
                     this.loadingMessage = '正在提交...';
                     this.loadingShow = true;
@@ -596,11 +583,10 @@
                         scoreNumber: this.scoreNumber,
                         paysum:this.lastPaySum,
                         tips:this.memo,
-						openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
+						openid: 'os0CqxBBANhLuBLTsViL3C0zDlNs',//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                         pshonse:this.shonse,
                         gift:{'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                     };
-                    console.log(pdata);
                     this.$http.post(localStorage.apiDomain + 'public/index/user/getSubmitOrder',pdata).then((response)=>{
                         console.log(response.data);
                         if(response.data.status === 1) {

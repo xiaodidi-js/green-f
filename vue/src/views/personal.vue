@@ -30,7 +30,7 @@
 			</div>
 		</div>
 		<separator :set-height="21"></separator>
-		<router-view></router-view>
+		<router-view ></router-view>
 		<toast :show.sync="toastShow" type="text">{{ toastMessage}}</toast>
 	</div>
 </template>
@@ -70,15 +70,15 @@
             this.myActive(1);
 			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 			ustore = JSON.parse(ustore);
-			this.$http.get(localStorage.apiDomain+'public/index/user/userinfo/uid/'+ustore.id+'/token/'+ustore.token).then((response)=>{
-				if(response.data.status === 1) {
-					this.uname = response.data.uname;
-					this.uscore = response.data.score;
-					if(response.data.shotcut!==null){
-						this.uimg = response.data.shotcut;
+			this.$getData('/index/user/userinfo/uid/'+ustore.id+'/token/'+ustore.token).then((res)=>{
+				if(res.status === 1) {
+					this.uname = res.uname;
+					this.uscore = res.score;
+					if(res.shotcut!==null){
+						this.uimg = res.shotcut;
 					}
-				}else if(response.data.status===-1){
-					this.toastMessage = response.data.info;
+				}else if(res.status===-1){
+					this.toastMessage = res.info;
 					this.toastShow = true;
 					let context = this;
 					setTimeout(function(){
@@ -88,10 +88,10 @@
 						context.$router.go({name:'login'});
 					},800);
 				}else{
-					this.toastMessage = response.data.info;
+					this.toastMessage = res.info;
 					this.toastShow = true;
 				}
-			},(response)=>{
+			},(res)=>{
 				this.toastMessage = '网络开小差了~';
 				this.toastShow = true;
 			});
@@ -100,14 +100,14 @@
 			main: function() {
 				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 				ustore = JSON.parse(ustore);
-				this.$http.get(localStorage.apiDomain+'public/index/Usercenter/integral/uid/' + ustore.id + '/token/' + ustore.token).then((response)=>{
-                    if(response.data.status == 0) {
+				this.$getData('/index/Usercenter/integral/uid/' + ustore.id + '/token/' + ustore.token).then((res)=>{
+                    if(res.status == 0) {
                         this.number = 0;
 					} else {
-                        this.number = response.data.zongfen;
+                        this.number = res.zongfen;
 					}
-					console.log(response.data.list);
-				},(response)=>{
+					console.log(res.list);
+				},(res)=>{
 					this.toastMessage = '网络开小差了~';
 					this.toastShow = true;
 				});
@@ -116,12 +116,12 @@
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
                 let openid = sessionStorage.getItem("openid");
-                this.$http.get(localStorage.apiDomain + 'public/index/index/get_weixin?openid=' + openid).then((response)=>{  /* 'os0CqxBBANhLuBLTsViL3C0zDlNs' */
-					this.headerIcon = response.data.info.weixindata;
+                this.$getData('/index/index/get_weixin?openid=' + openid).then((res)=>{  /* 'os0CqxBBANhLuBLTsViL3C0zDlNs' */
+					this.headerIcon = res.info.weixindata;
                     console.log(this.headerIcon);
                     var header = JSON.stringify(this.headerIcon);
                     localStorage.setItem("userHeader",header);
-                },(response)=>{
+                },(res)=>{
                     this.toastMessage = "网络开小差啦~";
                     this.toastShow = true;
                     this.upsta = 0;

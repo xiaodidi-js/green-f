@@ -1,114 +1,3 @@
-<style scoped>
-	.nowrap{
-		white-space:nowrap;
-		text-overflow:ellipsis;
-		overflow:hidden;
-	}
-
-	.com-wrapper{
-		width:100%;
-		height:100%;
-		background-color:#FFF;
-	}
-
-	.htimer{
-		width:100%;
-		padding:0.5rem 0rem;
-		font-size:1.4rem;
-		color:#808080;
-		text-align:center;
-		background-color:#F2F2F2;
-	}
-
-	.card-box{
-		width:97%;
-		height:auto;
-		padding:0% 0% 0% 3%;
-		border-bottom:#E6E6E6 dashed 1px;
-	}
-
-	.card-box .pro-mes{
-		width:97%;
-		padding:3% 3% 3% 0%;
-		border-bottom:#F2F2F2 1px solid;
-		font-size:0;
-	}
-
-	.card-box:last-child{
-		border-bottom:none;
-	}
-
-	.card-box .pro-mes .shotcut,.card-box .pro-mes .words{
-		display:inline-block;
-		vertical-align:top;
-		font-size:1.4rem;
-	}
-
-	.card-box .pro-mes .shotcut{
-		width:22%;
-		padding-top:22%;
-		margin-right:3%;
-		background-color:#DDD;
-		background-size:cover;
-		background-position:center;
-		background-repeat:no-repeat;
-		overflow:hidden;
-	}
-
-	.card-box .pro-mes .words{
-		width:75%;
-	}
-
-	.card-box .pro-mes .words .name{
-		width:100%;
-		display:-webkit-box;
-		-webkit-line-clamp:2;
-		-webkit-box-orient:vertical;
-		overflow:hidden;
-	}
-
-	.card-box .pro-mes .words .money{
-		font-size:1.4rem;
-		color:#F9AD0C;
-		text-align:left;
-		margin-top:0.7rem;
-		white-space:nowrap;
-		text-overflow:ellipsis;
-		overflow:hidden;
-	}
-
-	.card-box .pro-mes .words .unit{
-		font-size:1.2rem;
-	}
-
-	.card-box .pro-mes .com-text{
-		width:96%;
-		height:10.8rem;
-		font-size:1.4rem;
-		line-height:1.8rem;
-		color:#333;
-		background-color:#F2F2F2;
-		margin:0rem 0rem 1rem 0rem;
-		padding:2%;
-		border-radius:0.3rem;
-	}
-</style>
-
-<style>
-	.weui_btn_default{
-		background-color:#F9AD0C !important;
-		color:#fff !important;
-	}
-
-	.weui_btn_default:active{
-		background-color:#DE9A08 !important;
-	}
-
-	.weui_btn_disabled.weui_btn_default{
-		background-color:#F3C76A !important;
-	}
-</style>
-
 <template>
 	<div class="com-wrapper" style="margin-top: 46px;">
 		<!-- 头部时间 -->
@@ -254,3 +143,113 @@ export default{
 }
 
 </script>
+<style scoped>
+	.nowrap{
+		white-space:nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
+	}
+
+	.com-wrapper{
+		width:100%;
+		height:100%;
+		background-color:#FFF;
+	}
+
+	.htimer{
+		width:100%;
+		padding:0.5rem 0rem;
+		font-size:1.4rem;
+		color:#808080;
+		text-align:center;
+		background-color:#F2F2F2;
+	}
+
+	.card-box{
+		width:97%;
+		height:auto;
+		padding:0% 0% 0% 3%;
+		border-bottom:#E6E6E6 dashed 1px;
+	}
+
+	.card-box .pro-mes{
+		width:97%;
+		padding:3% 3% 3% 0%;
+		border-bottom:#F2F2F2 1px solid;
+		font-size:0;
+	}
+
+	.card-box:last-child{
+		border-bottom:none;
+	}
+
+	.card-box .pro-mes .shotcut,.card-box .pro-mes .words{
+		display:inline-block;
+		vertical-align:top;
+		font-size:1.4rem;
+	}
+
+	.card-box .pro-mes .shotcut{
+		width:22%;
+		padding-top:22%;
+		margin-right:3%;
+		background-color:#DDD;
+		background-size:cover;
+		background-position:center;
+		background-repeat:no-repeat;
+		overflow:hidden;
+	}
+
+	.card-box .pro-mes .words{
+		width:75%;
+	}
+
+	.card-box .pro-mes .words .name{
+		width:100%;
+		display:-webkit-box;
+		-webkit-line-clamp:2;
+		-webkit-box-orient:vertical;
+		overflow:hidden;
+	}
+
+	.card-box .pro-mes .words .money{
+		font-size:1.4rem;
+		color:#F9AD0C;
+		text-align:left;
+		margin-top:0.7rem;
+		white-space:nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
+	}
+
+	.card-box .pro-mes .words .unit{
+		font-size:1.2rem;
+	}
+
+	.card-box .pro-mes .com-text{
+		width:96%;
+		height:10.8rem;
+		font-size:1.4rem;
+		line-height:1.8rem;
+		color:#333;
+		background-color:#F2F2F2;
+		margin:0rem 0rem 1rem 0rem;
+		padding:2%;
+		border-radius:0.3rem;
+	}
+</style>
+
+<style>
+	.weui_btn_default{
+		background-color:#F9AD0C !important;
+		color:#fff !important;
+	}
+
+	.weui_btn_default:active{
+		background-color:#DE9A08 !important;
+	}
+
+	.weui_btn_disabled.weui_btn_default{
+		background-color:#F3C76A !important;
+	}
+</style>

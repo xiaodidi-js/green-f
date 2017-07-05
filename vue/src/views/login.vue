@@ -10,7 +10,6 @@
 				<i class="iconfont user_icon icon-mima"></i>
 				<x-input :show-clear=true placeholder="账号密码" type="password" :value.sync="data.pwd" class="login-ipt pwd-input"></x-input>
 			</div>
-			<!--<span class="checkbtn" @click="checkbtnShow()"></span>-->
 		</div>
 	</group>
 	<!-- 底部选择 -->
@@ -71,13 +70,6 @@ export default{
         this.data.auto = true;
 	},
 	methods: {
-        checkbtnShow () {
-            if($(".weui_input").eq(1).attr("type") == 'text') {
-                $(".weui_input").eq(1).attr("type","password");
-			} else {
-                $(".weui_input").eq(1).attr("type","text");
-			}
-		},
 		checkBefore: function(){
 			if(this.un.length <= 0 || this.up.length <= 0) {
 				return false;
@@ -98,9 +90,9 @@ export default{
 				this.btnText = '正在登录...';
 				this.btnDis = true;
 				this.loadingShow = true;
-				this.$http.get(localStorage.apiDomain + 'public/index/login/useraction/uname/' + this.un + '/upwd/' + this.up).then((response)=>{
-					if(response.data.status === 1) {
-						let obj = {id:response.data.id,token:response.data.token,time:response.data.time};
+				this.$getData('/index/login/useraction/uname/' + this.un + '/upwd/' + this.up).then((response)=>{
+                    var obj = {id:response.id,token:response.token,time:response.time};
+					if(response.status === 1) {
 						sessionStorage.removeItem('userInfo');
 						localStorage.removeItem('userInfo');
 						localStorage.removeItem('openid');
@@ -111,7 +103,7 @@ export default{
 							sessionStorage.setItem('userInfo',JSON.stringify(obj));
 						}
 						this.loadingShow = false;
-						this.toastMessage = response.data.info;
+						this.toastMessage = response.info;
 						this.toastShow = true;
 						let context = this;
 						setTimeout(function(){
@@ -122,19 +114,19 @@ export default{
 							context.btnDis = false;
 							context.$router.replace('index');
 						},800);
-					} else if (response.data.status === 0) {
-						alert(response.data.info);
+					} else if (response.status === 0) {
+						alert(response.info);
                         self.loadingShow = false;
                         self.btnText = '登录';
                         self.btnDis = false;
 					} else {
 						this.loadingShow = false;
-						this.toastMessage = response.data.info;
+						this.toastMessage = response.info;
 						this.toastShow = true;
 						this.btnText = '登录';
 						this.btnDis = false;
 					}
-				},(response)=>{
+				},(res)=>{
 					this.loadingShow = false;
 					this.toastMessage = '网络开小差了~';
 					this.toastShow = true;

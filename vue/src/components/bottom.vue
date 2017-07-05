@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper" style="margin-bottom:0px;">
+	<div class="wrapper" style="margin-bottom:0px;padding:0px;overflow:none;">
 		<!-- 购物车 -->
 		<div class="group-cart" v-link="{name:'cart'}" @click="goCart()">
 			<i class="icons icon-icon22fuzhi"></i>

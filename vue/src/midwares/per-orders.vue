@@ -117,9 +117,6 @@
                 showpro: false
 			}
 		},
-		route: {
-
-		},
 		ready() {
             this.getData(1);
             this.kefu();
@@ -131,6 +128,9 @@
                 this.getData(1);
 			}
 		},
+        watch: {
+
+        },
 		methods: {
             visiblepro: function () {
 				this.showpro = true;
@@ -140,9 +140,8 @@
             },
 		    kefu(){
 		        let _this = this;
-                this.$http.get(localStorage.apiDomain + 'public/index/Usercenter/onlie').then((response)=> {
-					_this.qqservice = response.data.list;
-					console.log(_this.qqservice)
+                this.$getData('/index/Usercenter/onlie').then((res)=> {
+					_this.qqservice = res.list;
                 });
             },
 		    $id: function(id){
@@ -164,14 +163,13 @@
 				this.dtype = type;
 				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 				ustore = JSON.parse(ustore);
-				this.$http.get(localStorage.apiDomain + 'public/index/user/orderselection/uid/' + ustore.id + '/token/' + ustore.token + '/type/' + type).then((response)=>{
-					if(response.data.status === 1) {
+				this.$getData('/index/user/orderselection/uid/' + ustore.id + '/token/' + ustore.token + '/type/' + type).then((res)=>{
+					if(res.status === 1) {
 						document.body.scrollTop = 0;
-						this.count = response.data.count;
-						this.data = response.data.list;
-						console.log(response.data.list);
-					}else if(response.data.status === -1) {
-						this.toastMessage = response.data.info;
+						this.count = res.count;
+						this.data = res.list;
+					}else if(res.status === -1) {
+						this.toastMessage = res.info;
 						this.toastShow = true;
 						let context = this;
 						setTimeout(function(){
@@ -181,7 +179,7 @@
 							context.$router.go({name:'login'});
 						},800);
 					}else{
-						this.toastMessage = response.data.info;
+						this.toastMessage = res.info;
 						this.toastShow = true;
 					}
 				},(response)=>{

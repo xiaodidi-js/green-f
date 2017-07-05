@@ -22,9 +22,7 @@
 					</div>
 				</div>
 			</div>
-
 			<div class="card-box"></div>
-
 		</div>
 	</div>
 </template>
@@ -80,26 +78,20 @@
                     }, 800);
                     return false;
 				}
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/index/productinfo/uid/' + ustore.id + '/pid/' + this.$route.query.pid,
-                }).then((response) => {
-                    console.log(response.data);
-                    if(typeof(response.data.articles) == 'undefined') {
-						$(".card-box").html("" +
-							"<div>暂时没有活动!</div>").css({
+				this.$getData('/index/index/productinfo/uid/' + ustore.id + '/pid/' + this.$route.query.pid).then((res) => {
+                    if(typeof(res.articles) == 'undefined') {
+                        $(".card-box").html("" +
+                            "<div>暂时没有活动!</div>").css({
                             "lineHeight" : "30px",
-							"fontSize" : "26px",
-							"color" : "#333",
-							"textAlign" : "center",
-							"margin" : "150px auto",
-						});
-					} else {
-                        localStorage.setItem("articles",JSON.stringify(response.data.articles.list));
-                        this.list = JSON.parse(localStorage.getItem("articles"));
-                        $(window).scrollTop(sessionStorage.getItem("scrolltop"));
-					}
-                });
+                            "fontSize" : "26px",
+                            "color" : "#333",
+                            "textAlign" : "center",
+                            "margin" : "150px auto",
+                        });
+                    } else {
+                        this.list = res.articles.list;
+                    }
+				});
 			}
 		}
 	}

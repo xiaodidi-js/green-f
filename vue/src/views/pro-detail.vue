@@ -257,10 +257,10 @@
 
 		},
 		ready() {
+            this.fetchData();
 		    //选项卡
 			this.siblingsDom();
 			this.timeline();
-            this.fetchData();
 		},
         watch: {
             '$route'(to,from) {
@@ -287,6 +287,7 @@
 		},
 		methods: {
 		    share() {
+		        var content = this;
                 //微信分享
                 this.$http.get(localStorage.apiDomain+'public/index/index/wxshare').then((response)=>{
                     let getSession = response.data;
@@ -321,16 +322,16 @@
                         WxJssdk.onMenuShareWeibo(shareData);
                         WxJssdk.onMenuShareQZone(shareData);
                         WxJssdk.onMenuShareQQ(shareData);
-                        if (_self.data.is_sell == 0) {
-                            _self.toastMessage = "商品已下架";
-                            _self.toastShow = true;
+                        if (content.data.is_sell == 0) {
+                            content.toastMessage = "商品已下架";
+                            content.toastShow = true;
                             return false;
                         } else {
                             // 分享好友
                             WxJssdk.onMenuShareAppMessage({
                                 option,
                                 success: function () {
-                                    _self.shareSuccess();
+                                    content.shareSuccess();
                                 },
                                 cancel: function() {
                                     alert("已取消分享");
@@ -341,7 +342,7 @@
                             WxJssdk.onMenuShareTimeline({
                                 option,
                                 success: function () {
-                                    _self.shareSuccess();
+                                    content.shareSuccess();
                                 },
                                 cancel: function() {
                                     alert("已取消分享");
@@ -352,7 +353,7 @@
                             WxJssdk.onMenuShareQQ({
                                 option,
                                 success: function () {
-                                    _self.shareSuccess();
+                                    content.shareSuccess();
                                 },
                                 cancel: function() {
                                     alert("已取消分享");
@@ -363,7 +364,7 @@
                             WxJssdk.onMenuShareWeibo({
                                 option,
                                 success: function () {
-                                    _self.shareSuccess();
+                                    content.shareSuccess();
                                 },
                                 cancel: function() {
                                     alert("已取消分享");
@@ -374,7 +375,7 @@
                             WxJssdk.onMenuShareQZone({
                                 option,
                                 success: function () {
-									_self.shareSuccess();
+                                    content.shareSuccess();
                                 },
                                 cancel: function() {
                                     alert("已取消分享");
@@ -394,9 +395,33 @@
                 var content = this, cart = JSON.parse(localStorage.getItem("myCart"));
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                this.$getData('/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid).then((response) => {
-                    if(response.data.status == 1) {
-                        alert(response.data.info);
+                console.log(ustore);
+                if(ustore == null) {
+                    alert("没有登录，请先登录!");
+                    setTimeout(function () {
+                        content.$router.go({name: 'login'});
+                    }, 800);
+                    return false;
+                }
+                this.$getData('/index/index/addshare?uid=' + ustore.id + '&pid=' + content.data.id + '&activeid=' + content.data.activeid).then((res) => {
+                    var cartObj = {
+                        id:this.$route.params.pid,
+                        shotcut:this.data.shotcut,
+                        name:this.data.name,
+                        price:this.data.price,
+                        deliverytime:this.data.deliverytime,
+                        peisongok:this.data.peisongok,
+                        activestu:this.data.activestu,
+                        activeid:this.data.activeid,
+                        activepay:this.data.activepay,
+                        format: '',
+                        formatName: '',
+                        nums:this.buyNums,
+                        store:this.proNums = res.store,
+                        activestu:this.data.activestu,
+                    };
+                    if(res.status == 1) {
+                        alert(res.info);
                         content.setCart(cartObj);
                         content.$router.go({name:'cart'});
                     }
@@ -406,6 +431,7 @@
                 let getUrl = '',context = this;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
+                console.log(ustore);
                 this.$nextTick(()=>{
                     if (ustore) {
                         getUrl = '/index/index/productdetail/uid/' + ustore.id + '/pid/' + this.$route.params.pid;
@@ -425,22 +451,7 @@
                             } else {
                                 context.showShare = false
                             }
-                            var cartObj = {
-                                id:this.$route.params.pid,
-                                shotcut:this.data.shotcut,
-                                name:this.data.name,
-                                price:this.data.price,
-                                deliverytime:this.data.deliverytime,
-                                peisongok:this.data.peisongok,
-                                activestu:this.data.activestu,
-                                activeid:this.data.activeid,
-                                activepay:this.data.activepay,
-                                format: '',
-                                formatName: '',
-                                nums:this.buyNums,
-                                store:this.proNums = response.store,
-                                activestu:this.data.activestu,
-                            };
+
                             if(!this.data.format){
                                 this.proNums = this.data.store;
                             }

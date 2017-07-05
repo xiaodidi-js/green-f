@@ -9,7 +9,7 @@ import App from 'components/app.vue';
 import Routers from './router';
 import Env from './config/env';
 import WxJssdk from 'weixin-js-sdk'
-import { fetchGet,fetchPost } from './libs/util.js'
+import { fetchGet,fetchPost,fetchPut } from './libs/util.js'
 
 Vue.use(VueLazy,{
 	preLoad:1.2,
@@ -23,6 +23,7 @@ Vue.use(VueRouter);
 
 Vue.prototype.$getData = fetchGet;
 Vue.prototype.$postData = fetchPost;
+Vue.prototype.$putData = fetchPut;
 
 // 开启debug模式
 Vue.config.debug = true;
@@ -49,6 +50,16 @@ let router = new VueRouter({
 router.map(Routers);
 
 router.beforeEach((transition) => {
+
+    //  解决支付路径问题
+    // let { href, protocol, host, search, hash } = window.location;
+    // const pathname = '/'; // 解决支付路径问题添加的前缀，替换成你的
+    // search = search || '?';
+    // hash = hash || '#!/';
+    // let newHref = `${protocol}//${host}${pathname}${search}${hash}`;
+    // if (newHref !== href) {
+    //     window.location.replace(newHref);
+    // }
     if(Env == 'production') {
         //微信openid检测
         if(!sessionStorage.getItem('openid')) {

@@ -32,32 +32,38 @@
 	</template>
 	<template v-else>
 		<div class="wrapper" :class="{'nopadding':noPadding}" >
-			<div class="ui_box" v-for="item in info.list">
-				<div @click="goPage('detail', {pid:item.id})">
-					<div class="img" v-if="item.store == 0">
-						<div class="qing">已售罄</div>
-						<!--<div v-lazy:background-image="item.src" class="lazyImg"></div>-->
-						<img :src="item.src" alt="" style="width:100%;height:100%;" />
+			<template v-for="item in info.list">
+				<div class="ui_box">
+					<div @click="goPage('detail', {pid:item.id})">
+						<div class="img" v-if="item.store == 0">
+							<div class="qing">已售罄</div>
+							<!--<div v-lazy:background-image="item.src" class="lazyImg"></div>-->
+							<img :src="item.src" alt="" style="width:100%;height:100%;" />
+						</div>
+						<div class="img" v-else>
+							<!--<div v-lazy:background-image="item.src" class="lazyImg"></div>-->
+							<img :src="item.src" alt="" style="width:100%;height:100%;" />
+						</div>
+						<div class="mes">
+							<div class="name">{{ item.title }}</div>
+						</div>
 					</div>
-					<div class="img" v-else>
-						<!--<div v-lazy:background-image="item.src" class="lazyImg"></div>-->
-						<img :src="item.src" alt="" style="width:100%;height:100%;" />
+					<div style="padding-bottom: 25px;margin: 0px 5px;">
+						<div class="money">
+							<label class="unit">¥</label>{{ item.price }}
 					</div>
-					<div class="mes">
-						<div class="name">{{ item.title }}</div>
+						<div class="scar" @click="addCart(item)">
+							<img src="../images/shopcar_youlike.png" style="width:100%;height:100%;"/>
+						</div>
 					</div>
 				</div>
-				<div style="padding-bottom: 25px;margin: 0px 5px;">
-					<div class="money">
-						<label class="unit">¥</label>{{ item.price }}
-					</div>
-					<div class="scar" @click="addCart(item)">
-						<img src="../images/shopcar_youlike.png" style="width:100%;height:100%;"/>
-					</div>
-				</div>
-			</div>
+			</template>
 		</div>
 	</template>
+	<!-- 弹出提示框 -->
+	<alert :show.sync="alertShow" title="" button-text="知道了">
+		<p>加入购物车成功!</p>
+	</alert>
 </template>
 
 <script>
@@ -66,6 +72,7 @@
     import { cartNums } from 'vxpath/getters'
     import axios from 'axios'
     import qs from 'qs'
+    import Alert from 'vux/src/components/alert'
 
 	export default{
         ready() {
@@ -87,10 +94,14 @@
                 clearAll,
             }
         },
+        components: {
+            Alert,
+		},
 		data() {
 			return {
                 buyNums:1,
                 proNums:1,
+                alertShow: false,
 			}
 		},
 		methods: {
@@ -155,20 +166,19 @@
                             }
                         }
                         self.setCart(obj);
-                        alert("加入购物车成功！");
+                        this.alertShow = true;
                     });
 				}
 			},
 		}
 	}
 </script>
-<style scoped>
+<style type="text/css">
 	.wrapper{
 		width:100%;
 		padding:0rem 0rem 1rem 0rem;
 		font-size:0;
 		margin-bottom:25px;
-		overflow: hidden;
 	}
 
 	.wrapper.nopadding{

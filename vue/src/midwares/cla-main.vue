@@ -41,7 +41,7 @@ import Toast from 'vux/src/components/toast'
 		ready() {
 		    this.$getData('/index/index/columns').then((res) => {
 		        this.data = res.classify;
-            },(response)=>{
+            },(res)=>{
                 this.toastMessage = "网络开小差啦~";
                 this.toastShow = true;
             });

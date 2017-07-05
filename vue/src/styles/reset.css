@@ -223,3 +223,12 @@ img[lazy=error]{
     display:none;
 }
 /* goto end */
+
+/* alertMsg start */
+.alertMsg {
+    position: relative;
+    top: 28px;
+    height: 50px;
+    color: #333;
+}
+/* alertMsg  */

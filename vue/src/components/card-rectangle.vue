@@ -75,7 +75,10 @@
 	<div></div>
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
-
+	<!-- 弹出提示框 -->
+	<alert :show.sync="alertShow" title="" button-text="知道了">
+		<p class="alertMsg">加入购物车成功!</p>
+	</alert>
 </template>
 
 <script>
@@ -86,6 +89,7 @@
     import Toast from 'vux/src/components/toast'
     import axios from 'axios'
     import qs from 'qs'
+    import Alert from 'vux/src/components/alert'
 
     export default{
         vuex: {
@@ -107,6 +111,7 @@
                 toastShow: false,
                 buyNums: 1,
                 proNums: 1,
+                alertShow: false,
 			}
 		},
         vuex: {
@@ -127,7 +132,8 @@
         },
         components: {
             Swiper,
-            Toast
+            Toast,
+            Alert
         },
         methods: {
             listclick(url) {
@@ -190,7 +196,7 @@
                             }
                         }
                         this.setCart(obj);
-                        alert("加入购物车成功！");
+                        this.alertShow = true;
                     });
 
 //                    axios({
