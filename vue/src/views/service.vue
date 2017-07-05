@@ -1,3 +1,179 @@
+<template>
+	<!-- 评价详情 -->
+	<div class="com-wrapper">
+		<!-- 头部时间 -->
+		<div class="htimer nowrap">成交时间:{{ data.createtime }}</div>
+		<!-- 售后详情 -->
+		<div class="card-box">
+			<div class="pro-mes">
+				<div class="shotcut" :style="{backgroundImage:'url('+data.shotcut+')'}"></div>
+				<div class="words">
+					<div class="name">{{ data.name }}<label v-if="data.count>1">等多件商品</label></div>
+					<div class="money">
+						<label class="unit">¥</label>
+						{{ data.price }}
+					</div>
+				</div>
+			</div>
+			<div class="pro-mes">
+				<div class="com-box my-com" style="margin-bottom:0rem;">
+					<div class="boxes left nowrap">申请原因</div>
+					<div class="boxes nowrap right">[{{ data.message.createtime }}]</div>
+					<div class="my-content">{{ data.message.content }}</div>
+				</div>
+				<div style="margin-top:0.7rem;" v-if="data.message.imgs&&data.message.imgs.length>0">
+					<pic-shower :imgs="data.message.imgs"></pic-shower>
+				</div>
+			</div>
+			<div class="pro-mes" v-if="data.message.status==0">
+				<div class="waitting">
+					申请审核中...
+				</div>
+			</div>
+			<div class="pro-mes" v-if="data.message.status>=1&&data.message.subs&&data.message.subs.length>0">
+				<div v-for="mitem in data.message.subs">
+					<div class="com-box" v-if="mitem.uid>0">
+						<div class="boxes left nowrap">后台回复</div>
+						<div class="boxes nowrap right">[{{ mitem.createtime }}]</div>
+						<div class="my-content">
+							{{ mitem.content }}
+						</div>
+					</div>
+					<div class="com-box my-com" v-else>
+						<div class="boxes left nowrap">用户回复</div>
+						<div class="boxes nowrap right">[{{ mitem.createtime }}]</div>
+						<div class="my-content">
+							{{ mitem.content }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="pro-mes" v-if="data.message.status==2">
+				<div class="waitting">
+					处理完毕
+				</div>
+			</div>
+			<separator v-show="data.message.status==1"></separator>
+		</div>
+	</div>
+
+	<!-- 发送评论 -->
+	<bottom-send :fixed="true" :disbtn="sendBtn" :text.sync="sendText" v-show="data.message.status==1"></bottom-send>
+
+	<!-- toast提示框 -->
+	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
+</template>
+
+<script>
+import Toast from 'vux/src/components/toast'
+import PicShower from 'components/pic-shower'
+import Separator from 'components/separator'
+import BottomSend from 'components/bottom-send'
+
+export default{
+	data() {
+		return {
+			toastMessage:'',
+			toastShow:false,
+			sendBtn:false,
+			sendText:'',
+			data:{
+				createtime: '',
+				shotcut: '',
+				name: '',
+				price: '',
+				count: 0,
+				message: {} 
+			}
+		}
+	},
+	components: {
+		Toast,
+		PicShower,
+		Separator,
+		BottomSend
+	},
+	route: {
+		
+	},
+	ready() {
+		let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+		ustore = JSON.parse(ustore);
+		this.$http.get(localStorage.apiDomain+'public/index/user/afterservice/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+this.$route.params.oid+'/message/1').then((response)=>{
+			if(response.data.status===1){
+				this.data.createtime = response.data.createtime;
+				this.data.shotcut = response.data.shotcut;
+				this.data.name = response.data.name;
+				this.data.price = response.data.price;
+				this.data.count = response.data.count;
+				this.data.message = response.data.message;
+				this.$nextTick(function(){
+					document.body.scrollTop = document.body.scrollHeight;
+				});
+			}else if(response.data.status===-1){
+				this.toastMessage = response.data.info;
+				this.toastShow = true;
+				let context = this;
+				setTimeout(function(){
+					context.clearAll();
+					sessionStorage.removeItem('userInfo');
+					localStorage.removeItem('userInfo');
+					context.$router.go({name:'login'});
+				},800);
+			}else{
+				this.toastMessage = response.data.info;
+				this.toastShow = true;
+			}
+		},(response)=>{
+			this.toastMessage = '网络开小差了~';
+			this.toastShow = true;
+		});
+	},
+	events: {
+		sendMes: function(mes){
+			if(typeof mes!='string'||mes==''){
+				this.toastMessage = '发送内容不能为空';
+				this.toastShow = true;
+				return false;
+			}
+			this.sendBtn = true;
+			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+			ustore = JSON.parse(ustore);
+			let pdata = {uid:ustore.id,token:ustore.token,oid:this.$route.params.oid,top:this.data.message.id,content:mes};
+			this.$http.put(localStorage.apiDomain+'public/index/user/afterservice',pdata).then((response)=>{
+				this.sendBtn = false;
+				if(response.data.status===1){
+					this.data.message.subs.push({id:response.data.id,uid:response.data.uid,content:response.data.content,createtime:response.data.createtime});
+					this.sendBtn = false;
+					this.sendText = '';
+					this.$nextTick(function(){
+						document.body.scrollTop = document.body.scrollHeight;
+					});
+				}else if(response.data.status===-1){
+					this.toastMessage = response.data.info;
+					this.toastShow = true;
+					let context = this;
+					setTimeout(function(){
+						context.clearAll();
+						sessionStorage.removeItem('userInfo');
+						localStorage.removeItem('userInfo');
+						context.$router.go({name:'login'});
+					},800);
+				}else{
+					this.toastMessage = response.data.info;
+					this.toastShow = true;
+				}
+			},(response)=>{
+				this.sendBtn = false;
+				this.toastMessage = '网络开小差了~';
+				this.toastShow = true;
+			});
+		}
+	}
+}
+
+</script>
+
 <style scoped>
 	.nowrap{
 		white-space:nowrap;
@@ -186,181 +362,3 @@
 		background-color:#F3C76A !important;
 	}
 </style>
-
-<template>
-	<!-- 评价详情 -->
-	<div class="com-wrapper">
-		<!-- 头部时间 -->
-		<div class="htimer nowrap">成交时间:{{ data.createtime }}</div>
-		<!-- 售后详情 -->
-		<div class="card-box">
-			<div class="pro-mes">
-				<div class="shotcut" :style="{backgroundImage:'url('+data.shotcut+')'}"></div>
-				<div class="words">
-					<div class="name">{{ data.name }}<label v-if="data.count>1">等多件商品</label></div>
-					<div class="money">
-						<label class="unit">¥</label>
-						{{ data.price }}
-					</div>
-				</div>
-			</div>
-			<div class="pro-mes">
-				<div class="com-box my-com" style="margin-bottom:0rem;">
-					<div class="boxes left nowrap">申请原因</div>
-					<div class="boxes nowrap right">[{{ data.message.createtime }}]</div>
-					<div class="my-content">
-						{{ data.message.content }}
-					</div>
-				</div>
-				<div style="margin-top:0.7rem;" v-if="data.message.imgs&&data.message.imgs.length>0">
-					<pic-shower :imgs="data.message.imgs"></pic-shower>
-				</div>
-			</div>
-			<div class="pro-mes" v-if="data.message.status==0">
-				<div class="waitting">
-					申请审核中...
-				</div>
-			</div>
-			<div class="pro-mes" v-if="data.message.status>=1&&data.message.subs&&data.message.subs.length>0">
-				<div v-for="mitem in data.message.subs">
-					<div class="com-box" v-if="mitem.uid>0">
-						<div class="boxes left nowrap">后台回复</div>
-						<div class="boxes nowrap right">[{{ mitem.createtime }}]</div>
-						<div class="my-content">
-							{{ mitem.content }}
-						</div>
-					</div>
-					<div class="com-box my-com" v-else>
-						<div class="boxes left nowrap">用户回复</div>
-						<div class="boxes nowrap right">[{{ mitem.createtime }}]</div>
-						<div class="my-content">
-							{{ mitem.content }}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="pro-mes" v-if="data.message.status==2">
-				<div class="waitting">
-					处理完毕
-				</div>
-			</div>
-			<separator v-show="data.message.status==1"></separator>
-		</div>
-	</div>
-
-	<!-- 发送评论 -->
-	<bottom-send :fixed="true" :disbtn="sendBtn" :text.sync="sendText" v-show="data.message.status==1"></bottom-send>
-
-	<!-- toast提示框 -->
-	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
-</template>
-
-<script>
-import Toast from 'vux/src/components/toast'
-import PicShower from 'components/pic-shower'
-import Separator from 'components/separator'
-import BottomSend from 'components/bottom-send'
-
-export default{
-	data() {
-		return {
-			toastMessage:'',
-			toastShow:false,
-			sendBtn:false,
-			sendText:'',
-			data:{
-				createtime: '',
-				shotcut: '',
-				name: '',
-				price: '',
-				count: 0,
-				message: {} 
-			}
-		}
-	},
-	components: {
-		Toast,
-		PicShower,
-		Separator,
-		BottomSend
-	},
-	route: {
-		
-	},
-	ready() {
-		let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-		ustore = JSON.parse(ustore);
-		this.$http.get(localStorage.apiDomain+'public/index/user/afterservice/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+this.$route.params.oid+'/message/1').then((response)=>{
-			if(response.data.status===1){
-				this.data.createtime = response.data.createtime;
-				this.data.shotcut = response.data.shotcut;
-				this.data.name = response.data.name;
-				this.data.price = response.data.price;
-				this.data.count = response.data.count;
-				this.data.message = response.data.message;
-				this.$nextTick(function(){
-					document.body.scrollTop = document.body.scrollHeight;
-				});
-			}else if(response.data.status===-1){
-				this.toastMessage = response.data.info;
-				this.toastShow = true;
-				let context = this;
-				setTimeout(function(){
-					context.clearAll();
-					sessionStorage.removeItem('userInfo');
-					localStorage.removeItem('userInfo');
-					context.$router.go({name:'login'});
-				},800);
-			}else{
-				this.toastMessage = response.data.info;
-				this.toastShow = true;
-			}
-		},(response)=>{
-			this.toastMessage = '网络开小差了~';
-			this.toastShow = true;
-		});
-	},
-	events: {
-		sendMes: function(mes){
-			if(typeof mes!='string'||mes==''){
-				this.toastMessage = '发送内容不能为空';
-				this.toastShow = true;
-				return false;
-			}
-			this.sendBtn = true;
-			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-			ustore = JSON.parse(ustore);
-			let pdata = {uid:ustore.id,token:ustore.token,oid:this.$route.params.oid,top:this.data.message.id,content:mes};
-			this.$http.put(localStorage.apiDomain+'public/index/user/afterservice',pdata).then((response)=>{
-				this.sendBtn = false;
-				if(response.data.status===1){
-					this.data.message.subs.push({id:response.data.id,uid:response.data.uid,content:response.data.content,createtime:response.data.createtime});
-					this.sendBtn = false;
-					this.sendText = '';
-					this.$nextTick(function(){
-						document.body.scrollTop = document.body.scrollHeight;
-					});
-				}else if(response.data.status===-1){
-					this.toastMessage = response.data.info;
-					this.toastShow = true;
-					let context = this;
-					setTimeout(function(){
-						context.clearAll();
-						sessionStorage.removeItem('userInfo');
-						localStorage.removeItem('userInfo');
-						context.$router.go({name:'login'});
-					},800);
-				}else{
-					this.toastMessage = response.data.info;
-					this.toastShow = true;
-				}
-			},(response)=>{
-				this.sendBtn = false;
-				this.toastMessage = '网络开小差了~';
-				this.toastShow = true;
-			});
-		}
-	}
-}
-
-</script>

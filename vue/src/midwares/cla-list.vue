@@ -65,22 +65,20 @@
             }
         },
         ready() {
-            this.getData('');
             $(".goto").click(function(){
                 $("html,body").animate({
                     scrollTop:0
                 },200);
             });
+            this.getData('');
         },
 		watch: {
             '$route'(to,from) {
-                if(parseInt(to.params.cid) && to.name === 'cla-list') {
-//                    this.getData('');
+                console.log(to);
+                if(parseInt(to.params.cid) != this.colum && to.name === 'cla-list') {
+                    this.getData('');
                 }
             }
-		},
-        mounted: {
-
 		},
         methods: {
             getData: function(sk){

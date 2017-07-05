@@ -9,8 +9,12 @@
 		<div id="scroller" class="ms-scroller" style="transform:translate3d(0px,0px,0px)">
 			<div class="ms-item">
 				<!-- 头部滚动图 -->
-				<swiper :list="data.gallery" loop auto dots-position="center" :show-desc-mask="false"
+				<!--<swiper :list="data.gallery" loop auto dots-position="center" :show-desc-mask="false"-->
+						<!--:aspect-ratio="480/480" dots-class="dots-my-orange" @touchstart.stop @touchend.stop></swiper>-->
+
+				<swiper :list="data.gallery" auto dots-position="center" :show-desc-mask="false"
 						:aspect-ratio="480/480" dots-class="dots-my-orange" @touchstart.stop @touchend.stop></swiper>
+
 				<!-- 产品信息 -->
 				<div class="pro-mes">
 					<div class="title">{{ data.name }}</div>
@@ -226,7 +230,7 @@
                 gotimeline: [],
                 seckillShow: false,
 				local:localStorage.apiDomain,
-				tjData: {} ,//推荐组合
+				tjData: {} ,		//推荐组合
                 showShare: false,
                 shareEle: false,
 			}
@@ -256,8 +260,6 @@
 		    //选项卡
 			this.siblingsDom();
 			this.timeline();
-		},
-		created() {
             this.fetchData();
 		},
         watch: {
@@ -265,19 +267,18 @@
                 if(parseInt(to.params.pid) !== this.data.id && to.name === 'detail') {
                     this.fetchData();
                     this.share();
-                    console.log(parseInt(to.params.pid),this.data.id);
                 }
             }
         },
 		computed: {
-			makeFreight: function(){
+			makeFreight() {
 				let fmoney = parseFloat(this.data.freight);
 				if(isNaN(fmoney)){
 					fmoney = 0;
 				}
 				return fmoney.toFixed(2);
 			},
-			getGuigeName: function(){
+			getGuigeName() {
 				if(this.guigeName <= 0) {
 					return '请选择商品规格和数量';
 				}
@@ -295,13 +296,11 @@
                         link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
                         imgUrl:this.data.shotcut
                     };
-
                     var option = {
                         title: this.data.name, // 分享标题
                         link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
                         imgUrl: this.data.shotcut, // 分享图标
 					};
-
                     WxJssdk.config({
                         debug:false,
                         appId:getSession.appid,
@@ -392,14 +391,14 @@
                 });
 			},
             shareSuccess() {
-                let getUrl = '',context = this;
+                var content = this, cart = JSON.parse(localStorage.getItem("myCart"));
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
                 this.$getData('/index/index/addshare?uid=' + ustore.id + '&pid=' + _self.data.id + '&activeid=' + _self.data.activeid).then((response) => {
                     if(response.data.status == 1) {
                         alert(response.data.info);
-                        _self.setCart(cartObj);
-                        _self.$router.go({name:'cart'});
+                        content.setCart(cartObj);
+                        content.$router.go({name:'cart'});
                     }
                 });
 			},
@@ -407,52 +406,50 @@
                 let getUrl = '',context = this;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                if (ustore) {
-                    getUrl = '/index/index/productdetail/uid/' + ustore.id + '/pid/' + this.$route.params.pid;
-                }else{
-                    getUrl = '/index/index/productdetail/uid/0/pid/' + this.$route.params.pid;
-                }
-                var _self = this, cart = JSON.parse(localStorage.getItem("myCart"));
-                try {
-                    this.$getData(getUrl).then((response)=>{
-                        this.data = response;
-                        console.log(this.data);
-                        context.share();
-                        //判断是否分享商品
-                        if(this.data.activestu == 2) {
-                            _self.showShare = true;
-                            $(".buyButton").css({
-                                "display":"none"
-                            });
-                        } else {
-                            _self.showShare = false
-                        }
-                        var cartObj = {
-                            id:this.$route.params.pid,
-                            shotcut:this.data.shotcut,
-                            name:this.data.name,
-                            price:this.data.price,
-                            deliverytime:this.data.deliverytime,
-                            peisongok:this.data.peisongok,
-                            activestu:this.data.activestu,
-                            activeid:this.data.activeid,
-                            activepay:this.data.activepay,
-                            format: '',
-                            formatName: '',
-                            nums:this.buyNums,
-                            store:this.proNums = response.store,
-                            activestu:this.data.activestu,
-                        };
-                        if(!this.data.format){
-                            this.proNums = this.data.store;
-                        }
-                        //判断是否活动商品
-                        if(_self.data.activestu == 0 && _self.data.activestu == 2) {
-                            _self.seckillShow = false
-                        } else if(_self.data.activestu == 1) {
-                            _self.seckillShow = true;
-                        }
-                        this.$nextTick(()=>{
+                this.$nextTick(()=>{
+                    if (ustore) {
+                        getUrl = '/index/index/productdetail/uid/' + ustore.id + '/pid/' + this.$route.params.pid;
+                    }else{
+                        getUrl = '/index/index/productdetail/uid/0/pid/' + this.$route.params.pid;
+                    }
+                    try {
+                        this.$getData(getUrl).then((response)=>{
+                            this.data = response;
+                            context.share();
+                            //判断是否分享商品
+                            if(this.data.activestu == 2) {
+                                context.showShare = true;
+                                $(".buyButton").css({
+                                    "display":"none"
+                                });
+                            } else {
+                                context.showShare = false
+                            }
+                            var cartObj = {
+                                id:this.$route.params.pid,
+                                shotcut:this.data.shotcut,
+                                name:this.data.name,
+                                price:this.data.price,
+                                deliverytime:this.data.deliverytime,
+                                peisongok:this.data.peisongok,
+                                activestu:this.data.activestu,
+                                activeid:this.data.activeid,
+                                activepay:this.data.activepay,
+                                format: '',
+                                formatName: '',
+                                nums:this.buyNums,
+                                store:this.proNums = response.store,
+                                activestu:this.data.activestu,
+                            };
+                            if(!this.data.format){
+                                this.proNums = this.data.store;
+                            }
+                            //判断是否活动商品
+                            if(context.data.activestu == 0 && context.data.activestu == 2) {
+                                context.seckillShow = false
+                            } else if(context.data.activestu == 1) {
+                                context.seckillShow = true;
+                            }
                             var scaleBox = this.data.content;
                             var itemEle = document.getElementsByClassName('ms-item')[1];
                             // 处理异常
@@ -472,16 +469,15 @@
                             } catch(e) {
                                 console.log(e);
                             } finally {}
-                        });
-                    },(response)=>{
-                        this.toastMessage = "网络开小差啦~";
-                        this.toastShow = true;
-                    }).catch(function (error) {
-                        (error)
-                    })
-				} catch(e) {
-					console.log(e);
-				}
+                        },(response)=>{
+                            this.toastMessage = "网络开小差啦~";
+                            this.toastShow = true;
+                        }).catch(function (error) {
+                            (error)
+                        })
+                    } catch(e) {}
+
+				});
 			},
             goback () {
                 window.history.back();
@@ -698,7 +694,6 @@
 			buyNow: function() {
                 if(!this.formatPopShow == true) {
                     this.formatPopShow = true;
-                    console.log(this.data.activepay);
                     return false;
                 }
                 if(this.proNums <= 0) {

@@ -109,10 +109,7 @@
                     }, 800);
                     return false;
 				} else if (ustore != null) {
-                    axios({
-                        method: 'get',
-                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
-                    }).then((response) => {
+                    this.$getData('/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id).then((response) => {
                         obj = {
                             id: data.id,
                             name: data.title,
