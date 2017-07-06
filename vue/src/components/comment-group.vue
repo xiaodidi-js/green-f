@@ -109,6 +109,7 @@
     import Rater from 'vux/src/components/rater'
     import PicUploader from 'components/pic-uploader'
     import Toast from 'vux/src/components/toast'
+
     export default{
         components:{
             Rater,

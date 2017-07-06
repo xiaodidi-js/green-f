@@ -3,7 +3,7 @@
 		<div class="edit" v-link="{name:'address-edit',params:{aid:obj.id}}" v-if="$parent.getType=='express'">
 			<img src="../images/add-edit.png" />
 		</div>
-		<div class="addcon" @click="changeActive()" v-if="$parent.getType=='express'">
+		<div class="addcon" @click="changeActive()" v-if="$parent.getType == 'express'">
 			<div class="name nowrap">
 				<!--<div class="default" v-if="obj.is_default === 1">默认</div>-->
 				<p style="line-height: 22px;">
@@ -101,8 +101,8 @@
 		methods: {
 			changeActive: function(evt){
 			    this.ischonse = true;
-				evt.preventDefault();
-				evt.stopPropagation();
+//				evt.preventDefault();
+//				evt.stopPropagation();
 				this.$dispatch('setChosen',this.obj);
 			}
 		}

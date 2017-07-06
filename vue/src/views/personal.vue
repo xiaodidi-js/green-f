@@ -120,7 +120,7 @@
 					this.headerIcon = res.info.weixindata;
                     console.log(this.headerIcon);
                     var header = JSON.stringify(this.headerIcon);
-                    localStorage.setItem("userHeader",header);
+                    localStorage.setItem("userHeader",JSON.stringify(res.info.weixindata));
                 },(res)=>{
                     this.toastMessage = "网络开小差啦~";
                     this.toastShow = true;

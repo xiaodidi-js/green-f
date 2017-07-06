@@ -100,6 +100,7 @@
 			},
 			disOff: function() {
 				let offnum = 0;
+				console.log(this.obj.type);
 				if(this.obj.type == 2 || this.obj.type == 4){
 					offnum = this.obj.discount.toFixed(2) * 10;
 					if(offnum % 10 === 0){

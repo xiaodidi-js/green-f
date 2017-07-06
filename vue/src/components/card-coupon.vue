@@ -1,3 +1,82 @@
+<template>
+	<div class="notify-box">
+		<div class="tips">当前有 {{ data.length }} 张可用优惠劵</div>
+		<div class="btn">
+			<!-- <a @click="showConfirm">口令兑换</a> -->
+		</div>
+	</div>
+
+	<separator :set-height="40" unit="px"></separator>
+
+	<div class="wrapper" v-if="data == '' "></div>
+	<div class="wrapper" v-else>
+		<coupon-list v-for="item in data" :obj="item" :showing.sync="choseArr"></coupon-list>
+	</div>
+
+
+	<!-- 确定弹框 -->
+	<confirm :show.sync="confirmShow" title="口令兑换" confirm-text="确定" cancel-text="取消" @on-confirm="confirmPassword">
+		<input type="text" class="pass-code" value="" placeholder="输入兑换码" />
+	</confirm>
+</template>
+
+<script>
+	import Confirm from 'vux/src/components/confirm'
+	import Separator from './separator'
+	import CouponList from 'components/coupon-list'
+	import { clearAll } from 'vxpath/actions'
+
+	export default{
+		vuex: {
+			actions: {
+				clearAll
+			}
+		},
+		components:{
+			Confirm,
+			Separator,
+			CouponList
+		},
+		data() {
+			return {
+				confirmShow:false,
+				choseArr:[],
+				data:[]
+			}
+		},
+		methods: {
+			showConfirm: function(){
+				this.confirmShow = true;
+			},
+			confirmPassword: function(){
+
+			}
+		},
+		ready() {
+			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+			ustore = JSON.parse(ustore);
+			this.$getData('/index/user/couponinfo/uid/' +ustore.id + '/token/' + ustore.token).then((res)=>{
+				if(res.status === 1) {
+					this.data = res.coupon;
+					console.log(this.data);
+				}else if(res.status===-1){
+					this.$dispatch('showMes',res.info);
+					let context = this;
+					setTimeout(function(){
+						context.clearAll();
+						sessionStorage.removeItem('userInfo');
+						localStorage.removeItem('userInfo');
+						context.$router.go({name:'login'});
+					},800);
+				}else{
+					this.$dispatch('showMes',res.info);
+				}
+			});
+		}
+	}
+</script>
+
+
 <style scoped>
 	.notify-box{
 		width:94%;
@@ -49,81 +128,3 @@
 		color:#333;
 	}
 </style>
-
-<template>
-	<div class="notify-box">
-		<div class="tips">当前有 {{ data.length }} 张可用优惠劵</div>
-		<div class="btn">
-			<!-- <a @click="showConfirm">口令兑换</a> -->
-		</div>
-	</div>
-
-	<separator :set-height="40" unit="px"></separator>
-
-	<div class="wrapper">
-		<coupon-list v-for="item in data" :obj="item" :showing.sync="choseArr"></coupon-list>
-	</div>
-
-	<!-- 确定弹框 -->
-	<confirm :show.sync="confirmShow" title="口令兑换" confirm-text="确定" cancel-text="取消" @on-confirm="confirmPassword">
-		<input type="text" class="pass-code" value="" placeholder="输入兑换码" />
-	</confirm>
-</template>
-
-<script>
-	import Confirm from 'vux/src/components/confirm'
-	import Separator from './separator'
-	import CouponList from 'components/coupon-list'
-	import { clearAll } from 'vxpath/actions'
-
-	export default{
-		vuex: {
-			actions: {
-				clearAll
-			}
-		},
-		components:{
-			Confirm,
-			Separator,
-			CouponList
-		},
-		data() {
-			return {
-				confirmShow:false,
-				choseArr:[],
-				data:[]
-			}
-		},
-		methods: {
-			showConfirm: function(){
-				this.confirmShow = true;
-			},
-			confirmPassword: function(){
-
-			}
-		},
-		ready() {
-			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-			ustore = JSON.parse(ustore);
-			this.$http.get(localStorage.apiDomain+'public/index/user/couponinfo/uid/'+ustore.id+'/token/'+ustore.token).then((response)=>{
-				if(response.data.status===1){
-					this.data = response.data.coupon;
-					console.log(response.data);
-				}else if(response.data.status===-1){
-					this.$dispatch('showMes',response.data.info);
-					let context = this;
-					setTimeout(function(){
-						context.clearAll();
-						sessionStorage.removeItem('userInfo');
-						localStorage.removeItem('userInfo');
-						context.$router.go({name:'login'});
-					},800);
-				}else{
-					this.$dispatch('showMes',response.data.info);
-				}
-		},(response)=>{
-				this.$dispatch('showMes','网络开小差了~');
-			});
-		}
-	}
-</script>

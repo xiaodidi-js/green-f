@@ -199,7 +199,7 @@ export default{
 	.card-box{
 		width:97%;
 		height:auto;
-		padding:0% 0% 0% 3%;
+		padding:10% 0% 0% 3%;
 		border-bottom:#E6E6E6 dashed 1px;
 		background-color:#fff;
 	}

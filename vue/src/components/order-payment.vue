@@ -47,7 +47,7 @@
                     <a class="manage-btn" v-if="item.reject == 0 && item.status == 1"
                        v-link="{name:'service-apply',params:{oid:item.id}}">申请售后</a>
 
-                    <span v-if="item.pinlun == 0">
+                    <span v-if="item.reject == 0">
                         <a class="manage-btn" v-if="item.reject == 0 && item.status == 1"
                            v-link="{name:'comment-submit',params:{oid:item.id}}">客户评价</a>
                     </span>
@@ -166,14 +166,15 @@
                 this.loadingShow = true;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                this.$http.get(localStorage.apiDomain + 'public/index/user/orderoperation/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+oid).then((response)=>{
+                this.$getData('/index/user/orderoperation/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+oid).then((res)=>{
+                    console.log(res);
                     this.loadingShow = false;
                     this.btnStatus = false;
-                    if(response.data.status===1) {
-                        this.setCartAgain(response.data.list);
+                    if(res.status === 1) {
+                        this.setCartAgain(res.list);
                         this.$router.go({name:'cart'});
-                    }else if(response.data.status === -1) {
-                        this.toastMessage = response.data.info;
+                    }else if(res.status === -1) {
+                        this.toastMessage = res.info;
                         this.toastShow = true;
                         let context = this;
                         setTimeout(function(){
@@ -183,10 +184,10 @@
                             context.$router.go({name:'login'});
                         },800);
                     }else{
-                        this.toastMessage = response.data.info;
+                        this.toastMessage = res.info;
                         this.toastShow = true;
                     }
-                },(response)=>{
+                },(res)=>{
                     this.btnStatus = false;
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;

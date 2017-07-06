@@ -129,7 +129,11 @@
 			}
 		},
         watch: {
-
+			$route(to) {
+				console.log(to);
+				this.getData(1);
+                console.log(1);
+			}
         },
 		methods: {
             visiblepro: function () {
@@ -149,11 +153,11 @@
 			},
 			getData: function(type) {
 		        if(type === 5) {
-                    this.$id("customer").style.display = "block";
+                    $("#customer").css("display","block");
 					$("#cardOrder").css("display","none");
 					$(".list-nothing").css("display","none");
 				} else {
-                    this.$id("customer").style.display = "none";
+                    $("#customer").css("display","none");
                     $("#cardOrder").css("display","block");
                     $(".list-nothing").css("display","block");
 				}

@@ -45,7 +45,7 @@
 	<comment-group :products.sync="data.list"></comment-group>
 	
 	<!-- 底部按钮 -->
-	<x-button text="发表评价" :disabled="btnDis" class="fixbtn" @click="submitComment" style="z-index:100;"></x-button>
+	<x-button text="发表评价" :disabled="btnDis" class="fixbtn" @click="submitComment" style="line-height: 2.777;z-index:100;"></x-button>
 
 	<!-- toast提示框 -->
 	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>

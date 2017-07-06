@@ -14,7 +14,12 @@
 			<div class="add-con">
 				<div style="text-align:left;padding-left:2rem;" class="words" v-if="data.address">
 					<div class="name">
-						<p>
+						<p>{{ deliverName }}</p>
+						<p v-if="deliverName === '到店自提' ">
+							<span class="address-left">姓名:</span>
+							<span>{{ wxName }}</span>
+						</p>
+						<p v-if="deliverName === '快递配送' ">
 							<span class="address-left">姓名:</span>
 							<span>{{ data.address.name }}</span>
 						</p>
@@ -24,8 +29,11 @@
 						</p>
 					</div>
 					<div class="add" v-if="data.address.area">
-						<p>{{ data.address.area }}</p>
-						<p>{{ data.address.address }}</p>
+						<p>
+							<span>地址:</span>
+							<span>{{ data.address.area }}</span>
+							<span>{{ data.address.address }}</span>
+						</p>
 					</div>
 					<div class="add" v-else>
 						<span class="address-left">地址:</span>
@@ -115,7 +123,6 @@
 			</div>
 			<div class="getInformation">提示：菜品到货后请及时取菜超过3天的菜我们将在第4天进行回收，谢谢！</div>
 		</div>
-
 		<!-- 其他选项 -->
 		<my-cell>
 			<!--<my-cell-item @click="showCou">-->
@@ -161,7 +168,7 @@
 	<actionsheet :show.sync="actionShow" :menus="data.deliver" :show-cancel="true" cancel-text="取消" @on-click-menu="clickMenu"></actionsheet>
 
 	<!-- 地址/自提点 -->
-	<my-freepop :show.sync="popShow" :pop="openpop" title="选择地址" :show-confirm="true" :chosen.sync="address" :money="lastPaySum" :lists="list"></my-freepop>
+	<my-freepop :show.sync="popShow" :pop="openpop" title="选择地址" :chonse="chonseParcel" :show-confirm="true" :chosen.sync="address" :money="lastPaySum" :lists="list"></my-freepop>
 
 	<!-- 优惠券-->
 	<my-coupop :show.sync="couShow" title="选择优惠券" :show-confirm="true" :price="paySum" :chosen.sync="coupon"></my-coupop>
@@ -217,11 +224,11 @@
                 loadingShow:false,
                 loadingMessage:'',
                 toastMessage:'',	//提示信息
-                toastShow:false,	//开关
-                actionShow:false,	//开关
-                popShow:false,		//开关
-                couShow:false,		//开关
-                alertShow:false,	//开关
+                toastShow:false,
+                actionShow:false,
+                popShow:false,
+                couShow:false,
+                alertShow:false,
                 address:0,			//快递地址
                 coupon:0,
                 couponObj:null,
@@ -248,7 +255,9 @@
                 openpop: false,
                 description: "",
                 lastPaySum: 0,
-                myCellTitle: ''
+                myCellTitle: '',
+                chonseParcel: false, //显示隐藏自提点选择框
+				wxName: '',			 // 微信名称
             }
         },
         components: {
@@ -337,7 +346,6 @@
         },
         watch: {
 			'$route'(to) {
-			    console.log(to);
 				if(to.name == 'submit') {
                     this.submitReady();
 				}
@@ -371,6 +379,12 @@
                         this.data.pay = res.pay;
                         this.payType = this.data.pay[0].ptype;
                         this.data.address = res.address;
+
+                        let openid = sessionStorage.getItem("openid");
+                        this.$getData('/index/index/get_weixin?openid=' + openid).then((res)=>{  /* 'os0CqxBBANhLuBLTsViL3C0zDlNs' */
+                            this.wxName = res.info.weixindata.nickname;
+                            console.log(this.wxName);
+                        });
                         if(this.data.address){
                             this.address = this.data.address.id;
                         }
@@ -390,7 +404,7 @@
                         this.toastMessage = res.info;
                         this.toastShow = true;
                     }
-                },(response)=>{
+                },(res)=>{
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                 });
@@ -471,6 +485,11 @@
             },
             showAction: function(){
                 this.actionShow = true;
+                if (this.deliverName === '快递配送') {
+                    this.chonseParcel = false;
+                } else if (this.deliverName === '到店自提') {
+                    this.chonseParcel = true;
+                }
             },
             clickMenu: function(key){
                 if(key === 'cancel'){
@@ -485,21 +504,21 @@
                 if(this.cartIds.length > 0) {
                     pids = this.cartIds.join(',');
                 }
-                this.$http.get(localStorage.apiDomain+'public/index/user/addesschange/uid/'+ustore.id+'/token/'+ustore.token+'/type/'+key+'/ids/'+pids).then((response)=>{
-                    if(response.data.status===1){
+                this.$getData('/index/user/addesschange/uid/'+ustore.id+'/token/'+ustore.token+'/type/'+key+'/ids/'+pids).then((res)=>{
+                    if(res.status === 1) { //chonseParcel
                         this.deliverType = key;
                         this.deliverName = key === 'express' ? this.data.deliver.express : this.data.deliver.parcel;
-                        this.freight = response.data.freight;
-                        if(typeof response.data.address !== 'undefined'){
-                            this.data.address = response.data.address;
+                        this.freight = res.freight;
+                        if(typeof res.address !== 'undefined'){
+                            this.data.address = res.address;
                             this.address = this.data.address.id;
                         }else{
                             this.data.address = null;
                             this.address = 0;
                             this.freight = 0;
                         }
-                    }else if(response.data.status===-1){
-                        this.toastMessage = response.data.info;
+                    }else if(res.status===-1){
+                        this.toastMessage = res.info;
                         this.toastShow = true;
                         let context = this;
                         setTimeout(function(){
@@ -512,14 +531,31 @@
                         this.toastMessage = response.data.info;
                         this.toastShow = true;
                     }
-                },(response)=>{
+                },(res)=>{
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                 });
             },
             showPop: function(){
-                this.popShow = true;
-                this.openpop = true;
+                let content = this;
+                content.popShow = true;
+                content.openpop = true;
+                console.log(this.deliverName);
+                if (content.deliverName === '快递配送') {
+                    content.chonseParcel = false;
+                    $(".commentButton").css("width","45%");
+                    $(".con-box").css({
+                        "marginTop" : "0px",
+                        "height" : "80%"
+                    });
+				} else if (content.deliverName === '到店自提') {
+                    content.chonseParcel = true;
+                    $(".commentButton").css("width","93%");
+                    $(".con-box").css({
+                        "marginTop" : "-5px",
+                        "height" : "78%"
+                    });
+                }
             },
             showCou: function(){
                 this.couShow = true;
@@ -583,22 +619,22 @@
                         scoreNumber: this.scoreNumber,
                         paysum:this.lastPaySum,
                         tips:this.memo,
-						openid: 'os0CqxBBANhLuBLTsViL3C0zDlNs',//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
+						openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                         pshonse:this.shonse,
                         gift:{'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                     };
-                    this.$http.post(localStorage.apiDomain + 'public/index/user/getSubmitOrder',pdata).then((response)=>{
-                        console.log(response.data);
-                        if(response.data.status === 1) {
+                    this.$postData('/index/user/getSubmitOrder',pdata).then((res)=>{
+                        if(res.status === 1) {
                             this.clearSel();
-                            this.$router.replace('order/detail/' + response.data.oid);
+                            this.$router.replace('order/detail/' + res.oid);
                             this.loadingShow = false;
-                        } else if (response.data.status == 0) {
-							alert(response.data.info);
+                        } else if (res.status == 0) {
+							alert(res.info);
+                            this.loadingShow = false;
 							this.$router.go({name:'cart'});
-						} else if(response.data.status === -1) {
+						} else if(res.status === -1) {
                             this.loadingShow = false;
-                            this.toastMessage = response.data.info;
+                            this.toastMessage = res.info;
                             this.toastShow = true;
                             let context = this;
                             setTimeout(function(){
@@ -609,9 +645,9 @@
                             },800);
                         }else{
                             this.loadingShow = false;
-                            alert(response.data.info);
+                            alert(res.info);
                         }
-                    },(response)=>{
+                    },(res)=>{
                         this.loadingShow = false;
                         this.toastMessage = '网络开小差了~';
                         this.toastShow = true;
@@ -816,6 +852,10 @@
 		text-align: center;
 		padding: 0.3rem 0rem;
 		margin: 0px auto;
+	}
+
+	.address-box .add-con>div.words .name p,add p {
+		line-height: 2.5rem;
 	}
 
 	.address-box .add-con>div.words .name{

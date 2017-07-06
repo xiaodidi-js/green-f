@@ -1,81 +1,3 @@
-<style scoped>
-	.col-wrapper,.card-wrapper{
-		width: 100%;
-		height: auto;
-		margin-top: 10px;
-		margin-bottom: 30px;
-	}
-
-	.notify-box{
-		width:94%;
-		height:auto;
-		padding:3%;
-		background-color:#81c429;
-		font-size:0;
-		position:fixed;
-		top:22.2rem;
-		left:0;
-		z-index:100;
-	}
-
-	.notify-box div{
-		display:inline-block;
-		vertical-align:middle;
-		font-size:1.4rem;
-		line-height:20px;
-		color:#fff;
-		white-space:nowrap;
-		text-overflow:ellipsis;
-		overflow:hidden;
-	}
-	.notify-box div.ntips{
-		width:65%;
-		margin-right:10%;
-	}
-
-	.notify-box div.btn{
-		width:25%;
-		text-align:right;
-	}
-
-	.col-wrapper .image{
-		width:45%;
-		padding-top:45%;
-		margin:15% auto 5%;
-		background-image:url('../images/collection.png');
-		background-position:center;
-		background-size:contain;
-		background-repeat:no-repeat;
-	}
-
-	.col-wrapper .tips{
-		font-size:1.8rem;
-		color:#999;
-		text-align:center;
-	}
-</style>
-
-<style>
-
-.weui_btn_default{
-	font-family:'Microsoft YaHei';
-	background-color:#F9AD0C !important;
-	color:#fff !important;
-}
-
-.weui_btn_default:active{
-	background-color:#DE9A08 !important;
-}
-
-.weui_btn_disabled.weui_btn_default{
-	background-color:#F3C76A !important;
-}
-
-.weui_btn_dialog.primary{
-	color:#F9AD0C !important;
-}
-</style>
-
 <template>
 	<div class="col-wrapper" v-if="collections.length > 0">
 		<div class="notify-box">
@@ -233,3 +155,80 @@
 		}
 	}
 </script>
+<style scoped>
+	.col-wrapper,.card-wrapper{
+		width: 100%;
+		height: auto;
+		margin-top: 10px;
+		margin-bottom: 30px;
+	}
+
+	.notify-box{
+		width:94%;
+		height:auto;
+		padding:3%;
+		background-color:#81c429;
+		font-size:0;
+		position:fixed;
+		top:22.2rem;
+		left:0;
+		z-index:100;
+	}
+
+	.notify-box div{
+		display:inline-block;
+		vertical-align:middle;
+		font-size:1.4rem;
+		line-height:20px;
+		color:#fff;
+		white-space:nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
+	}
+	.notify-box div.ntips{
+		width:65%;
+		margin-right:10%;
+	}
+
+	.notify-box div.btn{
+		width:25%;
+		text-align:right;
+	}
+
+	.col-wrapper .image{
+		width:45%;
+		padding-top:45%;
+		margin:15% auto 5%;
+		background-image:url('../images/collection.png');
+		background-position:center;
+		background-size:contain;
+		background-repeat:no-repeat;
+	}
+
+	.col-wrapper .tips{
+		font-size:1.8rem;
+		color:#999;
+		text-align:center;
+	}
+</style>
+
+<style>
+
+	.weui_btn_default{
+		font-family:'Microsoft YaHei';
+		background-color:#F9AD0C !important;
+		color:#fff !important;
+	}
+
+	.weui_btn_default:active{
+		background-color:#DE9A08 !important;
+	}
+
+	.weui_btn_disabled.weui_btn_default{
+		background-color:#F3C76A !important;
+	}
+
+	.weui_btn_dialog.primary{
+		color:#F9AD0C !important;
+	}
+</style>

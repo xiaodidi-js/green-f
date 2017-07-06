@@ -8,7 +8,7 @@
                 <input type="text" class="search_txt" placeholder="搜索自提点" v-model="search" />
                 <input type="button" class="search_btn"/>
             </form>
-            <div class="alladdress">
+            <div class="alladdress" v-show="chonse">
                 <span>地区选择:</span>
                 <div class="sel-bg">
                     <div class="select-add" id="selectTitle" @click="onChonse()">全部</div>
@@ -20,8 +20,11 @@
             <div class="emline" v-show="showStatus">{{ showTips }}</div>
             <freepop-list v-for="item in tmp_address" :obj="item" :chose-id="chosen" :sum-money="money" ></freepop-list>
         </div>
-        <div class="btn" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</div>
+        <!-- 底部按钮 -->
+        <div class="addButton commentButton" v-link="{name:'address-add'}">新增地址</div>
+        <div class="commentButton" style="float:right;" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</div>
     </div>
+
     <!-- 弹出选择层 -->
     <div class="popdown" v-show="popdown" @click="downpop"></div>
     <div class="option-list" id="left_Menu">
@@ -41,6 +44,7 @@
             </li>
         </div>
     </div>
+
     <!-- toast显示框 -->
     <toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
     <!-- loading加载框 -->
@@ -54,6 +58,7 @@
     import Loading from 'vux/src/components/loading'
     import axios from 'axios'
     import qs from 'qs'
+    import XButton from 'vux/src/components/x-button'
 
     export default{
         vuex: {
@@ -68,7 +73,8 @@
         components: {
             FreepopList,
             Toast,
-            Loading
+            Loading,
+            XButton
         },
         props: {
             show: {
@@ -102,6 +108,10 @@
             lists: {
                 type: [Object,Array],
                 default: [],
+            },
+            chonse: {
+                type: Boolean,
+                default: true,
             }
         },
         data() {
@@ -123,7 +133,8 @@
         ready() {
             this.selList();
             this.onToureEle();
-
+            console.log(this.chonse);
+            console.log(this.$parent.data.address)
 
         },
         created() {
@@ -306,6 +317,7 @@
                         this.showStatus = false;
                         this.showTips = '加载中...';
                         this.options = response.data.list;
+                        console.log(response.data);
                     } else if (response.data.status === -1) {
                         this.$dispatch('showMes', response.data.info);
                         let context = this;
@@ -386,6 +398,9 @@
             }
         },
         watch: {
+            '$route'(to) {
+                location.reload();
+            },
             search () {
                 if(this.search == '') {
                     this.tmp_address = this.address;
@@ -468,8 +483,8 @@
 
     .search_panel .alladdress {
         width: 20rem;
-        margin: 35px auto 0px;
-        padding-bottom: 60px;
+        margin: 24px auto 0px;
+        padding-bottom: 35px;
     }
 
     .search_panel .alladdress span {
@@ -638,12 +653,16 @@
         padding: 0% 3% 0% 3%;
         /* max-height: 20rem; */
         /* overflow-x: hidden; */
-        height: 68%;
+        height: 70%;
         /* overflow-y: scroll; */
         -webkit-overflow-scrolling: touch;
-        margin-top: 65px;
+        margin-top: 40px;
         overflow-y: auto;
         margin-bottom: 52px;
+    }
+
+    .add-address {
+        margin-top:100px;
     }
 
     .panel .title {
@@ -661,7 +680,20 @@
     }
 
     .panel .btn {
-        width: 94%;
+        width: 45%;
+        padding: 0%;
+        background-color: #81c429;
+        text-align: center;
+        font-size: 1.6rem;
+        color: #fff;
+        letter-spacing: 0.2rem;
+        position: absolute;
+        bottom: 0px;
+        margin: 10px;
+    }
+
+    .panel .commentButton {
+        width: 45%;
         padding: 3% 0%;
         background-color: #81c429;
         text-align: center;
@@ -671,6 +703,12 @@
         position: absolute;
         bottom: 0px;
         margin: 10px;
+    }
+
+    .panel .addButton {
+        width: 45%;
+        right: 0px;
+        padding: 3% 0px;
     }
 
     .my-icon:before {

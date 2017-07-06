@@ -4,9 +4,11 @@
 			<div id="scroller">
 				<div class="menu-left">
 					<ul id="touch-ui">
-						<li class="cla-card-li" style="border:none;" :class="{'active':dtype == item.id}" v-for="item in types" @click="getChonse(item.id)">
-							<div class="menu-item" @click="chooseSort(item.id)">{{ item.name }}</div>
-						</li>
+						<template v-for="item in types">
+							<li class="cla-card-li" style="border:none;" :class="{'active':dtype == item.id}" @click="getChonse(item.id)">
+								<div class="menu-item" @click="chooseSort(item.id)">{{ item.name }}</div>
+							</li>
+						</template>
 					</ul>
 				</div>
 			</div>
@@ -99,14 +101,9 @@
                 toastShow: false,
                 activestu:0,
                 intervalTime_left: null,
-                intervalTime_right: null,
                 myScroll_left: null,
-                myScroll_right: null,
                 alertShow: false,
             }
-        },
-        watch: {
-
         },
         created () {
 
@@ -131,6 +128,11 @@
                 }
             });
             this.onToure();
+        },
+        watch: {
+            '$route'(to) {
+
+            }
         },
         methods: {
             todo() {
@@ -177,20 +179,16 @@
 
 			},
             chooseSort(cid){
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/index/classifylist/cid/' + cid,
-                }).then((response) => {
-                    if (response.data.status == 1) {
-                        sessionStorage.setItem("pdata",JSON.stringify(response.data.info.list));
-                        this.pdata = JSON.parse(sessionStorage.getItem("pdata"));
+                this.$getData('/index/index/classifylist/cid/' + cid).then((res) => {
+                    if (res.status == 1) {
+                        this.pdata = res.info.list;
                         $("#scroller2").css({
                             "transform" : "translate(0px, 0px)"
                         });
                     }
-                }).catch(function(e) {
+				}).catch(function(e) {
                     console.log(e);
-				});
+                });
             },
             goCart: function(data) {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
@@ -204,10 +202,7 @@
                     }, 800);
                     return false;
 				} else if (ustore != null) {
-                    axios({
-                        method: 'get',
-                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id,
-                    }).then((response) => {
+                    this.$getData('/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id).then((res) => {
                         obj = {
                             id:data.id,
                             name:data.title,
@@ -219,7 +214,7 @@
                             activeid:data.activeid,
                             activepay:data.activepay,
                             nums:this.buyNums,
-                            store:this.proNums = response.data.store,
+                            store:this.proNums = res.store,
                             format:'',
                             formatName:'',
                         };
@@ -255,7 +250,7 @@
                         self.setCart(obj);
                         obj = {};
                         this.alertShow = true;
-                    });
+					});
 				}
 			}
         },

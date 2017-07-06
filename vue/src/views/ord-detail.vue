@@ -208,7 +208,7 @@ export default{
                         this.showTime = false;
                     } else if (this.minute == '0' && this.second == "0") {
                         this.clickType = 1;
-                        this.$router({name: 'ord-detail'});
+                        this.$router.go({name: 'ord-detail'});
                         this.showTime = false;
                     }
                     //判断是否有赠品

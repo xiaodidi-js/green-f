@@ -118,13 +118,7 @@
             }
         },
         watch: {
-			'$route'(to) {
-                console.log(to);
-                var content = this;
-                if(to.name == 'cart') {
-					console.log();
-                }
-			}
+
         },
         ready() {
             console.log(this.cartList);
@@ -167,8 +161,6 @@
                 }
                 _this.setSelCart(this.choseArr);
                 _this.$router.go({name:'submit'});
-
-
 
 //                var shoping = JSON.parse(localStorage.getItem("myCart"));
 //				var options = {

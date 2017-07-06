@@ -98,9 +98,9 @@
                 var _this = this;
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
-                this.$getData('/index/user/cainixihuan/uid/' + ustore.id + '/token/' + ustore.token).then((response)=>{
-                    this.likedata = response.tuijian_shop;
-                },(response)=>{
+                this.$getData('/index/user/cainixihuan/uid/' + ustore.id + '/token/' + ustore.token).then((res)=>{
+                    this.likedata = res.tuijian_shop;
+                },(res)=>{
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                 });

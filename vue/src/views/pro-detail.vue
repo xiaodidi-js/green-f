@@ -957,7 +957,6 @@
 		white-space: normal;
 		font-size: 14px;
 		text-align: left;
-		text-indent: 2em;
 	}
 
 	.pro-mes .price{
