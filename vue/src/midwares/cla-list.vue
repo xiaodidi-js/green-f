@@ -18,6 +18,7 @@
 		<!-- toast提示框 -->
 		<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
 		<loading :show="loadingShow" text="正在加载..."></loading>
+
 		<!-- 回到顶部 -->
 		<div class="goto"></div>
 
@@ -84,10 +85,7 @@
 		watch: {
             '$route'(to,from) {
                 var content = this;
-                console.log(content.data.list);
-                if(content.data.list == '') {
-                    $(".wrapper").html(123123);
-				} else if(parseInt(to.params.cid) != content.colum && to.name === 'cla-list') {
+                if(parseInt(to.params.cid) != content.colum && to.name === 'cla-list') {
                     content.getData('');
                 }
             }
@@ -106,16 +104,21 @@
                 }
                 this.$getData(url).then((res)=>{
 				    if(res.status = 1) {
-                        if(res.info.list == "") {
-                            this.alertShow = true;
-//                            this.$router.go({name : 'index'});
-                            return false;
-                        } else {
-                            this.alertShow = false;
-                            this.data.list = res.info.list;
-                            this.data.img = res.info.img;
-                            this.data.background = res.info.background;
-                        }
+                        this.alertShow = false;
+                        this.data.list = res.info.list;
+                        this.data.img = res.info.img;
+                        this.data.background = res.info.background;
+//                        if(res.info.list == "") {
+//                            alert("商品为空!");
+//
+////                            this.$router.go({name : 'index'});
+//                            return false;
+//                        } else {
+//                            this.alertShow = false;
+//                            this.data.list = res.info.list;
+//                            this.data.img = res.info.img;
+//                            this.data.background = res.info.background;
+//                        }
 					} else if(response.data.status = 0) {
                         this.$router.go({name : 'index'});
 					}

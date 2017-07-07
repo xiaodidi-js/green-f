@@ -66,7 +66,7 @@ export default{
 		if(this.$route.name === 'address-edit') {
 			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 			ustore = JSON.parse(ustore);
-			this.$http.get(localStorage.apiDomain+'public/index/user/addressinfo/uid/'+ustore.id+'/token/'+ustore.token+'/aid/'+this.$route.params.aid).then((response)=>{
+			this.$http.get(localStorage.apiDomain + 'public/index/user/addressinfo/uid/'+ustore.id+'/token/'+ustore.token+'/aid/'+this.$route.params.aid).then((response)=>{
 				if(response.data.status === 1) {
 					this.aname = response.data.person;
 					this.atel = response.data.tel;
@@ -173,16 +173,16 @@ export default{
 					area:this.provinceName,
 					address:this.address
 				};
-				this.$http.post(localStorage.apiDomain + 'public/index/user/addressinfo',pdata).then((response)=>{
-					if(response.data.status === 1) {
-						this.toastMessage = response.data.info;
+				this.$postData('/index/user/addressinfo',pdata).then((res)=>{
+					if(res.status === 1) {
+						this.toastMessage = res.info;
 						this.toastShow = true;
 						setTimeout(function(){
 							self.myActiveTwo("active");
 							history.back();
 						},600);
-					}else if(response.data.status === -1) {
-						this.toastMessage = response.data.info;
+					}else if(res.status === -1) {
+						this.toastMessage = res.info;
 						this.toastShow = true;
 						let context = this;
 						setTimeout(function(){
@@ -192,10 +192,10 @@ export default{
 							context.$router.go({name:'login'});
 						},800);
 					}else{
-						this.toastMessage = response.data.info;
+						this.toastMessage = res.info;
 						this.toastShow = true;
 					}
-				},(response)=>{
+				},(res)=>{
 					this.toastMessage = '网络开小差了~';
 					this.toastShow = true;
 				});

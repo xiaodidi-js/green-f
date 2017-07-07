@@ -30,7 +30,7 @@
 			</div>
 		</div>
 		<separator :set-height="21"></separator>
-		<router-view ></router-view>
+		<router-view keep-alive></router-view>
 		<toast :show.sync="toastShow" type="text">{{ toastMessage}}</toast>
 	</div>
 </template>

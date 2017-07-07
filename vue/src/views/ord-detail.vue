@@ -175,10 +175,10 @@ export default{
 	},
     watch: {
         payment: function () {
+            location.reload();
             this.startTimer();
         },
         '$route'(to,from) {
-            console.log(to);
 			var content = this;
 			if(to.params.oid == this.$route.params.oid && to.name === 'order-detail') {
 				content.getDetail();
@@ -276,9 +276,7 @@ export default{
 		},
 		jsApiCall: function() {
 			let context = this;
-			WeixinJSBridge.invoke(
-				'getBrandWCPayRequest',
-				context.data.payment,
+			WeixinJSBridge.invoke('getBrandWCPayRequest',context.data.payment,
 				function(res) {
 					if(res.err_msg == "get_brand_wcpay_request:ok") {
 						let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
@@ -294,9 +292,12 @@ export default{
 								context.data.process[1].time = response.data.time;
 								context.data.order.status = '待发货';
 								context.data.order.pay = 1;
+                                context.$router.go({name : 'ord-detail'});
+                                location.reload();
                                 if(context.data.order.statext == '待发货' || context.data.order.statext == '待收货' || context.data.order.statext == '待评价') {
                                     context.showTime = false;
                                 }
+                                context.$router.go({name : 'order-type'});
                             }else if(response.data.status===-1){
 								setTimeout(function(){
 									context.clearAll();
@@ -413,35 +414,22 @@ export default{
         oneGift: function (oid,money) {
             let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
             ustore = JSON.parse(ustore);
-
-            this.$getData('/index/user/manjiusong/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + oid + '/money/' + money).then((response)=>{
-                if(response.data.status === 1) {
+            this.$getData('/index/user/manjiusong/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + oid + '/money/' + money).then((res)=>{
+                if(res.status === 1) {
                     this.showGive = true;
-                    this.listGift = response.data.maxmoney;
-                    console.log(response.data.maxmoney);
+                    this.listGift = res.maxmoney;
                     this.giftstu = 1;
-                } else if(response.data.status=== -1) {
-                    this.toastMessage = response.data.info;
-                    this.toastShow = true;
-                    let context = this;
-                    setTimeout(function(){
-                        context.clearAll();
-                        sessionStorage.removeItem('userInfo');
-                        localStorage.removeItem('userInfo');
-                        context.$router.go({name:'login'});
-                    },800);
-                } else if(response.data.status === 0) {
+                } else if (res.status === 0) {
                     this.showGive = true;
                     this.giftstu = 0;
-                    this.$http.get(localStorage.apiDomain + 'public/index/user/shoudan/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + oid + '/money/' + money).then((response)=>{
-                        this.listGift = response.data.shoudan_data;
-                        console.log(this.listGift);
-                    },(response)=>{
+                    this.$getData('/index/user/shoudan/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + oid + '/money/' + money).then((res)=>{
+                        this.listGift = res.shoudan_data;
+                    },(res)=>{
                         this.toastMessage = '网络开小差了~';
                         this.toastShow = true;
                     });
                 }
-            },(response)=>{
+            },(res)=>{
                 this.toastMessage = '网络开小差了~';
                 this.toastShow = true;
             });
@@ -471,21 +459,19 @@ export default{
                         this.$router.go({name:'order-detail'});
 						return;
 					}
-					let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+					let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), context = this;
 					ustore = JSON.parse(ustore);
 					let opid = sessionStorage.getItem('openid');
-					let pdata = {uid:ustore.id,token:ustore.token,oid:this.$route.params.oid,opid:opid};
+                    let pdata = {uid:ustore.id,token:ustore.token,oid:this.$route.params.oid,opid:opid};
 					this.$http.put(localStorage.apiDomain+'public/index/user/getsubmitorder',pdata).then((response)=>{
 						if(response.data.status === 1) {
 							this.data.payment = JSON.parse(response.data.payment);
                             location.reload();
 							this.callpay();
-//                            window.location.href="http://m.green-f.cn/index_prod.html"
 						} else if(response.data.status === -1) {
 							this.btnStatus = false;
 							this.toastMessage = response.data.info;
 							this.toastShow = true;
-							let context = this;
 							setTimeout(function(){
 								context.clearAll();
 								sessionStorage.removeItem('userInfo');
@@ -582,15 +568,14 @@ export default{
 			this.loadingShow = true;
 			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 			ustore = JSON.parse(ustore);
-			this.$http.get(localStorage.apiDomain + 'public/index/user/orderoperation/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + this.$route.params.oid).then((response)=>{
+			this.$getData('/index/user/orderoperation/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + this.$route.params.oid).then((res)=>{
 				this.loadingShow = false;
 				this.btnStatus = false;
-				if (response.data.status === 1) {
-				    console.log(response.data.list);
-					this.setCartAgain(response.data.list);
+				if (res.status === 1) {
+					this.setCartAgain(res.list);
 					this.$router.go({name:'cart'});
-				} else if (response.data.status === -1) {
-					this.toastMessage = response.data.info;
+				} else if (res.status === -1) {
+					this.toastMessage = res.info;
 					this.toastShow = true;
 					let context = this;
 					setTimeout(function() {
@@ -600,10 +585,10 @@ export default{
 						context.$router.go({name:'login'});
 					},800);
 				}else{
-					this.toastMessage = response.data.info;
+					this.toastMessage = res.info;
 					this.toastShow = true;
 				}
-			},(response)=>{
+			},(res)=>{
 				this.btnStatus = false;
 				this.toastMessage = '网络开小差了~';
 				this.toastShow = true;

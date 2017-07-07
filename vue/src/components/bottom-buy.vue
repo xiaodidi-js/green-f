@@ -12,7 +12,7 @@
 			<div class="img"></div>
 			<p>收藏</p>
 		</div>
-		<div class="car" v-link="{name:'cart'}">
+		<div class="car" @click="goPage()">
 			<div class="img"></div>
 			<p>购物车</p>
 			<div class="bage" v-show="bage > 0">{{ bage }}</div>
@@ -64,9 +64,21 @@
 		data() {
 			return {
                 shareele: false,
+				ustore: sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'),
 			}
 		},
 		methods: {
+            goPage() {
+				this.$router.go({name : 'cart'});
+				this.ustore = JSON.parse(this.ustore);
+				if(this.ustore === null) {
+                    alert("没有登录，请先登录！");
+                    setTimeout(function () {
+                        content.$router.go({name: 'login'});
+                    }, 100);
+                    return false;
+				}
+			},
             clickShare () {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);

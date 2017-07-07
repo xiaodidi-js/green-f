@@ -182,7 +182,9 @@
 	}
 
 	.wrapper.nopadding{
-		padding-bottom: 0;
+		padding-bottom: 0rem;
+		height: 100%;
+		overflow: hidden;
 	}
 
 	.wrapper-top {

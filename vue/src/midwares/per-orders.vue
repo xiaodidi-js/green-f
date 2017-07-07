@@ -31,7 +31,6 @@
 					<div class="tap-type" :class="{'active':dtype == 5}" @click="getData(5)">
 						<div class="icon service icon-ui icon-ui-shouhou"></div>
 						<div class="title">申请售后</div>
-						<!--<badge :text="count.service.toString()" class="my-badge" v-show="count.service > 0"></badge>-->
 					</div>
 				</div>
 			</div>
@@ -57,13 +56,16 @@
 			</template>
 		</div>
 		<!--<separator :set-height="11.5"></separator>-->
-		<div class="list list-nothing" v-if="data == '' ">
-			<img src="../images/cart.png" style="width:100%;height: 100%" alt="" />
-			<p class="nothing-order not-text">暂时没有商品</p>
+		<div v-show="hiddenShop" class="hidden-list">
+			<div class="list list-nothing" v-if="data == '' ">
+				<img src="../images/cart.png" style="width:100%;height: 100%" alt="" />
+				<p class="nothing-order not-text">暂时没有商品</p>
+			</div>
+			<div class="list" style="margin-top: 130px;" v-else>
+				<card-orders :orders="data"></card-orders>
+			</div>
 		</div>
-		<div class="list" style="margin-top: 130px;" v-else>
-			<card-orders :orders="data"></card-orders>
-		</div>
+
 	</div>
 
 	<!-- 弹出 -->
@@ -114,12 +116,13 @@
 				},
 				data:[],
 				qqservice: null,
-                showpro: false
+                showpro: false,
+                hiddenShop: true,
 			}
 		},
 		ready() {
-            this.getData(1);
             this.kefu();
+            this.getData(1);
 		    if(this.$store.state.dtype == 5) {
                 this.getData(this.$store.state.dtype);
                 $("#cardOrder").css("display","none");
@@ -130,9 +133,14 @@
 		},
         watch: {
 			$route(to) {
-				console.log(to);
-				this.getData(1);
-                console.log(1);
+                this.getData(1);
+                if(this.$store.state.dtype == 5) {
+                    this.getData(this.$store.state.dtype);
+                    $("#cardOrder").css("display","none");
+                } else {
+                    $("#cardOrder").css("display","block");
+                    this.getData(1);
+                }
 			}
         },
 		methods: {
@@ -155,11 +163,11 @@
 		        if(type === 5) {
                     $("#customer").css("display","block");
 					$("#cardOrder").css("display","none");
-					$(".list-nothing").css("display","none");
+					this.hiddenShop = false;
 				} else {
                     $("#customer").css("display","none");
                     $("#cardOrder").css("display","block");
-                    $(".list-nothing").css("display","block");
+                    this.hiddenShop = true;
 				}
                 if(this.dtype == type && this.data){
                     return true;

@@ -364,10 +364,8 @@
                                 if(response.data.status === 1) {
                                     if(obj.is_default != 0) {
                                         obj.is_default = 0;
-                                        console.log(131);
                                     }
                                     obj.is_default = 1;
-                                    console.log(131);
                                 }
                             },(response)=>{
                                 this.$dispatch('showMes','网络开小差了~');
@@ -648,12 +646,12 @@
     .panel .con-box {
         width: 94%;
         padding: 0% 3% 0% 3%;
-        /* max-height: 20rem; */
-        /* overflow-x: hidden; */
         height: 70%;
-        /* overflow-y: scroll; */
+        overflow-scrolling: touch;
         -webkit-overflow-scrolling: touch;
-        margin-top: 40px;
+        -o-overflow-scrolling: touch;
+        -ms-overflow-scrolling: touch;
+        margin-top: 53px;
         overflow-y: auto;
         margin-bottom: 52px;
     }

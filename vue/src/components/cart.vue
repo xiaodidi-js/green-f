@@ -122,8 +122,8 @@
         },
         watch: {
 			$route() {
-			    var cartMessage = localStorage.getItem("myCart");
-			    this.cartList = cartMessage;
+//			    var cartMessage = localStorage.getItem("myCart");
+//			    this.cartList = cartMessage;
 			}
         },
         methods: {

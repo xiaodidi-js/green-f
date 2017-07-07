@@ -555,8 +555,8 @@
                     content.chonseParcel = true;
                     $(".commentButton").css("width","93%");
                     $(".con-box").css({
-                        "marginTop" : "-5px",
-                        "height" : "78%"
+                        "marginTop" : "50px",
+                        "height" : "65%"
                     });
                 }
             },

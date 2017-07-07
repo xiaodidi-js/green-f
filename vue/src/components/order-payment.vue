@@ -4,7 +4,7 @@
             <div class="top-line">
                 <div class="date">{{ item.createtime }}</div>
                 <div class="status" v-if="item.pay == 0 && item.send == 0 && item.receive == 0 && item.status == 0">待付款</div>
-                <div class="status" v-if="item.pay == 1 && item.send == 0 && item.receive == 0 && item.status == 0">待发货</div>
+                <div class="status" v-if="item.pay == 1 && item.send == 0 && item.receive == 0 && item.status == 0 && item.reject == 0">待发货</div>
                 <div class="status" v-if="item.pay == 1 && item.send == 1 && item.receive == 0 && item.status == 0">待收货</div>
                 <div class="status" v-if="item.reject == 0 && item.status == 1">交易完成</div>
                 <div class="status" v-if="item.reject == 0 && item.status == -1">已取消</div>
