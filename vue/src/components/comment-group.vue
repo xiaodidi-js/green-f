@@ -1,3 +1,57 @@
+<template>
+	<div class="com-wrapper">
+		<div class="card-box" v-for="item in products" style="width:95%;box-shadow: none;margin: 0px auto;">
+			<div class="pro-mes">
+				<div class="shotcut">
+					<img :src="item.shotcut" style="width:100%;height:100%;" />
+				</div>
+				<div class="words">
+					<div class="name">{{ item.name }}</div>
+					<div class="format">{{ item.fname }}</div>
+					<div class="money">
+						<label class="unit">¥</label>
+						{{ item.price }}
+                    </div>
+				</div>
+			</div>
+			<div class="pro-mes">
+				<rater :value.sync="item.stars" :margin="20" active-color="#F9AD0C" :font-size="30" style="width:100%;text-align:center;"></rater>
+				<textarea class="com-text" placeholder="请写下你对宝贝的感受" v-model="item.content"></textarea>
+				<pic-uploader :imgs.sync="item.imgs" :toast-message.sync="toastMessage" :toast-show.sync="toastShow" :pid="$index" ftype="comimg"></pic-uploader>
+			</div>
+		</div>
+	</div>
+	<!-- toast提示框 -->
+	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
+</template>
+<script>
+    import Rater from 'vux/src/components/rater'
+    import PicUploader from 'components/pic-uploader'
+    import Toast from 'vux/src/components/toast'
+
+    export default{
+        components:{
+            Rater,
+            PicUploader,
+            Toast
+        },
+        props: {
+            products: {
+                type: Array,
+                twoWay: true,
+                default() {
+                    return []
+                }
+            }
+        },
+        data() {
+            return {
+                toastMessage:'',
+                toastShow:false
+            }
+        }
+    }
+</script>
 <style scoped>
 	.com-wrapper{
 		width:100%;
@@ -79,57 +133,3 @@
 		border-radius:0.3rem;
 	}
 </style>
-<template>
-	<div class="com-wrapper">
-		<div class="card-box" v-for="item in products" style="width:95%;box-shadow: none;margin: 0px auto;">
-			<div class="pro-mes">
-				<div class="shotcut">
-					<img :src="item.shotcut" style="width:100%;height:100%;" />
-				</div>
-				<div class="words">
-					<div class="name">{{ item.name }}</div>
-					<div class="format">{{ item.fname }}</div>
-					<div class="money">
-						<label class="unit">¥</label>
-						{{ item.price }}
-                    </div>
-				</div>
-			</div>
-			<div class="pro-mes">
-				<rater :value.sync="item.stars" :margin="20" active-color="#F9AD0C" :font-size="30" style="width:100%;text-align:center;"></rater>
-				<textarea class="com-text" placeholder="请写下你对宝贝的感受" v-model="item.content"></textarea>
-				<pic-uploader :imgs.sync="item.imgs" :toast-message.sync="toastMessage" :toast-show.sync="toastShow" :pid="$index" ftype="comimg"></pic-uploader>
-			</div>
-		</div>
-	</div>
-	<!-- toast提示框 -->
-	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
-</template>
-<script>
-    import Rater from 'vux/src/components/rater'
-    import PicUploader from 'components/pic-uploader'
-    import Toast from 'vux/src/components/toast'
-
-    export default{
-        components:{
-            Rater,
-            PicUploader,
-            Toast
-        },
-        props: {
-            products: {
-                type: Array,
-                twoWay: true,
-                default() {
-                    return []
-                }
-            }
-        },
-        data() {
-            return {
-                toastMessage:'',
-                toastShow:false
-            }
-        }
-    }
-</script>

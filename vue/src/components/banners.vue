@@ -62,15 +62,9 @@
             this.breakSearch();
         },
         methods: {
-            ban: function () {
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/index/mainInfo',
-                }).then((response) => {
-                    this.banners = response.data.banners;
-                },(response) => {
-                    this.toastMessage = '网络开小差了~';
-                    this.toastShow = true;
+            ban() {
+                this.$getData('/index/index/mainInfo').then((res) => {
+                    this.banners = res.banners;
                 });
             },
             //按钮回车事件
@@ -80,28 +74,22 @@
                     this.goSearch();
                 }
             },
-            goSearch () {
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/index/searchshop?shopname=' + this.searchKey,
-                }).then((response) => {
-                    if(response.data.status == 1) {
+            goSearch() {
+                this.$getData('/index/index/searchshop?shopname=' + this.searchKey).then((res) => {
+                    if(res.status == 1) {
                         this.$router.go({
                             name:'search',
                             params:{
-                                arr:this.mySearch(response.data.info.data)
+                                arr:this.mySearch(res.info.data)
                             }
                         });
-                    } else if(response.data.status == 0) {
-                        alert(response.data.info);
+                    } else if(res.status == 0) {
+                        alert(res.info);
                         this.searchKey = '';
                     }
-                },(response) => {
-                    this.toastMessage = '网络开小差了~';
-                    this.toastShow = true;
                 });
             },
-            goPage () {
+            goPage() {
                 this.myActive(5);
                 this.$router.go({name: 'per-orders'})
             },

@@ -15,9 +15,9 @@
 	<div class="com-wrapper" v-if="data.list.length>0">
 		<div class="com-box" v-for="item in data.list">
 			<div class="head"> <!-- v-lazy:background-image="item.shotcut" -->
-				<img :src="item.shotcu" style="width:100%;height:100%;"/>
+				<img :src="wxImg" style="width:100%;height:100%;"/>
 			</div>
-			<div class="name">{{ item.uname }}</div>
+			<div class="name">{{ wxName }}</div>
 			<div class="date">{{ item.createtime }}</div>
 			<rater :value="item.stars" :margin="5" active-color="#F9AD0C" :font-size="18" :disabled="true" style="width:100%;margin:2% 0%;"></rater>
 			<div class="content">
@@ -86,7 +86,9 @@
 				},
 				list: {
 				    uimg:'',
-				}
+				},
+				wxImg: '',		//微信头像
+				wxName: '',		//微信名称
 			}
 		},
 		ready(){
@@ -103,12 +105,17 @@
 				this.getData();
 			},
 			getData: function(){
-				this.$http.get(localStorage.apiDomain+'public/index/index/commentlist/pid/' + this.$route.params.pid + '/type/' + this.column).then((response)=>{
-					if(response.data.status === 1) {
-						this.data = response.data;
-						console.log(this.data.list);
-					}else if(response.data.status === -1) {
-						this.toastMessage = response.data.info;
+                let openid = sessionStorage.getItem("openid");
+				this.$getData('/index/index/commentlist/pid/' + this.$route.params.pid + '/type/' + this.column).then((res)=>{
+					if(res.status === 1) {
+						this.data = res;
+						//	获取微信信息
+                        this.$getData('/index/index/get_weixin?openid=' + openid).then((res)=>{  /* 'os0CqxBBANhLuBLTsViL3C0zDlNs' */
+                            this.wxImg = res.info.weixindata.headimgurl;
+                            this.wxName = res.info.weixindata.nickname;
+                        });
+					}else if(res.status === -1) {
+						this.toastMessage = res.info;
 						this.toastShow = true;
 						let context = this;
 						setTimeout(function(){
@@ -118,10 +125,10 @@
 							context.$router.go({name:'login'});
 						},800);
 					}else{
-						this.toastMessage = response.data.info;
+						this.toastMessage = res.info;
 						this.toastShow = true;
 					}
-				},(response)=>{
+				},(res)=>{
 					this.toastMessage = '网络开小差了~';
 					this.toastShow = true;
 				});
@@ -154,14 +161,14 @@
 	}
 
 	.com-wrapper .com-box .head{
-		width:12%;
-		padding-top:12%;
-		border-radius:50%;
-		background-color:#ccc;
-		background-position:center;
-		background-repeat:no-repeat;
-		background-size:cover;
-		margin-right:5%;
+		width: 12%;
+		/* padding-top: 12%; */
+		/* border-radius: 50%; */
+		/* background-color: #ccc; */
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		margin-right: 5%;
 	}
 
 	.com-wrapper .com-box .name{

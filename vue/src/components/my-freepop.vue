@@ -133,9 +133,6 @@
         ready() {
             this.selList();
             this.onToureEle();
-            console.log(this.chonse);
-            console.log(this.$parent.data.address)
-
         },
         created() {
 

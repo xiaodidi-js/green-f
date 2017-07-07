@@ -432,6 +432,13 @@
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 ustore = JSON.parse(ustore);
                 console.log(ustore);
+                if(ustore === null) {
+                    alert("没有登录，请先登录！");
+                    setTimeout(function () {
+                        context.$router.go({name: 'login'});
+                    }, 800);
+                    return false;
+                }
                 this.$nextTick(()=>{
                     if (ustore) {
                         getUrl = '/index/index/productdetail/uid/' + ustore.id + '/pid/' + this.$route.params.pid;
@@ -480,11 +487,9 @@
                             } catch(e) {
                                 console.log(e);
                             } finally {}
-                        },(response)=>{
+                        },(res)=>{
                             this.toastMessage = "网络开小差啦~";
                             this.toastShow = true;
-                        }).catch(function (error) {
-                            (error)
                         })
                     } catch(e) {}
 

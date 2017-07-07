@@ -21,7 +21,7 @@
 						</p>
 						<p v-if="deliverName === '快递配送' ">
 							<span class="address-left">姓名:</span>
-							<span>{{ data.address.name }}</span>
+							<span class="expressName">{{ data.address.name }}</span> <!-- data.address.name -->
 						</p>
 						<p>
 							<span class="address-left">电话:</span>
@@ -258,6 +258,7 @@
                 myCellTitle: '',
                 chonseParcel: false, //显示隐藏自提点选择框
 				wxName: '',			 // 微信名称
+                expressName: ''		 //	收件人名称
             }
         },
         components: {
@@ -349,7 +350,8 @@
 				if(to.name == 'submit') {
                     this.submitReady();
 				}
-			}
+			},
+
 		},
         methods: {
             submitReady() {
@@ -383,7 +385,6 @@
                         let openid = sessionStorage.getItem("openid");
                         this.$getData('/index/index/get_weixin?openid=' + openid).then((res)=>{  /* 'os0CqxBBANhLuBLTsViL3C0zDlNs' */
                             this.wxName = res.info.weixindata.nickname;
-                            console.log(this.wxName);
                         });
                         if(this.data.address){
                             this.address = this.data.address.id;
@@ -487,6 +488,7 @@
                 this.actionShow = true;
                 if (this.deliverName === '快递配送') {
                     this.chonseParcel = false;
+                    $(".expressName").text(this.data.address.name);
                 } else if (this.deliverName === '到店自提') {
                     this.chonseParcel = true;
                 }
@@ -498,24 +500,25 @@
                 if(this.deliverType==key){
                     return true;
                 }
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
+                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), content = this;
                 ustore = JSON.parse(ustore);
                 let pids = '';
                 if(this.cartIds.length > 0) {
                     pids = this.cartIds.join(',');
                 }
                 this.$getData('/index/user/addesschange/uid/'+ustore.id+'/token/'+ustore.token+'/type/'+key+'/ids/'+pids).then((res)=>{
-                    if(res.status === 1) { //chonseParcel
-                        this.deliverType = key;
-                        this.deliverName = key === 'express' ? this.data.deliver.express : this.data.deliver.parcel;
-                        this.freight = res.freight;
+                    if(res.status === 1) {
+                        content.deliverType = key;
+                        content.deliverName = key === 'express' ? content.data.deliver.express : content.data.deliver.parcel;
+                        content.freight = res.freight;
                         if(typeof res.address !== 'undefined'){
-                            this.data.address = res.address;
-                            this.address = this.data.address.id;
+                            content.data.address = res.address;
+                            content.data.address.name = res.address.person;
+                            content.address = content.data.address.id;
                         }else{
-                            this.data.address = null;
-                            this.address = 0;
-                            this.freight = 0;
+                            content.data.address = null;
+                            content.address = 0;
+                            content.freight = 0;
                         }
                     }else if(res.status===-1){
                         this.toastMessage = res.info;

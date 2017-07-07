@@ -81,9 +81,12 @@
             });
 		},
         watch: {
-//            $route() {
-//                $(window).scrollTop(sessionStorage.getItem("scrolltop"));
-//            }
+            $route(to) {
+				if(to.name === 'search') {
+					var listData = JSON.parse(sessionStorage.getItem("serach"));
+					this.list = listData;
+				}
+            }
         },
 		computed: {
 
