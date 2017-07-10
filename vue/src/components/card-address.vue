@@ -114,6 +114,14 @@
 			this.siblingsDom();
 			this.chosenfun();
 		},
+		watch: {
+		    $route(to,from) {
+				console.log(to);
+				if(to.name == 'per-addresses') {
+                    location.reload();
+				}
+			}
+		},
 		methods: {
 			isActiveFun: function() {
 				var ele = document.getElementById("Ele-chonse"), eleAddress = ele.children, _this = this, i;
@@ -130,38 +138,35 @@
 			},
 		    //自提点
 			chosenfun: function() {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), _this = this;
-                ustore = JSON.parse(ustore);
                 this.getType = this.$parent.deliverType;
-                this.$http.get(localStorage.apiDomain+'public/index/user/addresschosen/uid/' + ustore.id + '/token/' + ustore.token + '/type/' + this.getType).then((response)=>{
-                    if(response.data.status === 1) {
-                        console.log(response.data);
+                let content = this;
+                this.$getData('/index/user/addresschosen/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/type/' + this.getType).then((res)=>{
+                    if(res.status === 1) {
                         this.showStatus = false;
                         this.showTips = '加载中...';
-                        this.chosens = response.data.list;
+                        this.chosens = res.list;
                         for(let i = 0; i < this.chosens.length; i++) {
 							this.chosens[i].index = i;
                             if(this.chosens[i].is_default == 1) {
-								_this.isActiveFun();
+                                content.isActiveFun();
 							}
 						}
-                    }else if(response.data.status=== -1) {
-                        this.$parent.toastMessage = response.data.info;
+                    } else if(res.status === -1) {
+                        this.$parent.toastMessage = res.info;
                         this.$parent.toastShow = true;
-                        let context = this;
                         setTimeout(function(){
-                            context.clearAll();
+                            content.clearAll();
                             sessionStorage.removeItem('userInfo');
                             localStorage.removeItem('userInfo');
-                            context.$router.go({name:'login'});
+                            content.$router.go({name:'login'});
                         },800);
-                    }else{
+                    } else {
                         this.address = [];
                         this.chosen = 0;
                         this.showTips = '暂无添加地址';
                         this.showStatus = true;
                     }
-                },(response)=>{
+                },(res) => {
                     this.$parent.toastMessage = '网络开小差了~';
                     this.$parent.toastShow = true;
                 });
@@ -169,20 +174,23 @@
             //自提点选择
             setChosen: function(obj){
                 if(typeof obj==='object') {
-                    let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                    ustore = JSON.parse(ustore);
                     let pids = '';
                     if(this.$parent.cartIds.length > 0) {
                         pids = this.$parent.cartIds.join(',');
                     }
-                    let pdata = {uid:ustore.id,token:ustore.token,type:this.$parent.deliverType,ids:pids,area:obj.area};
-                    this.$http.post(localStorage.apiDomain + 'public/index/user/addresschosen',pdata).then((response)=>{
-                        if(response.data.status === 1) {
+                    let pdata = {
+                        uid: this.$ustore.id,
+						token: this.$ustore.token,
+						type:this.$parent.deliverType,
+						ids:pids,area:obj.area
+                    };
+                    this.$postData('/index/user/addresschosen',pdata).then((res)=>{
+                        if(res.status === 1) {
                             this.chosen = obj.id;
                             this.$parent.data.address = obj;
-                            this.$parent.freight = response.data.freight;
-                        }else if(response.data.status === -1) {
-                            this.$parent.toastMessage = response.data.info;
+                            this.$parent.freight = res.freight;
+                        }else if(res.status === -1) {
+                            this.$parent.toastMessage = res.info;
                             this.$parent.toastShow = true;
                             let context = this;
                             setTimeout(function(){
@@ -192,10 +200,10 @@
                                 context.$router.go({name:'login'});
                             },800);
                         }else{
-                            this.$parent.toastMessage = response.data.info;
+                            this.$parent.toastMessage = res.info;
                             this.$parent.toastShow = true;
                         }
-                    },(response)=>{
+                    },(res)=>{
                         this.$parent.toastMessage = '网络开小差了~';
                         this.$parent.toastShow = true;
                     });
@@ -204,7 +212,7 @@
             $id: function(id) {
                 return document.getElementById(id);
             },
-            siblings: function (dom,callback){
+            siblings: function (dom,callback) {
                 var pdom = dom.parentElement;
                 var tabArr = [].slice.call(pdom.children);
                 tabArr.filter(function(obj){
@@ -236,20 +244,24 @@
                 }
             },
             isDefault: function(index,id) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), _this = this;
-                ustore = JSON.parse(ustore);
-                let pdata = {uid:ustore.id,token:ustore.token,state:0,addressid:id};
-                this.$http.put(localStorage.apiDomain + 'public/index/Usercenter/addressmoren',pdata).then((response) => {
-                    if(response.data.status === 1) {
+                let pdata = {
+                    uid: this.$ustore.id,
+					token: this.$ustore.token,
+					state:0,
+					addressid:id
+                };
+                let content = this;
+                this.$putData('/index/Usercenter/addressmoren',pdata).then((res) => {
+                    if(res.status === 1) {
                         for(let i = 0;i < this.chosens.length; i++) {
                             if(i != index && this.chosens[i].is_default != 0) {
                                 this.chosens[i].is_default = 0;
                             }
                         }
                         this.chosens[index].is_default = 1;
-                        _this.isActiveFun();
-                    }else if(response.data.status === -1) {
-                        this.$dispatch('showMes',response.data.info);
+                        content.isActiveFun();
+                    } else if (response.data.status === -1) {
+                        this.$dispatch('showMes',res.info);
                         let context = this;
                         setTimeout(function(){
                             context.clearAll();
@@ -258,40 +270,41 @@
                             context.$router.go({name:'login'});
                         },800);
                     }else{
-                        this.$dispatch('showMes',response.data.info);
+                        this.$dispatch('showMes',res.info);
                     }
-                },(response)=>{
+                },(res)=>{
                     this.$dispatch('showMes','网络开小差了~');
                 });
             },
 			setDefault: function(index,id){
-				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-				ustore = JSON.parse(ustore);
-				let pdata = {uid:ustore.id,token:ustore.token,aid:id};
-				this.$http.put(localStorage.apiDomain+'public/index/user/addresslist',pdata).then((response) => {
-					if(response.data.status===1) {
-                        console.log(response.data);
+				let pdata = {
+				    uid: this.$ustore.id,
+					token: this.$ustore.token,
+					aid: id
+				};
+				this.$putData('/index/user/addresslist',pdata).then((res) => {
+					if(res.status === 1) {
 						for(let i = 0;i < this.addresses.length; i++) {
 							if(i != index && this.addresses[i].is_default != 0) this.addresses[i].is_default = 0;
 						}
 						this.addresses[index].is_default = 1;
-					}else if(response.data.status===-1) {
-						this.$dispatch('showMes',response.data.info);
+					} else if (res.status === -1) {
+						this.$dispatch('showMes',res.info);
 						let context = this;
-						setTimeout(function(){
+						setTimeout(function() {
 							context.clearAll();
 							sessionStorage.removeItem('userInfo');
 							localStorage.removeItem('userInfo');
 							context.$router.go({name:'login'});
 						},800);
 					}else{
-						this.$dispatch('showMes',response.data.info);
+						this.$dispatch('showMes',res.info);
 					}
-				},(response)=>{
+				},(res)=>{
 					this.$dispatch('showMes','网络开小差了~');
 				});
 			},
-            changeActive: function(evt){
+            changeActive: function(evt) {
                 evt.preventDefault();
                 evt.stopPropagation();
                 this.$dispatch('setChosen',this.obj);
@@ -304,19 +317,17 @@
 				if(!this.delItem){
 					return false;
 				}
-				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-				ustore = JSON.parse(ustore);
-				let add = localStorage.apiDomain+'public/index/user/addressinfo/uid/'+ustore.id+'/token/'+ustore.token+'/aid/'+this.delItem;
-				this.$http.delete(add).then((response)=>{
-					if(response.data.status===1){
-						for(let add=0;add<this.addresses.length;add++){
-							if(this.addresses[add].id===this.delItem){
+				let add = '/index/user/addressinfo/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/aid/' + this.delItem;
+				this.$deleteData(add).then((res)=>{
+					if(res.status === 1) {
+						for(let add = 0;add < this.addresses.length; add++) {
+							if(this.addresses[add].id === this.delItem){
 								this.addresses.splice(add,1);
 								break;
 							}
 						}
-					}else if(response.data.status===-1){
-						this.$dispatch('showMes',response.data.info);
+					}else if(res.status === -1) {
+						this.$dispatch('showMes',res.info);
 						let context = this;
 						setTimeout(function(){
 							context.clearAll();
@@ -325,11 +336,10 @@
 							context.$router.go({name:'login'});
 						},800);
 					}else{
-						this.$dispatch('showMes',response.data.info);
-                        console.log("Yes...");
+						this.$dispatch('showMes',res.info);
 					}
 					this.delItem = 0;
-				},(response)=>{
+				},(res)=>{
 					this.delItem = 0;
 					this.$dispatch('showMes','网络开小差了~');
 				});

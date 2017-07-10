@@ -42,11 +42,11 @@
 		},
 		route: {
 			data(transition) {
-				this.$http.get(localStorage.apiDomain + 'public/index/index/columninfo/id/' + this.$route.params.cid).then((response)=>{
+				this.$getData('/index/index/columninfo/id/' + this.$route.params.cid).then((res)=>{
 					transition.next({
-						data: response.data
+						data: res
 					});
-				},(response)=>{
+				},(res)=>{
 					this.toastMessage = '网络开小差了~';
 					this.toastShow = true;
 				});

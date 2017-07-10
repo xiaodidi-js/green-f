@@ -140,17 +140,15 @@
                 this.$router.go(url);
 			},
             gocart: function (data) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
                 var cart = JSON.parse(localStorage.getItem("myCart")), obj = {} , self = this;
-                if(ustore == null) {
+                if(this.$ustore == null) {
                     alert("没有登录，请先登录！");
                     setTimeout(function () {
                         self.$router.go({name: 'login'});
                     }, 800);
                     return false;
 				} else if (ustore != null) {
-                    this.$getData('/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.shopid).then((response) => {
+                    this.$getData('/index/index/productdetail/uid/' + this.$ustore.id + '/pid/' + data.shopid).then((response) => {
                         obj = {
                             id: data.shopid,
                             name: data.shopname,
@@ -198,11 +196,6 @@
                         this.setCart(obj);
                         this.alertShow = true;
                     });
-
-//                    axios({
-//                        method: 'get',
-//                        url: localStorage.apiDomain + 'public/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.shopid,
-//                    })
 				}
             }
 		}

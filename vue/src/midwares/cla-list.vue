@@ -108,17 +108,6 @@
                         this.data.list = res.info.list;
                         this.data.img = res.info.img;
                         this.data.background = res.info.background;
-//                        if(res.info.list == "") {
-//                            alert("商品为空!");
-//
-////                            this.$router.go({name : 'index'});
-//                            return false;
-//                        } else {
-//                            this.alertShow = false;
-//                            this.data.list = res.info.list;
-//                            this.data.img = res.info.img;
-//                            this.data.background = res.info.background;
-//                        }
 					} else if(response.data.status = 0) {
                         this.$router.go({name : 'index'});
 					}

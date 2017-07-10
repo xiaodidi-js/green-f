@@ -23,7 +23,6 @@ export const fetchGet = (target, data) => {
         }).then(function (response) {
             resolve(response.data)
         }).catch(function (error) {
-            console.log(error);
             reject(error)
         })
     })
@@ -62,3 +61,28 @@ export const fetchPut = (target, data) => {
         })
     })
 };
+
+//  delete
+export const fetchDelete = (target, data) => {
+    if (data) {
+        var params = [];
+        for (var i in data) {
+            params.push(i);
+            params.push(data[i])
+        }
+        target = target + '/' + params.join('/')
+    }
+    return new Promise((resolve, reject) => {
+        axios({
+            url: localStorage.apiDomain + 'public' + target,
+            method: 'delete',
+            withCredentials: false
+        }).then(function (response) {
+            resolve(response.data)
+        }).catch(function (error) {
+            reject(error)
+        })
+    })
+};
+
+export const ustore = JSON.parse(sessionStorage.getItem('userInfo')) || JSON.parse(localStorage.getItem('userInfo'));

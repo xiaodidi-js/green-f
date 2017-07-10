@@ -9,7 +9,9 @@ import App from 'components/app.vue';
 import Routers from './router';
 import Env from './config/env';
 import WxJssdk from 'weixin-js-sdk'
-import { fetchGet,fetchPost,fetchPut } from './libs/util.js'
+import { fetchGet, fetchPost, fetchPut, fetchDelete,ustore } from './libs/util.js'
+
+import 'vux/src/styles/close.less';
 
 Vue.use(VueLazy,{
 	preLoad:1.2,
@@ -24,6 +26,8 @@ Vue.use(VueRouter);
 Vue.prototype.$getData = fetchGet;
 Vue.prototype.$postData = fetchPost;
 Vue.prototype.$putData = fetchPut;
+Vue.prototype.$deleteData = fetchDelete;
+Vue.prototype.$ustore = ustore;
 
 // 开启debug模式
 Vue.config.debug = true;

@@ -109,18 +109,16 @@
                 this.$router.go({name:name,params:params});
 			},
             addCart (data) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
                 var obj = {} , cart = JSON.parse(localStorage.getItem("myCart")), self = this;
-                if(ustore == null) {
+                if(this.$ustore == null) {
                     alert("没有登录，请先登录！");
                     setTimeout(function () {
                         self.clearAll();
                         self.$router.go({name: 'login'});
                     }, 800);
                     return false;
-				} else if (ustore != null) {
-                    this.$getData('/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id).then((response) => {
+				} else if (this.$ustore != null) {
+                    this.$getData('/index/index/productdetail/uid/' + this.$ustore.id + '/pid/' + data.id).then((res) => {
                         obj = {
                             id: data.id,
                             name: data.title,
@@ -166,7 +164,7 @@
                             }
                         }
                         self.setCart(obj);
-                        this.alertShow = true;
+                        alert("加入购物车成功!");
                     });
 				}
 			},

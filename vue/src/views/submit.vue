@@ -500,18 +500,16 @@
                 if(this.deliverType==key){
                     return true;
                 }
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), content = this;
-                ustore = JSON.parse(ustore);
-                let pids = '';
+                let content = this, pids = '';
                 if(this.cartIds.length > 0) {
                     pids = this.cartIds.join(',');
                 }
-                this.$getData('/index/user/addesschange/uid/'+ustore.id+'/token/'+ustore.token+'/type/'+key+'/ids/'+pids).then((res)=>{
-                    if(res.status === 1) {
+                this.$getData('/index/user/addesschange/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/type/' + key + '/ids/' + pids).then((res)=>{
+                    if (res.status === 1) {
                         content.deliverType = key;
                         content.deliverName = key === 'express' ? content.data.deliver.express : content.data.deliver.parcel;
                         content.freight = res.freight;
-                        if(typeof res.address !== 'undefined'){
+                        if(typeof res.address !== 'undefined') {
                             content.data.address = res.address;
                             content.data.address.name = res.address.person;
                             content.address = content.data.address.id;
@@ -520,7 +518,7 @@
                             content.address = 0;
                             content.freight = 0;
                         }
-                    }else if(res.status===-1){
+                    } else if (res.status ===-1) {
                         this.toastMessage = res.info;
                         this.toastShow = true;
                         let context = this;
@@ -539,11 +537,10 @@
                     this.toastShow = true;
                 });
             },
-            showPop: function(){
+            showPop: function() {
                 let content = this;
                 content.popShow = true;
                 content.openpop = true;
-                console.log(this.deliverName);
                 if (content.deliverName === '快递配送') {
                     content.chonseParcel = false;
                     $(".commentButton").css("width","45%");
@@ -559,6 +556,7 @@
                         "height" : "65%"
                     });
                 }
+                this.oneGift(this.address,this.lastPaySum);
             },
             showCou: function(){
                 this.couShow = true;
@@ -596,7 +594,7 @@
                     this.toastMessage = '未选择要购买的商品';
                     this.toastShow = true;
                     return false;
-                }else if(this.lastPaySum <= 0){
+                }else if(this.lastPaySum <= 0) {
                     this.toastMessage = '支付金额不能小于等于0';
                     this.toastShow = true;
                     return false;
@@ -605,26 +603,24 @@
                     this.toastShow = true;
                     return false;
 				}
-                for(let i = 0; i < this.cartInfo.length; i++) {
+                for(var i in this.cartInfo) {
                     this.loadingMessage = '正在提交...';
                     this.loadingShow = true;
-                    let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                    ustore = JSON.parse(ustore);
                     let pdata = {
-                        uid:ustore.id,
-                        token:ustore.token,
-                        paytype:this.payType,
-                        products:this.cartInfo,
-                        stype:this.deliverType,
-                        address:this.address,
-                        coupon:this.coupon,
-                        score:this.sNumber,
+                        uid: this.$ustore.id,
+                        token: this.$ustore.token,
+                        paytype: this.payType,
+                        products: this.cartInfo,
+                        stype: this.deliverType,
+                        address: this.address,
+                        coupon: this.coupon,
+                        score: this.sNumber,
                         scoreNumber: this.scoreNumber,
-                        paysum:this.lastPaySum,
-                        tips:this.memo,
+                        paysum: this.lastPaySum,
+                        tips: this.memo,
 						openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
-                        pshonse:this.shonse,
-                        gift:{'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
+                        pshonse: this.shonse,
+                        gift: {'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                     };
                     this.$postData('/index/user/getSubmitOrder',pdata).then((res)=>{
                         if(res.status === 1) {
@@ -646,7 +642,7 @@
                                 localStorage.removeItem('userInfo');
                                 context.$router.go({name:'login'});
                             },800);
-                        }else{
+                        } else {
                             this.loadingShow = false;
                             alert(res.info);
                         }

@@ -68,17 +68,15 @@
         },
 		methods: {
 		    message () {
-				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
                 var content = this;
-                if(ustore == null) {
+                if(this.$ustore == null) {
                     alert("没有登录，请先登录！");
                     setTimeout(function () {
                         content.$router.go({name: 'login'});
                     }, 800);
                     return false;
 				}
-				this.$getData('/index/index/productinfo/uid/' + ustore.id + '/pid/' + this.$route.query.pid).then((res) => {
+				this.$getData('/index/index/productinfo/uid/' + this.$ustore.id + '/pid/' + this.$route.query.pid).then((res) => {
                     if(typeof(res.articles) == 'undefined') {
                         $(".card-box").html("" +
                             "<div>暂时没有活动!</div>").css({

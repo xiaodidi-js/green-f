@@ -1,90 +1,3 @@
-<style scoped>
-.btn-wrapper{
-	width:80%;
-	margin: 20% 10% 0% 10%;
-}
-
-.btn-wrapper .link-box{
-	width:100%;
-	position:relative;
-	margin-top:0.8rem;
-	font-size:1.2rem;
-	color:#B3B3B3;
-}
-
-.btn-wrapper .link-box .left{
-	position:absolute;
-	left:0;
-	top:0;
-}
-
-.btn-wrapper .link-box .right{
-	position:absolute;
-	right:0;
-	top:0;
-}
-</style>
-
-<style>
-
-.weui_cells{
-	margin-top:0 !important;
-}
-
-.weui_btn_default{
-	font-family:'Microsoft YaHei';
-	background-color:#F9AD0C !important;
-	color:#fff !important;
-}
-
-.weui_btn_default:active{
-	background-color:#DE9A08 !important;
-}
-
-.weui_btn_disabled.weui_btn_default,.weui_cell_ft .weui_btn_disabled.weui_btn_primary{
-	background-color:#F3C76A !important;
-}
-
-.weui_cell_ft .weui_btn_primary{
-	height:3.4rem;
-	margin:0.5rem 0rem;
-	background-color:#F9AD0C !important;
-	font-size:1.4rem;
-	color:#fff;
-	line-height:2.4rem;
-	font-family:'Microsoft YaHei';
-	padding-top:0.5rem;
-	padding-bottom:0.5rem;
-	color:#fff;
-	margin-left:auto;
-	margin-right:auto;
-	margin-right:0.5rem;
-}
-
-.weui_cell_ft .weui_btn_primary:active{
-	background-color:#DE9A08 !important;
-	color:#fff;
-}
-
-.weui_cell{
-	font-size:14px;
-}
-
-	.wbox label {padding-left: 10px;
-		line-height: 2.1rem;}
-
-	.xieyi {
-		float: right;
-		display: block;
-		line-height: 4rem;
-		font-size: 15px;
-		margin-top: 5px;
-		color: #81c429;
-		margin-right:10px;
-	}
-
-</style>
-
 <template>
 	<!-- 输入内容 -->
 	<group style="margin-top: 46px;">
@@ -100,7 +13,6 @@
 		<!--<icon type="success" class="my-icon-chosen" v-show="item.is_default === 1"></icon>-->
 		<!--<icon type="circle" class="my-icon" v-show="item.is_default !== 1"></icon>-->
 	<!--</div>-->
-
 	<bottom-check style="width:43%;float:left;" title="我已阅读并同意" :status.sync="data.check"></bottom-check>
 	<a href="javascript:void(0);" class="xieyi">{{ data.xieyi }}商城使用协议</a>
 	<!-- 底部按钮 -->
@@ -151,10 +63,9 @@ export default{
 		
 	},
 	ready() {
-        this.$http.get(localStorage.apiDomain + 'public/index/index/xieyi').then((response)=>{
-            this.data.xieyi = response.data;
-            console.log(this.data.xieyi);
-        },(response)=>{
+        this.$getData('/index/index/xieyi').then((res)=>{
+            this.data.xieyi = res;
+        },(res)=>{
             this.toastMessage = '网络开小差了~';
             this.toastShow = true;
             this.codeDis = false;
@@ -171,15 +82,16 @@ export default{
 			}
 			let second = 120,context = this,timer = null;
 			this.codeDis = true;
-			this.$http.post(localStorage.apiDomain+'public/index/login/getCodeBySms',{tel:this.data.tel}).then((response)=>{
-				this.toastMessage = response.data.info;
+			var options = {tel:this.data.tel};
+			this.$postData('/index/login/getCodeBySms',options).then((res)=>{
+				this.toastMessage = res.info;
 				this.toastShow = true;
-				if(response.data.status===1){
+				if(res.status === 1) {
 					this.codeText = second+'s';
-					timer = setInterval(function(){
-						if(second>0){
+					timer = setInterval(function() {
+						if(second > 0) {
 							second--;
-							context.codeText = second+'s';
+							context.codeText = second + 's';
 						}else{
 							context.codeText = '获取验证码';
 							context.codeDis = false;
@@ -195,57 +107,57 @@ export default{
 				this.codeDis = false;
 			});
 		},
-		checkBefore: function(){
+		checkBefore: function() {
 			let telReg = /^[\d]{9,11}$/;
 			let pwdReg = /^[\w@\+\?\.\*-\_\#\^]{6,30}$/;
-			if(this.data.tel.length<=0){
+			if(this.data.tel.length <= 0) {
 				this.toastMessage = '请输入您的手机号码';
 				this.toastShow = true;
 				return false;
-			}else if(!telReg.test(this.data.tel)){
+			}else if(!telReg.test(this.data.tel)) {
 				this.toastMessage = '手机号码格式不正确';
 				this.toastShow = true;
 				return false;
-			}else if(this.data.ucode.length!=5){
+			}else if(this.data.ucode.length != 5) {
 				this.toastMessage = '请输入五位验证码';
 				this.toastShow = true;
 				return false;
-			}else if(this.unpwd.length<=0){
+			}else if(this.unpwd.length <= 0) {
 				this.toastMessage = '请输入账号密码';
 				this.toastShow = true;
 				return false;
-			}else if(!pwdReg.test(this.unpwd)){
+			}else if(!pwdReg.test(this.unpwd)) {
 				this.toastMessage = '账号密码格式不正确';
 				this.toastShow = true;
 				return false;
-			}else if(this.ucpwd.length<=0){
+			}else if(this.ucpwd.length <= 0) {
 				this.toastMessage = '请输入确认密码';
 				this.toastShow = true;
 				return false;
-			}else if(this.unpwd!==this.ucpwd){
+			}else if(this.unpwd!==this.ucpwd) {
 				this.toastMessage = '两次密码不一致';
 				this.toastShow = true;
 				return false;
-			}else if(!this.data.check){
+			}else if(!this.data.check) {
 				this.toastMessage = '请先仔细阅读使用协议';
 				this.toastShow = true;
 				return false;
 			}
 			return true;
 		},
-		postData: function(){
-			if(this.btnDis){
+		postData: function() {
+			if(this.btnDis) {
 				return false;
-			}else if(!this.checkBefore()){
+			}else if(!this.checkBefore()) {
 				return false;
 			}
 			this.btnDis = true;
 			this.btnText = '正在提交...';
 			let pdata = {utel:this.data.tel,upwd:this.unpwd,cpwd:this.ucpwd,code:this.data.ucode};
-			this.$http.post(localStorage.apiDomain+'public/index/login/useraction',pdata).then((response)=>{
-				if(response.data.status===1){
-					let getData = response.data;
-					if(getData.id&&getData.token&&getData.time){
+			this.$postData('/index/login/useraction',pdata).then((res) => {
+				if(res.status === 1) {
+					let getData = res;
+					if(getData.id && getData.token && getData.time) {
 						let storeData = {id:getData.id,token:getData.token,time:getData.time};
 						storeData = JSON.stringify(storeData);
 						sessionStorage.removeItem('userInfo');
@@ -259,13 +171,13 @@ export default{
 						context.btnText = '免费注册';
 						context.$router.replace('index');
 					},800);
-				}else if(typeof response.data.info !== 'undefined'){
-					this.toastMessage = response.data.info;
+				}else if(typeof res.info !== 'undefined'){
+					this.toastMessage = res.info;
 					this.toastShow = true;
 					this.btnDis = false;
 					this.btnText = '免费注册';
 				}
-			},(response)=>{
+			},(res)=>{
 				this.toastMessage = '网络开小差了~';
 				this.toastShow = true;
 				this.btnDis = false;
@@ -284,3 +196,89 @@ export default{
 }
 
 </script>
+<style scoped>
+	.btn-wrapper{
+		width:80%;
+		margin: 20% 10% 0% 10%;
+	}
+
+	.btn-wrapper .link-box{
+		width:100%;
+		position:relative;
+		margin-top:0.8rem;
+		font-size:1.2rem;
+		color:#B3B3B3;
+	}
+
+	.btn-wrapper .link-box .left{
+		position:absolute;
+		left:0;
+		top:0;
+	}
+
+	.btn-wrapper .link-box .right{
+		position:absolute;
+		right:0;
+		top:0;
+	}
+</style>
+
+<style>
+
+	.weui_cells{
+		margin-top:0 !important;
+	}
+
+	.weui_btn_default{
+		font-family:'Microsoft YaHei';
+		background-color:#F9AD0C !important;
+		color:#fff !important;
+	}
+
+	.weui_btn_default:active{
+		background-color:#DE9A08 !important;
+	}
+
+	.weui_btn_disabled.weui_btn_default,.weui_cell_ft .weui_btn_disabled.weui_btn_primary{
+		background-color:#F3C76A !important;
+	}
+
+	.weui_cell_ft .weui_btn_primary{
+		height:3.4rem;
+		margin:0.5rem 0rem;
+		background-color:#F9AD0C !important;
+		font-size:1.4rem;
+		color:#fff;
+		line-height:2.4rem;
+		font-family:'Microsoft YaHei';
+		padding-top:0.5rem;
+		padding-bottom:0.5rem;
+		color:#fff;
+		margin-left:auto;
+		margin-right:auto;
+		margin-right:0.5rem;
+	}
+
+	.weui_cell_ft .weui_btn_primary:active{
+		background-color:#DE9A08 !important;
+		color:#fff;
+	}
+
+	.weui_cell{
+		font-size:14px;
+	}
+
+	.wbox label {padding-left: 10px;
+		line-height: 2.1rem;}
+
+	.xieyi {
+		float: right;
+		display: block;
+		line-height: 4rem;
+		font-size: 15px;
+		margin-top: 5px;
+		color: #81c429;
+		margin-right:10px;
+	}
+
+</style>

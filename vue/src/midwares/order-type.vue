@@ -54,6 +54,8 @@
             return {
                 dtype: -1,
                 data: [],
+                loadingShow: false,
+                loadingMessage: '',
             }
         },
         ready() {
@@ -64,35 +66,51 @@
                 },200);
             });
         },
+        watch: {
+            $route(to) {
+                if(to.name === 'order-type') {
+                    this.getViewData(0);
+                }
+            }
+        },
         methods: {
             getViewData: function(type) {
                 if(this.dtype == type && this.data){
                     return true;
                 }
-                this.dtype = type;
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                this.$getData('/index/user/orderselection/uid/'+ustore.id+'/token/'+ustore.token+'/type/' + type).then((res) => {
-                    if(res.status === 1) {
-                        this.data = res.list;
-                    }else if(res.status.status === -1){
-                        this.toastMessage = res.info;
+                if(this.$ustore.id == null) {
+                    alert("没有登录，请先登录！");
+                    setInterval(function() {
+                        this.$router.go({ name : 'login'});
+                    },500);
+                } else {
+                    this.dtype = type;
+                    sessionStorage.setItem('mydtype',this.dtype);
+                    this.loadingMessage = '请稍候...';
+                    this.loadingShow = true;
+
+                    this.$getData('/index/user/orderselection/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/type/' + type).then((res) => {
+                        if(res.status === 1) {
+                            this.data = res.list;
+                        }else if(res.status.status === -1){
+                            this.toastMessage = res.info;
+                            this.toastShow = true;
+                            let context = this;
+                            setTimeout(function(){
+                                context.clearAll();
+                                sessionStorage.removeItem('userInfo');
+                                localStorage.removeItem('userInfo');
+                                context.$router.go({name:'login'});
+                            },800);
+                        }else{
+                            this.toastMessage = res.info;
+                            this.toastShow = true;
+                        }
+                    },(res)=>{
+                        this.toastMessage = "网络开小差啦~";
                         this.toastShow = true;
-                        let context = this;
-                        setTimeout(function(){
-                            context.clearAll();
-                            sessionStorage.removeItem('userInfo');
-                            localStorage.removeItem('userInfo');
-                            context.$router.go({name:'login'});
-                        },800);
-                    }else{
-                        this.toastMessage = res.info;
-                        this.toastShow = true;
-                    }
-                },(res)=>{
-                    this.toastMessage = "网络开小差啦~";
-                    this.toastShow = true;
-                });
+                    });
+                }
             }
         }
     }

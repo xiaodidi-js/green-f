@@ -95,18 +95,16 @@
             addCart (data){
                 //购物车缓存
                 var date = new Date(), hours = date.getHours();
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 var cart = JSON.parse(localStorage.getItem("myCart")) , obj = {} , self = this;
-                ustore = JSON.parse(ustore);
-                if(ustore == null) {
+                if(this.$ustore == null) {
                     alert("没有登录，请先登录！");
                     setTimeout(function () {
                         self.clearAll();
                         self.$router.go({name: 'login'});
                     }, 800);
                     return false;
-				} else if (ustore != null) {
-                    this.$getData('/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id).then((res) => {
+				} else if (this.$ustore != null) {
+                    this.$getData('/index/index/productdetail/uid/' + this.$ustore.id + '/pid/' + data.id).then((res) => {
                         if(data.peisongok == 0 && data.deliverytime == 1) {
                             alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                             return false;
@@ -150,7 +148,7 @@
                             formatName:'',
                         }
                         this.setCart(obj);
-                        this.alertShow = true;
+                        alert("加入购物车成功！");
 					});
 				}
 			}

@@ -57,14 +57,13 @@ export default{
 	},
 	methods: {
 		getData: function(sk) {
-			let url = localStorage.apiDomain + 'public/index/index/classifylist/cid/' + this.$route.params.cid + '/action/' + this.column;
+			let url = '/index/index/classifylist/cid/' + this.$route.params.cid + '/action/' + this.column;
 			if(sk.length > 0) {
 				url += '/search/' + sk;
 			}
 			var _this = this;
-			this.$http.get(url).then((response)=>{
-                _this.arrlist = response.data.list;
-				console.log(_this.arrlist);
+			this.$getData(url).then((res)=>{
+                _this.arrlist = res.list;
 			},(response)=>{
 				this.toastMessage = "网络开小差啦~";
 				this.toastShow = true;

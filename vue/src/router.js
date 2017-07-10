@@ -402,15 +402,6 @@ const routers = {
             require(['./components/order-receipt.vue'], resolve);
         }
     },
-    '/order-evaluate': {
-        name:'orderevaluate',
-        header:false,
-        footer:true,
-        title:'待评价',
-        component (resolve) {
-            require(['./components/order-evaluate.vue'], resolve);
-        }
-    },
     'coupon-list': {
         name:'couponlist',
         header:false,

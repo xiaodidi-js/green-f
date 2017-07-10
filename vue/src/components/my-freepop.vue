@@ -182,9 +182,7 @@
                 }
             },
             onOnlyAddress: function (id) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), content = this;
-                ustore = JSON.parse(ustore);
-                this.$getData('/index/Usercenter/myaddress/uid/' + ustore.id + '/token/' + ustore.token + '/state/0/sinceid/' + id).then((res)  => {
+                this.$getData('/index/Usercenter/myaddress/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/state/0/sinceid/' + id).then((res)  => {
                     if (res.status === 1) {
                         var tmp = this.address.filter(function (item) {
                             return item.pid == id;
@@ -259,18 +257,16 @@
                 }
             },
             oneGift: function (id,money) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), content = this, options = {};
-                ustore = JSON.parse(ustore);
-                options = {
-                    uid:ustore.id,
-                    token:ustore.token,
+                var options = {
+                    uid: this.$ustore.id,
+                    token: this.$ustore.token,
                     sinceid:id,
                     money:money
                 };
                 this.$postData('/index/user/manjiusong',options).then((res) => {
                     if(res.status == 1) {
-                        content.openpop = true;
-                        content.showGive = true;
+                        this.openpop = true;
+                        this.showGive = true;
                         this.lists = res.maxmoney;
                         for(var i in this.lists) {
                             this.mySong('请选择满'+ this.lists[i].maxmoney +'元赠品');
@@ -281,8 +277,8 @@
                     } else if(res.status == 0) {
                         this.commitData({target: 'visibleEle', data: false});
                         var jsons = {
-                            uid:ustore.id,
-                            token:ustore.token,
+                            uid: this.$ustore.id,
+                            token: this.$ustore.token,
                             sinceid:this.chosen,
                             money:this.money
                         };
@@ -290,10 +286,10 @@
                             if(res.status == 1) {
                                 this.commitData({target: 'visibleEle', data: true});
                                 this.mySong('请选择首单用户赠品');
-                                content.showGive = true;
+                                this.showGive = true;
                                 this.myGift(this.lists);
                                 this.lists = res.shoduan_data;
-                                this.commitData({target: 'giftList', data: res.shoudan_data})
+                                this.commitData({target: 'giftList', data: res.shoudan_data});
                                 this.commitData({target: 'giftstu', data: 2});
                             } else if(res.status === 0) {
                                 this.commitData({target: 'visibleEle', data: false});
@@ -306,17 +302,14 @@
                 evt.stopPropagation();
             },
             selList: function (id) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                let pdata = {uid: ustore.id, token: ustore.token, addressid: id};
-                this.$http.put(localStorage.apiDomain + 'public/index/Usercenter/since', pdata).then((response) => {
-                    if (response.data.status === 1) {
+                let pdata = {uid: this.$ustore.id, token: this.$ustore.token, addressid: id};
+                this.$putData('/index/Usercenter/since', pdata).then((res) => {
+                    if (res.status === 1) {
                         this.showStatus = false;
                         this.showTips = '加载中...';
-                        this.options = response.data.list;
-                        console.log(response.data);
-                    } else if (response.data.status === -1) {
-                        this.$dispatch('showMes', response.data.info);
+                        this.options = res.list;
+                    } else if (res.status === -1) {
+                        this.$dispatch('showMes', res.info);
                         let context = this;
                         setTimeout(function () {
                             context.clearAll();
@@ -325,31 +318,30 @@
                             context.$router.go({name: 'login'});
                         }, 800);
                     } else {
-                        this.$dispatch('showMes', response.data.info);
+                        this.$dispatch('showMes', res.info);
                     }
-                }, (response) => {
+                }, (res) => {
                     this.$dispatch('showMes', '网络开小差了~');
                 });
             }
         },
         events: {
             setChosen: function (obj) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), pids = '', pdata = {};
-                ustore = JSON.parse(ustore);
+                let pids = '', pdata = {};
                 if (typeof obj === 'object') {
                     if (this.$parent.cartIds.length > 0) {
                         pids = this.$parent.cartIds.join(',');
                     }
                     pdata = {
-                        uid: ustore.id,
-                        token: ustore.token,
+                        uid: this.$ustore.id,
+                        token: this.$ustore.token,
                         type: this.$parent.deliverType,
                         ids: pids,
                         area: obj.area,
                         is_default: obj.is_default
                     };
-                    this.$http.post(localStorage.apiDomain + 'public/index/user/addresschosen', pdata).then((response) => {
-                        if (response.data.status === 1) {
+                    this.$postData('/index/user/addresschosen', pdata).then((res) => {
+                        if (res.status === 1) {
                             if(obj.is_default != 0) {
                                 obj.is_default = 0;
                             }
@@ -359,20 +351,19 @@
                             this.$parent.data.tmp_address = obj;
                             this.$parent.freight = response.data.freight;
                             /* 设置默认 */
-                            let odata = {uid:ustore.id,token:ustore.token,state:0,addressid:obj.id};
-                            this.$http.put(localStorage.apiDomain + 'public/index/Usercenter/addressmoren',odata).then((response) => {
-                                if(response.data.status === 1) {
+                            let odata = {uid: this.$ustore.id,token: this.$ustore.token,state:0,addressid:obj.id};
+                            this.$putData('/index/Usercenter/addressmoren',odata).then((res) => {
+                                if(res.status === 1) {
                                     if(obj.is_default != 0) {
                                         obj.is_default = 0;
                                     }
                                     obj.is_default = 1;
                                 }
-                            },(response)=>{
+                            },(res)=>{
                                 this.$dispatch('showMes','网络开小差了~');
                             });
-
-                        } else if (response.data.status === -1) {
-                            this.$parent.toastMessage = response.data.info;
+                        } else if (res.status === -1) {
+                            this.$parent.toastMessage = res.info;
                             this.$parent.toastShow = true;
                             let context = this;
                             setTimeout(function () {
@@ -382,10 +373,10 @@
                                 context.$router.go({name: 'login'});
                             }, 800);
                         } else {
-                            this.$parent.toastMessage = response.data.info;
+                            this.$parent.toastMessage = res.info;
                             this.$parent.toastShow = true;
                         }
-                    }, (response) => {
+                    }, (res) => {
                         this.$parent.toastMessage = '网络开小差了~';
                         this.$parent.toastShow = true;
                     });
@@ -405,18 +396,16 @@
             },
             show: function (nval, oval) {
                 if ((nval === true && this.address.length <= 0) || (nval === true && this.$parent.deliverType != '' && this.$parent.deliverType != this.getType)) {
-                    let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                    ustore = JSON.parse(ustore);
                     this.getType = this.$parent.deliverType;
-                    this.$http.get(localStorage.apiDomain + 'public/index/user/addresschosen/uid/' + ustore.id + '/token/' + ustore.token + '/type/' + this.getType).then((response) => {
-                        if (response.data.status === 1) {
+                    this.$getData('/index/user/addresschosen/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/type/' + this.getType).then((res) => {
+                        if (res.status === 1) {
                             this.showStatus = false;
                             this.showTips = '加载中...';
-                            this.address = response.data.list;
-                            this.tmp_address = response.data.list;
+                            this.address = res.list;
+                            this.tmp_address = res.list;
 //                            this.data = response.data.list;
-                        } else if (response.data.status === -1) {
-                            this.$parent.toastMessage = response.data.info;
+                        } else if (res.status === -1) {
+                            this.$parent.toastMessage = res.info;
                             this.$parent.toastShow = true;
                             let context = this;
                             setTimeout(function () {
@@ -431,7 +420,7 @@
                             this.showTips = '暂无添加地址';
                             this.showStatus = true;
                         }
-                    }, (response) => {
+                    }, (res) => {
                         this.$parent.toastMessage = '网络开小差了~';
                         this.$parent.toastShow = true;
                     });

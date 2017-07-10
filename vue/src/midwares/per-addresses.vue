@@ -36,13 +36,11 @@
 
 		},
 		ready() {
-			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-			ustore = JSON.parse(ustore);
-			this.$http.get(localStorage.apiDomain+'public/index/user/addresslist/uid/'+ustore.id+'/token/'+ustore.token).then((response)=>{
-				if(response.data.status===1){
-					this.data = response.data.list;
-				}else if(response.data.status===-1){
-					this.toastMessage = response.data.info;
+			this.$getData('/index/user/addresslist/uid/' + this.$ustore.id + '/token/' + this.$ustore.token).then((res)=>{
+				if(res.status === 1) {
+					this.data = res.list;
+				}else if(res.status === -1) {
+					this.toastMessage = res.info;
 					this.toastShow = true;
 					let context = this;
 					setTimeout(function(){
@@ -52,7 +50,7 @@
 						context.$router.go({name:'login'});
 					},800);
 				}
-			},(response)=>{
+			},(res)=>{
 				this.toastMessage = '网络开小差了~';
 				this.toastShow = true;
 			})

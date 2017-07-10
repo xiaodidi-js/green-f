@@ -1,9 +1,120 @@
+<template style="background: #F2F2F2;">
+    <!-- order-search start -->
+    <div class="order-search">
+        <div class="callback"></div>
+        <div class="search">
+            <input type="text" class="" placeholder="请输入您要搜索的商品"/>
+        </div>
+        <input type="button" class="order-search-btn" value="搜索" style=""/>
+    </div>
+    <!-- order-search end -->
+
+    <!-- order-banner start -->
+    <div class="order-banner">
+        <img src="../images/banner_xiadan.png" alt="" style="width:100%;height:325px;" />
+    </div>
+    <!-- order-banner end -->
+
+    <!-- order-table start -->
+    <div class="order-table">
+        <ul id="card">
+            <li class="active">新品</li>
+            <li>热卖</li>
+            <li>价格</li>
+        </ul>
+    </div>
+    <!-- order-table end -->
+
+    <div class="order-content" id="content">
+        <neworder></neworder>
+        <holdorder style="display:none;"></holdorder>
+        <priceorder style="display:none;"></priceorder>
+    </div>
+
+</template>
+
+<script type="text/javascript">
+
+    import neworder from 'components/place-neworder'
+    import holdorder from 'components/place-holdorder'
+    import priceorder from 'components/place-price'
+
+    export default{
+        props: {
+            columns: {
+
+            }
+        },
+        data() {
+            return {
+
+            }
+        },
+        ready() {
+            this.siblingsDom();
+        },
+        methods: {
+            $id: function(id){
+                return document.getElementById(id);
+            },
+            siblings: function (dom,callback){
+                var pdom = dom.parentElement;
+                var tabArr = [].slice.call(pdom.children);
+                tabArr.filter(function(obj){
+                    if(obj!=dom)callback.call(obj);
+                });
+            },
+            siblingsDom:function (){
+                var cardDom = this.$id("card");
+                var liDomes = cardDom.children;
+                var len = liDomes.length;
+                for(var i = 0; i < len; i++) {
+                    //给对象缓存自有属性
+                    liDomes[i].index = i;
+                    var _this = this;
+                    liDomes[i].onclick = function(){
+
+                        var list = document.getElementsByClassName("wrap-list");
+                        //console.log(list);
+
+                        this.className = "active";
+                        for(var j = 0, len = list.length; j < len; j++) {
+                            list[j].index = j;
+                            //console.log(list[j].index);
+                        }
+                        //同辈元素互斥
+                        _this.siblings(this,function(){
+                            this.className = "";
+                        });
+                        //把对应的选项卡的内容显示出来
+                        var tabDom = document.getElementById("content").children[this.index];
+                        tabDom.style.display = "block";
+                        //拿它的父亲对象
+                        _this.siblings(tabDom,function(){
+                            this.style.display = "none";
+                        });
+                    };
+                }
+            }
+        },//模板
+        components: {
+            neworder,
+            holdorder,
+            priceorder,
+        },
+        computed: {
+
+        },
+        watch: {
+
+        }
+    }
+</script>
 
 <style type="text/css">
 
     *{margin:0px;padding:0px;}
     ul li{list-style:none;}
-
 
     .order-search{width:100%;height:50px;background: #343136;
         position: relative;}
@@ -140,114 +251,3 @@
     }
 
 </style>
-<template style="background: #F2F2F2;">
-    <!-- order-search start -->
-    <div class="order-search">
-        <div class="callback"></div>
-        <div class="search">
-            <input type="text" class="" placeholder="请输入您要搜索的商品"/>
-        </div>
-        <input type="button" class="order-search-btn" value="搜索" style=""/>
-    </div>
-    <!-- order-search end -->
-
-    <!-- order-banner start -->
-    <div class="order-banner">
-        <img src="../images/banner_xiadan.png" alt="" style="width:100%;height:325px;" />
-    </div>
-    <!-- order-banner end -->
-
-    <!-- order-table start -->
-    <div class="order-table">
-        <ul id="card">
-            <li class="active">新品</li>
-            <li>热卖</li>
-            <li>价格</li>
-        </ul>
-    </div>
-    <!-- order-table end -->
-
-    <div class="order-content" id="content">
-        <neworder></neworder>
-        <holdorder style="display:none;"></holdorder>
-        <priceorder style="display:none;"></priceorder>
-    </div>
-
-</template>
-<script type="text/javascript">
-
-    import neworder from 'components/place-neworder'
-    import holdorder from 'components/place-holdorder'
-    import priceorder from 'components/place-price'
-
-    export default{
-        props: {
-            columns: {
-
-            }
-        },
-        data() {
-            return {
-
-            }
-        },
-        ready() {
-            this.siblingsDom();
-        },
-        methods: {
-            $id: function(id){
-                return document.getElementById(id);
-            },
-            siblings: function (dom,callback){
-                var pdom = dom.parentElement;
-                var tabArr = [].slice.call(pdom.children);
-                tabArr.filter(function(obj){
-                    if(obj!=dom)callback.call(obj);
-                });
-            },
-            siblingsDom:function (){
-                var cardDom = this.$id("card");
-                var liDomes = cardDom.children;
-                var len = liDomes.length;
-                for(var i = 0; i < len; i++) {
-                    //给对象缓存自有属性
-                    liDomes[i].index = i;
-                    var _this = this;
-                    liDomes[i].onclick = function(){
-
-                        var list = document.getElementsByClassName("wrap-list");
-                        //console.log(list);
-
-                        this.className = "active";
-                        for(var j = 0, len = list.length; j < len; j++) {
-                            list[j].index = j;
-                            //console.log(list[j].index);
-                        }
-                        //同辈元素互斥
-                        _this.siblings(this,function(){
-                            this.className = "";
-                        });
-                        //把对应的选项卡的内容显示出来
-                        var tabDom = document.getElementById("content").children[this.index];
-                        tabDom.style.display = "block";
-                        //拿它的父亲对象
-                        _this.siblings(tabDom,function(){
-                            this.style.display = "none";
-                        });
-                    };
-                }
-            }
-        },//模板
-        components: {
-            neworder,
-            holdorder,
-            priceorder,
-        },
-        computed: {
-
-        },
-        watch: {
-
-        }
-    }
-</script>

@@ -109,21 +109,14 @@
             follow () {
                 let url = '' , openid = sessionStorage.getItem("openid");
                 if(sessionStorage.getItem('since')) {
-                    axios({
-                        method: 'post',
-                        url: localStorage.apiDomain + 'public/index/usercenter/sincestar/',
-                        data: qs.stringify({
-                            sinceid: sessionStorage.getItem('since'),
-                            openid: openid
-                        })
-                    }).then((response) => {
-						console.log(response.data);
-                    });
+                    var options = {
+                        sinceid: sessionStorage.getItem('since'),
+                        openid: openid
+					};
+                    this.$postData('/index/usercenter/sincestar/',options).then((res) => {});
                 }
             },
             timeline () {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
                 this.$getData('/index/sale/SaleTimeSolt/uid').then((res) => {
                     if(res.status === 1) {
                         this.maincolumns = res.SaleTimeSolt;

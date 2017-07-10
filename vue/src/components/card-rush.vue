@@ -2,7 +2,7 @@
 	<div class="wrapper" v-for="item in products">
 		<template v-for="list in item.arr">
 			<div class="card-box" v-link="{name:'detail',params:{pid:list.shopid}}" v-if="item.nowsale == 0">
-				<div class="img" v-lazy:background-image="list.shotcut"></div>
+				<div class="img" :style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
 				<!-- 即将开始 -->
 				<div class="mes">
 					<div class="name">{{ list.name }}</div>
@@ -25,10 +25,6 @@
 								<label class="unit">¥</label>
 								<span>{{ money.saleprice }}</span>
 							</div>
-							<!--<div class="salenub-div">-->
-								<!--<span>库存:</span>-->
-								<!--<span class="salenub">{{ money.salenub }}</span>-->
-							<!--</div>-->
 							<a class="rush">马上抢</a>
 						</div>
 					</template>

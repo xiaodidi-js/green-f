@@ -28,7 +28,7 @@
         },
         route: {
             data(transition) {
-                this.$http.get('src/data/index.json').then((response)=>{
+                this.$getData('src/data/index.json').then((response)=>{
                     transition.next({
                         data: response.data
                     })

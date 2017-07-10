@@ -68,9 +68,7 @@
             this.weixinHeader();
 		    //记录索引
             this.myActive(1);
-			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-			ustore = JSON.parse(ustore);
-			this.$getData('/index/user/userinfo/uid/'+ustore.id+'/token/'+ustore.token).then((res)=>{
+			this.$getData('/index/user/userinfo/uid/' + this.$ustore.id+'/token/' + this.$ustore.token).then((res)=>{
 				if(res.status === 1) {
 					this.uname = res.uname;
 					this.uscore = res.score;
@@ -98,23 +96,18 @@
 		},
 		methods: {
 			main: function() {
-				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-				ustore = JSON.parse(ustore);
-				this.$getData('/index/Usercenter/integral/uid/' + ustore.id + '/token/' + ustore.token).then((res)=>{
+				this.$getData('/index/Usercenter/integral/uid/' + this.$ustore.id + '/token/' + this.$ustore.token).then((res)=>{
                     if(res.status == 0) {
                         this.number = 0;
 					} else {
                         this.number = res.zongfen;
 					}
-					console.log(res.list);
 				},(res)=>{
 					this.toastMessage = '网络开小差了~';
 					this.toastShow = true;
 				});
 			},
 		    weixinHeader: function () {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
                 let openid = sessionStorage.getItem("openid");
                 this.$getData('/index/index/get_weixin?openid=' + openid).then((res)=>{  /* 'os0CqxBBANhLuBLTsViL3C0zDlNs' */
 					this.headerIcon = res.info.weixindata;

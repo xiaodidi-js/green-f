@@ -39,14 +39,14 @@
 			<template  v-for="item in qqservice">
 				<ul class="service-ul">
 					<li class="icon-service" v-if="item.name == 'QQ' ">
-						<a href="javascript:void(0);" style="display: block;padding-top: 7px;"  @click="visiblepro()">
+						<a href="javascript:void(0);" style="display: block;padding-top: 10px;"  @click="visiblepro()">
 							<i class="little-icon qq-ui-icon"></i>
 							<span class="service-txt">微信客服</span>
 							<img src="../images/arrow.png" class="service-allow" alt="" />
 						</a>
 					</li>
 					<li class="icon-service" v-if="item.name == 'tel' ">
-						<a href="tel:{{ item.tel }}" style="display: block;padding-top: 7px;">
+						<a href="tel:{{ item.tel }}" style="display: block;padding-top: 10px;">
 							<i class="little-icon call-icon"></i>
 							<span class="service-txt">一键拨号</span>
 							<img src="../images/arrow.png" class="service-allow" alt="" />
@@ -173,9 +173,7 @@
                     return true;
                 }
 				this.dtype = type;
-				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-				ustore = JSON.parse(ustore);
-				this.$getData('/index/user/orderselection/uid/' + ustore.id + '/token/' + ustore.token + '/type/' + type).then((res)=>{
+				this.$getData('/index/user/orderselection/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/type/' + type).then((res)=>{
 					if(res.status === 1) {
 						document.body.scrollTop = 0;
 						this.count = res.count;
@@ -428,7 +426,7 @@
 	}
 	.service-ul .icon-service {
 		margin: 0px 10px;
-		height: 48px;
+		height: 50px;
 		border-bottom: 1px solid #CACACA;
 		/* padding: 5px 0px; */
 		width: 93%;

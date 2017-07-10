@@ -61,6 +61,9 @@
 				default: false,
 			}
 		},
+		ready() {
+		    console.log(this.$ustore);
+		},
 		data() {
 			return {
                 shareele: false,
@@ -70,8 +73,7 @@
 		methods: {
             goPage() {
 				this.$router.go({name : 'cart'});
-				this.ustore = JSON.parse(this.ustore);
-				if(this.ustore === null) {
+				if(this.$ustore === null) {
                     alert("没有登录，请先登录！");
                     setTimeout(function () {
                         content.$router.go({name: 'login'});
@@ -80,10 +82,8 @@
 				}
 			},
             clickShare () {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
                 var content = this;
-                if(ustore == null) {
+                if(this.$ustore == null) {
                     alert("没有登录，请先登录！");
                     setTimeout(function () {
                         content.$router.go({name: 'login'});
@@ -96,17 +96,22 @@
                 this.shareele = false;
 			},
 			setCollect: function(){
-				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-				if(!ustore){
+				if(!this.$ustore){
 					this.$router.go({name:'login'});
 					return false;
 				}
-				ustore = JSON.parse(ustore);
-				this.$http.put(localStorage.apiDomain+'public/index/user/usercollection',{uid:ustore.id,pid:this.$route.params.pid,token:ustore.token,action:this.collect}).then((response)=>{
-					if(response.data.status === 1) {
+				var option = {
+				    uid : this.$ustore.id,
+					pid : this.$route.params.pid,
+					token : this.$ustore.token,
+					action : this.collect
+				};
+
+				this.$putData('/index/user/usercollection',option).then((res)=>{
+					if(res.status === 1) {
 						this.collect = !this.collect;
-					} else if (response.data.status === -1) {
-                        this.toastMessage = response.data.info;
+					} else if (res.status === -1) {
+                        this.toastMessage = res.info;
                         this.toastShow = true;
                         let context = this;
                         setTimeout(function() {
@@ -116,8 +121,8 @@
                             context.$router.go({name:'login'});
                         },800);
                     }
-					this.$dispatch('showSonMes',response.data.info);
-				},(response)=>{
+					this.$dispatch('showSonMes',res.info);
+				},(res)=>{
 					this.$dispatch('showSonMes','网络开小差了~');
 				});
 			},

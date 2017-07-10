@@ -120,27 +120,25 @@
         },
         methods: {
             myConfirmClick: function(id) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
                 switch(this.clickType) {
                     case 1:
-                        let pdata = {uid:ustore.id,token:ustore.token,oid:id};
-                        this.$http.put(localStorage.apiDomain + '/public/index/user/orderoperation',pdata).then((response)=>{
+                        let pdata = {uid: this.$ustore.id,token: this.$ustore.token,oid:id};
+                        this.$putData('/index/user/orderoperation',pdata).then((res)=>{
                             location.reload();
                         });
                     case 2:
-                        let d = {uid:ustore.id,token:ustore.token,oid:id};
-                        this.$http.delete(localStorage.apiDomain + '/public/index/user/getsubmitorder/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + id).then((response)=>{
-                            if(response.data.status === 1) {
+                        let d = {uid: this.$ustore.id,token: this.$ustore.token,oid:id};
+                        this.$deleteData('/index/user/getsubmitorder/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/oid/' + id).then((res)=>{
+                            if(res.status === 1) {
                                 this.data.order.statext = '用户取消';
                                 this.data.order.status = -1;
                                 this.btnStatus = false;
                                 $("#cancel-btn").css("display","none");
                                 $("#detail-btn").css("display","none");
                                 location.reload();
-                            }else if(response.data.status === -1) {
+                            }else if(res.status === -1) {
                                 this.btnStatus = false;
-                                this.toastMessage = response.data.info;
+                                this.toastMessage = res.info;
                                 this.toastShow = true;
                                 let context = this;
                                 setTimeout(function(){
@@ -154,7 +152,7 @@
                                 this.toastMessage = response.data.info;
                                 this.toastShow = true;
                             }
-                        },(response)=>{
+                        },(res)=>{
                             this.toastMessage = '网络开小差了~';
                             this.toastShow = true;
                         });
@@ -164,10 +162,7 @@
                 this.btnStatus = true;
                 this.loadingMessage = '请稍候...';
                 this.loadingShow = true;
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                this.$getData('/index/user/orderoperation/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+oid).then((res)=>{
-                    console.log(res);
+                this.$getData('/index/user/orderoperation/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/oid/' + oid).then((res)=>{
                     this.loadingShow = false;
                     this.btnStatus = false;
                     if(res.status === 1) {

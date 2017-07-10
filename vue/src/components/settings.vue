@@ -30,10 +30,10 @@
 			<input type="password" placeholder="请输入新密码" v-model="data.npwd" />
 			<input type="password" placeholder="请确认新密码" v-model="data.cpwd" />
 		</div>
-		<!--<div class="list">-->
-			<!--<label style="line-height: 30px;">主题颜色</label>-->
-			<!--<input type="color" class="chonseColor" v-model="colorVal" @change="chonseColor()" />-->
-		<!--</div>-->
+		<div class="list">
+			<label style="line-height: 30px;">主题颜色</label>
+			<span class="vux-close" style="color:red;"></span>
+		</div>
 	</div>
 
 	<!-- 底部按钮 -->

@@ -6,7 +6,6 @@
 	<div class="sub-content">
 		<card-coupon></card-coupon>
 	</div>
-
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
 </template>
 

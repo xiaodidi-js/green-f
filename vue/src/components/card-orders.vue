@@ -111,21 +111,18 @@
 		},
 		methods: {
             myConfirmClcik: function(id) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
                 switch(this.clickType) {
                     case 1:
-                        let d = {uid:ustore.id,token:ustore.token,oid:id};
-                        this.$http.delete(localStorage.apiDomain + 'public/index/user/getsubmitorder/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + id).then((response)=>{
-                            if(response.data.status === 1) {
+                        this.$deleteData('/index/user/getsubmitorder/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/oid/' + id).then((res)=>{
+                            if(res.status === 1) {
                                 this.data.order.statext = '用户取消';
                                 this.data.order.status = -1;
                                 this.btnStatus = false;
                                 //刷新当前页面
                                 location.reload();
-                            }else if(response.data.status === -1) {
+                            }else if(res.status === -1) {
                                 this.btnStatus = false;
-                                this.toastMessage = response.data.info;
+                                this.toastMessage = res.info;
                                 this.toastShow = true;
                                 let context = this;
                                 setTimeout(function(){
@@ -136,16 +133,16 @@
                                 },800);
                             }else{
                                 this.btnStatus = false;
-                                this.toastMessage = response.data.info;
+                                this.toastMessage = res.info;
                                 this.toastShow = true;
                             }
-                        },(response)=>{
+                        },(res)=>{
                             this.toastMessage = '网络开小差了~';
                             this.toastShow = true;
                         });
                     case 2:
-                        let pdata = {uid:ustore.id,token:ustore.token,oid:id};
-                        this.$http.put(localStorage.apiDomain + 'public/index/user/orderoperation',pdata).then((response)=>{
+                        let pdata = {uid:this.$ustore.id,token:this.$ustore.token,oid:id};
+                        this.$putData('/index/user/orderoperation',pdata).then((res)=>{
                             //刷新当前页面
                             location.reload();
                         });
@@ -155,16 +152,14 @@
 				this.btnStatus = true;
 				this.loadingMessage = '请稍候...';
 				this.loadingShow = true;
-				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-				ustore = JSON.parse(ustore);
-				this.$http.get(localStorage.apiDomain+'public/index/user/orderoperation/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+oid).then((response)=>{
+				this.$getData('/index/user/orderoperation/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/oid/' + oid).then((res)=>{
 					this.loadingShow = false;
 					this.btnStatus = false;
-					if(response.data.status===1) {
-						this.setCartAgain(response.data.list);
+					if(res.status === 1) {
+						this.setCartAgain(res.list);
 						this.$router.go({name:'cart'});
-					}else if(response.data.status === -1) {
-						this.toastMessage = response.data.info;
+					}else if(res.status === -1) {
+						this.toastMessage = res.info;
 						this.toastShow = true;
 						let context = this;
 						setTimeout(function(){
@@ -174,19 +169,19 @@
 							context.$router.go({name:'login'});
 						},800);
 					}else{
-						this.toastMessage = response.data.info;
+						this.toastMessage = res.info;
 						this.toastShow = true;
 					}
-				},(response)=>{
+				},(res)=>{
 					this.btnStatus = false;
 					this.toastMessage = '网络开小差了~';
 					this.toastShow = true;
 				});
 			},
-			clickExpress: function(scid,snum){
-				location.href='http://www.kuaidi100.com/chaxun?com='+scid+'&nu='+snum;
+			clickExpress: function(scid,snum) {
+				location.href = 'http://www.kuaidi100.com/chaxun?com=' + scid + '&nu=' + snum;
 			},
-			clickCancel: function(){
+			clickCancel: function() {
                 this.clickType = 1;
                 this.confirmTitle = '取消订单';
                 this.confirmText = '确定取消该订单吗,确认?';

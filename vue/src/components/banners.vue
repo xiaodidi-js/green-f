@@ -1,12 +1,4 @@
 <template>
-    <!-- 轮播图 -->
-    <!--<template v-for="item in testarr">-->
-        <!--<template v-if="item.type == 4">-->
-            <!--<swiper :list="item.arr" url="item.url" loop dots-position="center" :show-desc-mask="false"-->
-                    <!--:aspect-ratio="650/1242" auto dots-class="dots-my" style="width: 100%;margin-top:50px;">-->
-            <!--</swiper>-->
-        <!--</template>-->
-    <!--</template>-->
     <div class="order-search"  style="background: #81c429;">
         <div class="logo" style="background: none;width:50px;float:left;">
             <img src="../images/logo_lv.png" alt="" style="width:40px;height:40px;margin: 5px 15px;" />

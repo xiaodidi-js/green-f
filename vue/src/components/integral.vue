@@ -86,40 +86,25 @@
         },
         methods: {
             main: function(type) {
-
                 if(this.dtype == type && this.allList) {
                     return true;
                 }
                 this.dtype = type;
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/Usercenter/integral/uid/' + ustore.id + '/token/' + ustore.token,
-                }).then((response) => {
-                    this.allList = response.data.list;
-                    this.number = response.data.zongfen;
-                }).catch(function (error) {
-                    reject(error);
+                this.$getData('/index/Usercenter/integral/uid/' + this.$ustore.id + '/token/' + this.$ustore.token).then((res) => {
+                    this.allList = res.list;
+                    this.number = res.zongfen;
                 });
             },
             qiandao: function() {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/usercenter/qiandao/uid/' + ustore.id + '/token/' + ustore.token,
-                }).then((response) => {
-                    if(response.data.status == 0) {
-                        this.list = response.data.list;
+                this.$getData('/index/usercenter/qiandao/uid/' + this.$ustore.id + '/token/' + this.$ustore.token).then((res) => {
+                    if(res.status == 0) {
+                        this.list = res.list;
                         alert("今天已签到了哦!");
-                    } else if(response.data.status == 1) {
+                    } else if(res.status == 1) {
                         alert("签到成功！");
                         location.reload();
                     }
-                }).catch(function (error) {
-                    reject(error);
-                })
+                });
             },
             $id: function(id) {
                 return document.getElementById(id);

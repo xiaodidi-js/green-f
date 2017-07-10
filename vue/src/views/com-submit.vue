@@ -88,24 +88,22 @@ export default{
 	},
 	route: {
 		data(transition) {
-			if(typeof transition.to.params.oid==='undefined'||!transition.to.params.oid){
+			if(typeof transition.to.params.oid === 'undefined' || !transition.to.params.oid) {
 				transition.abort();
 				transition.go({name:'index'});
 			}
 		}
 	},
 	ready() {
-		let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-		ustore = JSON.parse(ustore);
-		this.$http.get(localStorage.apiDomain+'public/index/user/productscommention/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+this.$route.params.oid).then((response)=>{
-			if(response.data.status===1){
-				this.data.createtime = response.data.createtime;
-				this.data.uyhost = response.data.uyhost;
-				this.data.list = response.data.list;
-			}else if(response.data.status===-1){
-				this.toastMessage = response.data.info;
+		this.$getData('/index/user/productscommention/uid/' + this.$ustore.id + '/token/' + this.$ustore.token+'/oid/' + this.$route.params.oid).then((res)=>{
+            let context = this;
+			if(res.status === 1) {
+				this.data.createtime = res.createtime;
+				this.data.uyhost = res.uyhost;
+				this.data.list = res.list;
+			}else if(res.status===-1){
+				this.toastMessage = res.info;
 				this.toastShow = true;
-				let context = this;
 				setTimeout(function(){
 					context.clearAll();
 					sessionStorage.removeItem('userInfo');
@@ -113,10 +111,10 @@ export default{
 					context.$router.go({name:'login'});
 				},800);
 			}else{
-				this.toastMessage = response.data.info;
+				this.toastMessage = res.info;
 				this.toastShow = true;
 			}
-		},(response)=>{
+		},(res) => {
 			this.toastMessage = '网络开小差了~';
 			this.toastShow = true;
 		});
@@ -128,12 +126,12 @@ export default{
 				this.toastShow = true;
 				return false;
 			}
-			for(let litem=0;litem<this.data.list.length;litem++){
-				if(this.data.list[litem].stars<=0){
-					this.toastMessage = '还有未完成的评分'
+			for(let litem = 0; litem < this.data.list.length;litem++) {
+				if(this.data.list[litem].stars <= 0) {
+					this.toastMessage = '还有未完成的评分';
 					this.toastShow = true;
 					return false;
-				}else if(this.data.list[litem].content==''){
+				} else if(this.data.list[litem].content == '') {
 					this.toastMessage = '还有未填写的评论';
 					this.toastShow = true;
 					return false;
@@ -142,19 +140,22 @@ export default{
 			this.btnDis = true;
 			this.loadingMessage = '正在提交';
 			this.toastShow = true;
-			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-			ustore = JSON.parse(ustore);
-			let pdata = {uid:ustore.id,token:ustore.token,oid:this.$route.params.oid,'comments':JSON.stringify(this.data.list)};
-			this.$http.post(localStorage.apiDomain+'public/index/user/productscommention',pdata).then((response)=>{
+			let pdata = {
+			    uid: this.$ustore.id,
+				token: this.$ustore.token,
+				oid: this.$route.params.oid,
+				'comments': JSON.stringify(this.data.list)
+			};
+			this.$postData('/index/user/productscommention',pdata).then((response)=>{
 				this.loadingShow = false;
-				this.toastMessage = response.data.info;
+				this.toastMessage = response.info;
 				this.toastShow = true;
-				if(response.data.status===1){
+				if(response.status===1){
 					let context = this;
 					setTimeout(function(){
 						context.$router.replace({name:'order-detail',params:{oid:context.$route.params.oid}});
 					},800);
-				}else if(response.data.status===-1){
+				}else if(response.status === -1) {
 					let context = this;
 					setTimeout(function(){
 						context.clearAll();

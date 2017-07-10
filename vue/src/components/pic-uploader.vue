@@ -105,9 +105,12 @@
 				if(typeof file === 'undefined' || file === null){
 					return false;
 				}
-				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-				ustore = JSON.parse(ustore);
-				this.$http.put(localStorage.apiDomain+'/public/index/user/makeInfoForUpyun',{'allow-file-type':'jpg,jpeg,gif,png','ext-param':this.ftype+','+ustore.id+',1','ftype':file.type}).then((response)=>{
+				var options = {
+				    'allow-file-type' : 'jpg,jpeg,gif,png',
+					'ext-param' : this.ftype + ',' + this.$ustore.id + ',1',
+					'ftype':file.type
+				};
+				this.$http.put(localStorage.apiDomain+'/public/index/user/makeInfoForUpyun',options).then((response)=>{
 					let resdata = response.data;
 					if(resdata.status===1){
 						this.uploadImgToUpyun(resdata.url,file,resdata.policy,resdata.signature,index,resdata.domain,resdata.notify,resdata.param,resdata.thumb);
@@ -132,7 +135,6 @@
 				formData.append('x-gmkerl-thumb',thumb);
 				let context = this;
 				this.$http.post(url,formData).then((response)=>{
-				    console.log(response.data);
 					let gdata = response.data;
 					let upurl = domain + gdata.url;
 					context.imgs[index].state = 2;

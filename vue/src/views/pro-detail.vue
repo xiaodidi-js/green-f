@@ -8,13 +8,8 @@
 	<div class="my-swiper"> <!-- @touchstart="tslistener($event)" @touchend="telistener($event)" -->
 		<div id="scroller" class="ms-scroller" style="transform:translate3d(0px,0px,0px)">
 			<div class="ms-item">
-				<!-- 头部滚动图 -->
-				<!--<swiper :list="data.gallery" loop auto dots-position="center" :show-desc-mask="false"-->
-						<!--:aspect-ratio="480/480" dots-class="dots-my-orange" @touchstart.stop @touchend.stop></swiper>-->
-
 				<swiper :list="data.gallery" auto dots-position="center" :show-desc-mask="false"
 						:aspect-ratio="480/480" dots-class="dots-my-orange" @touchstart.stop @touchend.stop></swiper>
-
 				<!-- 产品信息 -->
 				<div class="pro-mes">
 					<div class="title">{{ data.name }}</div>
@@ -43,15 +38,6 @@
 					<div class="divider"></div>
 					<!-- 抢购时间 -->
 					<seckill-floor v-show="seckillShow" :columns="gotimeline" end=""></seckill-floor>
-					<!-- 抢购时间 -->
-					<!--<div class="product_button">-->
-						<!--<div class="product_button_num">数量：</div>-->
-						<!--<div class="product_button_number">-->
-							<!--<div class="product_button_cut":class="{'disabled':buyNums<=1}" @click="reduceNums">-</div>-->
-							<!--<div class="product_button_text"><input type="number" id="num" class="input" :value="buyNums" readonly /></div>-->
-							<!--<div class="product_button_add" :class="{'disabled':buyNums>=proNums}" @click="addNums">+</div>-->
-						<!--</div>-->
-					<!--</div>-->
 				</div>
 				<div class="preferential" style="display:none;">
 					<ul>
@@ -77,7 +63,6 @@
 					<!--<tab-item :selected="column === 1" @click="changeColumn(1)">图文详情</tab-item>-->
 					<!--<tab-item :selected="column === 2" @click="changeColumn(2)">品牌承诺</tab-item>-->
 				<!--</tab>-->
-
 				<div id="content">
 					<!-- 图文详情 -->
 					<div class="product_details">
@@ -266,7 +251,6 @@
             '$route'(to,from) {
                 if(parseInt(to.params.pid) !== this.data.id && to.name === 'detail') {
                     this.fetchData();
-                    this.share();
                 }
             }
         },
@@ -289,18 +273,21 @@
 		    share() {
 		        var content = this;
                 //微信分享
-                this.$http.get(localStorage.apiDomain+'public/index/index/wxshare').then((response)=>{
-                    let getSession = response.data;
-                    let shareData = {
-                        title:this.data.name,
-                        desc:this.data.description,
-                        link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
-                        imgUrl:this.data.shotcut
-                    };
-                    var option = {
-                        title: this.data.name, // 分享标题
-                        link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
-                        imgUrl: this.data.shotcut, // 分享图标
+                this.$getData('/index/index/wxshare').then((res)=>{
+                    let getSession = res;
+                    var options = {
+                        shareData: {
+                            title:this.data.name,
+                            desc:this.data.description,
+                            link:'http://' + window.location.host + '/index_prod.html#!/detail/' + this.data.id,
+                            imgUrl:this.data.shotcut
+                        },
+                        success: function () {
+                            content.shareSuccess();
+                        },
+                        cancel: function() {
+                            alert("已取消分享");
+                        },
 					};
                     WxJssdk.config({
                         debug:false,
@@ -317,93 +304,38 @@
                         ]
                     });
                     WxJssdk.ready(()=>{
-                        WxJssdk.onMenuShareTimeline(shareData);
-                        WxJssdk.onMenuShareAppMessage(shareData);
-                        WxJssdk.onMenuShareWeibo(shareData);
-                        WxJssdk.onMenuShareQZone(shareData);
-                        WxJssdk.onMenuShareQQ(shareData);
                         if (content.data.is_sell == 0) {
-                            content.toastMessage = "商品已下架";
                             content.toastShow = true;
+                            content.toastMessage = "商品已下架";
                             return false;
                         } else {
                             // 分享好友
-                            WxJssdk.onMenuShareAppMessage({
-                                option,
-                                success: function () {
-                                    content.shareSuccess();
-                                },
-                                cancel: function() {
-                                    alert("已取消分享");
-                                },
-                            });
-
+                            WxJssdk.onMenuShareAppMessage(options);
                             // 分享朋友圈
-                            WxJssdk.onMenuShareTimeline({
-                                option,
-                                success: function () {
-                                    content.shareSuccess();
-                                },
-                                cancel: function() {
-                                    alert("已取消分享");
-                                }
-                            });
-
+                            WxJssdk.onMenuShareTimeline(options);
                             // 分享QQ
-                            WxJssdk.onMenuShareQQ({
-                                option,
-                                success: function () {
-                                    content.shareSuccess();
-                                },
-                                cancel: function() {
-                                    alert("已取消分享");
-                                },
-                            });
-
+                            WxJssdk.onMenuShareQQ(options);
                             // 分享到腾讯微博
-                            WxJssdk.onMenuShareWeibo({
-                                option,
-                                success: function () {
-                                    content.shareSuccess();
-                                },
-                                cancel: function() {
-                                    alert("已取消分享");
-                                },
-                            });
-
+                            WxJssdk.onMenuShareWeibo(options);
                             // 分享QQ空间
-                            WxJssdk.onMenuShareQZone({
-                                option,
-                                success: function () {
-                                    content.shareSuccess();
-                                },
-                                cancel: function() {
-                                    alert("已取消分享");
-                                },
-                            });
-                            WxJssdk.error(function(res){
-                                console.log(res.errMsg);
-                            });
+                            WxJssdk.onMenuShareQZone(options);
                         }
 
                     });
-                },(response)=>{
+                },(res)=>{
                     console.log('get wx share failed.');
                 });
 			},
             shareSuccess() {
-                var content = this, cart = JSON.parse(localStorage.getItem("myCart"));
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                console.log(ustore);
-                if(ustore == null) {
+                if(this.$ustore == null) {
                     alert("没有登录，请先登录!");
                     setTimeout(function () {
                         content.$router.go({name: 'login'});
                     }, 800);
                     return false;
                 }
-                this.$getData('/index/index/addshare?uid=' + ustore.id + '&pid=' + content.data.id + '&activeid=' + content.data.activeid).then((res) => {
+                this.$getData('/index/index/addshare?uid=' + this.$ustore.id + '&pid=' + content.data.id + '&activeid=' + content.data.activeid).then((res) => {
                     var cartObj = {
                         id:this.$route.params.pid,
                         shotcut:this.data.shotcut,
@@ -429,19 +361,17 @@
 			},
             fetchData() {
                 let getUrl = '',context = this;
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                console.log(ustore);
                 this.$nextTick(()=>{
-                    if (ustore) {
-                        getUrl = '/index/index/productdetail/uid/' + ustore.id + '/pid/' + this.$route.params.pid;
+                    if (this.$ustore) {
+                        getUrl = '/index/index/productdetail/uid/' + this.$ustore.id + '/pid/' + this.$route.params.pid;
                     }else{
                         getUrl = '/index/index/productdetail/uid/0/pid/' + this.$route.params.pid;
                     }
                     try {
-                        this.$getData(getUrl).then((response)=>{
-                            this.data = response;
+                        this.$getData(getUrl).then((res)=>{
+                            this.data = res;
                             context.share();
+//                            context.tuijian();
                             //判断是否分享商品
                             if(this.data.activestu == 2) {
                                 context.showShare = true;
@@ -451,7 +381,6 @@
                             } else {
                                 context.showShare = false
                             }
-
                             if(!this.data.format){
                                 this.proNums = this.data.store;
                             }
@@ -492,59 +421,15 @@
                 window.history.back();
             },
             tuijian () {
-		        this.$getDate(index/user/tuijianzuhe/pid/' + this.$route.params.pid').then((response) => {
-                    if (response.data.status == 1) {
-                        this.tjData = response.data;
-                    } else if (response.data.status == -1) {
+		        this.$getData('/index/user/tuijianzuhe/pid/' + this.$route.params.pid).then((res) => {
+                    if (res.status == 1) {
+                        this.tjData = res.data;
+                    } else if (res.status == -1) {
                         console.log("失败");
                     } else {
                         console.log("无！");
                     }
                 });
-            },
-            judgefun:function () {
-                var _self = this;
-                var shoping = JSON.parse(sessionStorage.getItem("myCart"));
-                if(this.data.peisongok == 0) {
-                    alert("抱歉，菜品已截单，请到首页选购菜品，谢谢合作！");
-                    _self.toastMessage = "";
-                    _self.toastShow = false;
-                    return false;
-                }
-                if(shoping != null) {
-                    for(let i = 0; i < shoping.length; i++) {
-                        if (shoping[i]["deliverytime"] != this.data.deliverytime) {
-                            if (this.data.peisongok == 1 && this.data.deliverytime == 0) {
-                                alert("亲！您选购的菜品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                _self.toastShow = true;
-                                return false;
-                            } else if (this.data.peisongok == 1 && this.data.deliverytime == 1) {
-                                alert("亲！您选购的菜品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！！");
-                                _self.toastShow = true;
-                                return false;
-                            }
-                        }
-                    }
-                }
-            },
-            gofun: function() {
-                if(!this.formatPopShow == true) {
-                    this.formatPopShow = true;
-                    return false;
-                }
-                if(this.proNums <= 0) {
-                    this.toastMessage = '商品暂时缺货';
-                    this.toastShow = true;
-                    return false;
-                } else if (this.buyNums < 1) {
-                    this.toastMessage = '购买数量不能小于1';
-                    this.toastShow = true;
-                    return false;
-                } else if (this.buyNums > this.proNums) {
-                    this.toastMessage = '购买数量超过库存数量';
-                    this.toastShow = true;
-                    return false;
-                }
             },
             timeline: function() {
                 let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
@@ -621,7 +506,7 @@
 				this.column = col;
 				let iHeight = document.getElementsByClassName('ms-item')[col].offsetHeight < this.minHeight ? this.minHeight : document.getElementsByClassName('ms-item')[col].offsetHeight;
 				let scroller = document.getElementById('scroller');
-				scroller.style.height = iHeight+'px';
+				scroller.style.height = iHeight + 'px';
 				scroller.style.transition = "-webkit-transform 300ms ease-out";
 				scroller.style.webkitTransform = "translate3d(-" + this.column * this.winWidth + "px,0px,0px)";
 				window.scrollTo(0, 0);
@@ -645,24 +530,21 @@
 			changeGuige: function(index,id,name) {
 				this.guige.$set(index,id);
 				this.guigeName.$set(index,name);
-				if(!this.checkGuige()) return;
-                axios({
-                    method: 'get',
-                    url: localStorage.apiDomain + 'public/index/index/propertyprice/pid/'+this.$route.params.pid+'/val/'+this.guige.join(','),
-                }).then((response) => {
-                    if(response.data.status === 1) {
+				if (!this.checkGuige()) return;
+				this.$getData('/index/index/propertyprice/pid/' + this.$route.params.pid + '/val/' + this.guige.join(',')).then((res) => {
+                    if(res.status === 1) {
                         if(this.data.is_promote) {
-                            this.data.promote_price = response.data.price;
+                            this.data.promote_price = res.price;
                         } else {
-                            this.data.price = response.data.price;
+                            this.data.price = res.price;
                         }
-                        this.proNums = response.data.store;
+                        this.proNums = res.store;
                         this.buyNums = 1;
-                    }else{
-                        this.toastMessage = response.data.info;
+                    } else {
+                        this.toastMessage = res.info;
                         this.toastShow = true;
                     }
-                },(response) => {
+				},(res) => {
                     this.toastMessage = '商品信息获取失败~';
                     this.toastShow = true;
                 });
@@ -677,6 +559,11 @@
                         }
                     }
                     return false;
+				} else {
+                    if(this.buyNums>=this.proNums){
+                        return false;
+                    }
+                    this.buyNums++;
 				}
 			},
 			reduceNums: function() {
@@ -695,7 +582,7 @@
 		},
 		events: {
 			showSonMes: function(mes) {
-				if(typeof mes==='string'&&mes.length > 0) {
+				if(typeof mes === 'string' && mes.length > 0) {
 					this.toastMessage = mes;
 					this.toastShow = true;
 				}

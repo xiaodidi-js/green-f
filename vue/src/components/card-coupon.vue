@@ -13,7 +13,6 @@
 		<coupon-list v-for="item in data" :obj="item" :showing.sync="choseArr"></coupon-list>
 	</div>
 
-
 	<!-- 确定弹框 -->
 	<confirm :show.sync="confirmShow" title="口令兑换" confirm-text="确定" cancel-text="取消" @on-confirm="confirmPassword">
 		<input type="text" class="pass-code" value="" placeholder="输入兑换码" />
@@ -53,13 +52,10 @@
 			}
 		},
 		ready() {
-			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-			ustore = JSON.parse(ustore);
-			this.$getData('/index/user/couponinfo/uid/' +ustore.id + '/token/' + ustore.token).then((res)=>{
+			this.$getData('/index/user/couponinfo/uid/' + this.$ustore.id + '/token/' + this.$ustore.token).then((res)=>{
 				if(res.status === 1) {
 					this.data = res.coupon;
-					console.log(this.data);
-				}else if(res.status===-1){
+				} else if(res.status === -1) {
 					this.$dispatch('showMes',res.info);
 					let context = this;
 					setTimeout(function(){

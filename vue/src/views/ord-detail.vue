@@ -160,22 +160,16 @@ export default{
         Surplus
 	},
 	route: {
-//		data(transition) {
-//		    var content = this;
-//			if(typeof transition.to.params.oid === 'undefined' || !transition.to.params.oid) {
-//				transition.abort();
-//                content.$router.go({name:'index'});
-//			}
-//		}
-	},
-	ready() {
-        this.getDetail();
-		//	开始时间
-		this.startTimer();
+		data(transition) {
+		    var content = this;
+			if(typeof transition.to.params.oid === 'undefined' || !transition.to.params.oid) {
+				transition.abort();
+                content.$router.go({name:'index'});
+			}
+		}
 	},
     watch: {
         payment: function () {
-            location.reload();
             this.startTimer();
         },
         '$route'(to,from) {
@@ -185,12 +179,15 @@ export default{
 			}
 		}
     },
+    ready() {
+	    this.getDetail();
+        //	开始时间
+        this.startTimer();
+    },
 	methods: {
 	    getDetail() {
-            let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-            ustore = JSON.parse(ustore);
             var self = this;
-            this.$getData('/index/user/getsubmitorder/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + this.$route.params.oid).then((res)=>{
+            this.$getData('/index/user/getsubmitorder/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/oid/' + this.$route.params.oid).then((res) => {
                 if(res.status === 1) {
                     //获取数据
                     this.data.pindex = res.pindex;
@@ -204,8 +201,10 @@ export default{
                         this.showTime = true;
                     } else if(this.data.order.statext == '确认收货') {
                         this.showTime = false;
+                        this.btnStatus = true;
                     } else if(this.data.order.statext == '待发货' || this.data.order.statext == '待收货' || this.data.order.statext == '待评价') {
                         this.showTime = false;
+                        this.btnStatus = true;
                     } else if (this.minute == '0' && this.second == "0") {
                         this.clickType = 1;
                         this.$router.go({name: 'ord-detail'});
@@ -222,7 +221,7 @@ export default{
                     for(let i in this.data.products) {
                         this.stime = this.data.products[i].stime;
                     }
-                } else if (res.status===-1) {
+                } else if (res.status === -1) {
                     this.toastMessage = res.info;
                     this.toastShow = true;
                     let context = this;
@@ -236,7 +235,7 @@ export default{
                     this.toastMessage = res.info;
                     this.toastShow = true;
                 }
-            },(response)=>{
+            },(res)=>{
                 this.toastMessage = '网络开小差了~';
                 this.toastShow = true;
             });
@@ -246,7 +245,7 @@ export default{
 				if (this.minute < 0) {
 					clearInterval(this.Interval);
 					if(this.payInfo){
-						this.$store.commit('showToast', {type:'cancel',msg:'订单超时！'})
+						this.$store.commit('showToast', {type:'cancel',msg:'订单超时!'})
 					}
 					this.minute = 0;
 					this.second = 0;
@@ -272,119 +271,117 @@ export default{
 			if(this.data.order.pay != 1 || this.data.order.send != 1 || !this.data.order.snum) {
 				return false;
 			}
-			location.href='http://www.kuaidi100.com/chaxun?com='+this.data.order.scid+'&nu='+this.data.order.snum;
+			location.href = 'http://www.kuaidi100.com/chaxun?com=' + this.data.order.scid + '&nu=' + this.data.order.snum;
 		},
 		jsApiCall: function() {
 			let context = this;
-			WeixinJSBridge.invoke('getBrandWCPayRequest',context.data.payment,
+			WeixinJSBridge.invoke (
+			    'getBrandWCPayRequest',
+				context.data.payment,
 				function(res) {
-					if(res.err_msg == "get_brand_wcpay_request:ok") {
-						let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-						ustore = JSON.parse(ustore);
-						let opid = sessionStorage.getItem('openid');
-						let pdata = {uid:ustore.id,token:ustore.token,oid:context.$route.params.oid,opid:opid,paysuccess:1};
-						context.$http.put(localStorage.apiDomain + 'public/index/user/getsubmitorder',pdata).then((response)=>{
-							context.toastMessage = response.data.info;
-							context.toastShow = true;
-							if(response.data.status === 1) {
-								context.data.pindex = 1;
-								context.data.process[1].status = 1;
-								context.data.process[1].time = response.data.time;
-								context.data.order.status = '待发货';
-								context.data.order.pay = 1;
-                                context.$router.go({name : 'ord-detail'});
-                                location.reload();
-                                if(context.data.order.statext == '待发货' || context.data.order.statext == '待收货' || context.data.order.statext == '待评价') {
-                                    context.showTime = false;
-                                }
-                                context.$router.go({name : 'order-type'});
-                            }else if(response.data.status===-1){
-								setTimeout(function(){
-									context.clearAll();
-									sessionStorage.removeItem('userInfo');
-									localStorage.removeItem('userInfo');
-									context.$router.go({name:'login'});
-								},800);
-							}
-							context.btnStatus = false;
-						},(response)=>{
-							context.btnStatus = false;
-							context.toastMessage = '网络开小差了~';
-							context.toastShow = true;
-						});
-					}else{
-						context.btnStatus = false;
-						context.toastMessage = '订单支付失败';
-						context.toastShow = true;
-					}
+                    if(res.err_msg == "get_brand_wcpay_request:ok") {
+                        context.getDetail();
+                        let opid = sessionStorage.getItem('openid');
+                        let pdata = {
+                            uid: this.$ustore.id,
+							token: this.$ustore.token,
+							oid: context.$route.params.oid,
+							opid: opid,
+							paysuccess: 1
+                        };
+                        context.$putData('/index/user/getsubmitorder',pdata).then((res)=>{
+                            context.toastShow = true;
+                            context.toastMessage = res.info;
+                            if (res.status === 1) {
+                                context.data.pindex = 1;
+                                context.data.process[1].status = 1;
+                                context.data.process[1].time = res.time;
+                                context.data.order.status = '待发货';
+                                context.data.order.pay = 1;
+                            } else if (res.status === -1) {
+                                setTimeout(function(){
+                                    context.clearAll();
+                                    sessionStorage.removeItem('userInfo');
+                                    localStorage.removeItem('userInfo');
+                                    context.$router.go({name:'login'});
+                                },800);
+                            }
+                            context.btnStatus = false;
+                        },(res)=>{
+                            context.btnStatus = false;
+                            context.toastShow = true;
+                            context.toastMessage = '网络开小差了~';
+                        });
+                    } else {
+                        context.btnStatus = false;
+                        context.toastShow = true;
+                        context.toastMessage = '订单支付失败';
+                    }
 				}
 			);
 		},
-		callpay: function(){
-			if (typeof WeixinJSBridge == "undefined"){
-			    if(document.addEventListener ){
-			        document.addEventListener('WeixinJSBridgeReady',this.jsApiCall, false);
-			    }else if (document.attachEvent){
-			        document.attachEvent('WeixinJSBridgeReady',this.jsApiCall);
-			        document.attachEvent('onWeixinJSBridgeReady',this.jsApiCall);
-			    }
-			}else{
-			    this.jsApiCall();
-			}
+		callpay: function() {
+            if (typeof WeixinJSBridge == "undefined") {
+                if( document.addEventListener ){
+                    document.addEventListener('WeixinJSBridgeReady',this.jsApiCall, false);
+                }else if (document.attachEvent){
+                    document.attachEvent('WeixinJSBridgeReady',this.jsApiCall);
+                    document.attachEvent('onWeixinJSBridgeReady',this.jsApiCall);
+                }
+            } else {
+                this.jsApiCall();
+            }
 		},
 		confirmClcik: function(){
-			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-			ustore = JSON.parse(ustore);
 			switch(this.clickType){
 				case 1:
 					//取消订单
-					this.$http.delete(localStorage.apiDomain + 'public/index/user/getsubmitorder/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+this.$route.params.oid).then((response)=>{
-						if(response.data.status === 1) {
-						    console.log(response.data + '1');
-							this.data.order.statext = '用户取消';
-							this.data.order.status = -1;
-							this.btnStatus = false;
+					this.$deleteData('/index/user/getsubmitorder/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/oid/' + this.$route.params.oid).then((res) => {
+                        if(res.status === 1) {
+                            this.data.order.statext = '用户取消';
+                            this.data.order.status = -1;
+                            this.btnStatus = false;
                             location.reload();
-						}else if(response.data.status === -1) {
-							this.btnStatus = false;
-							this.toastMessage = response.data.info;
-							this.toastShow = true;
-							let context = this;
-							setTimeout(function(){
-								context.clearAll();
-								sessionStorage.removeItem('userInfo');
-								localStorage.removeItem('userInfo');
-								context.$router.go({name:'login'});
-							},800);
-						}else{
-							this.btnStatus = false;
-							this.toastMessage = response.data.info;
-							this.toastShow = true;
-						}
-					},(response) => {
-						this.btnStatus = false;
-						this.toastMessage = '网络开小差了~';
-						this.toastShow = true;
+                        }else if(res.status === -1) {
+                            this.btnStatus = false;
+                            this.toastMessage = res.info;
+                            this.toastShow = true;
+                            let context = this;
+                            setTimeout(function(){
+                                context.clearAll();
+                                sessionStorage.removeItem('userInfo');
+                                localStorage.removeItem('userInfo');
+                                context.$router.go({name:'login'});
+                            },800);
+                        }else{
+                            this.btnStatus = false;
+                            this.toastMessage = res.info;
+                            this.toastShow = true;
+                        }
 					});
 					break;
 				case 2:
 					//确认收货
 					this.loadingMessage = '正在确认';
 					this.loadingShow = true;
-					let pdata = {uid:ustore.id,token:ustore.token,oid:this.$route.params.oid};
-					this.$http.put(localStorage.apiDomain+'public/index/user/orderoperation',pdata).then((response)=>{
+					let pdata = {
+					    uid: this.$ustore.id,
+						token: this.$ustore.token,
+						oid: this.$route.params.oid
+					};
+					this.$putData('/index/user/orderoperation',pdata).then((response)=>{
 						this.loadingShow = false;
-						this.toastMessage = response.data.info;
+						this.toastMessage = response.info;
 						this.toastShow = true;
 						this.btnStatus = false;
-						if(response.data.status===1) {
+						if(response.status === 1) {
 							this.data.order.receive = 1;
 							this.data.pindex = 3;
 							this.data.process[3].status = 1;
-							this.data.process[3].time = response.data.time;
+							this.data.process[3].time = response.time;
 							this.data.order.statext = '确认收货';
 							this.data.order.status = 1;
-						}else if(response.data.status===-1){
+						}else if(response.status===-1){
 							let context = this;
 							setTimeout(function(){
 								context.clearAll();
@@ -412,9 +409,8 @@ export default{
 		},
         //首单赠品
         oneGift: function (oid,money) {
-            let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-            ustore = JSON.parse(ustore);
-            this.$getData('/index/user/manjiusong/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + oid + '/money/' + money).then((res)=>{
+		    var str = this.$ustore.id + '/token/' + this.$ustore.token + '/sinceid/' + oid + '/money/' + money;
+		    this.$getData('/index/user/manjiusong/uid/' + str).then((res)=>{
                 if(res.status === 1) {
                     this.showGive = true;
                     this.listGift = res.maxmoney;
@@ -422,7 +418,7 @@ export default{
                 } else if (res.status === 0) {
                     this.showGive = true;
                     this.giftstu = 0;
-                    this.$getData('/index/user/shoudan/uid/' + ustore.id + '/token/' + ustore.token +'/sinceid/' + oid + '/money/' + money).then((res)=>{
+                    this.$getData('/index/user/shoudan/uid/' + str).then((res)=>{
                         this.listGift = res.shoudan_data;
                     },(res)=>{
                         this.toastMessage = '网络开小差了~';
@@ -456,38 +452,42 @@ export default{
 					//微信支付
 					if(typeof this.data.payment.appId === 'string' && typeof this.data.payment.package === 'string') {
 						this.callpay();
-                        this.$router.go({name:'order-detail'});
+                        this.getDetail();
 						return;
 					}
-					let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), context = this;
-					ustore = JSON.parse(ustore);
 					let opid = sessionStorage.getItem('openid');
-                    let pdata = {uid:ustore.id,token:ustore.token,oid:this.$route.params.oid,opid:opid};
-					this.$http.put(localStorage.apiDomain+'public/index/user/getsubmitorder',pdata).then((response)=>{
-						if(response.data.status === 1) {
-							this.data.payment = JSON.parse(response.data.payment);
-                            location.reload();
-							this.callpay();
-						} else if(response.data.status === -1) {
-							this.btnStatus = false;
-							this.toastMessage = response.data.info;
-							this.toastShow = true;
-							setTimeout(function(){
-								context.clearAll();
-								sessionStorage.removeItem('userInfo');
-								localStorage.removeItem('userInfo');
-								context.$router.go({name:'login'});
-							},800);
-						}else{
-							this.btnStatus = false;
-							this.toastMessage = response.data.info;
-							this.toastShow = true;
-						}
-					},(response)=>{
-						this.btnStatus = false;
-						this.toastMessage = '网络开小差了~';
-						this.toastShow = true;
-					});
+                    let pdata = {
+                        uid: this.$ustore.id,
+						token: this.$ustore.token,
+						oid:this.$route.params.oid,
+						opid:opid
+                    };
+                    this.$putData('/index/user/getsubmitorder',pdata).then((res) => {
+                        if(res.status === 1) {
+                            this.data.payment = JSON.parse(res.payment);
+//                            location.reload();
+                            this.callpay();
+                            this.getDetail();
+                        } else if(res.status === -1) {
+                            this.btnStatus = false;
+                            this.toastMessage = res.info;
+                            this.toastShow = true;
+                            setTimeout(function(){
+                                this.clearAll();
+                                sessionStorage.removeItem('userInfo');
+                                localStorage.removeItem('userInfo');
+                                this.$router.go({name:'login'});
+                            },800);
+                        }else{
+                            this.btnStatus = false;
+                            this.toastMessage = res.info;
+                            this.toastShow = true;
+                        }
+					},(res)=>{
+                        this.btnStatus = false;
+                        this.toastMessage = '网络开小差了~';
+                        this.toastShow = true;
+                    });
 					break;
 				case 2:
 					//支付宝支付
@@ -498,19 +498,16 @@ export default{
 			}
 		},
         overtime () {
-            let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-            ustore = JSON.parse(ustore);
             //取消订单
-            this.$http.delete(localStorage.apiDomain+'public/index/user/getsubmitorder/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+this.$route.params.oid).then((response)=>{
-                if(response.data.status===1){
-                    console.log(response.data + '1');
+            this.$deleteData('/index/user/getsubmitorder/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/oid/' + this.$route.params.oid).then((res)=>{
+                if(res.status === 1) {
                     this.data.order.statext = '用户取消';
                     this.data.order.status = -1;
                     this.btnStatus = false;
-                    document.location.reload();
-                }else if(response.data.status === -1) {
+                    location.reload();
+                }else if(res.status === -1) {
                     this.btnStatus = false;
-                    this.toastMessage = response.data.info;
+                    this.toastMessage = res.info;
                     this.toastShow = true;
                     let context = this;
                     setTimeout(function(){
@@ -521,10 +518,10 @@ export default{
                     },800);
                 }else{
                     this.btnStatus = false;
-                    this.toastMessage = response.data.info;
+                    this.toastMessage = res.info;
                     this.toastShow = true;
                 }
-            },(response) => {
+            },(res) => {
                 this.btnStatus = false;
                 this.toastMessage = '网络开小差了~';
                 this.toastShow = true;
@@ -566,9 +563,7 @@ export default{
 			this.btnStatus = true;
 			this.loadingMessage = '请稍候...';
 			this.loadingShow = true;
-			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-			ustore = JSON.parse(ustore);
-			this.$getData('/index/user/orderoperation/uid/' + ustore.id + '/token/' + ustore.token + '/oid/' + this.$route.params.oid).then((res)=>{
+			this.$getData('/index/user/orderoperation/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/oid/' + this.$route.params.oid).then((res)=>{
 				this.loadingShow = false;
 				this.btnStatus = false;
 				if (res.status === 1) {

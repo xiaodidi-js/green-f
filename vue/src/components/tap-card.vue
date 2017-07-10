@@ -119,8 +119,6 @@
 //                }
             },
             timeline: function() {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), content = this;
-                ustore = JSON.parse(ustore);
                 this.$getData('/index/sale/SaleTimeSolt/uid').then((res) => {
                     if(res.status === 1) {
                         content.gotimeline = res.SaleTimeSolt;
