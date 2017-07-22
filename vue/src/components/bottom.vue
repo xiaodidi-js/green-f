@@ -126,7 +126,10 @@
                 var cardDom = document.getElementById("card"), active = cardDom.children, i;
                 for(i = 0; i <= active.length; i++) {
                     try {
-                        if(active[i]) active[i].className = "group";
+                        if(active[i]) {
+                            active[i].className = "group";
+                            active[i].style.color = "#ccc";
+						}
 					} catch(e) {
                         throw "呵呵哒！";
 					} finally {}

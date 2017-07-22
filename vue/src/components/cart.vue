@@ -1,6 +1,6 @@
 <template>
 	<div class="col-wrapper" style="position: relative" v-if="cartList.length > 0">
-		<div class="notify-box" style="z-index: 0;">
+		<div class="notify-box">
 			<div class="ntips" v-show="editMode === 1">请选择删除商品</div>
 			<div class="ntips" v-else>购物车中共有{{ cartList.length }}个商品</div>
 			<div class="btn">
