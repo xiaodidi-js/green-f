@@ -121,8 +121,7 @@
             timeline: function() {
                 this.$getData('/index/sale/SaleTimeSolt/uid').then((res) => {
                     if(res.status === 1) {
-                        content.gotimeline = res.SaleTimeSolt;
-                        console.log(content.gotimeline);
+                        this.gotimeline = res.SaleTimeSolt;
                     } else if(res.status === -1) {
                         this.toastMessage = res.info;
                         this.toastShow = true;

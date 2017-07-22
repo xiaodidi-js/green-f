@@ -1,11 +1,12 @@
 <template>
-    <div class="order-search"  style="background: #81c429;">
+    <div class="order-search">
         <div class="logo" style="background: none;width:50px;float:left;">
             <img src="../images/logo_lv.png" alt="" style="width:40px;height:40px;margin: 5px 15px;" />
         </div>
         <div class="search" style="width:66%;position:relative;left:12px;">
             <input type="text" placeholder="请输入您要搜索的商品" v-model="searchKey" @keydown="breakSearch()" />
-            <a href="javascript:void();" class="order-search-btn" style="display:block;" @click="goSearch()">搜索</a>
+            <a href="javascript:void(0)" class="order-search-btn" style="display:block;" @click="goSearch()">搜索</a>
+            <!--<x-button text="搜索" class="order-search-btn" style="display:block;" @click="goSearch()"></x-button>-->
             <!--<input type="button" class="order-search-btn" @click="goSearch()" value="搜索" />-->
         </div>
         <div class="customer">
@@ -24,6 +25,7 @@
     import { myActive,mySearch,commitData } from 'vxpath/actions'
     import axios from 'axios'
     import qs from 'qs'
+    import XButton from 'vux/src/components/x-button'
 
     export default{
         props: {
@@ -45,6 +47,7 @@
         components: {
             Swiper,
             Scroller,
+            XButton
         },
         route: {
 
@@ -75,7 +78,7 @@
                                 arr:this.mySearch(res.info.data)
                             }
                         });
-                    } else if(res.status == 0) {
+                    } else if (res.status == 0) {
                         alert(res.info);
                         this.searchKey = '';
                     }
@@ -90,14 +93,16 @@
 
         }
     }
-
 </script>
 
-<style>
+<style lang="less">
+
+    @import '../styles/theme.less';
+
     .order-search{
         width:100%;
         height:50px;
-        background: #343136;
+        background-color: @header-default-bg-color;
         position: fixed;
         top:0px;
         left:0px;
@@ -185,4 +190,5 @@
         padding: 5px 5px 5px 10px;
     }
     /* search end */
+
 </style>

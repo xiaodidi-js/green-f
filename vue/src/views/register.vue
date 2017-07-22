@@ -13,11 +13,14 @@
 		<!--<icon type="success" class="my-icon-chosen" v-show="item.is_default === 1"></icon>-->
 		<!--<icon type="circle" class="my-icon" v-show="item.is_default !== 1"></icon>-->
 	<!--</div>-->
-	<bottom-check style="width:43%;float:left;" title="我已阅读并同意" :status.sync="data.check"></bottom-check>
-	<a href="javascript:void(0);" class="xieyi">{{ data.xieyi }}商城使用协议</a>
+	<div class="eleChonse">
+		<bottom-check style="width:43%;float:left;" title="我已阅读并同意" :status.sync="data.check"></bottom-check>
+		<a href="javascript:void(0);" class="xieyi">{{ data.xieyi }}商城使用协议</a>
+	</div>
+
 	<!-- 底部按钮 -->
 	<div class="btn-wrapper">
-		<x-button :text="btnText" :disabled="btnDis" @click="postData"></x-button>
+		<x-button type="primary" :text="btnText" :disabled="btnDis" @click="postData"></x-button>
 	</div>
 	<!-- 输入内容 -->
 	<!-- toast提示框 -->
@@ -197,9 +200,24 @@ export default{
 
 </script>
 <style scoped>
-	.btn-wrapper{
-		width:80%;
-		margin: 20% 10% 0% 10%;
+
+	/* eleChonse start */
+	.eleChonse {
+		width: 100%;
+		height: 5.5rem;
+		position: relative;
+	}
+
+	.eleChonse .xieyi {
+		position: absolute;
+		top: 0px;
+		right: 0px;
+	}
+	/* eleChonse end */
+
+	.btn-wrapper {
+		width: 80%;
+		margin: 5% 10% 0% 10%;
 	}
 
 	.btn-wrapper .link-box{

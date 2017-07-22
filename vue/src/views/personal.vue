@@ -72,10 +72,10 @@
 				if(res.status === 1) {
 					this.uname = res.uname;
 					this.uscore = res.score;
-					if(res.shotcut!==null){
+					if(res.shotcut !== null) {
 						this.uimg = res.shotcut;
 					}
-				}else if(res.status===-1){
+				} else if (res.status === -1) {
 					this.toastMessage = res.info;
 					this.toastShow = true;
 					let context = this;
@@ -96,7 +96,7 @@
 		},
 		methods: {
 			main: function() {
-				this.$getData('/index/Usercenter/integral/uid/' + this.$ustore.id + '/token/' + this.$ustore.token).then((res)=>{
+				this.$getData('/index/Usercenter/integral/uid/' + this.$ustore.id + '/token/' + this.$ustore.token).then((res) => {
                     if(res.status == 0) {
                         this.number = 0;
 					} else {
@@ -161,9 +161,7 @@
 				if(typeof file === 'undefined' || file === null){
 					return false;
 				}
-				let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-				ustore = JSON.parse(ustore);
-				this.$http.put(localStorage.apiDomain+'/public/index/user/makeInfoForUpyun',{'allow-file-type':'jpg,jpeg,gif,png','ext-param':'himg,'+ustore.id+',1','ftype':file.type}).then((response)=>{
+				this.$http.put(localStorage.apiDomain+'/public/index/user/makeInfoForUpyun',{'allow-file-type':'jpg,jpeg,gif,png','ext-param':'himg,' + this.$ustore.id + ',1','ftype':file.type}).then((response)=>{
 					let resdata = response.data;
 					if(resdata.status === 1) {
 						this.uploadImgToUpyun(resdata.domain,resdata.url,file,resdata.policy,resdata.signature,resdata.notify,resdata.param,resdata.thumb);
@@ -201,7 +199,10 @@
 	}
 </script>
 
-<style scoped>
+<style lang="less">
+
+	@import '../styles/theme.less';
+
 	.container{
 		width:100%;
 		height:auto;
@@ -260,7 +261,7 @@
 		color:#666;
 	}
 
-	.container .top-message .score{
+	.container .top-message .score {
 		margin:auto;
 		width:50%;
 		font-size:1.4rem;
@@ -270,13 +271,19 @@
 		white-space:nowrap;
 		text-overflow:ellipsis;
 		overflow:hidden;
-		background: url("../images/qiandao.png") no-repeat #81c429;
+		background: url("../images/qiandao.png") no-repeat @button-primary-bg-color;
 		background-size: 23px 23px;
 		background-position: 5px 2px;
 		border-radius: 5px;
 		text-indent: 2.5em;
 		margin: 7px auto;
 		text-align: center;
+	}
+
+	.container .top-message .score:active {
+		background: url("../images/qiandao.png") no-repeat @button-primary-active-bg-color;
+		background-size: 23px 23px;
+		background-position: 5px 2px;
 	}
 
 	.container .mid-card{

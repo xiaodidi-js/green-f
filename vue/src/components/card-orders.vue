@@ -34,12 +34,13 @@
 					   @click="clickCancel">取消订单</a>
 
 					<a class="manage-btn"
-					   v-if="item.pay == 1 && item.send == 1 && item.receive == 0 && item.status == 0"
-					   @click="clickExpress(item.scid,item.snum)">查看快递</a>
-
-					<a class="manage-btn"
 					   v-if="item.pay == 1 && (item.send == 1 || item.send == 0) && item.reject == 0 || item.status == 1"
 					   @click="buyAgain(item.id)">再次购买</a>
+
+					<!--v-if="item.pay == 1 && item.send == 1 && item.receive == 0 && item.status == 0"-->
+					<!--<a class="manage-btn"-->
+					   <!--v-if="item.pay == 1"-->
+					   <!--@click="clickExpress(item.id,item.snum)">查看快递</a>-->
 
 					<a class="manage-btn"
 					   v-if="item.pay == 1 && item.send == 1 && item.receive == 0 && item.status == 0"
@@ -179,7 +180,15 @@
 				});
 			},
 			clickExpress: function(scid,snum) {
-				location.href = 'http://www.kuaidi100.com/chaxun?com=' + scid + '&nu=' + snum;
+//				location.href = 'http://www.kuaidi100.com/chaxun?com=' + scid + '&nu=' + snum;
+
+				this.$router.go({
+					name : 'express' ,
+					params: {
+						oid: scid,
+					}
+				});
+
 			},
 			clickCancel: function() {
                 this.clickType = 1;

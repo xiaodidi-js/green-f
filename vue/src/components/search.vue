@@ -1,5 +1,5 @@
 <template>
-	<div class="wrapper-search" style="padding:50px 0px 20px;">
+	<div class="wrapper-search" style="padding: 50px 0px 20px;">
 		<template v-for="item in list">
 			<div class="ui_box">
 				<div v-link="{name:'detail',params:{pid:item.id}}">

@@ -176,11 +176,10 @@
 		width:100%;
 		padding:0rem 0rem 1rem 0rem;
 		font-size:0;
-		margin-bottom:25px;
 	}
 
 	.wrapper.nopadding{
-		padding-bottom: 0rem;
+		padding-bottom: 3rem;
 		height: 100%;
 		overflow: hidden;
 	}
@@ -201,15 +200,65 @@
 	}
 
 	.wrapper .ui_box {
-		width: 47%;
+		width: 48%;
 		height: auto;
 		background-color: #fff;
 		display: block;
-		float:left;
+		float: left;
 		font-size: 1.6rem;
-		margin: 10px 0px 0px 7px;
+		overflow: hidden;
+		margin: 4px 2.3px;
 		color: #333;
 		box-shadow: 1px 1px 2px #e2e2e2;
+	}
+
+	@media screen and (max-width: 600px) {
+		.wrapper .ui_box {
+			width: 146px;
+			height: 230px;
+		}
+	}
+
+	@media screen and (max-width: 414px) {
+		.wrapper .ui_box {
+			width: 188px;
+			height: 270px;
+		}
+	}
+
+	@media screen and (max-width: 412px) {
+		.wrapper .ui_box {
+			width: 202px;
+			height: 285px;
+		}
+	}
+
+	@media screen and (max-width: 384px) {
+		.wrapper .ui_box {
+			width: 183px;
+			height: 265px;
+		}
+	}
+
+	@media screen and (max-width: 375px) {
+		.wrapper .ui_box {
+			width: 183px;
+			height: 265px;
+		}
+	}
+
+	@media screen and (max-width: 360px) {
+		.wrapper .ui_box {
+			width: 176px;
+			height: 260px;
+		}
+	}
+
+	@media screen and (max-width: 320px) {
+		.wrapper .ui_box {
+			width: 156px;
+			height: 240px;
+		}
 	}
 
 	.wrapper .ui_box:nth-child(even){

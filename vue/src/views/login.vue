@@ -14,9 +14,10 @@
 	</group>
 	<!-- 底部选择 -->
 	<bottom-check title="下次自动登录（公众场所请慎用）" desc="" :status.sync="data.auto"></bottom-check>
+
 	<!-- 底部按钮 -->
 	<div class="btn-wrapper">
-		<x-button :text="btnText" :disabled="btnDis" style="line-height:47px;" @click="postData"></x-button>
+		<x-button type="primary" :text="btnText" :disabled="btnDis" style="line-height:47px;" @click="postData"></x-button>
 		<div class="link-box">
 			<a class="left" v-link="{name:'find'}">找回密码</a>
 			<a class="right" v-link="{name:'register'}">免费注册</a>
@@ -148,7 +149,7 @@ export default{
 
 </script>
 
-<style scoped>
+<style>
 
 	.msg-head {
 		width:100%;
@@ -234,7 +235,6 @@ export default{
 		background: url("../images/hide_password.png") no-repeat;
 		background-size: cover;
 	}
-
 </style>
 
 <style>

@@ -30,16 +30,27 @@
 			<input type="password" placeholder="请输入新密码" v-model="data.npwd" />
 			<input type="password" placeholder="请确认新密码" v-model="data.cpwd" />
 		</div>
-		<div class="list">
-			<label style="line-height: 30px;">主题颜色</label>
-			<span class="vux-close" style="color:red;"></span>
-		</div>
+		<!--<div class="list">-->
+			<!--<label style="line-height: 30px;">主题颜色</label>-->
+			<!--<button class="that-style" @click="chonseColor"></button>-->
+			<!--<ul class="color-list">-->
+				<!--<li style="background-color:#c00000;" @click="thatColor"></li>-->
+				<!--<li style="background-color:#ff0000;"></li>-->
+				<!--<li style="background-color:#ffc000;"></li>-->
+				<!--<li style="background-color:#ffff00;"></li>-->
+				<!--<li style="background-color:#92d050;"></li>-->
+				<!--<li style="background-color:#00b050;"></li>-->
+				<!--<li style="background-color:#00b0f0;"></li>-->
+				<!--<li style="background-color:#0070c0;"></li>-->
+				<!--<li style="background-color:#002060;"></li>-->
+			<!--</ul>-->
+		<!--</div>-->
 	</div>
 
 	<!-- 底部按钮 -->
 	<div class="btn-wrapper">
-		<x-button :text="btnText" id="confirm" :disabled="btnDis" @click="postData"></x-button>
-		<x-button text="退出登录" style="background-color:transparent !important;color:#81c429 !important;border:1px solid #81c429;margin-top:10px;" @click="showExit"></x-button>
+		<x-button type="primary" :text="btnText" id="confirm" :disabled="btnDis" @click="postData"></x-button>
+		<x-button type="primary" text="退出登录" style="background-color:transparent !important;color:#81c429 !important;border:1px solid #81c429;margin-top:10px;" @click="showExit"></x-button>
 	</div>
 
 	<!-- 确定弹框 -->
@@ -90,18 +101,23 @@ export default{
 	},
 	methods: {
         chonseColor () {
-            var pColor = document.getElementsByClassName("public-color");
-            localStorage.setItem("color",this.colorVal);
-            var cVal = localStorage.getItem("color");
-            for(var i = 0; i <pColor.length; i++) {
-				pColor[i].style.color = cVal;
-			}
-			var btnColor = document.getElementsByClassName("public-bgcolor");
-			for(var i = 0; i <btnColor.length; i++) {
-                btnColor[i].style.background = cVal;
-			}
-			console.log();
-			console.log(this.colorVal);
+
+//            this.$getData('').then((res) => {
+//
+//			});
+
+			$(".color-list").css({"display" : "block"});
+		},
+        thatColor () {
+            var links = document.createElement("link");
+            links.rel = 'stylesheet';
+            links.type = 'text/css';
+            links.href = '../src/styles/red.css';
+
+            var header = document.getElementsByTagName("head")[0];
+            header.appendChild(links);
+
+//			$(document).append(links);
 		},
 		changePwd: function(event){
 			let pwd = document.getElementById("pwd");
@@ -118,7 +134,7 @@ export default{
 		showExit: function(){
 			this.confirmShow = true;
 		},
-		exitLogin: function(){
+		exitLogin: function() {
 			this.clearAll();
             localStorage.removeItem('userInfo');
 			sessionStorage.removeItem('userInfo');
@@ -126,58 +142,70 @@ export default{
 			sessionStorage.removeItem('openid');
 			this.$router.go({name:'index'});
 		},
-		checkBefore: function(){
+		checkBefore: function() {
 			let telReg = /^[\d]{9,11}$/;
 			let pwdReg = /^[\w@\+\?\.\*-\_\#\^]{6,30}$/;
-			if(this.data.tel.length<=0){
+			if(this.data.tel.length <= 0) {
 				this.toastMessage = '请输入您的手机号码';
 				this.toastShow = true;
 				return false;
-			}else if(!telReg.test(this.data.tel)){
+			}else if(!telReg.test(this.data.tel)) {
 				this.toastMessage = '手机号码格式不正确';
 				this.toastShow = true;
 				return false;
-			}else if(this.data.name.length<=0){
+			}else if(this.data.name.length <= 0) {
 				this.toastMessage = '请输入您的昵称';
 				this.toastShow = true;
 				return false;
-			}else if(this.uopwd.length>0&&this.unpwd.length<=0){
+			}else if(this.uopwd.length > 0 && this.unpwd.length <= 0) {
 				this.toastMessage = '请输入新密码';
 				this.toastShow = true;
 				return false;
-			}else if(this.uopwd.length>0&&this.unpwd.length>0&&!pwdReg.test(this.unpwd)){
+			}else if(this.uopwd.length > 0 && this.unpwd.length > 0 && !pwdReg.test(this.unpwd)) {
 				this.toastMessage = '新密码格式不正确';
 				this.toastShow = true;
 				return false;
-			}else if(this.uopwd.length>0&&this.unpwd.length>0&&this.ucpwd.length<=0){
+			}else if(this.uopwd.length > 0 && this.unpwd.length > 0 && this.ucpwd.length <= 0) {
 				this.toastMessage = '请输入确认密码';
 				this.toastShow = true;
 				return false;
-			}else if(this.uopwd.length>0&&this.unpwd.length>0&&this.unpwd!==this.ucpwd){
+			}else if(this.uopwd.length > 0 && this.unpwd.length > 0 && this.unpwd !== this.ucpwd) {
 				this.toastMessage = '两次密码不一致';
 				this.toastShow = true;
 				return false;
 			}
 			return true;
 		},
-		postData: function(){
-			if(this.btnDis){
+		postData: function() {
+			if(this.btnDis) {
 				return false;
-			}else if(!this.checkBefore()){
+			} else if(!this.checkBefore()) {
 				return false;
 			}
 			this.btnDis = true;
 			this.btnText = '正在提交...';
-			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-			ustore = JSON.parse(ustore);
-			let pdata = {id:ustore.id,token:ustore.token,utel:this.data.tel,uname:this.data.name,opwd:this.uopwd,upwd:this.unpwd,cpwd:this.ucpwd,sex:this.data.sex,birthday:this.data.birthday};
-			this.$http.put(localStorage.apiDomain + 'public/index/login/useredit',pdata).then((response)=>{
-				if(response.data.status===1){
-					let getData = response.data;
-					if(getData.id&&getData.token&&getData.time){
-						let storeData = {id:getData.id,token:getData.token,time:getData.time};
+			let pdata = {
+			    id: this.$ustore.id,
+				token: this.$ustore.token,
+				utel: this.data.tel,
+				uname: this.data.name,
+				opwd: this.uopwd,
+				upwd: this.unpwd,
+				cpwd: this.ucpwd,
+				sex: this.data.sex,
+				birthday: this.data.birthday
+			};
+			this.$putData('/index/login/useredit',pdata).then((res)=>{
+				if (res.status===1) {
+					let getData = res;
+					if(getData.id && getData.token && getData.time) {
+						let storeData = {
+						    id:getData.id,
+							token:getData.token,
+							time:getData.time
+						};
 						storeData = JSON.stringify(storeData);
-						sessionStorage.getItem('userInfo')===null ? localStorage.setItem('userInfo',storeData) : sessionStorage.setItem('userInfo',storeData);
+						sessionStorage.getItem('userInfo') === null ? localStorage.setItem('userInfo',storeData) : sessionStorage.setItem('userInfo',storeData);
 					}
 					this.toastMessage = getData.info;
 					this.toastShow = true;
@@ -186,15 +214,15 @@ export default{
 					this.data.cpwd = '';
 					this.btnDis = false;
 					this.btnText = '确认修改';
-				}else{
-					if(typeof response.data.info !== 'undefined'){
-						this.toastMessage = response.data.info;
+				} else {
+					if(typeof res.info !== 'undefined'){
+						this.toastMessage = res.info;
 						this.toastShow = true;
 					}
 					this.btnDis = false;
 					this.btnText = '确认修改';
 				}
-			},(response)=>{
+			},(res)=>{
 				this.toastMessage = '网络开小差了~';
 				this.toastShow = true;
 				this.btnDis = false;
@@ -203,21 +231,19 @@ export default{
 		}
 	},
 	ready() {
-		let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-		ustore = JSON.parse(ustore);
-		this.$http.get(localStorage.apiDomain+'public/index/login/useredit/uid/'+ustore.id).then((respone)=>{
-			if(respone.data.status===1){
-				this.data.tel = respone.data.utel;
-				this.data.name = respone.data.uname;
-				this.data.sex = respone.data.sex;
-				if(respone.data.birthday!==''&&respone.data.birthday!=='0000-00-00'){
-					this.data.birthday = respone.data.birthday;
+		this.$getData('/index/login/useredit/uid/' + this.$ustore.id).then((res)=>{
+			if(res.status===1){
+				this.data.tel = res.utel;
+				this.data.name = res.uname;
+				this.data.sex = res.sex;
+				if(res.birthday !== '' && res.birthday!=='0000-00-00'){
+					this.data.birthday = res.birthday;
 				}
 			}else{
-				this.toastMessage = respone.data.info;
+				this.toastMessage = res.info;
 				this.toastShow = true;
 			}
-		},(respone)=>{
+		},(res)=>{
 			this.toastMessage = '网络开小差了~';
 			this.toastShow = true;
 		})
@@ -258,6 +284,33 @@ export default{
 		line-height: 2.5rem;
 		position: relative;
 		/* border-bottom: 1px solid #ccc; */
+	}
+
+	.input-wrapper .list .that-style {
+		float: right;
+		width: 3.3rem;
+		height: 3.3rem;
+		background: #81c429;
+		border: 1px solid #81c429;
+	}
+
+	.input-wrapper .list .color-list {
+		width: 111px;
+		height: 111px;
+		position: absolute;
+		top: -39px;
+		right: 33px;
+		z-index: 1000;
+		background: #fff;
+		display: none;
+	}
+
+	.input-wrapper .list .color-list li {
+		width: 33px;
+		height: 33px;
+		float: left;
+		background: #55a532;
+		margin: 2px;
 	}
 
 	.input-wrapper .list:last-child{

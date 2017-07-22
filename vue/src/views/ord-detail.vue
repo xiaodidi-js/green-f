@@ -65,6 +65,10 @@
 		<!-- 商品列表 -->
 		<balance-two :list="data.products" :show-top="true" :show-btm="false" :visi="vieible"></balance-two>
 
+		<div class="express-ele" v-if="data.order.pay == 1" style="display:none;">
+			<x-button type="primary" class="express_button" @click="goExpress">查看快递</x-button>
+		</div>
+
 		<div class="comment" v-if="data.order.pay == 1 && data.order.receive == 1">
 			<a v-if="data.order.comment == 1" v-link="{name:'comment-detail',params:{oid:this.$route.params.oid}}">查看评价</a>
 			<a v-else v-link="{name:'comment-submit',params:{oid:this.$route.params.oid}}">我要评价</a>
@@ -108,7 +112,7 @@ import Confirm from 'vux/src/components/confirm'
 import Scroller from 'vux/src/components/scroller'
 import { setCartAgain,clearAll } from 'vxpath/actions'
 import Surplus from 'components/surplus'
-
+import XButton from 'vux/src/components/x-button'
 
 export default{
 	vuex: {
@@ -157,7 +161,8 @@ export default{
 		Loading,
 		Confirm,
         Scroller,
-        Surplus
+        Surplus,
+        XButton
 	},
 	route: {
 		data(transition) {
@@ -183,8 +188,26 @@ export default{
 	    this.getDetail();
         //	开始时间
         this.startTimer();
+
+
+
     },
 	methods: {
+        goExpress() {
+			console.log(this.stime,this.data.order.id,this.$ustore.id);
+			for(var i in this.data.products) {
+                console.log(this.data.products[i].id);
+                this.$router.go({
+                    name: "express",
+                    query: {
+                        uid: this.$router.id,
+                        rid: this.data.order.id,
+                        stime: this.stime,
+						oid: this.data.products[i].id
+                    }
+                })
+			}
+		},
 	    getDetail() {
             var self = this;
             this.$getData('/index/user/getsubmitorder/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/oid/' + this.$route.params.oid).then((res) => {
@@ -201,10 +224,10 @@ export default{
                         this.showTime = true;
                     } else if(this.data.order.statext == '确认收货') {
                         this.showTime = false;
-                        this.btnStatus = true;
+                        this.btnStatus = false;
                     } else if(this.data.order.statext == '待发货' || this.data.order.statext == '待收货' || this.data.order.statext == '待评价') {
                         this.showTime = false;
-                        this.btnStatus = true;
+                        this.btnStatus = false;
                     } else if (this.minute == '0' && this.second == "0") {
                         this.clickType = 1;
                         this.$router.go({name: 'ord-detail'});
@@ -221,6 +244,11 @@ export default{
                     for(let i in this.data.products) {
                         this.stime = this.data.products[i].stime;
                     }
+
+                    this.$getData('/index/index/wxshare').then((res) => {
+                        $(".confirm").css("background" , res.color);
+                    });
+
                 } else if (res.status === -1) {
                     this.toastMessage = res.info;
                     this.toastShow = true;
@@ -953,5 +981,25 @@ export default{
 		color: #81c429;
 		font-size:14px;
 	}
+
+	/* express-ele start */
+	.express-ele {
+		width: 100%;
+		height: 4.5rem;
+		position: relative;
+		background: #fff;
+	}
+
+	.express-ele .express_button {
+		width: 95%;
+		height: 3.5rem;
+		margin: 0px 1rem;
+		position: absolute;
+		top: 5px;
+		left: 0px;
+		line-height: 0.5rem;
+	}
+
+	/* express-ele end */
 
 </style>

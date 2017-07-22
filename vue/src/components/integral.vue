@@ -7,7 +7,7 @@
             </p>
             <i class="integral-number">{{ number }}</i>
         </div>
-        <button class="sign public-bgcolor" @click="qiandao()">点我签到</button>
+        <x-button type="primary" class="sign public-bgcolor" @click="qiandao()">点我签到</x-button>
         <p class="integral-h5">小积分大用途，通过每日签到和订单评价获取更多积分</p>
     </div>
     <div class="integral-tab">
@@ -37,6 +37,7 @@
     import orders from 'components/integral-tmpl'
     import qiandao from 'components/integral-qiandao'
     import arr from 'components/integral-arr'
+    import XButton from 'vux/src/components/x-button'
 
     export default{
         vuex: {
@@ -47,7 +48,8 @@
         components: {
             orders,
             qiandao,
-            arr
+            arr,
+            XButton
         },
         data() {
             return {
@@ -144,24 +146,31 @@
     }
 </script>
 
-<style type="text/css">
+<style lang="less">
+
+    @import '../styles/theme.less';
+
     /* integral-head start */
-    .integral-head{
+
+    .integral-head {
         font-size:16px;
         width:100%;
         background: #fff;
         padding: 10px 0px;
     }
-    .integral-head .integral-head-h1{
+
+    .integral-head .integral-head-h1 {
         width:100%;
         margin:10px auto;
     }
-    .integral-head .integral-title{
+
+    .integral-head .integral-title {
         font-size:16px;
         text-indent:1em;
         padding-top:10px;
     }
-    .integral-head .integral-number{
+
+    .integral-head .integral-number {
         font-size: 57px;
         color: #81c429;
         font-family: 'PingFang';
@@ -180,23 +189,27 @@
     }
     .integral-head .sign {
         margin: 10px auto;
+        font-size: 1.4rem;
         display: block;
         width: 15rem;
         height: 3.5rem;
+        line-height: 2.5rem;
         border: 1px solid #81c429;
-        background: #81c429;
+        /*background: #81c429;*/
         color: #fff;
         border-radius: 5px;
     }
     /* integral-head end */
+
     /* integral-tab start */
-    .integral-tab{
+    .integral-tab {
         width:100%;
         background: #81c429;
         height:50px;
         border-top:5px solid #f2f2f2;
     }
-    .integral-tab ul li{
+
+    .integral-tab ul li {
         font-size: 14px;
         float: left;
         width: 33%;
@@ -210,63 +223,61 @@
         position:relative;
         color:#fff;
     }
+
     .integral-tab ul .active {
         width:33%;
         height:47px;
         border-bottom: 3px solid #f9cc3d;
     }
-    /*.integral-tab ul li .list {*/
-    /*width:50%;*/
-    /*height:3px;*/
-    /*background: #f9cc3d;*/
-    /*position:absolute;*/
-    /*left:28px;*/
-    /*bottom:0px;*/
-    /*}*/
-    /* integral-tab end */
-    /* integral-body start */
-    .integral-body{
+
+
+    .integral-body {
         width:100%;
     }
+
     .integral-body .body-list{
         margin:10px 10px 0;
     }
+
     .integral-body .body-list ul li{
         height: 60px;
         border-bottom: 1px solid #CACACA;
         color: #4d4d4d;
         width: 100%;
     }
+
     .integral-body .body-list ul li .all-date{
         width:50%;
         float:left;
         font-size:14.5px;
         margin-top: 5px;
     }
-    .integral-body .body-list ul li .all-date p{
+
+    .integral-body .body-list ul li .all-date p {
         height:25px;
         line-height: 25px;
         text-align:left;
         /*padding:10px 0px;*/
     }
-    .integral-body .body-list ul li .add-number{
+
+    .integral-body .body-list ul li .add-number {
         font-size: 25px;
         float: right;
         color: #81c429;
         width: 43%;
         overflow: hidden;
-
-
-
         line-height: 61px;
         text-align: right;
         text-overflow: ellipsis;
     }
-    #sign{
+
+    #sign {
         display:none;
     }
-    #consumption{
+
+    #consumption {
         display:none;
     }
     /* integral-body end */
+
 </style>

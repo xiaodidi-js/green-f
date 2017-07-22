@@ -1,74 +1,3 @@
-<style scoped>
-	.mes-line{
-		width:100%;
-		height:auto;
-		padding-bottom:1rem;
-		margin-bottom:1rem;
-		border-bottom:#EFEFEF dashed 1px;
-		font-size:0;
-	}
-
-	.mes-line:last-child{
-		border-bottom:none;
-	}
-
-	.mes-line .money,.mes-line .info,.mes-line .check{
-		display:inline-block;
-		vertical-align:middle;
-	}
-
-	.mes-line .money{
-		width:20%;
-		text-align:center;
-		font-size:2.2rem;
-		font-weight:bold;
-		color:#f9ad0c;
-		padding:3% 0%;
-	}
-
-	.mes-line .money .unit{
-		font-size:1.4rem;
-	}
-
-	.mes-line .check{
-		width:9.5%;
-		text-align:right;
-	}
-
-	.mes-line .info{
-		width:55%;
-		text-align:left;
-		margin:0% 3%;
-		padding-left:3%;
-		border-left:#EFEFEF solid 1px;
-	}
-
-	.mes-line .info>div{
-		width:100%;
-	}
-
-	.mes-line .info>div.tit{
-		font-size:1.4rem;
-		color:#333;
-	}
-
-	.mes-line .info>div.type{
-		font-size:1.2rem;
-		color:#ccc;
-	}
-
-	.mes-line .info>div.date{
-		font-size:1.2rem;
-		color:#808080;
-	}
-
-	.nowrap{
-		white-space:nowrap;
-		text-overflow:ellipsis;
-		overflow:hidden;
-	}
-</style>
-
 <template>
 	<div class="mes-line my-common-fadein" @click="changeActive">
 		<div class="money" v-if="obj.type==1||obj.type==3">
@@ -143,3 +72,73 @@
 		}
 	}
 </script>
+<style scoped>
+	.mes-line{
+		width:100%;
+		height:auto;
+		padding-bottom:1rem;
+		margin-bottom:1rem;
+		border-bottom:#EFEFEF dashed 1px;
+		font-size:0;
+	}
+
+	.mes-line:last-child{
+		border-bottom:none;
+	}
+
+	.mes-line .money,.mes-line .info,.mes-line .check{
+		display:inline-block;
+		vertical-align:middle;
+	}
+
+	.mes-line .money{
+		width:20%;
+		text-align:center;
+		font-size:2.2rem;
+		font-weight:bold;
+		color:#f9ad0c;
+		padding:3% 0%;
+	}
+
+	.mes-line .money .unit{
+		font-size:1.4rem;
+	}
+
+	.mes-line .check{
+		width:9.5%;
+		text-align:right;
+	}
+
+	.mes-line .info{
+		width:55%;
+		text-align:left;
+		margin:0% 3%;
+		padding-left:3%;
+		border-left:#EFEFEF solid 1px;
+	}
+
+	.mes-line .info>div{
+		width:100%;
+	}
+
+	.mes-line .info>div.tit{
+		font-size:1.4rem;
+		color:#333;
+	}
+
+	.mes-line .info>div.type{
+		font-size:1.2rem;
+		color:#ccc;
+	}
+
+	.mes-line .info>div.date{
+		font-size:1.2rem;
+		color:#808080;
+	}
+
+	.nowrap{
+		white-space:nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
+	}
+</style>

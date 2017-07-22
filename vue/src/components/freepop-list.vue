@@ -3,7 +3,7 @@
 		<div class="edit" v-link="{name:'address-edit',params:{aid:obj.id}}" v-if="$parent.getType=='express'">
 			<img src="../images/add-edit.png" />
 		</div>
-		<div class="addcon" @click="changeActive()" v-if="$parent.getType == 'express'">
+		<div class="addcon" @click="changeActive(obj.id)" v-if="$parent.getType == 'express'">
 			<div class="name nowrap">
 				<!--<div class="default" v-if="obj.is_default === 1">默认</div>-->
 				<p style="line-height: 22px;">
@@ -96,6 +96,16 @@
 			}
 		},
 		ready () {
+            console.log(this.$parent.getType);
+
+            this.$getData('/index/index/wxshare').then((res) => {
+                $(".isChonse").css({
+                    "background" : res.color,
+                    "color" : "#fff",
+                }).siblings().css({
+                    "color" : "#ccc",
+                });
+            });
 
 		},
 		methods: {
@@ -103,13 +113,16 @@
 			    this.ischonse = true;
 //				evt.preventDefault();
 //				evt.stopPropagation();
-				this.$dispatch('setChosen',this.obj);
+				this.$dispatch('setChosen',this.obj,this.$parent.getType);
 			}
 		}
 	}
 </script>
 
-<style scoped>
+<style lang="less">
+
+	@import '../styles/theme.less';
+
 	.mes-line{
 		width:100%;
 		height:auto;
@@ -127,14 +140,14 @@
 		color:#808080;
 	}
 
-	.isChonse{
+	.isChonse {
 		width:100%;
 		height:auto;
 		border-bottom:#EFEFEF solid 1px;
 		font-size:0;
 		padding: 10px 0px;
 		margin: 5px 0px;
-		background: #81c429;
+		background: @button-primary-bg-color;
 	}
 
 	.isChonse .addcon .name {

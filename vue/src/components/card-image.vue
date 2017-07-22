@@ -102,7 +102,6 @@
 		width: 100%;
 		height: 100%;
 		position: relative;
-		top: 45px;
 	}
 
 	.wrapper{
@@ -133,10 +132,12 @@
 		display:block;
 		padding:2%;
 		text-align:center;
+		box-shadow: none;
+		margin-top: 15%;
 	}
 
 	.card-box:last-child{
-		margin-bottom:0%;
+		margin-bottom: 0%;
 	}
 
 	.card-box .img{

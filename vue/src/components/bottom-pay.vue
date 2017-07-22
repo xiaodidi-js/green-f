@@ -5,11 +5,13 @@
 			<span style="margin-left:12px;">¥{{ sum }}</span>
 		</div>
 		<!--<div class="btn addCar" disabled="disabled" @click="submit">提交订单</div>-->
-		<button class="btn addCar" @click="submit">提交订单</button>
+		<x-button type="primary" class="btn addCar" @click="submit">提交订单</x-button>
 	</div>
 </template>
 
 <script>
+
+    import XButton from 'vux/src/components/x-button'
 
 	export default{
 		props: {
@@ -30,6 +32,9 @@
 				default: 'rem'
 			}
 		},
+        components: {
+            XButton,
+        },
 		data() {
 			return {
 
@@ -48,22 +53,23 @@
 	}
 </script>
 
-<style scoped>
-	.bottom-buy{
+<style>
+
+	.bottom-buy {
 		width:100%;
 		height:auto;
 		background-color:#343136;
 		font-size:0;
 	}
 
-	.bottom-buy.fixed{
+	.bottom-buy.fixed {
 		position:fixed;
 		bottom:0;
 		left:0;
 		z-index:100;
 	}
 
-	.bottom-buy>div{
+	.bottom-buy>div {
 		display:inline-block;
 		vertical-align:middle;
 		font-size:1.6rem;
@@ -91,11 +97,8 @@
 		border:none;
 	}
 
-	.bottom-buy .addCar{
-		background-color:#81c429;
+	.bottom-buy .addCar {
+		border-radius: 0;
 	}
 
-	.bottom-buy .addCar:active{
-		background-color:#81c429;
-	}
 </style>

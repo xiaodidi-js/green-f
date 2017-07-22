@@ -174,6 +174,7 @@
                 }
 				this.dtype = type;
 				this.$getData('/index/user/orderselection/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/type/' + type).then((res)=>{
+				    console.log(res);
 					if(res.status === 1) {
 						document.body.scrollTop = 0;
 						this.count = res.count;

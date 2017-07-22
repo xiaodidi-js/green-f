@@ -21,8 +21,9 @@
             <freepop-list v-for="item in tmp_address" :obj="item" :chose-id="chosen" :sum-money="money" ></freepop-list>
         </div>
         <!-- 底部按钮 -->
-        <div class="addButton commentButton" v-link="{name:'address-add'}">新增地址</div>
-        <div class="commentButton" style="float:right;" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</div>
+        <x-button type="primary" class="addButton commentButton" v-link="{name:'address-add'}">新增地址</x-button>
+        <x-button type="primary" class="commentButton" style="float:right;" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</x-button>
+        <!--<div class="commentButton" style="float:right;" v-if="showConfirm" @click="hidePanel">{{ confirmText }}</div>-->
     </div>
 
     <!-- 弹出选择层 -->
@@ -133,6 +134,8 @@
         ready() {
             this.selList();
             this.onToureEle();
+
+
         },
         created() {
 
@@ -174,6 +177,15 @@
                     return item.name.indexOf(self.search) !== -1
                 });
                 this.tmp_address = data;
+
+                //	主配色
+                this.$getData('/index/index/wxshare').then((res) => {
+                    console.log(res.color);
+                    $(".isChonse").css({
+                        "background" : res.color,
+                    })
+                });
+
             },
             touchout: function () {
                 if (this.isChonse) {
@@ -182,6 +194,7 @@
                 }
             },
             onOnlyAddress: function (id) {
+                var content = this;
                 this.$getData('/index/Usercenter/myaddress/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/state/0/sinceid/' + id).then((res)  => {
                     if (res.status === 1) {
                         var tmp = this.address.filter(function (item) {
@@ -233,7 +246,6 @@
                 this.isChonse = false;
             },
             onChonse: function () {
-                var content = this;
                 this.popdown = true;
                 $(".option-list").show().animate({
                     "bottom":"0px"
@@ -256,7 +268,7 @@
                     this.ischonse = false;
                 }
             },
-            oneGift: function (id,money) {
+            oneGift: function (id,money) {     // 赠品
                 var options = {
                     uid: this.$ustore.id,
                     token: this.$ustore.token,
@@ -326,7 +338,7 @@
             }
         },
         events: {
-            setChosen: function (obj) {
+            setChosen: function (obj,getType) {
                 let pids = '', pdata = {};
                 if (typeof obj === 'object') {
                     if (this.$parent.cartIds.length > 0) {
@@ -349,19 +361,37 @@
                             this.chosen = obj.id;
                             this.$parent.data.address = obj;
                             this.$parent.data.tmp_address = obj;
-                            this.$parent.freight = response.data.freight;
-                            /* 设置默认 */
-                            let odata = {uid: this.$ustore.id,token: this.$ustore.token,state:0,addressid:obj.id};
-                            this.$putData('/index/Usercenter/addressmoren',odata).then((res) => {
-                                if(res.status === 1) {
-                                    if(obj.is_default != 0) {
-                                        obj.is_default = 0;
+                            this.$parent.freight = res.freight;
+                            if(getType === 'express') {     //  快递配送
+                                let pdata = {
+                                    uid: this.$ustore.id,
+                                    token: this.$ustore.token,
+                                    aid: obj.id
+                                };
+                                this.$putData('/index/user/addresslist',pdata).then((res) => {
+                                    if(res.status === 1) {
+                                        for(let i = 0;i < obj.length; i++) {
+                                            if(i != index && obj[i].is_default != 0) obj[i].is_default = 0;
+                                        }
+                                        obj.is_default = 1;
+                                    } else {
+                                        this.$dispatch('showMes',res.info);
                                     }
-                                    obj.is_default = 1;
-                                }
-                            },(res)=>{
-                                this.$dispatch('showMes','网络开小差了~');
-                            });
+                                });
+                            } else if(getType === 'parcel') {     //  自提点
+                                //  设置默认
+                                let odata = {uid: this.$ustore.id,token: this.$ustore.token,state:0,addressid:obj.id};
+                                this.$putData('/index/Usercenter/addressmoren',odata).then((res) => {
+                                    if(res.status === 1) {
+                                        if(obj.is_default != 0) {
+                                            obj.is_default = 0;
+                                        }
+                                        obj.is_default = 1;
+                                    }
+                                },(res)=>{
+                                    this.$dispatch('showMes','网络开小差了~');
+                                });
+                            }
                         } else if (res.status === -1) {
                             this.$parent.toastMessage = res.info;
                             this.$parent.toastShow = true;
@@ -435,7 +465,7 @@
     }
 </script>
 
-<style scoped>
+<style>
 
     /* search_panel start */
     .search_panel {
@@ -678,8 +708,7 @@
 
     .panel .commentButton {
         width: 45%;
-        padding: 3% 0%;
-        background-color: #81c429;
+        padding: 1% 0%;
         text-align: center;
         font-size: 1.6rem;
         color: #fff;
@@ -692,7 +721,7 @@
     .panel .addButton {
         width: 45%;
         right: 0px;
-        padding: 3% 0px;
+        padding: 1% 0px;
     }
 
     .my-icon:before {

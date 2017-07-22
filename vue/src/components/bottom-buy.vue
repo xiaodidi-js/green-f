@@ -1,12 +1,10 @@
 <template>
-
 	<!--引导购买-->
 	<div class="share" v-show="shareele">
 		<div class="share_shop" @click="clearShare()">
 			<button class="share_clear" @click="clearShare()">OK</button>
 		</div>
 	</div>
-
 	<div class="bottom-buy" :class="{'fixed' : fixed}" :style="{bottom : fixed===true && btm > 0 ? btm + unit : 0}">
 		<div class="collect" :class="{active : collect}" @click="setCollect">
 			<div class="img"></div>
@@ -18,13 +16,15 @@
 			<div class="bage" v-show="bage > 0">{{ bage }}</div>
 		</div>
 		<button class="btn addCar doBuyButton buyButton" @click="clickCart" v-show="store > 0">加入购物车</button>
-		<button class="btn doBuy buyButton" @click="clickBuy" v-show="store > 0">立即购买</button>
+		<x-button type="primary" class="btn doBuy buyButton" @click="clickBuy" v-show="store > 0">立即购买</x-button>
 		<button class="btn shareButton" v-show="share" @click="clickShare">分享抢购</button>
 		<div class="btn noBuy" v-show="store <= 0">暂时缺货</div>
 	</div>
 </template>
 
 <script>
+
+    import XButton from 'vux/src/components/x-button'
 
 	export default{
 		props: {
@@ -61,8 +61,18 @@
 				default: false,
 			}
 		},
+        components: {
+            XButton,
+        },
 		ready() {
-		    console.log(this.$ustore);
+		    //	主配色
+		    this.$getData('/index/index/wxshare').then((res) => {
+				console.log(res.color);
+                $(".doBuy").css({
+                    "background" : res.color,
+                    "border" : "1px solid" + res.color
+                })
+			});
 		},
 		data() {
 			return {
@@ -245,8 +255,7 @@
 		font-size:14px;
 	}
 
-	.bottom-buy .btn.doBuy{
-		background :#81c429;
+	.bottom-buy .doBuy {
 		display:block;
 		width:35%;
 		height:4.5rem;
@@ -255,15 +264,16 @@
 		border:1px solid #81c429;
 		color:#fff;
 		font-size:14px;
+		border-radius: 0;
 	}
 
-	.bottom-buy .btn.addCar{
+	.bottom-buy .addCar {
 		background: #F9AD0C;
 	}
 
-	.bottom-buy .btn.doBuy:active{
-		border:1px solid #DE6156;
-		background: #DE6156;
+	.bottom-buy .doBuy:active{
+		/*border:1px solid #DE6156;*/
+		/*background: #DE6156;*/
 	}
 
 	.bottom-buy .btn.addCar:active{
@@ -273,7 +283,7 @@
 	.bottom-buy .btn.noBuy{
 		width:70%;
 		background: #d6d6d6;
-		box-shadow:0.2rem 0.2rem 1rem #969696 inset;
+		box-shadow: 0.2rem 0.2rem 1rem #969696 inset;
 	}
 
 	.bottom-buy.fixed{

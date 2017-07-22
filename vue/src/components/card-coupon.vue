@@ -1,5 +1,5 @@
 <template>
-	<div class="notify-box">
+	<div class="notify-box" style="z-index: 0;">
 		<div class="tips">当前有 {{ data.length }} 张可用优惠劵</div>
 		<div class="btn">
 			<!-- <a @click="showConfirm">口令兑换</a> -->
@@ -74,17 +74,17 @@
 
 
 <style scoped>
-	.notify-box{
-		width:94%;
-		height:20px;
-		padding:10px 3%;
-		background-color:#81c429;
-		font-size:0;
-		position:fixed;
-		top:22.2rem;
-		left:0;
-		z-index:100;
-	}
+
+	/*.notify-box{*/
+		/*width: 94%;*/
+		/*height: 20px;*/
+		/*padding: 10px 3%;*/
+		/*background :#81c429;*/
+		/*font-size: 0;*/
+		/*!*position:fixed;*!*/
+		/*top: 22.2rem;*/
+		/*left: 0;*/
+	/*}*/
 
 	.notify-box div{
 		display:inline-block;
@@ -113,7 +113,7 @@
 </style>
 
 <style>
-	.weui_btn_dialog.primary{
+	.weui_btn_dialog.primary {
 		color:#F9AD0C !important;
 	}
 
@@ -123,4 +123,5 @@
 		background-color:#F2F2F2;
 		color:#333;
 	}
+
 </style>

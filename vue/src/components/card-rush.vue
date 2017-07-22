@@ -2,7 +2,7 @@
 	<div class="wrapper" v-for="item in products">
 		<template v-for="list in item.arr">
 			<div class="card-box" v-link="{name:'detail',params:{pid:list.shopid}}" v-if="item.nowsale == 0">
-				<div class="img" :style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
+				<div class="img" style="padding-top: 35%;" :style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
 				<!-- 即将开始 -->
 				<div class="mes">
 					<div class="name">{{ list.name }}</div>
@@ -13,7 +13,7 @@
 				</div>
 			</div>
 			<div class="card-box" v-link="{name:'detail',params:{pid:list.shopid}}" v-else>
-				<div class="img" :style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
+				<div class="img" style="padding-top: 35%;" :style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
 				<!-- 正在抢购/抢购完毕 -->
 				<div class="mes">
 					<template  v-for="money in list.saledata">
@@ -25,7 +25,7 @@
 								<label class="unit">¥</label>
 								<span>{{ money.saleprice }}</span>
 							</div>
-							<a class="rush">马上抢</a>
+							<x-button type="primary" class="rush">马上抢</x-button>
 						</div>
 					</template>
 				</div>
@@ -35,6 +35,9 @@
 </template>
 
 <script>
+
+    import XButton from 'vux/src/components/x-button'
+
 	export default{
 		props: {
 			products: {
@@ -47,6 +50,9 @@
         ready() {
 
         },
+        components: {
+            XButton
+		},
 		data() {
 			return {
                 timeline: [],
@@ -73,7 +79,8 @@
 	}
 </script>
 
-<style scoped>
+<style>
+
 	.wrapper{
 		width:100%;
 		padding-bottom: 8rem;
@@ -100,7 +107,6 @@
 		display:inline-block;
 		vertical-align:middle;
 		width:35%;
-		padding-top:35%;
 		margin-right:2%;
 		background-color:#eee;
 		background-repeat:no-repeat;
@@ -180,27 +186,21 @@
 	}
 
 	.card-box .mes .money .rush{
-		width:6.2rem;
-		height:2.7rem;
-		font-size:1.2rem;
+		width: 7.2rem;
+		height: 2.7rem;
+		font-size: 1.2rem;
 		line-height: 2.7rem;
-		color:#fff;
-		background: #81c429;
-		border-radius:0.3rem;
-		text-align:center;
+		color: #fff;
+		border-radius: 0.3rem;
+		text-align: center;
 		display: block;
 		float: right;
 		margin-top: 8px;
 	}
 
-	.card-box .mes .money .rush:active{
-		background:#DE9A08;
-	}
-
 	.card-box .mes .money .rush.disabled{
 		background:#F3C76A;
 	}
-
 
 	progress::-moz-progress-bar { background: #0064B4; }
 	progress::-webkit-progress-bar { background: #eee; }

@@ -30,14 +30,13 @@
 					</div>
 					<div class="add" v-if="data.address.area">
 						<p>
-							<span>地址:</span>
-							<span>{{ data.address.area }}</span>
+							<span>详细地址:</span>
 							<span>{{ data.address.address }}</span>
 						</p>
 					</div>
 					<div class="add" v-else>
 						<span class="address-left">地址:</span>
-						{{ data.address.address }}
+						<span>{{ data.address.address }}</span>
 					</div>
 				</div>
 				<div style="text-align:center;" class="words" v-else>
@@ -151,7 +150,6 @@
 					<div class="l-icon doubt" style="margin-right:0%;" @click="showAlert"></div>
 				</div>
 			</my-cell-item>
-
 		</my-cell>
 
 		<!-- 价格详情 -->
@@ -311,16 +309,12 @@
                 if(this.scoreSwitch) {
                     this.scoreNumber = 1;
                     obj['makePrice'] = obj['showText'];
-                    axios({
-                        method: 'get',
-                        url: localStorage.apiDomain + 'public/index/index/jifenmoney'
-                    }).then((response) => {
-                        if(response.data.status == 1) {
-                            this.sNumber = parseInt(response.data.info.jifen);
-							console.log(this.sNumber,response.data.info);
-						}
-                    });
-                }else{
+                    this.$getData('/index/index/jifenmoney').then((res) => {
+                        if(res.status == 1) {
+                            this.sNumber = parseInt(res.info.jifen);
+                        }
+					});
+                } else {
                     this.scoreNumber = 2;
                     this.sNumber = 0;
                     obj['makePrice'] = 0;
@@ -340,7 +334,7 @@
                 return money.toFixed(2);
             },
             lastPaySum: function() {
-                let lastMoney = parseFloat(this.paySum)+parseFloat(this.freight) - parseFloat(this.scoreMoney.makePrice) - parseFloat(this.couponMoney);
+                let lastMoney = parseFloat(this.paySum) + parseFloat(this.freight) - parseFloat(this.scoreMoney.makePrice) - parseFloat(this.couponMoney);
                 if(lastMoney <= 0) lastMoney = 1;
                 return lastMoney.toFixed(2);
             }
@@ -351,12 +345,10 @@
                     this.submitReady();
 				}
 			},
-
 		},
         methods: {
             submitReady() {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo'), pids = '';
-                ustore = JSON.parse(ustore);
+                let pids = '';
                 if(this.cartIds.length > 0) {
                     pids = this.cartIds.join(',');
                 }
@@ -366,13 +358,13 @@
                 } else {
                     opid = '/openid/' + opid;
                 }
-                this.$getData('/index/user/ordersubmission/uid/'+ustore.id+'/token/'+ustore.token+'/ids/'+pids+opid).then((res)=>{
+                this.$getData('/index/user/ordersubmission/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/ids/' + pids + opid).then((res)=>{
                     if(res.status === 1) {
                         this.data.deliver = res.deliver;
                         if(typeof this.data.deliver.express !== 'undefined' && this.data.deliver.express !== '') {
                             this.deliverType = 'express';
                             this.deliverName = this.data.deliver.express;
-                        }else{
+                        } else {
                             this.deliverType = 'parcel';
                             this.deliverName = this.data.deliver.parcel;
                         }
@@ -381,27 +373,28 @@
                         this.data.pay = res.pay;
                         this.payType = this.data.pay[0].ptype;
                         this.data.address = res.address;
-
+                        //	获取微信信息
                         let openid = sessionStorage.getItem("openid");
                         this.$getData('/index/index/get_weixin?openid=' + openid).then((res)=>{  /* 'os0CqxBBANhLuBLTsViL3C0zDlNs' */
                             this.wxName = res.info.weixindata.nickname;
                         });
-                        if(this.data.address){
+                        if(this.data.address) {
                             this.address = this.data.address.id;
                         }
                         this.score = res.score;
                         this.freight = res.freight;
-                    } else if(res.status === -1) {
+
+                    } else if (res.status === -1) {
                         this.toastMessage = res.info;
                         this.toastShow = true;
                         let context = this;
-                        setTimeout(function() {
+                        setTimeout(function () {
                             context.clearAll();
                             sessionStorage.removeItem('userInfo');
                             localStorage.removeItem('userInfo');
-                            context.$router.go({name:'login'});
-                        },800);
-                    }else{
+                            context.$router.go({name: 'login'});
+                        }, 800);
+                    } else {
                         this.toastMessage = res.info;
                         this.toastShow = true;
                     }
@@ -412,8 +405,6 @@
 			},
             isRadio: function() {
                 var date = new Date() , y = date.getFullYear() , m = date.getMonth() + 1 , d = date.getDate();
-                var radA = $(".label-radio").eq(0).text();
-                var radB = $(".label-radio").eq(1).text();
                 var time = null;
                 for(let i = 0; i < this.cartInfo.length; i++) {
 					if (this.cartInfo[i].deliverytime == 0) {
@@ -513,12 +504,12 @@
                             content.data.address = res.address;
                             content.data.address.name = res.address.person;
                             content.address = content.data.address.id;
-                        }else{
+                        } else {
                             content.data.address = null;
                             content.address = 0;
                             content.freight = 0;
                         }
-                    } else if (res.status ===-1) {
+                    } else if (res.status === -1) {
                         this.toastMessage = res.info;
                         this.toastShow = true;
                         let context = this;
@@ -528,11 +519,11 @@
                             localStorage.removeItem('userInfo');
                             context.$router.go({name:'login'});
                         },800);
-                    }else{
+                    } else {
                         this.toastMessage = response.data.info;
                         this.toastShow = true;
                     }
-                },(res)=>{
+                },(res) => {
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                 });
@@ -545,15 +536,15 @@
                     content.chonseParcel = false;
                     $(".commentButton").css("width","45%");
                     $(".con-box").css({
-                        "marginTop" : "0px",
+                        "marginTop" : "17px",
                         "height" : "80%"
                     });
 				} else if (content.deliverName === '到店自提') {
                     content.chonseParcel = true;
                     $(".commentButton").css("width","93%");
                     $(".con-box").css({
-                        "marginTop" : "50px",
-                        "height" : "65%"
+                        "marginTop" : "10px",
+                        "height" : "70%"
                     });
                 }
                 this.oneGift(this.address,this.lastPaySum);

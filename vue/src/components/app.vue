@@ -1,6 +1,5 @@
-<style scoped>
+<style>
     @import '../styles/common.css';
-
     .vux-header {
         position: fixed;
         width: 100%;
@@ -11,12 +10,16 @@
         background: #35495e;
         z-index: 10;
     }
-
 </style>
+
+<style lang="less">
+    @import '../styles/theme.less';
+</style>
+
 <template>
     <div>
         <!-- 头部 -->
-        <x-header :fixed="true" color="#343136" :left-options="{showBack:true,backText:''}" v-show="$route.header">{{ $route.title }}</x-header>
+        <x-header :fixed="true" style="position: fixed;" color="#343136" :left-options="{showBack:true,backText:''}" v-show="$route.header">{{ $route.title }}</x-header>
         <!-- 顶部间距 -->
         <!--<separator :set-height="46" unit="px" v-show="$route.header"></separator>-->
         <router-view keep-alive></router-view>
@@ -43,13 +46,15 @@
            
         },
         data () {
-            return {}
+            return {
+                pColor: '', //  通用样式
+            }
         },
         route: {
             
         },
         ready () {
-           
+
         },
         beforeDestroy () {
 

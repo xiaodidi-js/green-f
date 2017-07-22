@@ -22,7 +22,7 @@
 	</div>
 
 	<!-- 底部按钮 -->
-	<x-button text="提交申请" :disabled="btnDis" style="position:fixed;bottom:0;left:0;border-radius:0;margin:0;" @click="submit"></x-button>
+	<x-button type="primary" text="提交申请" :disabled="btnDis" style="position:fixed;bottom:0;left:0;border-radius:0;margin:0;" @click="submit"></x-button>
 
 	<!-- toast提示框 -->
 	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
@@ -46,11 +46,11 @@ export default{
 	},
 	data() {
 		return {
-			loadingShow:false,
-			loadingMessage:'',
-			toastMessage:'',
-			toastShow:false,
-			btnDis:false,
+			loadingShow: false,
+			loadingMessage: '',
+			toastMessage: '',
+			toastShow: false,
+			btnDis: false,
 			data:{
 				createtime: '',
 				shotcut: '',
@@ -77,17 +77,15 @@ export default{
 		
 	},
 	ready() {
-		let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-		ustore = JSON.parse(ustore);
-		this.$http.get(localStorage.apiDomain+'public/index/user/afterservice/uid/'+ustore.id+'/token/'+ustore.token+'/oid/'+this.$route.params.oid).then((response)=>{
-			if(response.data.status===1){
-				this.data.createtime = response.data.createtime;
-				this.data.shotcut = response.data.shotcut;
-				this.data.name = response.data.name;
-				this.data.price = response.data.price;
-				this.data.count = response.data.count; 
-			}else if(response.data.status===-1){
-				this.toastMessage = response.data.info;
+		this.$getData('/index/user/afterservice/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/oid/' + this.$route.params.oid).then((res)=>{
+			if(res.status===1){
+				this.data.createtime = res.createtime;
+				this.data.shotcut = res.shotcut;
+				this.data.name = res.name;
+				this.data.price = res.price;
+				this.data.count = res.count;
+			}else if(res.status===-1){
+				this.toastMessage = res.info;
 				this.toastShow = true;
 				let context = this;
 				setTimeout(function(){
@@ -97,42 +95,46 @@ export default{
 					context.$router.go({name:'login'});
 				},800);
 			}else{
-				this.toastMessage = response.data.info;
+				this.toastMessage = res.info;
 				this.toastShow = true;
 			}
-		},(response)=>{
+		},(res)=>{
 			this.toastMessage = '网络开小差了~';
 			this.toastShow = true;
 		});
 	},
 	methods: {
-		submit: function(){
-			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-			ustore = JSON.parse(ustore);
-			let pdata = {uid:ustore.id,token:ustore.token,oid:this.$route.params.oid,content:this.data.content,imgs:JSON.stringify(this.data.imgs)};
+		submit: function() {
+			let pdata = {
+			    uid: this.$ustore.id,
+				token: this.$ustore.token,
+				oid:this.$route.params.oid,
+				content:this.data.content,
+				imgs:JSON.stringify(this.data.imgs)
+			};
 			this.btnDis = true;
 			this.loadingMessage = '正在提交';
 			this.loadingShow = true;
-			this.$http.post(localStorage.apiDomain+'public/index/user/afterservice',pdata).then((response)=>{
+			this.$postData('/index/user/afterservice',pdata).then((res) => {
 				this.loadingShow = false;
 				this.btnDis = false;
-				this.toastMessage = response.data.info;
+				this.toastMessage = res.info;
 				this.toastShow = true;
-				if(response.data.status===1){
+				if (res.status === 1) {
 					let context = this;
 					setTimeout(function(){
 						context.$router.replace({name:'service',params:{oid:context.$route.params.oid}});
 					},800);
-				}else if(response.data.status===-1){
+				} else if (res.status === -1) {
 					let context = this;
-					setTimeout(function(){
+					setTimeout(function() {
 						context.clearAll();
 						sessionStorage.removeItem('userInfo');
 						localStorage.removeItem('userInfo');
 						context.$router.go({name:'login'});
 					},800);
 				}
-			},(response)=>{
+			},(res) => {
 				this.loadingShow = false;
 				this.btnDis = false;
 				this.toastMessage = '网络开小差了~';

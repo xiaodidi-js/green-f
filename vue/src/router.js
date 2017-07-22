@@ -438,15 +438,6 @@ const routers = {
             require(['./components/buying-like.vue'], resolve);
         }
     },
-    'address': {
-        name:'address',
-        header:false,
-        footer:false,
-        title:'地址',
-        component (resolve) {
-            require(['./components/address.vue'], resolve);
-        }
-    },
     'order-success': {
         name:'ordersuccess',
         header:false,

@@ -1,77 +1,4 @@
-<style scoped>
-.btn-wrapper{
-	width:80%;
-	margin:20% 10% 0% 10%;
-}
-
-.btn-wrapper .link-box{
-	width:100%;
-	position:relative;
-	margin-top:0.8rem;
-	font-size:1.2rem;
-	color:#B3B3B3;
-}
-
-.btn-wrapper .link-box .left{
-	position:absolute;
-	left:0;
-	top:0;
-}
-
-.btn-wrapper .link-box .right{
-	position:absolute;
-	right:0;
-	top:0;
-}
-</style>
-
-<style>
-
-.weui_cells{
-	margin-top:0px !important;
-}
-
-.weui_btn_default{
-	font-family:'Microsoft YaHei';
-	background: #81c429 !important;
-	color:#fff !important;
-	font-size:16px;
-}
-
-.weui_btn_default:active{
-	background: #3cc51f !important;
-}
-
-.weui_btn_disabled.weui_btn_default{
-	background-color:#F3C76A !important;
-}
-
-.weui_cell_ft .weui_btn_primary{
-	height:3.4rem;
-	margin:0.5rem 0rem;
-	background-color:#fff !important;
-	font-size:1.4rem;
-	line-height:2.4rem;
-	font-family:'Microsoft YaHei';
-	padding-top:0.5rem;
-	padding-bottom:0.5rem;
-	color:#81c429;
-	margin-left:auto;
-	margin-right:auto;
-	margin-right:0.5rem;
-	color:#81c429;
-	border:1px solid #81c429;
-}
-
-.weui_cell_ft .weui_btn_primary:active{
-	background-color:#81c429 !important;
-	color:#fff;
-}
-
-</style>
-
 <template>
-
 	<!-- 输入内容 -->
 	<group title="" style="margin-top: 46px;">
 		<x-input :show-clear=true placeholder="请输入您的手机号码" type="number" :value.sync="data.tel"></x-input>
@@ -83,7 +10,7 @@
 	</group>
 	<!-- 底部按钮 -->
 	<div class="btn-wrapper">
-		<x-button :text="btnText" :disabled="btnDis" @click="postData"></x-button>
+		<x-button type="primary" :text="btnText" :disabled="btnDis" @click="postData"></x-button>
 	</div>
 	<!-- 输入内容 -->
 
@@ -139,15 +66,15 @@ export default{
 			}
 			let second = 120,context = this,timer = null;
 			this.codeDis = true;
-			this.$http.put(localStorage.apiDomain+'public/index/login/getCodeBySms',{tel:this.data.tel}).then((response)=>{
-				this.toastMessage = response.data.info;
+			this.$putData('/index/login/getCodeBySms',{tel:this.data.tel}).then((res)=>{
+				this.toastMessage = res.info;
 				this.toastShow = true;
-				if(response.data.status===1){
+				if(res.status === 1) {
 					this.codeText = second+'s';
 					timer = setInterval(function(){
-						if(second>0){
+						if(second > 0) {
 							second--;
-							context.codeText = second+'s';
+							context.codeText = second + 's';
 						}else{
 							context.codeText = '获取验证码';
 							context.codeDis = false;
@@ -157,72 +84,72 @@ export default{
 				}else{
 					this.codeDis = false;
 				}
-			},(response)=>{
+			},(res)=>{
 				this.toastMessage = '网络开小差了~';
 				this.toastShow = true;
 				this.codeDis = false;
 			});
 		},
-		checkBefore: function(){
+		checkBefore: function() {
 			let telReg = /^[\d]{9,11}$/;
 			let pwdReg = /^[\w@\+\?\.\*-\_\#\^]{6,30}$/;
-			if(this.data.tel.length<=0){
+			if (this.data.tel.length <= 0) {
 				this.toastMessage = '请输入您的手机号码';
 				this.toastShow = true;
 				return false;
-			}else if(!telReg.test(this.data.tel)){
+			} else if (!telReg.test(this.data.tel)) {
 				this.toastMessage = '手机号码格式不正确';
 				this.toastShow = true;
 				return false;
-			}else if(this.data.ucode.length!=5){
+			} else if (this.data.ucode.length != 5) {
 				this.toastMessage = '请输入五位验证码';
 				this.toastShow = true;
 				return false;
-			}else if(this.unpwd.length<=0){
+			} else if (this.unpwd.length <= 0) {
 				this.toastMessage = '请输入账号密码';
 				this.toastShow = true;
 				return false;
-			}else if(!pwdReg.test(this.unpwd)){
+			} else if (!pwdReg.test(this.unpwd)) {
 				this.toastMessage = '账号密码格式不正确';
 				this.toastShow = true;
 				return false;
-			}else if(this.ucpwd.length<=0){
+			} else if (this.ucpwd.length <= 0) {
 				this.toastMessage = '请输入确认密码';
 				this.toastShow = true;
 				return false;
-			}else if(this.unpwd!==this.ucpwd){
+			} else if (this.unpwd !== this.ucpwd) {
 				this.toastMessage = '两次密码不一致';
 				this.toastShow = true;
 				return false;
 			}
 			return true;
 		},
-		postData: function(){
-			if(this.btnDis){
+		postData: function() {
+			if(this.btnDis) {
 				return false;
-			}else if(!this.checkBefore()){
+			}else if(!this.checkBefore()) {
 				return false;
 			}
 			this.btnDis = true;
 			this.btnText = '正在提交...';
 			let pdata = {utel:this.data.tel,upwd:this.unpwd,cpwd:this.ucpwd,code:this.data.ucode};
-			this.$http.put(localStorage.apiDomain+'public/index/login/useraction',pdata).then((response)=>{
-				if(response.data.status===1){
-					this.toastMessage = response.data.info;
+			this.$putData('/index/login/useraction',pdata).then((res)=>{
+				if(res.status === 1) {
+					this.toastMessage = res.info;
 					this.toastShow = true;
 					let context = this;
 					setTimeout(function(){
 						context.btnDis = false;
 						context.btnText = '找回密码';
 						context.$router.go({name:'login'});
-					},800);;
-				}else if(typeof response.data.info !== 'undefined'){
-					this.toastMessage = response.data.info;
+					},800);
+				}else if(typeof res.info !== 'undefined') {
+					this.toastMessage = res.info;
 					this.toastShow = true;
 					this.btnDis = false;
 					this.btnText = '找回密码';
 				}
-			},(response)=>{
+			},(res)=>{
 				this.toastMessage = '网络开小差了~';
 				this.toastShow = true;
 				this.btnDis = false;
@@ -241,3 +168,80 @@ export default{
 }
 
 </script>
+
+<style>
+
+	.btn-wrapper{
+		width:80%;
+		margin: 5% 10% 0% 10%;
+	}
+
+	.btn-wrapper .link-box{
+		width:100%;
+		position:relative;
+		margin-top:0.8rem;
+		font-size:1.2rem;
+		color:#B3B3B3;
+	}
+
+	.btn-wrapper .link-box .left{
+		position:absolute;
+		left:0;
+		top:0;
+	}
+
+	.btn-wrapper .link-box .right{
+		position:absolute;
+		right:0;
+		top:0;
+	}
+</style>
+
+
+<style>
+
+	.weui_cells{
+		margin-top:0px !important;
+	}
+
+	.weui_btn_default{
+		font-family:'Microsoft YaHei';
+		background: #81c429 !important;
+		color:#fff !important;
+		font-size:16px;
+	}
+
+	.weui_btn_default:active{
+		background: #3cc51f !important;
+	}
+
+	.weui_btn_disabled.weui_btn_default{
+		background-color:#F3C76A !important;
+	}
+
+	.weui_cell_ft .weui_btn_primary{
+		height:3.4rem;
+		margin:0.5rem 0rem;
+		background-color:#fff !important;
+		font-size:1.4rem;
+		line-height:2.4rem;
+		font-family:'Microsoft YaHei';
+		padding-top:0.5rem;
+		padding-bottom:0.5rem;
+		color:#81c429;
+		margin-left:auto;
+		margin-right:auto;
+		margin-right:0.5rem;
+		color:#81c429;
+		border:1px solid #81c429;
+	}
+
+	.weui_cell_ft .weui_btn_primary:active{
+		background-color:#81c429 !important;
+		color:#fff;
+	}
+
+</style>
+
+
+

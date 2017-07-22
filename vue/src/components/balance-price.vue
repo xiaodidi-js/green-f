@@ -118,7 +118,7 @@
 	.bl-wrapper .line{
 		width:100%;
 		padding:2% 0%;
-		font-size:0rem;
+		font-size: 0rem;
 		line-height:1.6rem;
 	}
 

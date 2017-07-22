@@ -1,15 +1,13 @@
-
-
 <template>
-	<div class="col-wrapper" v-if="cartList.length > 0" style="padding-top: 46px;">
-		<div class="notify-box">
+	<div class="col-wrapper" style="position: relative" v-if="cartList.length > 0">
+		<div class="notify-box" style="z-index: 0;">
 			<div class="ntips" v-show="editMode === 1">请选择删除商品</div>
 			<div class="ntips" v-else>购物车中共有{{ cartList.length }}个商品</div>
 			<div class="btn">
 				<a @click="changMode">{{ modeText }}</a>
 			</div>
 		</div>
-		<div class="card-wrapper">
+		<div class="card-wrapper" style="padding: 40px 0px 0px;">
 			<cart-list :chosen.sync="choseArr" v-for="item in cartList" :pid="item.id"
 					:img="item.shotcut" :pname="item.name" :pprice="item.price"
 					:pnums="item.nums" :pstore="item.store" :mode="editMode"
@@ -39,7 +37,7 @@
 					</div>
 					<div class="sum">合计：¥{{ chosePrice }}</div>
 				</div>
-				<div class="right color" @click="getOrders">
+				<div class="right color gopay" @click="getOrders">
 					<span>去结算</span>
 					<span class="js-number">({{ choseArr.length }})</span>
 				</div>
@@ -50,16 +48,17 @@
 	<div class="col-wrapper" style="padding:25px 0px 5px;" v-else>
 		<div class="image"></div>
 		<p class="tips">亲，您的购物车空空如也~</p>
-		<x-button text="逛一逛" style="width:40%;margin:2rem auto;" class="public-bgcolor" v-link="{name:'index'}"></x-button>
+		<x-button type="primary" text="逛一逛" class="public-bgcolor" v-link="{name:'index'}"></x-button>
 	</div>
 
 	<!-- <猜你喜欢> -->
 	<cardlike></cardlike>
-
 	<!-- <猜你喜欢> -->
 
 	<!-- 确定弹框 -->
-	<confirm :show.sync="confirmShow" title="删除商品" confirm-text="确定" cancel-text="取消" @on-confirm="confirmDel"><p style="text-align:center;">确定删除选中的商品吗？</p></confirm>
+	<confirm :show.sync="confirmShow" title="删除商品" confirm-text="确定" cancel-text="取消" @on-confirm="confirmDel">
+		<p style="text-align:center;">确定删除选中的商品吗？</p>
+	</confirm>
 
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
@@ -118,7 +117,7 @@
             }
         },
         ready() {
-            console.log(this.cartList);
+
         },
         watch: {
 			$route() {
@@ -198,12 +197,18 @@
 		height:auto;
 	}
 
-	.notify-box{
+	.col-wrapper, .card-wrapper {
+		position: relative;
+		margin-top: 4.6rem;
+	}
+
+	.notify-box {
 		width:94%;
 		height:20px;
 		padding:10px 3%;
-		background-color:#81c429;
-		font-size:0;
+		position: absolute;
+		top: 0px;
+		left: 0px;
 	}
 
 	.notify-box div{
@@ -240,6 +245,12 @@
 		font-size:1.8rem;
 		color:#999;
 		text-align:center;
+	}
+
+	.col-wrapper .public-bgcolor {
+		width:40%;
+		margin:2rem auto;
+		font-size: 16px;
 	}
 
 	.my-icon:before{
@@ -326,11 +337,6 @@
 		line-height:2.9rem;
 	}
 
-	.bottom>div.right.color{
-		background:#81c429;
-	}
-
-
 	.bottom>div.right .btn{
 		width:80%;
 		border:#81c429 solid 0.1rem;
@@ -357,6 +363,21 @@
 
 	.isChonse .addcon .address .weui_icon_success:before {
 		color:#fff;
+	}
+
+</style>
+
+<style lang="less">
+
+	// 导入theme.less
+	@import '../styles/theme.less';
+
+	.bottom .right ,.notify-box {
+		background: @button-primary-bg-color;
+	}
+
+	.bottom .right:active {
+		background: @button-primary-active-bg-color;
 	}
 
 </style>

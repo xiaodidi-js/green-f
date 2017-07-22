@@ -1,7 +1,5 @@
 <style scoped>
-    .counter{
-
-    }
+    .counter{}
 
 </style>
 <template>

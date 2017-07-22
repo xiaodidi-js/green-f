@@ -5,7 +5,7 @@
 </style>
 
 <template>
-	<div class="separator" :style="{height:setHeight+unit}"></div>
+	<div class="separator" :style="{height:setHeight + unit}"></div>
 </template>
 
 <script>

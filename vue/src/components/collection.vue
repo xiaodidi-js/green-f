@@ -33,7 +33,7 @@
 		</div>
 		<div class="image"></div>
 		<p class="tips">亲，您的收藏夹空空如也~</p>
-		<x-button text="逛一逛" style="width:40%;margin:2rem auto;" v-link="{name:'index'}"></x-button>
+		<x-button type="primary" text="逛一逛" style="width:40%;margin:2rem auto;" v-link="{name:'index'}"></x-button>
 	</div>
 
 	<!-- 确定弹框 -->
@@ -155,7 +155,10 @@
 		}
 	}
 </script>
-<style scoped>
+<style lang="less">
+
+	@import '../styles/theme.less';
+
 	.col-wrapper,.card-wrapper{
 		width: 100%;
 		height: auto;
@@ -163,11 +166,11 @@
 		margin-bottom: 30px;
 	}
 
-	.notify-box{
+	.notify-box {
 		width:94%;
 		height:auto;
 		padding:3%;
-		background-color:#81c429;
+		background: @button-primary-bg-color;
 		font-size:0;
 		position:fixed;
 		top:22.2rem;
@@ -175,7 +178,7 @@
 		z-index:100;
 	}
 
-	.notify-box div{
+	.notify-box div {
 		display:inline-block;
 		vertical-align:middle;
 		font-size:1.4rem;
@@ -210,25 +213,18 @@
 		color:#999;
 		text-align:center;
 	}
+
+	.gogo {
+
+	}
+
 </style>
 
 <style>
 
-	.weui_btn_default{
+	.weui_btn_primary {
 		font-family:'Microsoft YaHei';
-		background-color:#F9AD0C !important;
-		color:#fff !important;
+		font-size: 16px;
 	}
 
-	.weui_btn_default:active{
-		background-color:#DE9A08 !important;
-	}
-
-	.weui_btn_disabled.weui_btn_default{
-		background-color:#F3C76A !important;
-	}
-
-	.weui_btn_dialog.primary{
-		color:#F9AD0C !important;
-	}
 </style>

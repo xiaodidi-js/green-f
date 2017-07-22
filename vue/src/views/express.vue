@@ -18,31 +18,53 @@
 			</div>
 		</div>
 	</div>
-	<!-- 物流信息 -->
-	<div class="express-box">
-		<div class="line-info">
-			<div class="icon first">
-				<img src="../images/epoint.png" />
-			</div>
-			<div class="con-box">
-				<div class="ebtit">
-					佛山市[签收]佛山市【顺德大良B站】，李代已签收
-				</div>
-				<div class="ebtime">
-					2016-07-04 18:20:59
-				</div>
-			</div>
+
+	<!-- 配送司机信息 -->
+	<div class="driver">
+		<div class="driver-img">
+			<img src="../images/img33.png" alt="" style="width:100%;height:100%;" />
 		</div>
-		<div class="line-info">
-			<div class="icon">
-				<img src="../images/expoint.png" />
-			</div>
-			<div class="con-box">
-				<div class="ebtit">
-					佛山市[签收]佛山市【顺德大良B站】，李代已签收
+		<div class="driver-text">
+			<p style="color: #898989;">派送员</p>
+			<p>梁星星</p>
+		</div>
+		<div class="driver-call">
+			<a href="tel:{{}}" style="display:">
+				<div class="call" @click="callPerson()">
+					<img src="../images/call.png" alt="" style="width:100%;height:100%;" />
 				</div>
-				<div class="ebtime">
-					2016-07-04 18:20:59
+				<div class="allow"></div>
+			</a>
+		</div>
+	</div>
+
+	<!-- 物流信息 -->
+	<div style="background: #fff;width: 100%;height: 100%;position: relative;top: 10px;">
+		<div class="express-box">
+			<div class="line-info">
+				<div class="icon first">
+					<img src="../images/epoint.png" />
+				</div>
+				<div class="con-box">
+					<div class="ebtit">
+						佛山市[签收]佛山市【顺德大良B站】，李代已签收
+                    </div>
+					<div class="ebtime">
+						2016-07-04 18:20:59
+                    </div>
+				</div>
+			</div>
+			<div class="line-info">
+				<div class="icon">
+					<img src="../images/expoint.png" />
+				</div>
+				<div class="con-box">
+					<div class="ebtit">
+						佛山市[签收]佛山市【顺德大良B站】，李代已签收
+                    </div>
+					<div class="ebtime">
+						2016-07-04 18:20:59
+                    </div>
 				</div>
 			</div>
 		</div>
@@ -50,6 +72,7 @@
 </template>
 
 <script>
+
 	import Separator from 'components/separator'
 
 	export default{
@@ -58,7 +81,35 @@
 		},
 		data() {
 			return {
-				
+				doDay: this.$route.query.stime,
+			}
+		},
+		ready() {
+			this.express();
+		},
+        filters: {
+            time: function (value) {
+                let d = new Date(parseInt(value) * 1000);
+                var years = d.getFullYear();
+                var month = d.getMonth() + 1;
+                var days = d.getDate();
+                var hours = d.getHours();
+                var minutes = d.getMinutes();
+                var seconds = d.getSeconds();
+                return years + "-" + month + "-" + days + " " + (hours > 9 ? hours : '0' + hours) + ':' + (minutes > 9 ? minutes : '0' + minutes);
+            }
+        },
+		methods: {
+			express() {
+			    this.$getData('/index/app/getdelivery/uid/' + this.$ustore.id + "/rid/" + this.$route.query.rid + "/stime/" + this.doDay + "/oid/" + this.$route.query.oid).then((res) => {
+                    console.log(res);
+                    if(res.status === 0) {
+						$(".express-box").html(res.info).css({
+							"fontSize" : "1.6rem",
+							"textAlign" : "center",
+						});
+					}
+				});
 			}
 		}
 	}
@@ -129,31 +180,78 @@
 		color:#fa9d0c;
 	}
 
+	/* driver start */
+	.driver {
+		width: 100%;
+		height: 7rem;
+		background: #fff;
+		margin: 50px 0px 0px;
+	}
+
+	.driver .driver-img {
+		width: 44px;
+		height: 44px;
+		padding: 13px 15px;
+		float: left;
+	}
+
+	.driver .driver-text {
+		font-size: 1.4rem;
+		padding: 16px 0px;
+		float: left;
+	}
+
+	.driver .driver-call {
+		float: right;
+	}
+
+	.driver .driver-call .call {
+		width: 35px;
+		height: 35px;
+		padding: 18px;
+		float: left;
+		position: relative;
+		right: 28px;
+	}
+
+	.driver .driver-call .allow {
+		width: 10px;
+		height: 18px;
+		background: url("../images/img34.png") no-repeat;
+		background-size: 100%;
+		float: right;
+		margin: 26px 0px;
+		position: relative;
+		right: 20px;
+	}
+
+	/* driver end */
+
 	.express-box{
 		width: 93%;
-		padding: 5% 0% 32% 6%;
-		position: relative;
-		top: 40px;
+		padding: 5% 0% 0% 6%;
+		background: #fff;
+		height: 100%;
 	}
 
 	.express-box .line-info{
-		width:100%;
-		height:auto;
-		border-left:#ccc solid 0.1rem;
-		padding-top:3%;
-		font-size:0;
+		width: 100%;
+		height: auto;
+		border-left: #ccc solid 0.1rem;
+		padding-top: 3%;
+		font-size: 0;
 	}
 
 	.express-box .line-info:first-child{
-		padding-top:0%;
+		padding-top: 0%;
 	}
 
 	.express-box .line-info:first-child .ebtit{
-		color:#333;
+		color: #333;
 	}
 
 	.express-box .line-info:first-child .ebtime{
-		color:#808080;
+		color: #808080;
 	}
 
 	.express-box .line-info>div{
@@ -168,9 +266,17 @@
 		margin-left:-4%;
 		margin-right:1%;
 		text-align:center;
-		background-color:#efefef;
 		font-size:0;
 		padding:0.5rem 0rem;
+		position: relative;
+		top: -5px;
+	}
+
+	.express-box .line-info .icon .epoint {
+		width:15px;
+		height: 15px;
+		background: #55a532;
+		border-radius: 100px;
 	}
 
 	.express-box .line-info .icon>img{
@@ -180,14 +286,11 @@
 	}
 
 	.express-box .line-info .icon.first{
-		vertical-align:top;
-
+		/*vertical-align:top;*/
 		animation: zoom 2.5s linear infinite normal;
 		-webkit-animation: zoom 2.5s linear infinite normal;
-
 		/*animation:jump 1.5s linear infinite normal;*/
 		/*-webkit-animation:jump 1.5s linear infinite normal;*/
-
 	}
 
 	.express-box .line-info .icon.first>img{

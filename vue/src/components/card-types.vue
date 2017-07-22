@@ -1,5 +1,5 @@
 <template>
-	<div class="type-bg" keep-alive>
+	<div class="type-bg">
 		<div type="popup" class="cla-wrapper" id="left_Menu" style="float: left;">
 			<div id="scroller">
 				<div class="menu-left">
@@ -130,9 +130,7 @@
             this.onToure();
         },
         watch: {
-            '$route'(to) {
-
-            }
+            '$route'(to) {}
         },
         methods: {
             todo() {

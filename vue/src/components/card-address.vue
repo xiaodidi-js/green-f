@@ -37,7 +37,7 @@
 				</template>
 			</div>
 			<div class="comfire-chonse">
-				<x-button text="确认"></x-button>
+				<x-button type="primary" text="确认"></x-button>
 			</div>
 		</div>
 
@@ -60,7 +60,7 @@
 			</div>
 			<!-- 底部按钮 -->
 			<div class="add-address">
-				<x-button text="新增地址" class="address-comfirm" v-link="{name:'address-add'}"></x-button>
+				<x-button type="primary" text="新增地址" class="address-comfirm" v-link="{name:'address-add'}"></x-button>
 			</div>
 		</div>
 	</div>
@@ -149,6 +149,12 @@
 							this.chosens[i].index = i;
                             if(this.chosens[i].is_default == 1) {
                                 content.isActiveFun();
+                                //	主配色
+                                content.$getData('/index/index/wxshare').then((res) => {
+                                    $(".isActive").css({
+                                        "background" : res.color,
+                                    })
+                                });
 							}
 						}
                     } else if(res.status === -1) {
@@ -438,6 +444,8 @@
 		width:80%;
 		margin:5% 10% 30% 10%;
 	}
+
+
 
 	.address-comfirm {
 		-webkit-appearance: none;

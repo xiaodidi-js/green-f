@@ -293,14 +293,14 @@
 	}
 
 	.card-box .maininfo .mes .name{
-		color:#4D4D4D;
-		line-height:1.6rem;
-		white-space:nowrap;
-		overflow:hidden;
-		text-overflow:ellipsis;
-		font-weight:normal;
-		margin-bottom:2%;
-		font-weight:600;
+		color: #4D4D4D;
+		line-height: 1.6rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		font-weight: normal;
+		margin-bottom: 2%;
+		font-weight: 600;
+		width: 100%;
 	}
 
 	.card-box .maininfo .mes .format{

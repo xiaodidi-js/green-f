@@ -1,51 +1,14 @@
-<style scoped>
-	.wrapper{
-		width: 93%;
-		height: auto;
-		margin: 5% auto 1%;
-		text-align: left;
-		font-size: 0;
-	}
-
-	.wrapper .cbox,.wrapper .wbox{
-		display:inline-block;
-		vertical-align:top;
-		font-size:1.5rem;
-	}
-
-	.wrapper .cbox{
-		width:5%;
-		margin-right:1%;
-	}
-
-	.wrapper .wbox{
-		width:94%;
-		color:#B3B3B3;
-		padding-top:0.1rem;
-	}
-
-	.wrapper .wbox a{
-		color:#F9AD0C;
-	}
-
-	.my-icon:before{
-		font-size:1.8rem;
-	}
-
-	.my-icon-chosen:before{
-		color:#f9ad0c;
-	}
-
-</style>
-
 <template>
-	<div class="wrapper" @click="changeStatus">
+	<div class="wrapper" @click="changeStatus" style="padding: 0px;">
 		<div class="cbox">
 			<icon type="success" class="my-icon my-icon-chosen" v-show="status"></icon>
 			<icon type="circle" class="my-icon" v-show="!status"></icon>
 		</div>
 		<div class="wbox">
-			&nbsp;<label>{{ title }}<a v-if="desc != ''" style="color:#81c429">{{ desc }}</a></label>
+			<span style="margin-left: 1.5rem;">{{ title }}</span>
+			<a v-if="desc != ''" style="color:#81c429">
+				<label>{{ desc }}</label>
+			</a>
 		</div>
 	</div>
 </template>
@@ -88,3 +51,44 @@ export default{
 	}
 }
 </script>
+<style scoped>
+	.wrapper{
+		width: 95%;
+		height: auto;
+		margin: 5% auto 2%;
+		margin-left: 10px;
+		text-align: left;
+		font-size: 0;
+		float: left;
+	}
+
+	.wrapper .cbox,.wrapper .wbox{
+		display:inline-block;
+		vertical-align:top;
+		font-size:1.5rem;
+	}
+
+	.wrapper .cbox{
+		width:5%;
+		margin-right:1%;
+	}
+
+	.wrapper .wbox {
+		width: 94%;
+		color:#B3B3B3;
+		padding-top:0.1rem;
+	}
+
+	.wrapper .wbox a{
+		color:#F9AD0C;
+	}
+
+	.my-icon:before{
+		font-size:1.8rem;
+	}
+
+	.my-icon-chosen:before{
+		color:#f9ad0c;
+	}
+
+</style>

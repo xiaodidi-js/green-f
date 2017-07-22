@@ -9,7 +9,6 @@
 	</div>
 	<!-- 回到顶部 -->
 	<div class="goto"></div>
-	<ceshi></ceshi>
     <!-- toast提示框 -->
     <toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
 	<loading :show="loadingShow" text="正在加载..."></loading>
@@ -27,7 +26,6 @@
     import axios from 'axios'
     import qs from 'qs'
     import Loading from 'vux/src/components/loading'
-    import ceshi from 'components/ceshi'
 
 	export default{
 		components: {
@@ -38,7 +36,6 @@
             Swiper,
             banners,
             Loading,
-            ceshi
 		},
         vuex: {
             actions: {

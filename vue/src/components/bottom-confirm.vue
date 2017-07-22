@@ -1,14 +1,14 @@
 <template>
 	<div class="bottom-buy" :class="{'fixed':fixed}" :style="{bottom:fixed===true&&btm>0 ? btm+unit : 0}">
-			<div v-if="pay==0&&send==0&&receive==0">
-				<div class="btn service" :class="{'disabled':disabled}" @click="clickCancel">取消订单</div>
+		<div style="font-size: 0rem;" v-if="pay == 0 && send == 0 && receive == 0">
+			<div class="btn service" :class="{'disabled':disabled}" @click="clickCancel">取消订单</div>
 			<div class="btn again" :class="{'disabled':disabled}" @click="clickPay">确认支付</div>
 		</div>
-		<div v-if="pay==1&&(send==0||send==1)&&receive==0">
+		<div style="font-size: 0rem;"  v-if="pay == 1 && (send == 0 || send == 1) && receive == 0">
 			<div class="btn confirm" :class="{'disabled':disabled}" @click="clickConfirm">确认收货</div>
 			<div class="btn again" :class="{'disabled':disabled}" @click="clickAgain">再次购买</div>
 		</div>
-		<div v-if="pay==1&&send==1&&receive==1">
+		<div style="font-size: 0rem;"  v-if="pay == 1 && send == 1 && receive == 1">
 			<div class="btn service" :class="{'disabled':disabled}" @click="clickService">申请售后</div>
 			<div class="btn again" :class="{'disabled':disabled}" @click="clickAgain">再次购买</div>
 		</div>
@@ -53,6 +53,9 @@
 
 			}
 		},
+		ready() {
+
+		},
 		methods: {
 			clickPay: function(){
 				if(this.disabled){
@@ -93,7 +96,7 @@
 	.bottom-buy{
 		width:100%;
 		height:auto;
-		font-size:0;
+		font-size: 0;
 	}
 
 	.bottom-buy.fixed{
@@ -103,7 +106,7 @@
 		z-index:100;
 	}
 
-	.bottom-buy>div{
+	.bottom-buy>div {
 		width:100%;
 		height:auto;
 	}
@@ -111,7 +114,7 @@
 	.bottom-buy>div>div{
 		display:inline-block;
 		vertical-align:middle;
-		font-size:1.6rem;
+		/*font-size:1.6rem;*/
 		color:#fff;
 	}
 
@@ -134,7 +137,7 @@
 		background-color:#E29D0A;
 	}
 
-	.bottom-buy>div>div.btn.confirm{
+	.bottom-buy .confirm{
 		background-color:#81c429;
 	}
 

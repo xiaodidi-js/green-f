@@ -119,7 +119,6 @@
 		width: 100%;
 		height: auto;
 		background: #fff;
-		margin-top: 46px;
 		clear: both;
 	}
 

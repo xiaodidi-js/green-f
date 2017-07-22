@@ -1,3 +1,94 @@
+<template>
+    <div class="pop">
+        <div class="fpmasker" :class="{'show':formatPopShow}" @touchmove.stop.prevent @touchend.stop @touchstart.stop @click="hideFormatPop"></div>
+        <div class="format-pop" :class="{'show':formatPopShow}" @touchmove.stop.prevent @touchend.stop @touchstart.stop>
+            <div class="line">
+                <div class="pimg" v-bind:style="{backgroundImage:'url('+ data.shotcut +')'}"></div>
+                <div class="pmes">
+                    <div class="price" v-if="data.is_promote">¥{{data.promote_price}}</div>
+                    <div class="price" v-else>¥{{data.price}}</div>
+                    <div>库存{{proNums}}件</div>
+                    <div class="dialog">{{ getGuigeName }}</div>
+                </div>
+            </div>
+            <div class="close" @click="hideFormatPop">X</div>
+            <div class="divider" style="margin-top:23%;"></div>
+            <div class="line" v-for="(pindex,fmt) in data.format">
+                <div class="title">{{ fmt.name }}</div>
+                <div id="con" class="con" style="font-size:0;white-space:normal;">
+                    <guige :value="val.id" :text="val.name" v-for="(sindex,val) in fmt.value" @click="changeGuige(pindex,val.id,val.name)"></guige>
+                </div>
+                <div class="divider"></div>
+            </div>
+            <div class="line" style="padding-bottom:0.3rem;font-size:0;">
+                <div class="title inline">购买数量</div>
+                <div class="con inline">
+                    <div class="num-counter">
+                        <div class="btns" :class="{'disabled':buyNums <= 1}" @click="reduceNums">-</div>
+                        <input type="number" class="input" :value="buyNums" readonly />
+                        <div class="btns" :class="{'disabled':buyNums >= proNums}" @click="addNums">+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+
+    import Scroller from 'vux/src/components/scroller'
+    import { setCartStorage } from 'vxpath/actions'
+    import { cartNums } from 'vxpath/getters'
+
+    export default{
+        props: {
+            types: {
+                type: Array,
+                default() {
+                    return []
+                }
+            }
+        },
+        data() {
+            return {
+                data: [],
+                formatPopShow:false,
+                proNums:1,
+                buyNums:1,
+            }
+        },
+        ready() {
+
+        },
+        components: {
+            Scroller
+        },
+        filters: {
+
+        },
+        methods: {
+            addNums: function(){
+                if(this.buyNums>=this.proNums){
+                    return false;
+                }
+                this.buyNums++;
+            },
+            reduceNums: function() {
+                if(this.buyNums <= 1) {
+                    return false;
+                }
+                this.buyNums--;
+            },
+            hideFormatPop: function(evt){
+                evt.stopPropagation();
+                this.formatPopShow = false;
+            },
+            showFormatPop: function(){
+                this.formatPopShow = true;
+            }
+        },
+    }
+</script>
 <style type="text/css">
     .fpmasker{
         position:fixed;
@@ -110,96 +201,3 @@
     }
 
 </style>
-
-
-<template>
-    <div class="pop">
-        <div class="fpmasker" :class="{'show':formatPopShow}" @touchmove.stop.prevent @touchend.stop @touchstart.stop @click="hideFormatPop"></div>
-        <div class="format-pop" :class="{'show':formatPopShow}" @touchmove.stop.prevent @touchend.stop @touchstart.stop>
-            <div class="line">
-                <div class="pimg" v-lazy:background-image="data.shotcut"></div>
-                <div class="pmes">
-                    <div class="price" v-if="data.is_promote">¥{{data.promote_price}}</div>
-                    <div class="price" v-else>¥{{data.price}}</div>
-                    <div>库存{{proNums}}件</div>
-                    <div class="dialog">{{ getGuigeName }}</div>
-                </div>
-            </div>
-            <div class="close" @click="hideFormatPop">X</div>
-            <div class="divider" style="margin-top:23%;"></div>
-            <div class="line" v-for="(pindex,fmt) in data.format">
-                <div class="title">{{ fmt.name }}</div>
-                <div id="con" class="con" style="font-size:0;white-space:normal;">
-                    <guige :value="val.id" :text="val.name" v-for="(sindex,val) in fmt.value" @click="changeGuige(pindex,val.id,val.name)"></guige>
-                </div>
-                <div class="divider"></div>
-            </div>
-            <div class="line" style="padding-bottom:0.3rem;font-size:0;">
-                <div class="title inline">购买数量</div>
-                <div class="con inline">
-                    <div class="num-counter">
-                        <div class="btns" :class="{'disabled':buyNums <= 1}" @click="reduceNums">-</div>
-                        <input type="number" class="input" :value="buyNums" readonly />
-                        <div class="btns" :class="{'disabled':buyNums >= proNums}" @click="addNums">+</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-
-<script>
-
-    import Scroller from 'vux/src/components/scroller'
-    import { setCartStorage } from 'vxpath/actions'
-    import { cartNums } from 'vxpath/getters'
-
-    export default{
-        props: {
-            types: {
-                type: Array,
-                default() {
-                    return []
-                }
-            }
-        },
-        data() {
-            return {
-                data: [],
-                formatPopShow:false,
-                proNums:1,
-                buyNums:1,
-            }
-        },
-        ready() {
-
-        },
-        components: {
-            Scroller
-        },
-        filters: {
-
-        },
-        methods: {
-            addNums: function(){
-                if(this.buyNums>=this.proNums){
-                    return false;
-                }
-                this.buyNums++;
-            },
-            reduceNums: function() {
-                if(this.buyNums <= 1) {
-                    return false;
-                }
-                this.buyNums--;
-            },
-            hideFormatPop: function(evt){
-                evt.stopPropagation();
-                this.formatPopShow = false;
-            },
-            showFormatPop: function(){
-                this.formatPopShow = true;
-            }
-        },
-    }
-</script>

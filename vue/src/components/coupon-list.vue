@@ -114,6 +114,7 @@
 </script>
 
 <style scoped>
+
 	.card-coupon-box{
 		width: 96%;
 		height: auto;
@@ -161,10 +162,10 @@
 		padding-top:90%;
 		margin:auto;
 		border-radius:50%;
+		background-image:url('../images/logo_lv.png');
 		background-repeat:no-repeat;
 		background-size:cover;
 		background-position:center;
-		background-image:url('../images/logo_lv.png');
 	}
 
 	.card-coupon-box .top .divider .unit{

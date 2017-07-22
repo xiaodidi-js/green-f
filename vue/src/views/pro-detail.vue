@@ -8,8 +8,12 @@
 	<div class="my-swiper"> <!-- @touchstart="tslistener($event)" @touchend="telistener($event)" -->
 		<div id="scroller" class="ms-scroller" style="transform:translate3d(0px,0px,0px)">
 			<div class="ms-item">
-				<swiper :list="data.gallery" auto dots-position="center" :show-desc-mask="false"
+				<swiper :list="data.gallery" dots-position="center" :show-desc-mask="false"
 						:aspect-ratio="480/480" dots-class="dots-my-orange" @touchstart.stop @touchend.stop></swiper>
+
+				<!--<swiper :list="data.gallery" auto dots-position="center" :show-desc-mask="false"-->
+						<!--:aspect-ratio="480/480" dots-class="dots-my-orange" @touchstart.stop @touchend.stop></swiper>-->
+
 				<!-- 产品信息 -->
 				<div class="pro-mes">
 					<div class="title">{{ data.name }}</div>
@@ -327,7 +331,6 @@
                 });
 			},
             shareSuccess() {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
                 if(this.$ustore == null) {
                     alert("没有登录，请先登录!");
                     setTimeout(function () {
@@ -432,11 +435,8 @@
                 });
             },
             timeline: function() {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
                 var content = this;
                 this.$getData('/index/sale/SaleTimeSolt/uid').then((res) => {
-                    console.log(res.SaleTimeSolt);
                     if(res.status == 1) {
                         content.gotimeline = res.SaleTimeSolt;
                     } else if(res.data.status === -1) {

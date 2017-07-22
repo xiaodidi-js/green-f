@@ -189,7 +189,7 @@
                 });
             },
             clickExpress: function(scid,snum){
-                location.href='http://www.kuaidi100.com/chaxun?com='+scid+'&nu='+snum;
+                location.href = 'http://www.kuaidi100.com/chaxun?com=' + scid + '&nu=' + snum;
             },
             clickCancel: function(){
                 this.clickType = 2;

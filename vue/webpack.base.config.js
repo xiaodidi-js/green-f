@@ -5,6 +5,11 @@
 var path = require('path');
 var webpack = require('webpack');
 
+let lessTheme = {
+    name: 'less-theme',
+    path: path.resolve(__dirname,'../src/styles/theme.less')
+}
+
 module.exports = {
     // 入口
     entry: {
@@ -48,7 +53,8 @@ module.exports = {
         new webpack.ProvidePlugin({
             $:"jquery",
             jQuery:"jquery",
-            "window.jQuery":"jquery"
-        })
+            "window.jQuery":"jquery",
+            lessTheme
+        }),
     ]
 };

@@ -50,17 +50,64 @@
 		},
 		data() {
 			return {
-				
+
 			}
 		},
 		ready() {
+            this.$getData('/index/index/wxshare').then((res) => {
+                $(".active").css({
+                    "color" : res.color,
+                });
+            });
+		},
+        watch: {
+            $route(to) {
+                switch(to.position) {
+					case 1:
+                        this.$getData('/index/index/wxshare').then((res) => {
+                            $(".group").css({
+                                "color" : "#ccc",
+                            });
+                            $(".active").css({
+                                "color" : res.color,
+                            });
+                        });
+                    case 2:
+                        this.$getData('/index/index/wxshare').then((res) => {
+                            $(".group").css({
+                                "color" : "#ccc",
+                            });
+                            $(".active").css({
+                                "color" : res.color,
+                            });
+                        });
+                    case 3:
+                        this.$getData('/index/index/wxshare').then((res) => {
+                            $(".group").css({
+                                "color" : "#ccc",
+                            });
+                            $(".active").css({
+                                "color" : res.color,
+                            });
+                        });
+                    case 4:
+                        this.$getData('/index/index/wxshare').then((res) => {
+                            $(".group").css({
+                                "color" : "#ccc",
+                            });
+                            $(".active").css({
+                                "color" : res.color,
+                            });
+                        });
 
+				}
+			},
 		},
         methods: {
             goPage(name) {
 				this.$router.go({name : name});
 			},
-		    goConter: function() {
+		    goBack() {
                 let openid = sessionStorage.getItem("openid");
                 this.$getData('/index/index/guanzhu?openid=' + openid).then((response)=>{
                     if(response.status == 0) {
@@ -68,20 +115,16 @@
                         return;
                     }
                 });
+			},
+		    goConter: function() {
+				this.goBack();
                 this.myActive(1);
                 this.$router.go({name: 'per-orders'})
 			},
             goCart: function() {
-                let openid = sessionStorage.getItem("openid");
-                this.$getData('/index/index/guanzhu?openid=' + openid).then((response)=>{
-                    if(response.status == 0) {
-                        this.$router.go({name: 'sao'});
-                        return;
-                    }
-                });
-                var cardDom = document.getElementById("card");
-                var active = cardDom.children;
-                for(var i = 0; i <= active.length; i++) {
+                this.goBack();
+                var cardDom = document.getElementById("card"), active = cardDom.children, i;
+                for(i = 0; i <= active.length; i++) {
                     try {
                         if(active[i]) active[i].className = "group";
 					} catch(e) {
@@ -146,7 +189,7 @@
 		z-index:99;
 	}
 
-	.cart-bor{
+	.cart-bor {
 		position: absolute;
 		top: 0px;
 		right: -12px;
@@ -164,14 +207,14 @@
 		line-height: 32px;
 	}
 
-	.wrapper .group{
-		display:inline-block;
-		width:25%;
-		height:auto;
-		text-align:center;
-		color:#ccc;
-		padding:0.7rem 0rem;
-		vertical-align:middle;
+	.wrapper .group {
+		display: inline-block;
+		width: 25%;
+		height: auto;
+		text-align: center;
+		color: #ccc;
+		padding: 0.7rem 0rem;
+		vertical-align: middle;
 	}
 
 	.wrapper .icons {
@@ -230,7 +273,7 @@
 	}
 
 	.wrapper .active {
-		color:#81c429;
+		color: #81c429;
 		display:inline-block;
 		width:25%;
 		height:auto;
@@ -247,7 +290,7 @@
 		display:block;
 	}
 
-	.iconfont{
+	.iconfont {
 		font-size:2.4rem;
 		line-height:2.5rem;
 	}
@@ -261,7 +304,7 @@
 		line-height: 1.9rem;
 	}
 
-	.cart{
+	.cart {
 		position: absolute;
 		top: 0px;
 		left: 118px;
@@ -272,12 +315,16 @@
 	}
 
 	.wrapper .group .my-badge{
-		background-color:#f9ad0c;
-		position:absolute;
-		top:2%;
-		right:30%;
+		background: #f9ad0c;
+		position: absolute;
+		top: 2%;
+		right: 30%;
 	}
-
 	/* wrapper start */
 
 </style>
+
+
+
+
+

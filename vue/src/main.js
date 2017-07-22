@@ -9,9 +9,7 @@ import App from 'components/app.vue';
 import Routers from './router';
 import Env from './config/env';
 import WxJssdk from 'weixin-js-sdk'
-import { fetchGet, fetchPost, fetchPut, fetchDelete,ustore } from './libs/util.js'
-
-import 'vux/src/styles/close.less';
+import { fetchGet, fetchPost, fetchPut, fetchDelete, ustore } from './libs/util.js'
 
 Vue.use(VueLazy,{
 	preLoad:1.2,
@@ -88,19 +86,19 @@ router.beforeEach((transition) => {
     //登录检测
     if(typeof(transition.to.login) !== 'undefined' && transition.to.login === true) {
         let ustore = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo');
-        if(ustore===null) {
+        if(ustore === null) {
             transition.redirect({name:'login'});
         } else {
             transition.next();
         }
-    }else if(['login','register','find'].indexOf(transition.to.name) >= 0) {
+    } else if (['login','register','find'].indexOf(transition.to.name) >= 0) {
         let ustore = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo');
         if(ustore !== null) {
             transition.abort();
-        }else{
+        } else {
             transition.next();
         }
-    }else{
+    } else {
         transition.next();
     }
     window.scrollTo(0, 0);
@@ -116,14 +114,51 @@ router.beforeEach((transition) => {
 });
 
 router.afterEach((transition) => {
+
+    // Vue.http.get('../src/data/classify.json').then(function(res) {
+    //     for(var i in res.data) {
+    //         var pColor = '', fColor = '';
+    //         pColor = res.data[i].publicColor;
+    //         fColor = res.data[i].fontColor;
+    //         $(".weui_btn_primary").css({
+    //             "background" : pColor,
+    //             "color" : fColor
+    //         });
+    //         $(".order-search").css({
+    //             "background" : pColor
+    //         });
+    //         $(".score").css({
+    //             "background" : "url('../src/images/qiandao.png') no-repeat" + pColor,
+    //             "backgroundSize" : "23px 23px",
+    //             "backgroundPosition" : "5px 2px"
+    //         });
+    //
+    //         if($("#card").find(".group").className === 'active') {
+    //             console.log(12123);
+    //         }
+    //     }
+    // });
+
     //获取微信分享配置
     if(transition.to.name != 'detail') {
-        Vue.http.get(localStorage.apiDomain+'public/index/index/wxshare').then((response)=>{
+        Vue.http.get(localStorage.apiDomain + 'public/index/index/wxshare').then((response)=>{
             let getSession = response.data;
+            $(".score").css({
+                "background" : "url('../dist/assets/qiandao.png') no-repeat" + response.data.color,
+                "backgroundSize" : "23px 23px",
+                "backgroundPosition" : "5px 2px"
+            });
+            $(".group-cart").css({
+                "background" : response.data.color,
+                "border" : "1px solid " + response.data.color,
+            });
+            $(".weui_btn_primary, .order-search, .gopay, .notify-box, .confirm").css({
+                "background" : response.data.color,
+            });
             let shareData = {
                 title:getSession.title,
                 desc:getSession.desc,
-                link:'http://'+window.location.host+'/index.html',
+                link:'http://' + window.location.host + '/index.html',
                 imgUrl:getSession.imgurl
             };
             WxJssdk.config({

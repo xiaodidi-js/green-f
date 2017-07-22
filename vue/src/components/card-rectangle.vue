@@ -72,7 +72,6 @@
 	<div class="footer-list">
 		—————&nbsp;&nbsp;我是有底线的!&nbsp;&nbsp;—————
     </div>
-	<div></div>
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
 	<!-- 弹出提示框 -->

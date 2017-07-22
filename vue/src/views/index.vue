@@ -1,11 +1,12 @@
 <template>
-	<div class="wrapper">
+	<div class="wrapper" style="padding:0px;">
 		<!-- 导航栏 -->
 		<router-view keep-alive></router-view>
         <!-- toast提示框 -->
 		<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
 		<!-- loading加载框 -->
 		<loading :show="loadingShow" :text="loadingMessage"></loading>
+
 	</div>
 </template>
 <script>
@@ -30,6 +31,8 @@ export default{
 	},
 	ready() {
 
+
+
 	},
     methods: {
 
@@ -50,7 +53,7 @@ export default{
 		position: relative;
 	}
 
-	.wrapper{
+	.wrapper {
 		width:100%;
 		height:auto;
 	}
