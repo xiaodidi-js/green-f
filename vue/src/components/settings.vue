@@ -30,31 +30,18 @@
 			<input type="password" placeholder="请输入新密码" v-model="data.npwd" />
 			<input type="password" placeholder="请确认新密码" v-model="data.cpwd" />
 		</div>
-		<!--<div class="list">-->
-			<!--<label style="line-height: 30px;">主题颜色</label>-->
-			<!--<button class="that-style" @click="chonseColor"></button>-->
-			<!--<ul class="color-list">-->
-				<!--<li style="background-color:#c00000;" @click="thatColor"></li>-->
-				<!--<li style="background-color:#ff0000;"></li>-->
-				<!--<li style="background-color:#ffc000;"></li>-->
-				<!--<li style="background-color:#ffff00;"></li>-->
-				<!--<li style="background-color:#92d050;"></li>-->
-				<!--<li style="background-color:#00b050;"></li>-->
-				<!--<li style="background-color:#00b0f0;"></li>-->
-				<!--<li style="background-color:#0070c0;"></li>-->
-				<!--<li style="background-color:#002060;"></li>-->
-			<!--</ul>-->
-		<!--</div>-->
 	</div>
 
 	<!-- 底部按钮 -->
 	<div class="btn-wrapper">
 		<x-button type="primary" :text="btnText" id="confirm" :disabled="btnDis" @click="postData"></x-button>
-		<x-button type="primary" text="退出登录" style="background-color:transparent !important;color:#81c429 !important;border:1px solid #81c429;margin-top:10px;" @click="showExit"></x-button>
+		<x-button style="color: #fff;" type="primary" text="退出登录" style="background-color:transparent !important;color:#81c429 !important;border:1px solid #81c429;margin-top:10px;" @click="showExit"></x-button>
 	</div>
 
 	<!-- 确定弹框 -->
-	<confirm :show.sync="confirmShow" title="退出登录" confirm-text="确定" cancel-text="取消" @on-confirm="exitLogin"><p style="text-align:center;">确定退出当前账号吗？</p></confirm>
+	<confirm :show.sync="confirmShow" title="退出登录" confirm-text="确定" cancel-text="取消" @on-confirm="exitLogin">
+		<p style="text-align:center;">确定退出当前账号吗？</p>
+	</confirm>
 
 	<!-- toast提示框 -->
 	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>

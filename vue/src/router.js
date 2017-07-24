@@ -621,16 +621,6 @@ const routers = {
         component (resolve) {
             require(['./components/integral-arr.vue'], resolve);
         }
-    },
-    '/toast-msg' : {
-        name:'toast-msg',
-        header:false,
-        footer:false,
-        title:'',
-        position:3,
-        component (resolve) {
-            require(['./components/toast-msg.vue'], resolve);
-        }
-    },
+    }
 };
 export default routers;

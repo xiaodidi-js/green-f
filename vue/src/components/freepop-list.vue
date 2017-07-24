@@ -99,12 +99,14 @@
             console.log(this.$parent.getType);
 
             this.$getData('/index/index/wxshare').then((res) => {
-                $(".isChonse").css({
+                $(".mes-line .my-common-fadein").css({
+                    "background" : "#fff",
+                });
+                $(".mes-line .my-common-fadein .isChonse").css({
                     "background" : res.color,
                     "color" : "#fff",
-                }).siblings().css({
-                    "color" : "#ccc",
                 });
+
             });
 
 		},

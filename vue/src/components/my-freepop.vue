@@ -735,7 +735,7 @@
     }
 
     .nowrap {
-        white-space: nowrap;
+        /*white-space: nowrap;*/
         text-overflow: ellipsis;
         overflow: hidden;
     }

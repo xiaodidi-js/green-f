@@ -28,7 +28,6 @@
 	<loading :show="loadingShow" text="正在登录..."></loading>
 	<!-- toast提示框 -->
 	<!--<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>-->
-	<!--<toast-msg :messages="toastMessage" :showele="toastShow"></toast-msg>-->
 </template>
 
 <script>
@@ -38,7 +37,6 @@ import BottomCheck from 'components/bottom-check'
 import XButton from 'vux/src/components/x-button'
 import Toast from 'vux/src/components/toast'
 import Loading from 'vux/src/components/loading'
-import toastMsg from 'components/toast-msg'
 
 export default{
 	data() {
@@ -62,7 +60,6 @@ export default{
 		XButton,
 		Toast,
 		Loading,
-        toastMsg
 	},
 	route: {
 

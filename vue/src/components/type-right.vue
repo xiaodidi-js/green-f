@@ -1,3 +1,64 @@
+<template>
+	<div class="wrapper" :class="{'nopadding':noPadding}">
+		<template v-for="item in arrsomething">
+			<div class="card-box">
+				{{ item }}
+				<div class="img" v-lazy:background-image="item.src"></div>
+					<div class="mes">
+						<div class="name">
+							{{ item.title }}
+					</div>
+					<div class="money">
+						<label class="unit">¥</label>{{ item.price }}
+					</div>
+				</div>
+			</div>
+		</template>
+	</div>
+</template>
+
+<script>
+	export default{
+		props: {
+			info: {
+				type: Object,
+				required: true
+			},
+			noPadding: {
+				type: Boolean,
+				default: false
+			},
+			arrsomething: []
+		},
+		data() {
+			return {
+
+			}
+		},
+		ready() {
+
+		},
+		methods: {
+            getData: function(sk){
+                let url = localStorage.apiDomain +
+                    'public/index/index/classifylist/cid/' +
+                    this.$route.params.cid+'/action/' +
+                    this.column;
+                if(sk.length>0){
+                    url += '/search/'+sk;
+                }
+                var _this = this;
+                this.$getData(url).then((res)=>{
+                    _this.arrsomething = res.list;
+                },(res)=>{
+                    this.toastMessage = "网络开小差啦~";
+                    this.toastShow = true;
+                });
+            }
+		}
+	}
+</script>
+
 <style scoped>
 	.wrapper{
 		width:100%;
@@ -83,79 +144,3 @@
 		margin-right:0.2rem;
 	}
 </style>
-
-<template>
-	<!--<div class="wrapper" v-if="info.title">-->
-		<!--<label class="title">{{ info.title }}</label>-->
-		<!--<div class="parent">-->
-			<!--<div class="card-box" v-link="{name:'detail',params:{pid:item.id}}" v-for="item in info.list">-->
-				<!--<div class="img" v-lazy:background-image="item.src"></div>-->
-				<!--<div class="mes">-->
-					<!--<div class="name">-->
-						<!--{{ item.title }}-->
-					<!--</div>-->
-					<!--<div class="money">-->
-						<!--<label class="unit">¥</label>{{ item.price }}-->
-					<!--</div>-->
-				<!--</div>-->
-			<!--</div>-->
-		<!--</div>-->
-	<!--</div>-->
-	<div class="wrapper" :class="{'nopadding':noPadding}">
-		<div class="card-box" v-for="item in arrsomething"> <!--  v-link="{name:'detail',params:{pid:item.id}}" -->
-			{{ item }}
-			<div class="img" v-lazy:background-image="item.src"></div>
-			<div class="mes">
-				<div class="name">
-					{{ item.title }}
-				</div>
-				<div class="money">
-					<label class="unit">¥</label>{{ item.price }}
-				</div>
-			</div>
-		</div>
-	</div>
-</template>
-
-<script>
-	export default{
-		props: {
-			info: {
-				type: Object,
-				required: true
-			},
-			noPadding: {
-				type: Boolean,
-				default: false
-			},
-			arrsomething: []
-		},
-		data() {
-			return {
-
-			}
-		},
-		ready() {
-
-		},
-		methods: {
-            getData: function(sk){
-                let url = localStorage.apiDomain +
-                    'public/index/index/classifylist/cid/' +
-                    this.$route.params.cid+'/action/' +
-                    this.column;
-                if(sk.length>0){
-                    url += '/search/'+sk;
-                }
-                var _this = this;
-                this.$http.get(url).then((response)=>{
-                    _this.arrsomething = response.data.list;
-                    console.log(response.data.list);
-                },(response)=>{
-                    this.toastMessage = "网络开小差啦~";
-                    this.toastShow = true;
-                });
-            }
-		}
-	}
-</script>

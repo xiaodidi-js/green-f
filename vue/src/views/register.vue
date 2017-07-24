@@ -33,7 +33,6 @@ import XInput from 'vux/src/components/x-input'
 import BottomCheck from 'components/bottom-check'
 import XButton from 'vux/src/components/x-button'
 import Toast from 'vux/src/components/toast'
-import toastMsg from 'components/toast-msg'
 
 export default{
 	data() {
@@ -60,7 +59,6 @@ export default{
 		BottomCheck,
 		XButton,
 		Toast,
-        toastMsg
 	},
 	route: {
 		

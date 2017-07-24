@@ -173,15 +173,15 @@ export default{
 
 	.btn-wrapper{
 		width:80%;
-		margin: 5% 10% 0% 10%;
+		margin: 20% 10% 0% 10%;
 	}
 
 	.btn-wrapper .link-box{
-		width:100%;
-		position:relative;
-		margin-top:0.8rem;
-		font-size:1.2rem;
-		color:#B3B3B3;
+		width: 100%;
+		position: relative;
+		margin-top: 1.8rem;
+		font-size: 1.2rem;
+		color: #B3B3B3;
 	}
 
 	.btn-wrapper .link-box .left{

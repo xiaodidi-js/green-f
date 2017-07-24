@@ -221,8 +221,8 @@
 
 	@media screen and (max-width: 414px) {
 		.wrapper .ui_box {
-			width: 188px;
-			height: 270px;
+			width: 203px;
+			height: 290px;
 		}
 	}
 
@@ -235,8 +235,8 @@
 
 	@media screen and (max-width: 384px) {
 		.wrapper .ui_box {
-			width: 183px;
-			height: 265px;
+			width: 188px;
+			height: 270px;
 		}
 	}
 
