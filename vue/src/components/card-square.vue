@@ -1,6 +1,6 @@
 <template>
 	<template v-if="info.title">
-		<div class="wrapper" style="padding-bottom: 100px;" :class="{'nopadding':noPadding}" >
+		<div class="wrapper-ele" style="padding-bottom: 100px;" :class="{'nopadding':noPadding}" >
 			<label class="title">{{ info.title }}</label>
 			<div class="parent">
 				<div class="ui-box" v-for="item in info.list">
@@ -31,24 +31,25 @@
 		</div>
 	</template>
 	<template v-else>
-		<div class="wrapper" :class="{'nopadding':noPadding}" >
+		<div class="wrapper-ele" :class="{'nopadding':noPadding}" >
 			<template v-for="item in info.list">
 				<div class="ui_box">
 					<div @click="goPage('detail', {pid:item.id})">
-						<div class="img" v-if="item.store == 0">
+						<div class="img" v-if="item.store == 0" v-bind:style="{backgroundImage:'url('+ item.src +')'}">
 							<div class="qing">已售罄</div>
 							<!--<div v-lazy:background-image="item.src" class="lazyImg"></div>-->
-							<img :src="item.src" alt="" style="width:100%;height:100%;" />
+							<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
 						</div>
-						<div class="img" v-else>
+						<div class="img" v-else v-bind:style="{backgroundImage:'url('+ item.src +')'}">
 							<!--<div v-lazy:background-image="item.src" class="lazyImg"></div>-->
-							<img :src="item.src" alt="" style="width:100%;height:100%;" />
+							<!--<div class="img" v-bind:style="{backgroundImage:'url('+ item.src +')'}"></div>-->
+							<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
 						</div>
 						<div class="mes">
 							<div class="name">{{ item.title }}</div>
 						</div>
 					</div>
-					<div style="padding-bottom: 25px;margin: 0px 5px;">
+					<div style="padding-bottom: 25px;margin: 10px 5px;">
 						<div class="money">
 							<label class="unit">¥</label>{{ item.price }}
 					</div>
@@ -172,13 +173,13 @@
 	}
 </script>
 <style type="text/css">
-	.wrapper{
-		width:100%;
-		padding:0rem 0rem 1rem 0rem;
-		font-size:0;
+	.wrapper-ele{
+		height: 100%;
+		overflow: hidden;
+		padding: 5px 4px 3rem;
 	}
 
-	.wrapper.nopadding{
+	.wrapper-ele.nopadding{
 		padding-bottom: 3rem;
 		height: 100%;
 		overflow: hidden;
@@ -188,7 +189,7 @@
 		margin-top: 166px;
 	}
 
-	.wrapper .title{
+	.wrapper-ele .title{
 		display:block;
 		margin:0.5rem 0rem 1rem 0rem;
 		font-size:1.4rem;
@@ -199,74 +200,75 @@
 		padding-left:0.8rem;
 	}
 
-	.wrapper .ui_box {
-		width: 48%;
-		height: auto;
+	.wrapper-ele .ui_box {
+		width: 49.2%;
+		/* height: auto; */
 		background-color: #fff;
 		display: block;
 		float: left;
 		font-size: 1.6rem;
 		overflow: hidden;
-		margin: 4px 2.3px;
+		margin-right: 5px;
+		margin-top: 5px;
 		color: #333;
 		box-shadow: 1px 1px 2px #e2e2e2;
 	}
 
-	@media screen and (max-width: 600px) {
-		.wrapper .ui_box {
-			width: 146px;
-			height: 230px;
-		}
+	/*@media screen and (max-width: 600px) {*/
+		/*.wrapper .ui_box {*/
+			/*width: 146px;*/
+			/*height: 230px;*/
+		/*}*/
+	/*}*/
+
+	/*@media screen and (max-width: 414px) {*/
+		/*.wrapper .ui_box {*/
+			/*width: 203px;*/
+			/*height: 290px;*/
+		/*}*/
+	/*}*/
+
+	/*@media screen and (max-width: 412px) {*/
+		/*.wrapper .ui_box {*/
+			/*width: 202px;*/
+			/*height: 285px;*/
+		/*}*/
+	/*}*/
+
+	/*@media screen and (max-width: 384px) {*/
+		/*.wrapper .ui_box {*/
+			/*width: 188px;*/
+			/*height: 270px;*/
+		/*}*/
+	/*}*/
+
+	/*@media screen and (max-width: 375px) {*/
+		/*.wrapper .ui_box {*/
+			/*width: 183px;*/
+			/*height: 265px;*/
+		/*}*/
+	/*}*/
+
+	/*@media screen and (max-width: 360px) {*/
+		/*.wrapper .ui_box {*/
+			/*width: 176px;*/
+			/*height: 260px;*/
+		/*}*/
+	/*}*/
+
+	/*@media screen and (max-width: 320px) {*/
+		/*.wrapper .ui_box {*/
+			/*width: 156px;*/
+			/*height: 240px;*/
+		/*}*/
+	/*}*/
+
+	.wrapper-ele .ui_box:nth-child(even){
+		margin-right: 0%;
 	}
 
-	@media screen and (max-width: 414px) {
-		.wrapper .ui_box {
-			width: 203px;
-			height: 290px;
-		}
-	}
-
-	@media screen and (max-width: 412px) {
-		.wrapper .ui_box {
-			width: 202px;
-			height: 285px;
-		}
-	}
-
-	@media screen and (max-width: 384px) {
-		.wrapper .ui_box {
-			width: 188px;
-			height: 270px;
-		}
-	}
-
-	@media screen and (max-width: 375px) {
-		.wrapper .ui_box {
-			width: 183px;
-			height: 265px;
-		}
-	}
-
-	@media screen and (max-width: 360px) {
-		.wrapper .ui_box {
-			width: 176px;
-			height: 260px;
-		}
-	}
-
-	@media screen and (max-width: 320px) {
-		.wrapper .ui_box {
-			width: 156px;
-			height: 240px;
-		}
-	}
-
-	.wrapper .ui_box:nth-child(even){
-		margin-right:0%;
-	}
-
-	.wrapper .ui_box:nth-last-child(2),.wrapper .ui_box:last-child{
-		margin-bottom:0%;
+	.wrapper-ele .ui_box:nth-last-child(2),.wrapper .ui_box:last-child{
+		margin-bottom: 0%;
 	}
 
 	.parent{
@@ -276,23 +278,21 @@
 		padding:0;
 	}
 
-	.wrapper .ui_box .img{
-		width:100%;
-		background-position:center;
-		background-size:cover;
-		background-repeat:no-repeat;
+	.wrapper-ele .ui_box .img{
+		width: 100%;
 		position: relative;
+		height: auto;
+		padding-top: 100%;
+		background-size: cover;
+		background-position:center;
 	}
 
-	.wrapper .ui_box .img .lazyImg {
+	.wrapper-ele .ui_box .img .lazyImg {
 		width:100%;
 		padding-top:100%;
-		background-position: center;
-		background-size: cover;
-		background-repeat: no-repeat;
 	}
 
-	.wrapper .ui_box .img .qing {
+	.wrapper-ele .ui_box .img .qing {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -306,11 +306,11 @@
 		background: rgba(0,0,0,0.5);
 	}
 
-	.wrapper .ui_box .mes{
+	.wrapper-ele .ui_box .mes{
 		padding:0.7rem 0.5rem;
 	}
 
-	.wrapper .ui_box .mes .name{
+	.wrapper-ele .ui_box .mes .name{
 		font-size:1.4rem;
 		color:#333;
 		line-height:1.8rem;
