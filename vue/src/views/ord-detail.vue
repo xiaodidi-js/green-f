@@ -188,15 +188,11 @@ export default{
 	    this.getDetail();
         //	开始时间
         this.startTimer();
-
-
-
     },
 	methods: {
         goExpress() {
 			console.log(this.stime,this.data.order.id,this.$ustore.id);
 			for(var i in this.data.products) {
-                console.log(this.data.products[i].id);
                 this.$router.go({
                     name: "express",
                     query: {

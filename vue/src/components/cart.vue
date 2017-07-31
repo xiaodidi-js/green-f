@@ -25,8 +25,9 @@
 					<span>全选</span>
 				</div>
 				<div class="right">
-					<x-button type="primary" class="btn" @click="setDel">删除</x-button>
-					<!--<div class="btn" @click="setDel">删除</div>-->
+
+					<!--<x-button type="primary" class="btn" @click="setDel"></x-button>-->
+					<div class="btn" @click="setDel">删除</div>
 				</div>
 			</div>
 			<div class="bottom color" v-else>
