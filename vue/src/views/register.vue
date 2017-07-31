@@ -15,11 +15,10 @@
 	<!--</div>-->
 	<div class="eleChonse">
 		<bottom-check style="width:43%;float:left;" title="我已阅读并同意" :status.sync="data.check"></bottom-check>
-		<a href="javascript:void(0);" class="xieyi">{{ data.xieyi }}商城使用协议</a>
 	</div>
-
+	<a href="javascript:void(0);" class="xieyi">{{ data.xieyi }}商城使用协议</a>
 	<!-- 底部按钮 -->
-	<div class="btn-wrapper">
+	<div class="btn-wrapper" style="width:90%;margin:0px 5%;">
 		<x-button type="primary" :text="btnText" :disabled="btnDis" @click="postData"></x-button>
 	</div>
 	<!-- 输入内容 -->
@@ -202,7 +201,6 @@ export default{
 	/* eleChonse start */
 	.eleChonse {
 		width: 100%;
-		height: 5.5rem;
 		position: relative;
 	}
 
@@ -215,7 +213,7 @@ export default{
 
 	.btn-wrapper {
 		width: 80%;
-		margin: 5% 10% 0% 10%;
+		margin: 5% 10% 0%;
 	}
 
 	.btn-wrapper .link-box{
@@ -290,11 +288,11 @@ export default{
 	.xieyi {
 		float: right;
 		display: block;
-		line-height: 4rem;
+		line-height: 2rem;
 		font-size: 15px;
 		margin-top: 5px;
 		color: #81c429;
-		margin-right:10px;
+		margin: 10px 15px;
 	}
 
 </style>

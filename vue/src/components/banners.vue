@@ -4,10 +4,11 @@
             <img src="../images/logo_lv.png" alt="" style="width:40px;height:40px;margin: 5px 15px;" />
         </div>
         <div class="search" style="width:66%;position:relative;left:12px;">
-            <input type="text" placeholder="请输入您要搜索的商品" v-model="searchKey" @keydown="breakSearch()" />
-            <a href="javascript:void(0)" class="order-search-btn" style="display:block;" @click="goSearch()">搜索</a>
-            <!--<x-button text="搜索" class="order-search-btn" style="display:block;" @click="goSearch()"></x-button>-->
-            <!--<input type="button" class="order-search-btn" @click="goSearch()" value="搜索" />-->
+            <form action="">
+                <input type="text" placeholder="请输入您要搜索的商品" v-model="searchKey" @keydown="breakSearch()" />
+                <input type="text" style="display: none;">
+                <a href="javascript:void(0)" class="order-search-btn" style="display:block;" @click="goSearch()">搜索</a>
+            </form>
         </div>
         <div class="customer">
             <a href="javascript:void(0)" class="txt-service" @click="goPage"></a>

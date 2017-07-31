@@ -256,6 +256,7 @@
                 if(parseInt(to.params.pid) !== this.data.id && to.name === 'detail') {
                     this.fetchData();
                 }
+
             }
         },
 		computed: {
@@ -274,6 +275,14 @@
 			}
 		},
 		methods: {
+		    abc() {
+                console.log(this.data.activestu);
+                if(this.data.activestu == 0) {
+                    this.seckillShow = false
+                } else if(this.data.activestu == 1) {
+                    this.seckillShow = true;
+                }
+			},
 		    share() {
 		        var content = this;
                 //微信分享
@@ -388,9 +397,11 @@
                                 this.proNums = this.data.store;
                             }
                             //判断是否活动商品
-                            if(context.data.activestu == 0 && context.data.activestu == 2) {
+                            if(context.data.activestu == 0) {
                                 context.seckillShow = false
-                            } else if(context.data.activestu == 1) {
+                            } else if(context.data.activestu == 2) {
+                                context.seckillShow = false
+							} else if(context.data.activestu == 1) {
                                 context.seckillShow = true;
                             }
                             var scaleBox = this.data.content;

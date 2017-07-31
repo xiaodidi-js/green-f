@@ -25,7 +25,8 @@
 					<span>全选</span>
 				</div>
 				<div class="right">
-					<div class="btn" @click="setDel">删除</div>
+					<x-button type="primary" class="btn" @click="setDel">删除</x-button>
+					<!--<div class="btn" @click="setDel">删除</div>-->
 				</div>
 			</div>
 			<div class="bottom color" v-else>
@@ -117,12 +118,27 @@
             }
         },
         ready() {
-
+            this.$getData('/index/index/wxshare').then((res) => {
+                $(".right").css({
+                    "background" : res.color,
+                    "color" : "#fff"
+                });
+            });
         },
         watch: {
-			$route() {
-//			    var cartMessage = localStorage.getItem("myCart");
-//			    this.cartList = cartMessage;
+			$route(to) {
+			    console.log(to.name);
+			    if(to.name == 'cart') {
+			        this.$getData('/index/index/wxshare').then((res) => {
+						$(".right").css({
+						    "background" : res.color,
+							"color" : "#fff"
+						});
+					});
+					$(".group").css({"color":"#ccc"});
+                    this.modeText = "编辑";
+                    this.editMode = 0;
+				}
 			}
         },
         methods: {
@@ -141,6 +157,12 @@
                 this.editMode = this.editMode ? 0 : 1;
                 this.choseArr = [];
                 this.btnText = '删除';
+                this.$getData('/index/index/wxshare').then((res) => {
+                    $(".right").css({
+                        "background" : res.color,
+                        "color" : "#fff"
+                    });
+                });
             },
             changAll: function(type) {
                 if(this.choseArr.length > 0) {
@@ -165,6 +187,12 @@
                 content.$router.go({name:'submit'});
             }
         },
+        events: {
+            goCarts: function() {
+                this.modeText = "编辑";
+                this.editMode = 0;
+			}
+		},
         computed: {
             allsel: function() {
                 if(this.cartList.length === this.choseArr.length) {

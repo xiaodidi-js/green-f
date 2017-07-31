@@ -139,6 +139,7 @@
                             return false;
                         } else if(data.store == 0) {
                             alert("已售罄");
+                            this.$dispatch("goCart");
                             return false;
                         } else if (data.activeid == 1) {
                             alert("这是限时抢购商品！");
@@ -163,6 +164,7 @@
                         this.setCart(obj);
                         obj = {};
                         this.alertShow = true;
+                        this.$dispatch("goCarts");
                         this.$router.go({name : "cart"});
                     },(response)=>{
                         this.toastMessage = '网络开小差了~';

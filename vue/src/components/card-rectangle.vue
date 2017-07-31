@@ -146,7 +146,7 @@
                         self.$router.go({name: 'login'});
                     }, 800);
                     return false;
-				} else if (ustore != null) {
+				} else if (this.$ustore != null) {
                     this.$getData('/index/index/productdetail/uid/' + this.$ustore.id + '/pid/' + data.shopid).then((response) => {
                         obj = {
                             id: data.shopid,
