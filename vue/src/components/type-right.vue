@@ -3,7 +3,7 @@
 		<template v-for="item in arrsomething">
 			<div class="card-box">
 				{{ item }}
-				<div class="img" v-lazy:background-image="item.src"></div>
+				<div class="img" :style="{backgroundImage:'url('+ item.src +')'}"></div>
 					<div class="mes">
 						<div class="name">
 							{{ item.title }}

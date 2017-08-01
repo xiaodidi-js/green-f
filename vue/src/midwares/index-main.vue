@@ -66,7 +66,6 @@
                     scrollTop:0
                 },200);
             });
-            console.log(this.maincolumns);
         },
         filters: {
             timeline: function (value) {
@@ -118,6 +117,7 @@
                 this.$getData('/index/sale/SaleTimeSolt/uid').then((res) => {
                     if(res.status === 1) {
                         this.maincolumns = res.SaleTimeSolt;
+                        console.log(this.maincolumns);
                     } else {
                         this.toastMessage = res.info;
                         this.toastShow = true;

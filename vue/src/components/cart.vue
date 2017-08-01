@@ -117,13 +117,21 @@
                 data:{},
             }
         },
-        ready() {},
+        ready() {
+            this.modeText = "编辑";
+            this.editMode = 0;
+            $(".group ,.active").css({
+                "color" : "#ccc",
+            });
+		},
         watch: {
 			$route(to) {
-				if(to.path == '/cart') {
-				    $(".group").css("color","#ccc");
+				if(to.path === '/cart' || to.name === 'cart' || to.position === 0) {
                     this.modeText = "编辑";
                     this.editMode = 0;
+                    $(".group ,.active").css({
+						"color" : "#ccc",
+					});
 				}
 			}
         },

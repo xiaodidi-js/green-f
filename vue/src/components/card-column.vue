@@ -23,7 +23,7 @@
 			<div style="width:1850px;">
 				<div type="popup" class="cla-wrapper" id="menu" style="float: left;">
 					<div id="scroller">
-						<template  v-for="item in columns">
+						<template v-for="item in columns">
 							<template v-if="item.nowsale == 1">
 								<div class="box-list" v-for="list in item.arr">
 									<a class="display:block;" v-link="{name:'detail',params:{pid:list.shopid}}">
@@ -36,7 +36,7 @@
 										</template>
 										<div class="main-des">{{ list.name }}</div>
 										<div style="width:90%;margin:7px auto;">
-											<div class="price-img" v-lazy:background-image="list.shotcut"></div>
+											<div class="price-img" v-bind:style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
 										</div>
 									</a>
 								</div>

@@ -272,14 +272,6 @@
             }
         },
         methods: {
-            abc() {
-                console.log(this.data.activestu);
-                if(this.data.activestu == 0) {
-                    this.seckillShow = false
-                } else if(this.data.activestu == 1) {
-                    this.seckillShow = true;
-                }
-            },
             share() {
                 var content = this;
                 //微信分享
@@ -394,10 +386,10 @@
                             }
                             //判断是否活动商品
                             if(context.data.activestu == 0) {
-                                context.seckillShow = false
+                                context.seckillShow = false;
                             } else if(context.data.activestu == 2) {
-                                context.seckillShow = false
-                            } else if(context.data.activestu == 1) {
+                                context.seckillShow = false;
+							} else if(context.data.activestu == 1) {
                                 context.seckillShow = true;
                             }
                             var scaleBox = this.data.content;
@@ -416,9 +408,7 @@
                                         chil[i].style.display = "block";
                                     }
                                 }
-                            } catch(e) {
-                                console.log(e);
-                            } finally {}
+                            } catch(e) {} finally {}
                         },(res)=>{
                             this.toastMessage = "网络开小差啦~";
                             this.toastShow = true;

@@ -62,17 +62,20 @@
 
         },
         ready() {
-            this.$getData('/index/index/xieyi').then((res)=>{
-                this.data.xieyi = res;
-                var str = this.data.xieyi.substring(0,9);
-                this.data.xieyi = str;
-            },(res)=>{
-                this.toastMessage = '网络开小差了~';
-                this.toastShow = true;
-                this.codeDis = false;
-            });
+			this.xiayi();
         },
         methods: {
+            xiayi: function() {
+                this.$getData('/index/index/xieyi').then((res)=>{
+                    this.data.xieyi = res.info.data;
+                    var str = this.data.xieyi.substring(0,9);
+                    this.data.xieyi = str;
+                },(res)=>{
+                    this.toastMessage = '网络开小差了~';
+                    this.toastShow = true;
+                    this.codeDis = false;
+                });
+			},
             getCode: function(){
                 if(this.codeDis){
                     return false;
