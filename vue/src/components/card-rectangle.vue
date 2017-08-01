@@ -193,7 +193,8 @@
                             }
                         }
                         this.setCart(obj);
-                        this.alertShow = true;
+                        alert("加入购物车成功!");
+//                        this.alertShow = true;
                     });
 				}
             }
