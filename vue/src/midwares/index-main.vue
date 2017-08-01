@@ -66,6 +66,7 @@
                     scrollTop:0
                 },200);
             });
+            console.log(this.maincolumns);
         },
         filters: {
             timeline: function (value) {

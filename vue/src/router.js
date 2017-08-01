@@ -621,6 +621,15 @@ const routers = {
         component (resolve) {
             require(['./components/integral-arr.vue'], resolve);
         }
+    },
+    '/xieyi' : {
+        name:'xieyi',
+        header: true,
+        footer: false,
+        title:'用户协议',
+        component (resolve) {
+            require(['./components/xieyi.vue'], resolve);
+        }
     }
 };
 export default routers;

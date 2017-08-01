@@ -15,8 +15,8 @@
 	<!--</div>-->
 	<div class="eleChonse">
 		<bottom-check style="width:43%;float:left;" title="我已阅读并同意" :status.sync="data.check"></bottom-check>
+		<a href="javascript:void(0);" v-link="{name: 'xieyi'}" class="xieyi">{{ data.xieyi }}</a>
 	</div>
-	<a href="javascript:void(0);" class="xieyi">{{ data.xieyi }}商城使用协议</a>
 	<!-- 底部按钮 -->
 	<div class="btn-wrapper" style="width:90%;margin:0px 5%;">
 		<x-button type="primary" :text="btnText" :disabled="btnDis" @click="postData"></x-button>
@@ -64,6 +64,8 @@
         ready() {
             this.$getData('/index/index/xieyi').then((res)=>{
                 this.data.xieyi = res;
+                var str = this.data.xieyi.substring(0,9);
+                this.data.xieyi = str;
             },(res)=>{
                 this.toastMessage = '网络开小差了~';
                 this.toastShow = true;
@@ -100,7 +102,7 @@
                     }else{
                         this.codeDis = false;
                     }
-                },(response)=>{
+                },(res)=>{
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                     this.codeDis = false;
@@ -109,35 +111,35 @@
             checkBefore: function() {
                 let telReg = /^[\d]{9,11}$/;
                 let pwdReg = /^[\w@\+\?\.\*-\_\#\^]{6,30}$/;
-                if(this.data.tel.length <= 0) {
+                if (this.data.tel.length <= 0) {
                     this.toastMessage = '请输入您的手机号码';
                     this.toastShow = true;
                     return false;
-                }else if(!telReg.test(this.data.tel)) {
+                } else if(!telReg.test(this.data.tel)) {
                     this.toastMessage = '手机号码格式不正确';
                     this.toastShow = true;
                     return false;
-                }else if(this.data.ucode.length != 5) {
+                } else if(this.data.ucode.length != 5) {
                     this.toastMessage = '请输入五位验证码';
                     this.toastShow = true;
                     return false;
-                }else if(this.unpwd.length <= 0) {
+                } else if(this.unpwd.length <= 0) {
                     this.toastMessage = '请输入账号密码';
                     this.toastShow = true;
                     return false;
-                }else if(!pwdReg.test(this.unpwd)) {
+                } else if(!pwdReg.test(this.unpwd)) {
                     this.toastMessage = '账号密码格式不正确';
                     this.toastShow = true;
                     return false;
-                }else if(this.ucpwd.length <= 0) {
+                } else if(this.ucpwd.length <= 0) {
                     this.toastMessage = '请输入确认密码';
                     this.toastShow = true;
                     return false;
-                }else if(this.unpwd!==this.ucpwd) {
+                } else if(this.unpwd!==this.ucpwd) {
                     this.toastMessage = '两次密码不一致';
                     this.toastShow = true;
                     return false;
-                }else if(!this.data.check) {
+                } else if(!this.data.check) {
                     this.toastMessage = '请先仔细阅读使用协议';
                     this.toastShow = true;
                     return false;
@@ -199,7 +201,15 @@
 	.eleChonse {
 		width: 100%;
 		position: relative;
+		height: 5rem;
+		top: 10px;
 	}
+
+	.eleChonse .wrapper {
+		margin: 0px 15px;
+		padding: 0px 1rem;
+	}
+
 	.eleChonse .xieyi {
 		position: absolute;
 		top: 0px;
@@ -244,7 +254,8 @@
 	.weui_btn_disabled.weui_btn_default,.weui_cell_ft .weui_btn_disabled.weui_btn_primary{
 		background-color:#F3C76A !important;
 	}
-	.weui_cell_ft .weui_btn_primary{
+
+	.weui_cell_ft .weui_btn_primary {
 		height:3.4rem;
 		margin:0.5rem 0rem;
 		background-color:#F9AD0C !important;
@@ -266,15 +277,17 @@
 	.weui_cell{
 		font-size:14px;
 	}
-	.wbox label {padding-left: 10px;
-		line-height: 2.1rem;}
+	.wbox label {
+		padding-left: 10px;
+		line-height: 2.1rem;
+	}
+
 	.xieyi {
 		float: right;
 		display: block;
 		line-height: 2rem;
 		font-size: 15px;
-		margin-top: 5px;
 		color: #81c429;
-		margin: 10px 15px;
+		margin: 0px 15px;
 	}
 </style>

@@ -134,8 +134,6 @@
         ready() {
             this.selList();
             this.onToureEle();
-
-
         },
         created() {
 
@@ -314,6 +312,7 @@
                 evt.stopPropagation();
             },
             selList: function (id) {
+
                 let pdata = {uid: this.$ustore.id, token: this.$ustore.token, addressid: id};
                 this.$putData('/index/Usercenter/since', pdata).then((res) => {
                     if (res.status === 1) {
