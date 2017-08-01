@@ -12,7 +12,7 @@
 						:aspect-ratio="480/480" dots-class="dots-my-orange" @touchstart.stop @touchend.stop></swiper>
 
 				<!--<swiper :list="data.gallery" auto dots-position="center" :show-desc-mask="false"-->
-						<!--:aspect-ratio="480/480" dots-class="dots-my-orange" @touchstart.stop @touchend.stop></swiper>-->
+				<!--:aspect-ratio="480/480" dots-class="dots-my-orange" @touchstart.stop @touchend.stop></swiper>-->
 
 				<!-- 产品信息 -->
 				<div class="pro-mes">
@@ -35,8 +35,8 @@
 					</div>
 					<div class="deliver">
 						<div class="son">快递：{{ makeFreight }}</div>
-                        <div class="son">销量：{{ data.virtual_sale }}</div>
-                        <div class="son">库存：{{ data.store }}</div>
+						<div class="son">销量：{{ data.virtual_sale }}</div>
+						<div class="son">库存：{{ data.store }}</div>
 					</div>
 					<!-- 分割线 -->
 					<div class="divider"></div>
@@ -63,9 +63,9 @@
 					</ul>
 				</div>
 				<!--<tab default-color="#333" active-color="#F9AD0C" :line-width="2" class="fixed-tab">-->
-					<!--<tab-item :selected="column === 0" @click="changeColumn(0)">基本信息</tab-item>-->
-					<!--<tab-item :selected="column === 1" @click="changeColumn(1)">图文详情</tab-item>-->
-					<!--<tab-item :selected="column === 2" @click="changeColumn(2)">品牌承诺</tab-item>-->
+				<!--<tab-item :selected="column === 0" @click="changeColumn(0)">基本信息</tab-item>-->
+				<!--<tab-item :selected="column === 1" @click="changeColumn(1)">图文详情</tab-item>-->
+				<!--<tab-item :selected="column === 2" @click="changeColumn(2)">品牌承诺</tab-item>-->
 				<!--</tab>-->
 				<div id="content">
 					<!-- 图文详情 -->
@@ -166,125 +166,122 @@
 </template>
 
 <script>
-	import { cartNums } from 'vxpath/getters'
-	import { setCartStorage } from 'vxpath/actions'
-	import Swiper from 'vux/src/components/swiper'
-	import SwiperItem from 'vux/src/components/swiper-item'
-	import Tab from 'vux/src/components/tab/tab.vue'
-	import TabItem from 'vux/src/components/tab/tab-item'
-	import Icon from 'vux/src/components/icon'
-	import MyPop from 'components/my-pop'
-	import Rater from 'vux/src/components/rater'
-	import CardRecommend from 'components/card-recommend'
-	import TimerCountdown from 'components/timer-countdown'
-	import Scroller from 'vux/src/components/scroller'
-	import BottomBuy from 'components/bottom-buy'
-	import Separator from 'components/separator'
-	import Toast from 'vux/src/components/toast'
-	import Guige from 'components/guige'
-	import Spinner from'components/spinner'
-	import WxJssdk from 'weixin-js-sdk'
-	import SeckillFloor from 'components/seckill-floor'
+    import { cartNums } from 'vxpath/getters'
+    import { setCartStorage } from 'vxpath/actions'
+    import Swiper from 'vux/src/components/swiper'
+    import SwiperItem from 'vux/src/components/swiper-item'
+    import Tab from 'vux/src/components/tab/tab.vue'
+    import TabItem from 'vux/src/components/tab/tab-item'
+    import Icon from 'vux/src/components/icon'
+    import MyPop from 'components/my-pop'
+    import Rater from 'vux/src/components/rater'
+    import CardRecommend from 'components/card-recommend'
+    import TimerCountdown from 'components/timer-countdown'
+    import Scroller from 'vux/src/components/scroller'
+    import BottomBuy from 'components/bottom-buy'
+    import Separator from 'components/separator'
+    import Toast from 'vux/src/components/toast'
+    import Guige from 'components/guige'
+    import Spinner from'components/spinner'
+    import WxJssdk from 'weixin-js-sdk'
+    import SeckillFloor from 'components/seckill-floor'
     import axios from 'axios'
     import qs from 'qs'
-
-	export default{
-		vuex: {
-			getters: {
-				cartNums
-			},
-			actions: {
-				setCart: setCartStorage
-			}
-		},
-		data() {
-			return {
-				column:0,
-				winWidth:0,
-				minHeight:0,
-				startX:0,
-				startY:0,
-				showPanel:false,
-				proNums:1,
-				buyNums:1,
-				guige:[],
-				guigeName:[],
-				formatPopShow:false,
-				toastMessage:'',
-				toastShow:false,
-				stoastMessage:'',
-				stoastShow:false,
-				data:[],
+    export default{
+        vuex: {
+            getters: {
+                cartNums
+            },
+            actions: {
+                setCart: setCartStorage
+            }
+        },
+        data() {
+            return {
+                column:0,
+                winWidth:0,
+                minHeight:0,
+                startX:0,
+                startY:0,
+                showPanel:false,
+                proNums:1,
+                buyNums:1,
+                guige:[],
+                guigeName:[],
+                formatPopShow:false,
+                toastMessage:'',
+                toastShow:false,
+                stoastMessage:'',
+                stoastShow:false,
+                data:[],
                 toggle: true,
                 gotimeline: [],
                 seckillShow: false,
-				local:localStorage.apiDomain,
-				tjData: {} ,		//推荐组合
+                local:localStorage.apiDomain,
+                tjData: {} ,		//推荐组合
                 showShare: false,
                 shareEle: false,
-			}
-		},
-		components: {
-			Swiper,
-			SwiperItem,
-			Tab,
-			TabItem,
-			Icon,
-			MyPop,
-			Rater,
-			CardRecommend,
-			TimerCountdown,
-			Scroller,
-			BottomBuy,
-			Separator,
-			Toast,
-			Guige,
-			Spinner,
+            }
+        },
+        components: {
+            Swiper,
+            SwiperItem,
+            Tab,
+            TabItem,
+            Icon,
+            MyPop,
+            Rater,
+            CardRecommend,
+            TimerCountdown,
+            Scroller,
+            BottomBuy,
+            Separator,
+            Toast,
+            Guige,
+            Spinner,
             SeckillFloor
-		},
-		route: {
-
-		},
-		ready() {
+        },
+        route: {
+        },
+        ready() {
             this.fetchData();
-		    //选项卡
-			this.siblingsDom();
-			this.timeline();
-		},
+            //选项卡
+            this.siblingsDom();
+            this.timeline();
+        },
         watch: {
             '$route'(to,from) {
                 if(parseInt(to.params.pid) !== this.data.id && to.name === 'detail') {
                     this.fetchData();
                 }
-
             }
         },
-		computed: {
-			makeFreight() {
-				let fmoney = parseFloat(this.data.freight);
-				if(isNaN(fmoney)){
-					fmoney = 0;
-				}
-				return fmoney.toFixed(2);
-			},
-			getGuigeName() {
-				if(this.guigeName <= 0) {
-					return '请选择商品规格和数量';
-				}
-				return '已选择"'+ this.guigeName.join('-') +'"';
-			}
-		},
-		methods: {
-		    abc() {
+        computed: {
+            makeFreight() {
+                let fmoney = parseFloat(this.data.freight);
+                if(isNaN(fmoney)){
+                    fmoney = 0;
+                }
+                return fmoney.toFixed(2);
+            },
+            getGuigeName() {
+                if(this.guigeName <= 0) {
+                    return '请选择商品规格和数量';
+                }
+                return '已选择"'+ this.guigeName.join('-') +'"';
+            }
+        },
+        methods: {
+            abc() {
                 console.log(this.data.activestu);
                 if(this.data.activestu == 0) {
                     this.seckillShow = false
                 } else if(this.data.activestu == 1) {
                     this.seckillShow = true;
                 }
-			},
-		    share() {
-		        var content = this;
+            },
+            share() {
+                var content = this;
                 //微信分享
                 this.$getData('/index/index/wxshare').then((res)=>{
                     let getSession = res;
@@ -301,7 +298,7 @@
                         cancel: function() {
                             alert("已取消分享");
                         },
-					};
+                    };
                     WxJssdk.config({
                         debug:false,
                         appId:getSession.appid,
@@ -333,12 +330,11 @@
                             // 分享QQ空间
                             WxJssdk.onMenuShareQZone(options);
                         }
-
                     });
                 },(res)=>{
                     console.log('get wx share failed.');
                 });
-			},
+            },
             shareSuccess() {
                 if(this.$ustore == null) {
                     alert("没有登录，请先登录!");
@@ -370,7 +366,7 @@
                         content.$router.go({name:'cart'});
                     }
                 });
-			},
+            },
             fetchData() {
                 let getUrl = '',context = this;
                 this.$nextTick(()=>{
@@ -401,7 +397,7 @@
                                 context.seckillShow = false
                             } else if(context.data.activestu == 2) {
                                 context.seckillShow = false
-							} else if(context.data.activestu == 1) {
+                            } else if(context.data.activestu == 1) {
                                 context.seckillShow = true;
                             }
                             var scaleBox = this.data.content;
@@ -428,14 +424,13 @@
                             this.toastShow = true;
                         })
                     } catch(e) {}
-
-				});
-			},
+                });
+            },
             goback () {
                 window.history.back();
             },
             tuijian () {
-		        this.$getData('/index/user/tuijianzuhe/pid/' + this.$route.params.pid).then((res) => {
+                this.$getData('/index/user/tuijianzuhe/pid/' + this.$route.params.pid).then((res) => {
                     if (res.status == 1) {
                         this.tjData = res.data;
                     } else if (res.status == -1) {
@@ -500,49 +495,49 @@
                     };
                 }
             },
-			tslistener: function(e){
-				this.startX = e.changedTouches[0].pageX;
-				this.startY = e.changedTouches[0].pageY;
-			},
-			telistener: function(e){
-				if(Math.abs(e.changedTouches[0].pageX - this.startX) - Math.abs(e.changedTouches[0].pageY - this.startY) > 0){
-					if(e.changedTouches[0].pageX - this.startX > 0 && this.column > 0 && e.changedTouches[0].pageX - this.startX > 50) {
-						this.changeColumn(this.column-1);
-					}else if(e.changedTouches[0].pageX - this.startX < 0 && this.column < 2 && e.changedTouches[0].pageX - this.startX < -50) {
-						this.changeColumn(this.column+1);
-					}
-				}
-			},
-			changeColumn: function(col) {
-				this.column = col;
-				let iHeight = document.getElementsByClassName('ms-item')[col].offsetHeight < this.minHeight ? this.minHeight : document.getElementsByClassName('ms-item')[col].offsetHeight;
-				let scroller = document.getElementById('scroller');
-				scroller.style.height = iHeight + 'px';
-				scroller.style.transition = "-webkit-transform 300ms ease-out";
-				scroller.style.webkitTransform = "translate3d(-" + this.column * this.winWidth + "px,0px,0px)";
-				window.scrollTo(0, 0);
-			},
-			showPanelMes: function() {
-				this.showPanel = true;
-			},
-			checkGuige: function() {
-				if(this.guige.length !== this.data.format.length) {
-					return false;
-				} else {
-					for(let gg = 0; gg < this.guige.length; gg++) {
-						if(typeof this.guige[gg] === 'undefined' || this.guige[gg] == '') {
-						    console.log(this.guige.length);
-							return false;
-						}
-					}
-					return true;
-				}
-			},
-			changeGuige: function(index,id,name) {
-				this.guige.$set(index,id);
-				this.guigeName.$set(index,name);
-				if (!this.checkGuige()) return;
-				this.$getData('/index/index/propertyprice/pid/' + this.$route.params.pid + '/val/' + this.guige.join(',')).then((res) => {
+            tslistener: function(e){
+                this.startX = e.changedTouches[0].pageX;
+                this.startY = e.changedTouches[0].pageY;
+            },
+            telistener: function(e){
+                if(Math.abs(e.changedTouches[0].pageX - this.startX) - Math.abs(e.changedTouches[0].pageY - this.startY) > 0){
+                    if(e.changedTouches[0].pageX - this.startX > 0 && this.column > 0 && e.changedTouches[0].pageX - this.startX > 50) {
+                        this.changeColumn(this.column-1);
+                    }else if(e.changedTouches[0].pageX - this.startX < 0 && this.column < 2 && e.changedTouches[0].pageX - this.startX < -50) {
+                        this.changeColumn(this.column+1);
+                    }
+                }
+            },
+            changeColumn: function(col) {
+                this.column = col;
+                let iHeight = document.getElementsByClassName('ms-item')[col].offsetHeight < this.minHeight ? this.minHeight : document.getElementsByClassName('ms-item')[col].offsetHeight;
+                let scroller = document.getElementById('scroller');
+                scroller.style.height = iHeight + 'px';
+                scroller.style.transition = "-webkit-transform 300ms ease-out";
+                scroller.style.webkitTransform = "translate3d(-" + this.column * this.winWidth + "px,0px,0px)";
+                window.scrollTo(0, 0);
+            },
+            showPanelMes: function() {
+                this.showPanel = true;
+            },
+            checkGuige: function() {
+                if(this.guige.length !== this.data.format.length) {
+                    return false;
+                } else {
+                    for(let gg = 0; gg < this.guige.length; gg++) {
+                        if(typeof this.guige[gg] === 'undefined' || this.guige[gg] == '') {
+                            console.log(this.guige.length);
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            },
+            changeGuige: function(index,id,name) {
+                this.guige.$set(index,id);
+                this.guigeName.$set(index,name);
+                if (!this.checkGuige()) return;
+                this.$getData('/index/index/propertyprice/pid/' + this.$route.params.pid + '/val/' + this.guige.join(',')).then((res) => {
                     if(res.status === 1) {
                         if(this.data.is_promote) {
                             this.data.promote_price = res.price;
@@ -555,13 +550,13 @@
                         this.toastMessage = res.info;
                         this.toastShow = true;
                     }
-				},(res) => {
+                },(res) => {
                     this.toastMessage = '商品信息获取失败~';
                     this.toastShow = true;
                 });
-			},
-			addNums: function(){
-			    if(this.data.activeid != 0) {
+            },
+            addNums: function(){
+                if(this.data.activeid != 0) {
                     if(this.data.activepay > this.buyNums) {
                         this.buyNums++;
                         if(this.buyNums == this.data.activepay) {
@@ -570,35 +565,35 @@
                         }
                     }
                     return false;
-				} else {
+                } else {
                     if(this.buyNums>=this.proNums){
                         return false;
                     }
                     this.buyNums++;
-				}
-			},
-			reduceNums: function() {
-				if(this.buyNums <= 1) {
-					return false;
-				}
-				this.buyNums--;
-			},
-			hideFormatPop: function(evt){
-				evt.stopPropagation();
-				this.formatPopShow = false;
-			},
-			showFormatPop: function(){
-				this.formatPopShow = true;
-			}
-		},
-		events: {
-			showSonMes: function(mes) {
-				if(typeof mes === 'string' && mes.length > 0) {
-					this.toastMessage = mes;
-					this.toastShow = true;
-				}
-			},
-			buyNow: function() {
+                }
+            },
+            reduceNums: function() {
+                if(this.buyNums <= 1) {
+                    return false;
+                }
+                this.buyNums--;
+            },
+            hideFormatPop: function(evt){
+                evt.stopPropagation();
+                this.formatPopShow = false;
+            },
+            showFormatPop: function(){
+                this.formatPopShow = true;
+            }
+        },
+        events: {
+            showSonMes: function(mes) {
+                if(typeof mes === 'string' && mes.length > 0) {
+                    this.toastMessage = mes;
+                    this.toastShow = true;
+                }
+            },
+            buyNow: function() {
                 if(!this.formatPopShow == true) {
                     this.formatPopShow = true;
                     return false;
@@ -616,10 +611,10 @@
                     this.toastShow = true;
                     return false;
                 } else if (this.data.is_sell == 0) {
-					this.toastMessage = "商品已下架";
-					this.toastShow = true;
-					return false;
-				}
+                    this.toastMessage = "商品已下架";
+                    this.toastShow = true;
+                    return false;
+                }
                 let cartObj = {};
                 let cartFormat = this.guige.length > 0 ? this.guige.join(',') : '';
                 let cartFormatName = this.guige.length > 0 ? this.guigeName.join('-') : '';
@@ -667,12 +662,12 @@
                 this.stoastMessage = '加入购物车成功';
                 this.stoastShow = true;
                 this.$router.go({name:'cart'});
-			},
-			addCart : function() {
+            },
+            addCart : function() {
                 if(!this.formatPopShow == true) {
                     this.formatPopShow = true;
                     return false;
-				}
+                }
                 if(this.proNums <= 0) {
                     this.toastMessage = '商品暂时缺货';
                     this.toastShow = true;
@@ -715,7 +710,7 @@
                     alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
                     _self.toastMessage = "";
                     _self.toastShow = false;
-					sessionStorage.removeItem("myCart");
+                    sessionStorage.removeItem("myCart");
                     this.$router.go({name: 'index'});
                     return false;
                 }
@@ -750,14 +745,13 @@
                     return (hours > 9 ? hours : '0' + hours) + ':' + (minutes > 9 ? minutes : '0' + minutes) + ":" + (seconds > 9 ? seconds : '0' + seconds)
                 }
             }
-		}
-	}
+        }
+    }
 </script>
 
 
 
 <style scoped>
-
 	.msg-head {
 		width:100%;
 		height:4.6rem;
@@ -767,7 +761,6 @@
 		background: #35495e;
 		display:block;
 	}
-
 	.msg-head .msg-back {
 		width: 10%;
 		font-size: 16px;
@@ -775,7 +768,6 @@
 		height: 100%;
 		float: left;
 	}
-
 	.msg-head .msg-back:before {
 		content: "";
 		position: absolute;
@@ -794,25 +786,21 @@
 		-moz-transform: rotate(315deg);
 		-webkit-transform: rotate(315deg);
 	}
-
 	.msg-head .msg-title {
 		font-size: 16px;
 		width: 92%;
 	}
-
 	.my-swiper{
 		width:100%;
 		height:auto;
 		overflow:hidden;
 	}
-
 	.ms-scroller{
 		min-width:100%;
 		height:auto;
 		font-size:0;
 		white-space:nowrap;
 	}
-
 	.ms-scroller>div.ms-item{
 		display:inline-block;
 		vertical-align:top;
@@ -823,7 +811,6 @@
 		overflow:hidden;
 		background: #fff;
 	}
-
 	.pro-mes{
 		width:96%;
 		height:auto;
@@ -831,13 +818,11 @@
 		background-color:#FFF;
 		font-size:1.4rem;
 	}
-
 	.nowrap{
 		white-space:nowrap;
 		text-overflow:ellipsis;
 		overflow:hidden;
 	}
-
 	.pro-mes .title{
 		font-size: 16px;
 		color: #232326;
@@ -846,7 +831,6 @@
 		margin-bottom: 0.5rem;
 		white-space: normal;
 	}
-
 	.pro-mes .desc{
 		color: #81c429;
 		margin-bottom: 0.3rem;
@@ -854,29 +838,24 @@
 		font-size: 14px;
 		text-align: left;
 	}
-
 	.pro-mes .price{
 		color:#F9AD0C;
 		font-size:30px;
 	}
-
 	.pro-mes .price .unit{
 		font-size:20px;
 	}
-
 	.pro-mes .price .old{
 		font-size:1.2rem;
 		color:#ccc;
 		text-decoration:line-through;
 	}
-
 	.divider{
 		width:97%;
 		padding-left:3%;
 		margin:1% 0% 2% 0%;
 		border-bottom:#EFEFEF solid 1px;
 	}
-
 	/* 商品優惠 */
 	.preferential {
 		width:100%;
@@ -886,34 +865,27 @@
 		clear:both;
 		text-indent: 2rem;
 	}
-
 	.preferential ul li {
 		color:#808080;
 	}
-
 	.preferential ul li .icon-tick {
 		background: url("../images/chengnou.png") no-repeat;
 		background-size: 83%;
 		padding:0px 10px;
 		position:relative;
 		top:2px;
-
 	}
-
 	.preferential ul .free {
 		width:40%;
 		float:left;
 		font-size:12px;
 	}
-
 	.preferential ul .deliver {
 		width:60%;
 		float:left;
 		font-size:12px;
 	}
-
 	/* 商品優惠 */
-
 	.num-counter{
 		max-width:100%;
 		height:auto;
@@ -921,7 +893,6 @@
 		font-size:0;
 		overflow:hidden;
 	}
-
 	.num-counter .btns{
 		display:inline-block;
 		vertical-align:top;
@@ -934,19 +905,15 @@
 		border:#ccc solid 1px;
 		text-align:center;
 	}
-
 	.num-counter .btns.disabled{
 		color:#ccc;
 	}
-
 	.num-counter .btns.disabled:active{
 		background-color:#fff;
 	}
-
 	.num-counter .btns:active{
 		background-color:#ccc;
 	}
-
 	.num-counter .input{
 		display:inline-block;
 		vertical-align:top;
@@ -960,7 +927,6 @@
 		border-radius:0;
 		text-align:center;
 	}
-
 	.service-bar{
 		width:96%;
 		/*padding:2%;*/
@@ -970,7 +936,6 @@
 		height:38px;
 		overflow:hidden;
 	}
-
 	.service-bar .words{
 		font-size:12px;
 		color:#000;
@@ -978,7 +943,6 @@
 		vertical-align:middle;
 		width:92%;
 	}
-
 	.service-bar .arrow{
 		display:inline-block;
 		vertical-align:middle;
@@ -986,7 +950,6 @@
 		margin:0% 3%;
 		height:100%;
 	}
-
 	.service-bar .words .service-span{
 		width: 30%;
 		height:38px;
@@ -995,32 +958,27 @@
 		float:left;
 		padding-left: 8%;
 	}
-
 	.service-bar .arrow>img{
 		width:100%;
 		height:auto;
 	}
-
 	.my-icon:before{
 		font-size:1.6rem;
 		color:#f26c60;
 		margin-right:0.3rem;
 		line-height:1.6rem;
 	}
-
 	.comment-box{
 		width:100%;
 		margin: 0% 0px 30%;
 		height:auto;
 		background-color:#fff;
 	}
-
 	.comment-bar{
 		width:96%;
 		padding:2%;
 		font-size:0;
 	}
-
 	.comment-bar .com-title{
 		font-size:1.4rem;
 		color:#808080;
@@ -1028,7 +986,6 @@
 		vertical-align:middle;
 		width:92%;
 	}
-
 	.comment-bar .com-arrow{
 		display:inline-block;
 		vertical-align:middle;
@@ -1036,40 +993,33 @@
 		margin:0% 3%;
 		height:100%;
 	}
-
 	.comment-bar .com-arrow>img{
 		width:100%;
 		height:auto;
 	}
-
 	.comment-bar.guige{
 		width:100%;
 		padding:0;
 	}
-
 	.comment-bar.guige .com-title{
 		width:92%;
 	}
-
 	.comment-bar.guige .com-arrow{
 		width:7%;
 		margin:0% 1% 0% 0%;
 		text-align:right;
 	}
-
 	.com-line{
 		width:96%;
 		padding:2%;
 		font-size:0;
 		border-top:#EFEFEF solid 1px
 	}
-
 	.com-line>p.first{
 		font-size:1.2rem;
 		color:#808080;
 		letter-spacing:0.1rem;
 	}
-
 	.com-line .cstar,.com-line .cname,.com-line .cdate{
 		display:inline-block;
 		vertical-align:top;
@@ -1080,18 +1030,15 @@
 		text-overflow:ellipsis;
 		overflow:hidden;
 	}
-
 	.com-line .cname,.com-line .cdate{
 		/*margin-left:5%;*/
 		/*text-align:center;*/
 	}
-
 	.com-line .cdate{
 		text-align:right;
 		float:right;
 		width: 30%;
 	}
-
 	.com-line .content{
 		width:100%;
 		margin:2% 0%;
@@ -1099,7 +1046,6 @@
 		color:#333;
 		white-space:normal;
 	}
-
 	.com-line .format{
 		width:100%;
 		margin:2% 0% 0% 0%;
@@ -1109,7 +1055,6 @@
 		text-overflow:ellipsis;
 		overflow:hidden;
 	}
-
 	.tuijian-box{
 		width: 96%;
 		height: auto;
@@ -1119,7 +1064,6 @@
 		background: #fff;
 		clear: both;
 	}
-
 	.tuijian-box .tj-scroller{
 		white-space:nowrap;
 		font-size:0;
@@ -1128,7 +1072,6 @@
 		width:100%;
 		float:left;
 	}
-
 	.pro-mes .main .line .rush{
 		width:96%;
 		border-radius:0.3rem;
@@ -1137,7 +1080,6 @@
 		font-size:0;
 		overflow:hidden;
 	}
-
 	.pro-mes .main .line .rush .rtit{
 		display:inline-block;
 		vertical-align:middle;
@@ -1148,7 +1090,6 @@
 		text-align:center;
 		background-color:#f26c60;
 	}
-
 	.pro-mes .main .line .rush .rcon{
 		display:inline-block;
 		vertical-align:middle;
@@ -1157,29 +1098,24 @@
 		width:72%;
 		margin-left:3%;
 	}
-
 	.pro-mes .main .line .rush .rcon>div{
 		width:100%;
 		white-space:nowrap;
 		text-overflow:ellipsis;
 		overflow:hidden;
 	}
-
 	.pro-mes .main .line .rush .rcon .rctit{
 		color:#808080;
 	}
-
 	.pro-mes .main .line .rush .rcon .rccon{
 		color:#f26c60;
 	}
-
 	.pro-mes .deliver{
 		font-size:0;
 		color:#ccc;
 		margin-top:0.5rem;
 		margin-bottom: 1.2rem;
 	}
-
 	.pro-mes .deliver .son{
 		display:inline-block;
 		font-size:1.2rem;
@@ -1190,19 +1126,15 @@
 		overflow:hidden;
 		text-align:center;
 	}
-
 	.pro-mes .deliver .son:nth-child(1){
 		text-align:left;
 	}
-
 	.pro-mes .deliver .son:nth-child(2){
 		text-align:center;
 	}
-
 	/*.pro-mes .deliver .son:nth-child(3){*/
 	/*text-align:right;*/
 	/*}*/
-
 	.fixed-tab{
 		/*position:fixed;*/
 		/*top:0;*/
@@ -1210,17 +1142,14 @@
 		width:100%;
 		z-index:90;
 	}
-
 	.com-line.allcom{
 		font-size:1.4rem;
 		color:#81c429;
 		text-align:center;
 	}
-
 	.com-line.allcom:active{
 		background-color:#f5f5f5;
 	}
-
 	.format-pop{
 		width:100%;
 		box-sizing:border-box;
@@ -1234,14 +1163,12 @@
 		transform:scale(0);
 		-webkit-transform:scale(0);
 	}
-
 	.format-pop.show{
 		transform:scale(1);
 		-webkit-transform:scale(1);
 		transition:transform .3s;
 		-webkit-transition:transform .3s;
 	}
-
 	.format-pop .line .pimg{
 		box-sizing:border-box;
 		width:25%;
@@ -1254,7 +1181,6 @@
 		position:absolute;
 		top:-5%;
 	}
-
 	.format-pop .line .pmes{
 		box-sizing:border-box;
 		width:65%;
@@ -1264,17 +1190,13 @@
 		left:30%;
 		margin-top:3%;
 	}
-
 	.format-pop .line .pmes div{
 		font-size:1.4rem;
 		color:#808080;
 	}
-
 	.format-pop .line .pmes div.price{
 		color:#F26C60;
 	}
-
-
 	.format-pop .close{
 		width:1.8rem;
 		height:1.8rem;
@@ -1288,30 +1210,25 @@
 		top:1rem;
 		right:1rem;
 	}
-
 	.format-pop .line .title{
 		font-size:1.4rem;
 		color:#666;
 		margin:0.68rem 0rem;
 	}
-
 	.format-pop .line .title.inline{
 		display:inline-block;
 		width:30%;
 		vertical-align:middle;
 		font-size:1.4rem;
 	}
-
 	.format-pop .line .con.inline{
 		display:inline-block;
 		width:70%;
 		vertical-align:middle;
 	}
-
 	.format-pop .line .con.inline .num-counter{
 		text-align:right;
 	}
-
 	.fpmasker{
 		position:fixed;
 		top:0;
@@ -1321,7 +1238,6 @@
 		z-index:98;
 		background-color:transparent;
 	}
-
 	.fpmasker.show{
 		width:100%;
 		height:100%;
@@ -1330,7 +1246,6 @@
 		transition:background .5s;
 		-webkit-transition:background .5s;
 	}
-
 	.product_titile{
 		width: 100%;
 		height: 45px	;
@@ -1342,7 +1257,6 @@
 		background: #fff;
 		border-bottom: 1px solid #ccc;
 	}
-
 	.product_titile ul li{
 		width: 33.33%;
 		height: 100%;
@@ -1351,12 +1265,10 @@
 		float: left;
 		line-height: 43px;
 	}
-
 	.product_titile ul .active{
 		color: #81C429;
 		border-bottom: 3px solid #81C429;
 	}
-
 	.product_details_picture{
 		width: 100%;
 		height: 554px;
@@ -1367,8 +1279,6 @@
 	/*width: 100%;*/
 	/*height: 554px;*/
 	/*}*/
-
-
 	/* 分享 */
 	.product_details_share{
 		width: 100%;
@@ -1409,8 +1319,6 @@
 		font-size: 12px;
 	}
 	/* 分享 */
-
-
 	/* 增加数量 */
 	.product_button{
 		width: 100%;
@@ -1462,7 +1370,6 @@
 		color:#999;
 	}
 	/* 增加数量 */
-
 	.ms-item-class {
 		clear: both;
 		padding-bottom: 13px;
@@ -1471,11 +1378,9 @@
 		text-align:center;
 		color:#333;
 	}
-
 	img {
 		display:block;
 	}
-
 </style>
 
 <style>

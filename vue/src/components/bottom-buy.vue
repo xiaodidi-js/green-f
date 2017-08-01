@@ -267,6 +267,11 @@
 		border-radius: 0;
 	}
 
+	.bottom-buy .doBuy:after {
+		border:none;
+		border-radius: 0px;
+	}
+
 	.bottom-buy .addCar {
 		background: #F9AD0C;
 	}

@@ -40,9 +40,9 @@
                        v-if="item.pay == 1 && item.send == 1 && item.receive == 0 && item.status == 0"
                        @click="clickConfirm()">确认收货</a>
 
-                    <a class="manage-btn"
-                       v-if="item.pay == 1 && (item.send == 1 || item.send == 0) && item.reject == 0 || item.status == 1"
-                       @click="buyAgain(item.id)">再次购买</a>
+                    <!--<a class="manage-btn"-->
+                       <!--v-if="item.pay == 1 && (item.send == 1 || item.send == 0) && item.reject == 0 || item.status == 1"-->
+                       <!--@click="buyAgain(item.id)">再次购买</a>-->
 
                     <a class="manage-btn" v-if="item.reject == 0 && item.status == 1"
                        v-link="{name:'service-apply',params:{oid:item.id}}">申请售后</a>

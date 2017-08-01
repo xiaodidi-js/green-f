@@ -116,6 +116,7 @@
 	}
 
 	#article-body {
+		margin-top: 4.5rem;
 		width: 100%;
 		height: auto;
 		background: #fff;

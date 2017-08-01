@@ -25,9 +25,8 @@
 					<span>全选</span>
 				</div>
 				<div class="right">
-
-					<!--<x-button type="primary" class="btn" @click="setDel"></x-button>-->
-					<div class="btn" @click="setDel">删除</div>
+					<x-button class="btn" @click="setDel">删除</x-button>
+					<!--<div class="btn" @click="setDel">删除</div>-->
 				</div>
 			</div>
 			<div class="bottom color" v-else>
@@ -118,32 +117,18 @@
                 data:{},
             }
         },
-        ready() {
-            this.$getData('/index/index/wxshare').then((res) => {
-                $(".right").css({
-                    "background" : res.color,
-                    "color" : "#fff"
-                });
-            });
-        },
+        ready() {},
         watch: {
 			$route(to) {
-			    console.log(to.name);
-			    if(to.name == 'cart') {
-			        this.$getData('/index/index/wxshare').then((res) => {
-						$(".right").css({
-						    "background" : res.color,
-							"color" : "#fff"
-						});
-					});
-					$(".group").css({"color":"#ccc"});
+				if(to.path == '/cart') {
+				    $(".group").css("color","#ccc");
                     this.modeText = "编辑";
                     this.editMode = 0;
 				}
 			}
         },
         methods: {
-            setDel: function(it){
+            setDel: function() {
                 this.confirmShow = true;
             },
             confirmDel: function(){
@@ -153,17 +138,14 @@
                     this.delMultiple(this.choseArr);
                 }
             },
-            changMode: function() {
+			changMode: function() {
+                this.$getData('/index/index/wxshare').then((res)=>{
+                    $(".gopay").css("background" , res.color);
+                });
                 this.modeText = this.modeText === '编辑' ? '完成' : '编辑';
                 this.editMode = this.editMode ? 0 : 1;
                 this.choseArr = [];
                 this.btnText = '删除';
-                this.$getData('/index/index/wxshare').then((res) => {
-                    $(".right").css({
-                        "background" : res.color,
-                        "color" : "#fff"
-                    });
-                });
             },
             changAll: function(type) {
                 if(this.choseArr.length > 0) {
@@ -189,9 +171,14 @@
             }
         },
         events: {
-            goCarts: function() {
+            goOver() {
                 this.modeText = "编辑";
                 this.editMode = 0;
+
+                this.$getData('/index/index/wxshare').then((res)=>{
+					$('.gopay').css('background',res.color);
+				});
+
 			}
 		},
         computed: {
@@ -297,7 +284,7 @@
 		bottom:50px;
 		left:0;
 		font-size:0;
-		background: #EFEFEF;
+		background: #f2f2f2;
 		z-index: 5;
 	}
 
@@ -367,14 +354,17 @@
 	}
 
 	.bottom>div.right .btn{
-		width:80%;
-		border:#81c429 solid 0.1rem;
-		border-radius:0.3rem;
-		text-align:center;
-		color:#81c429;
-		margin:0.5rem auto;
-		height:3.5rem;
-		line-height:3.5rem;
+		width: 100%;
+		text-align: center;
+		color: #81c429;
+		margin: 0rem auto;
+		height: 100%;
+		line-height: 3.5rem;
+	}
+
+	.bottom>div.right .btn:after{
+		border:none;
+		border-radius: 0px;
 	}
 
 	.bottom>div.right span{
@@ -392,21 +382,6 @@
 
 	.isChonse .addcon .address .weui_icon_success:before {
 		color:#fff;
-	}
-
-</style>
-
-<style lang="less">
-
-	// 导入theme.less
-	@import '../styles/theme.less';
-
-	.bottom .right ,.notify-box {
-		background: @button-primary-bg-color;
-	}
-
-	.bottom .right:active {
-		background: @button-primary-active-bg-color;
 	}
 
 </style>

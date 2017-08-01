@@ -138,8 +138,8 @@
                             alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
                             return false;
                         } else if(data.store == 0) {
+                            this.$dispatch("goOver");
                             alert("已售罄");
-                            this.$dispatch("goCart");
                             return false;
                         } else if (data.activeid == 1) {
                             alert("这是限时抢购商品！");
@@ -164,9 +164,9 @@
                         this.setCart(obj);
                         obj = {};
                         this.alertShow = true;
-                        this.$dispatch("goCarts");
+                        this.$dispatch("goOver");
                         this.$router.go({name : "cart"});
-                    },(response)=>{
+                    },(res)=>{
                         this.toastMessage = '网络开小差了~';
                         this.toastShow = true;
                     });
@@ -276,16 +276,16 @@
         line-height: 3.22rem;
         float: left;
     }
-    .footer_shopcar{
+    .footer_shopcar {
         width: 25%;
         height: 2.806rem;
         float: right;
         text-align: right;
     }
-    .footer_shopcar{
+    .footer_shopcar {
         margin-top: 5px;
     }
-    .footer_shopcar img{
+    .footer_shopcar img {
         width: 2.3rem;
         height: 2rem;
     }

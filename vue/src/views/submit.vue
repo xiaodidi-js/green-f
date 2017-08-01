@@ -347,18 +347,6 @@
 			},
 		},
         methods: {
-            getLastDay(year, month) {
-                var new_year = year;  //取当前的年份
-                var new_month = month++;//取下一个月的第一天，方便计算（最后一天不固定）
-                if (month > 12)      //如果当前大于12月，则年份转到下一年
-                {
-                    new_month -= 12;    //月份减
-                    new_year++;      //年份增
-                }
-                var new_date = new Date(new_year, new_month, 1);        //取当年当月中的第一天
-                var  day = new Date(new_date.getTime() - 1000 * 60 * 60 * 24);
-                return day.getDate();//获取当月最后一天日期
-			},
             submitReady() {
                 let pids = '';
                 if(this.cartIds.length > 0) {
@@ -415,73 +403,27 @@
                     this.toastShow = true;
                 });
 			},
-            utilTime(num) {
-                num = num + "";
-                var date = "", month = new Array();
-                month["Jan"] = 1;
-                month["Feb"] = 2;
-                month["Mar"] = 3;
-                month["Apr"] = 4;
-                month["May"] = 5;
-                month["Jan"] = 6;
-                month["Jul"] = 7;
-                month["Aug"] = 8;
-                month["Sep"] = 9;
-                month["Oct"] = 10;
-                month["Nov"] = 11;
-                month["Dec"] = 12;
-                var week = new Array();
-
-                week["Mon"] = "一";
-                week["Tue"] = "二";
-                week["Wed"] = "三";
-                week["Thu"] = "四";
-                week["Fri"] = "五";
-                week["Sat"] = "六";
-                week["Sun"] = "日";
-
-                var str = num.split(" "), date = str[1] + "-";
-
-                date = month[str[1]] + "-" + str[2];
-
-                return date;
-            },
             isRadio: function() {
                 var date = new Date() , y = date.getFullYear() , m = date.getMonth() + 1 , d = date.getDate();
-                var time = null, new_date = null;
+                var time = null;
                 for(let i = 0; i < this.cartInfo.length; i++) {
 					if (this.cartInfo[i].deliverytime == 0) {
 						this.theDay = "次日";
+                        d = date.getDate() + 1;
                         $(".my-icon").eq(1).removeAttr("disabled");
-
-                        if(d == this.getLastDay(y,m)) {
-                            var newYear = y;
-                            var newMonth = m++;
-                            if(m > 12) {
-                                newMonth -= 12; //   月份减
-                                newYear++; //   年份增
-                            }
-
-                            new_date = new Date(newYear,newMonth,1);    //  取当年当月中的第一天
-
-                            console.log(this.utilTime(new_date));
-                            $("#today").find("option:selected").text(this.utilTime(new_date));
-							m++;
-                        	d = date.getDate() - 1;
-						} else {
-                        	d = date.getDate() + 1;
-						}
-
 					} else if (this.cartInfo[i].deliverytime == 1) {
 						$(".my-icon").eq(0).hide();
                         $(".my-icon").eq(1).css("left","0px");
-                        $(".my-icon").eq(1).addClass("my-icon-chosen");
+                        $(".my-icon").eq(1).addClass("my-icon-chosen")
 						$(".label-radio").eq(0).hide();
                         this.theDay = "当日";
-                        time = y + "-" + m + "-" + d;
-                		$("#today").find("option:selected").text(time);
+                        switch($(".my-icon").val()) {
+                            case 1:
+                        }
 					}
 				}
+                time = y + "-" + m + "-" + d;
+                $("#today").find("option:selected").text(time);
 				$(".bor").find(".my-icon").change(function () {
 					$(this).addClass("my-icon-chosen").siblings().removeClass("my-icon-chosen");
                 });
@@ -667,7 +609,7 @@
                         scoreNumber: this.scoreNumber,
                         paysum: this.lastPaySum,
                         tips: this.memo,
-						openid: 'os0CqxBBANhLuBLTsViL3C0zDlNs',//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
+						openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                         pshonse: this.shonse,
                         gift: {'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                     };

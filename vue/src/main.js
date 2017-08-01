@@ -10,6 +10,7 @@ import Routers from './router';
 import Env from './config/env';
 import WxJssdk from 'weixin-js-sdk'
 import { fetchGet, fetchPost, fetchPut, fetchDelete, ustore } from './libs/util.js'
+// import vconsole from 'vconsole'
 
 Vue.use(VueLazy,{
 	preLoad:1.2,

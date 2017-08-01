@@ -214,55 +214,6 @@
 		box-shadow: 1px 1px 2px #e2e2e2;
 	}
 
-	/*@media screen and (max-width: 600px) {*/
-		/*.wrapper .ui_box {*/
-			/*width: 146px;*/
-			/*height: 230px;*/
-		/*}*/
-	/*}*/
-
-	/*@media screen and (max-width: 414px) {*/
-		/*.wrapper .ui_box {*/
-			/*width: 203px;*/
-			/*height: 290px;*/
-		/*}*/
-	/*}*/
-
-	/*@media screen and (max-width: 412px) {*/
-		/*.wrapper .ui_box {*/
-			/*width: 202px;*/
-			/*height: 285px;*/
-		/*}*/
-	/*}*/
-
-	/*@media screen and (max-width: 384px) {*/
-		/*.wrapper .ui_box {*/
-			/*width: 188px;*/
-			/*height: 270px;*/
-		/*}*/
-	/*}*/
-
-	/*@media screen and (max-width: 375px) {*/
-		/*.wrapper .ui_box {*/
-			/*width: 183px;*/
-			/*height: 265px;*/
-		/*}*/
-	/*}*/
-
-	/*@media screen and (max-width: 360px) {*/
-		/*.wrapper .ui_box {*/
-			/*width: 176px;*/
-			/*height: 260px;*/
-		/*}*/
-	/*}*/
-
-	/*@media screen and (max-width: 320px) {*/
-		/*.wrapper .ui_box {*/
-			/*width: 156px;*/
-			/*height: 240px;*/
-		/*}*/
-	/*}*/
-
 	.wrapper-ele .ui_box:nth-child(even){
 		margin-right: 0%;
 	}

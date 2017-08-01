@@ -2,7 +2,7 @@
 	<div class="wrapper-ele" style="">
 		<div class="wrapper cardImage">
 			<!--<label class="title" v-if="articles.title">{{ articles.title }}</label>-->
-			<div class="card-box" style="width:95%;" v-for="item in list" v-link="{name:'article',params:{cid:item.id}}">
+			<div class="card-box" v-for="item in list" v-link="{name:'article',params:{cid:item.id}}">
 				<!--<div class="img" v-lazy:background-image="item.img"></div>-->
 				<img :src="item.img" class="img" alt="{{ item.title }}" />
 				<div class="mes">
@@ -99,7 +99,7 @@
 
 	.wrapper-ele {
 		background: #fff;
-		width: 100%;
+		/*width: 100%;*/
 		height: 100%;
 		position: relative;
 	}
@@ -127,11 +127,11 @@
 	}
 
 	.card-box{
-		width:90%;
-		height:auto;
-		display:block;
-		padding:2%;
-		text-align:center;
+		width: 93.7%;
+		height: auto;
+		display: block;
+		/* padding: 2%; */
+		text-align: center;
 		box-shadow: none;
 		margin-top: 15%;
 	}

@@ -79,10 +79,12 @@
                     scrollTop:0
                 },200);
             });
+            $(".group").css({"color":"#ccc"});
 		},
         watch: {
             $route(to) {
 				if(to.name === 'search') {
+                    $(".group").css({"color":"#ccc"});
 					var listData = JSON.parse(sessionStorage.getItem("serach"));
 					this.list = listData;
 				}

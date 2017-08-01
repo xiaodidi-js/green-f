@@ -5,10 +5,11 @@
         </div>
         <div class="search" style="width:66%;position:relative;left:12px;">
             <form action="">
-                <input type="text" placeholder="请输入您要搜索的商品" v-model="searchKey" @keydown="breakSearch()" />
-                <input type="text" style="display: none;">
+                <input type="search" placeholder="请输入您要搜索的商品" v-model="searchKey" @keydown="breakSearch()" />
                 <a href="javascript:void(0)" class="order-search-btn" style="display:block;" @click="goSearch()">搜索</a>
+                <input style="display:none;" />
             </form>
+
         </div>
         <div class="customer">
             <a href="javascript:void(0)" class="txt-service" @click="goPage"></a>
@@ -122,7 +123,7 @@
         background-position-x: 6px;
     }
 
-    .order-search .search input[type='text']{
+    .order-search .search input[type='search']{
         margin: 5px 0px 0px 29px;
         height: 30px;
         border: none;
