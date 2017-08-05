@@ -79,4 +79,9 @@ export const commitData = function ({dispatch}, params) {
     console.log(params);
 };
 
+export const addressid = function ({dispatch}, addID) {
+    dispatch('addressid', addID);
+    console.log(addID);
+};
+
 

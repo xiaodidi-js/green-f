@@ -236,7 +236,7 @@
         top:0px;
         left:0px;
         width:100%;
-        height:100%;
+        height: 98%;
         background: rgba(0,0,0,0.5);
         text-align:center;
         font-size:24px;

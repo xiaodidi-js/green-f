@@ -96,8 +96,6 @@
 			}
 		},
 		ready () {
-            console.log(this.$parent.getType);
-
             this.$getData('/index/index/wxshare').then((res) => {
                 $(".mes-line .my-common-fadein").css({
                     "background" : "#fff",
@@ -106,7 +104,6 @@
                     "background" : res.color,
                     "color" : "#fff",
                 });
-
             });
 
 		},

@@ -5,12 +5,12 @@
 			<div class="btn again" :class="{'disabled':disabled}" @click="clickPay">确认支付</div>
 		</div>
 		<div style="font-size: 0rem;"  v-if="pay == 1 && (send == 0 || send == 1) && receive == 0">
-			<div class="btn confirm" :class="{'disabled':disabled}" @click="clickConfirm">确认收货</div>
-			<div class="btn again" :class="{'disabled':disabled}" @click="clickAgain">再次购买</div>
+			<div class="btn confirm" style="width: 100%;" :class="{'disabled':disabled}" @click="clickConfirm">确认收货</div>
+			<!--<div class="btn again" :class="{'disabled':disabled}" @click="clickAgain">再次购买</div>-->
 		</div>
 		<div style="font-size: 0rem;"  v-if="pay == 1 && send == 1 && receive == 1">
-			<div class="btn service" :class="{'disabled':disabled}" @click="clickService">申请售后</div>
-			<div class="btn again" :class="{'disabled':disabled}" @click="clickAgain">再次购买</div>
+			<div class="btn service" style="width: 100%;" :class="{'disabled':disabled}" @click="clickService">申请售后</div>
+			<!--<div class="btn again" :class="{'disabled':disabled}" @click="clickAgain">再次购买</div>-->
 		</div>
 	</div>
 </template>

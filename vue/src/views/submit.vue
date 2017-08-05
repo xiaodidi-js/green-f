@@ -135,7 +135,6 @@
 					<!--</div>-->
 				<!--</div>-->
 			<!--</my-cell-item>-->
-
 			<my-cell-item style="margin:0px;" v-if="score == 0">
 				<div class="line-con zero-font" style="font-size:14px;">没有可用积分</div>
 			</my-cell-item>
@@ -200,7 +199,7 @@
     import Toast from 'vux/src/components/toast'
     import Loading from 'vux/src/components/loading'
     import { selCartInfo,selCartSum,selCartIdsNoFormat } from 'vxpath/getters'
-    import { clearAll,clearSel } from 'vxpath/actions'
+    import { clearAll, clearSel, addressid} from 'vxpath/actions'
     import Scroller from 'vux/src/components/scroller'
     import axios from 'axios'
     import qs from 'qs'
@@ -215,6 +214,7 @@
             actions: {
                 clearAll,
                 clearSel,
+                addressid,
             }
         },
         data() {
@@ -252,7 +252,7 @@
                 giftstu: 0,	//赠品状态,
                 openpop: false,
                 description: "",
-                lastPaySum: 0,
+                lastPaySum: 0,		//	金额
                 myCellTitle: '',
                 chonseParcel: false, //显示隐藏自提点选择框
 				wxName: '',			 // 微信名称
@@ -384,7 +384,14 @@
                         typeof(res.address) == '' ? this.myCellTitle = '到店自提' : this.myCellTitle = '请选择配送方式';
                         this.data.pay = res.pay;
                         this.payType = this.data.pay[0].ptype;
+
                         this.data.address = res.address;
+                        console.log(this.data.address.id);
+
+                        this.addressid(this.data.address.id);
+
+                        this.address = this.data.address.id;
+
                         //	获取微信信息
                         let openid = sessionStorage.getItem("openid");
                         this.$getData('/index/index/get_weixin?openid=' + openid).then((res)=>{  /* 'os0CqxBBANhLuBLTsViL3C0zDlNs' */
@@ -455,36 +462,6 @@
                     //清除禁用按钮
                     document.getElementsByClassName("addCar")[0].disabled = "";
 				}
-            },
-            oneGift: function (id,money) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                var content = this;
-				var options = {
-                    uid:ustore.id,
-                    token:ustore.token,
-                    sinceid:id,
-                    money:money
-				};
-                this.$postData('/index/user/manjiusong',options).then((res) => {
-                    if(res.status == 1) {
-                        this.description = '请选择满20元赠品';
-                        this.showGive = true;
-                        this.list = res.maxmoney;
-                        this.giftstu = 1;
-                    } else if(res.status == 0) {
-                        content.openpop =  false;
-                        this.$postData('/index/user/shoudan',options).then((res) => {
-                            if(res.status == 1) {
-                                this.description = '请选择首单用户赠品';
-                                this.showGive = true;
-                                this.list = res.shoduan_data;
-                            } else if(res.status === 0) {
-                                this.showGive = false;
-                            }
-						});
-                    }
-				});
             },
             changePayType: function(tp){
                 this.payType = tp;
@@ -564,7 +541,6 @@
                         "height" : "70%"
                     });
                 }
-                this.oneGift(this.address,this.lastPaySum);
             },
             showCou: function(){
                 this.couShow = true;

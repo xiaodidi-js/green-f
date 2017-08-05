@@ -131,7 +131,7 @@
                             activeid:data.activeid,
                             activepay:data.activepay,
                             nums: this.buyNums,
-                            store: this.proNums,
+                            store: res.store,
                             formatName: '',
                             format: '',
                         };

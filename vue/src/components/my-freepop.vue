@@ -312,13 +312,15 @@
                 evt.stopPropagation();
             },
             selList: function (id) {
-
                 let pdata = {uid: this.$ustore.id, token: this.$ustore.token, addressid: id};
                 this.$putData('/index/Usercenter/since', pdata).then((res) => {
                     if (res.status === 1) {
                         this.showStatus = false;
                         this.showTips = '加载中...';
                         this.options = res.list;
+
+                        console.log(this.addressid);
+                        this.oneGift(this.$store.state.addID,this.money);
                     } else if (res.status === -1) {
                         this.$dispatch('showMes', res.info);
                         let context = this;

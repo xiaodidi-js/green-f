@@ -157,7 +157,7 @@
             <div class="con inline">
                 <div class="num-counter">
                     <div class="btns" :class="{'disabled':buyNums <= 1}" @click="reduceNums">-</div>
-                    <input type="number" class="input" :value="buyNums" /> <!-- readonly -->
+                    <input type="number" class="input" :value="buyNums" readonly /> <!-- readonly -->
                     <div class="btns" :class="{'disabled':buyNums >= proNums}" @click="addNums">+</div>
                 </div>
             </div>
@@ -656,6 +656,7 @@
                 this.stoastMessage = '加入购物车成功';
                 this.stoastShow = true;
                 this.$router.go({name: 'cart'});
+                this.buyNums = 1;
             },
             addCart: function () {
                 if (!this.formatPopShow == true) {
@@ -729,6 +730,7 @@
                 this.formatPopShow = false;
                 this.stoastMessage = '加入购物车成功';
                 this.stoastShow = true;
+                this.buyNums = 1;
             },
             filters: {
                 time: function (value) {

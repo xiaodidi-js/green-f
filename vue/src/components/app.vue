@@ -9,6 +9,7 @@
         box-sizing: border-box;
         background: #35495e;
         z-index: 300;
+        height: 46px;
     }
 
 
