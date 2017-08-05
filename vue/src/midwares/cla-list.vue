@@ -83,7 +83,7 @@
             this.getData('');
         },
 		watch: {
-            '$route'(to,from) {
+            '$route'(to) {
                 var content = this;
                 if(parseInt(to.params.cid) != content.colum && to.name === 'cla-list') {
                     content.getData('');
@@ -103,7 +103,7 @@
                     url += '/search/' + sk;
                 }
                 this.$getData(url).then((res)=>{
-				    if(res.status = 1) {
+				    if(res.status == 1) {
                         this.alertShow = false;
                         this.data.list = res.info.list;
                         this.data.img = res.info.img;

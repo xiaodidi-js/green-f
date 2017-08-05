@@ -115,7 +115,7 @@
 			this.chosenfun();
 		},
 		watch: {
-		    $route(to,from) {
+		    $route: function(to) {
 				console.log(to);
 				if(to.name == 'per-addresses') {
                     location.reload();
@@ -124,14 +124,25 @@
 		},
 		methods: {
 			isActiveFun: function() {
+			    var that = this;
 				var ele = document.getElementById("Ele-chonse"), eleAddress = ele.children, _this = this, i;
 				for(i = 0; i < eleAddress.length; i++) {
 					eleAddress[i].index = i;
 					eleAddress[i].onclick = function(){
 						this.className = "address isActive";
+//                        that.$getData('/index/index/wxshare').then((res) => {
+//                            $(".address").css({
+//								"background" : "#fff"
+//							});
+//
+//                            $(".address .isActive").css({
+//                                "background" : res.color,
+//                            });
+//                        });
 						//同辈元素互斥
 						_this.siblings(this,function(){
 							this.className = "address";
+//							this.style.background = "#fff";
 						});
 					};
 				}
@@ -149,12 +160,7 @@
 							this.chosens[i].index = i;
                             if(this.chosens[i].is_default == 1) {
                                 content.isActiveFun();
-                                //	主配色
-                                content.$getData('/index/index/wxshare').then((res) => {
-                                    $(".isActive").css({
-                                        "background" : res.color,
-                                    })
-                                });
+
 							}
 						}
                     } else if(res.status === -1) {
@@ -235,9 +241,11 @@
                     var _this = this;
                     liDomes[i].onclick = function(){
                         this.className = "active";
+                        this.style.color = "#81c429";
                         //同辈元素互斥
                         _this.siblings(this,function(){
                             this.className = "";
+                            this.style.color = "#333";
                         });
                         //把对应的选项卡的内容显示出来
                         var tabDom = document.getElementById("content").children[this.index];
@@ -266,7 +274,7 @@
                         }
                         this.chosens[index].is_default = 1;
                         content.isActiveFun();
-                    } else if (response.data.status === -1) {
+                    } else if (res.status === -1) {
                         this.$dispatch('showMes',res.info);
                         let context = this;
                         setTimeout(function(){
@@ -551,10 +559,10 @@
 	#ziti .main_ziti .isActive {
 		width:98%;
 		height:auto;
-		background:#81c429;
 		overflow:hidden;
 		position:relative;
 		margin:0 auto;
+		background: #81c429;
 		margin-bottom:1.16rem;
 	}
 

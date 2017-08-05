@@ -36,15 +36,22 @@ import Toast from 'vux/src/components/toast'
 
 		},
         watch: {
+			$route: function(to) {
 
+			}
         },
 		ready() {
-		    this.$getData('/index/index/columns').then((res) => {
-		        this.data = res.classify;
-            },(res)=>{
-                this.toastMessage = "网络开小差啦~";
-                this.toastShow = true;
-            });
+			this.GetData();
+		},
+		methods: {
+		    GetData() {
+                this.$getData('/index/index/columns').then((res) => {
+                    this.data = res.classify;
+                },(res)=>{
+                    this.toastMessage = "网络开小差啦~";
+                    this.toastShow = true;
+                });
+			}
 		}
 	}
 

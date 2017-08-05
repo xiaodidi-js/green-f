@@ -1,23 +1,53 @@
 <template>
     <div class="classif">
-        <div class="list licon fixed justify">
-            <div class="tap-type" :class="{'active':dtype == 0}" @click="getViewData(0)">
+        <tab default-color="#333" active-color="#81c429">
+
+            <tab-item :class="{'actives':dtype === 0}" :selected="dtype === 0" @click="getViewData(0)">
                 <div class="icon unpay icon-ui icon-ui-fukuan"></div>
                 <div class="title">全部</div>
-            </div>
-            <div class="tap-type" :class="{'active':dtype == 1}" @click="getViewData(1)">
+            </tab-item>
+
+            <tab-item :class="{'actives':dtype === 1}" :selected="dtype === 1" @click="getViewData(1)">
+                <div class="icon unpay icon-ui icon-ui-fukuan"></div>
                 <div class="title">待付款</div>
-            </div>
-            <div class="tap-type" :class="{'active':dtype == 2}" @click="getViewData(2)">
+            </tab-item>
+
+            <tab-item :class="{'actives':dtype === 2}" :selected="dtype === 2" @click="getViewData(2)">
+                <div class="icon unpay icon-ui icon-ui-fukuan"></div>
                 <div class="title">待发货</div>
-            </div>
-            <div class="tap-type" :class="{'active':dtype == 3}" @click="getViewData(3)">
+            </tab-item>
+
+            <tab-item :class="{'actives':dtype === 3}" :selected="dtype === 3" @click="getViewData(3)">
+                <div class="icon unpay icon-ui icon-ui-fukuan"></div>
                 <div class="title">待收货</div>
-            </div>
-            <div class="tap-type" :class="{'active':dtype == 4}" @click="getViewData(4)">
+            </tab-item>
+
+            <tab-item :class="{'actives':dtype === 4}" :selected="dtype === 4" @click="getViewData(4)">
+                <div class="icon unpay icon-ui icon-ui-fukuan"></div>
                 <div class="title">评价</div>
-            </div>
-        </div>
+            </tab-item>
+
+            <!--<div class="list licon fixed justify" style="width:100%;">-->
+                <!--<div class="tap-type" :class="{'actives':dtype == 0}" @click="getViewData(0)">-->
+                    <!--<div class="icon unpay icon-ui icon-ui-fukuan"></div>-->
+                    <!--<div class="title">全部</div>-->
+                <!--</div>-->
+                <!--<div class="tap-type" :class="{'actives':dtype == 1}" @click="getViewData(1)">-->
+                    <!--<div class="title">待付款</div>-->
+                <!--</div>-->
+                <!--<div class="tap-type" :class="{'actives':dtype == 2}" @click="getViewData(2)">-->
+                    <!--<div class="title">待发货</div>-->
+                <!--</div>-->
+                <!--<div class="tap-type" :class="{'actives':dtype == 3}" @click="getViewData(3)">-->
+                    <!--<div class="title">待收货</div>-->
+                <!--</div>-->
+                <!--<div class="tap-type" :class="{'actives':dtype == 4}" @click="getViewData(4)">-->
+                    <!--<div class="title">评价</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        </tab>
+
     </div>
     <div class="payment">
         <payment :orders="data"></payment>
@@ -65,11 +95,13 @@
                     scrollTop:0
                 },200);
             });
+            $(".group ,.active").css({"color":"#ccc"});
         },
         watch: {
             $route(to) {
                 if(to.name === 'order-type') {
                     this.getViewData(0);
+                    $(".group ,.active").css({"color":"#ccc"});
                 }
             }
         },
@@ -88,7 +120,6 @@
                     sessionStorage.setItem('mydtype',this.dtype);
                     this.loadingMessage = '请稍候...';
                     this.loadingShow = true;
-
                     this.$getData('/index/user/orderselection/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/type/' + type).then((res) => {
                         if(res.status === 1) {
                             this.data = res.list;
@@ -134,7 +165,8 @@
         text-align: center;
     }
 
-    .classif .list .active {
+    .classif .list .actives {
+        color: #333;
         border-bottom:3px solid #81c429;
     }
 

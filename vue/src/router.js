@@ -43,15 +43,6 @@ const routers = {
                     require(['./midwares/index-column.vue'], resolve);
                 }
             },
-            'card-types/:cid': {
-                name:'cardtypes',
-                header:true,
-                footer:true,
-                title:'下单',
-                component (resolve) {
-                    require(['./components/card-types.vue'], resolve);
-                }
-            },
             'banners/:cid': {
                 name:'banners',
                 header:false,
@@ -87,6 +78,7 @@ const routers = {
                 footer:true,
                 title:'商品分类',
                 position:2,
+                saveScrollPosition: true,
                 component (resolve) {
                     require(['./midwares/cla-main.vue'], resolve);
                 }
@@ -97,8 +89,19 @@ const routers = {
                 footer:true,
                 title:'',
                 position:2,
+                saveScrollPosition: true,
                 component (resolve) {
                     require(['./midwares/cla-list.vue'], resolve);
+                }
+            },
+            'card-types/:cid': {
+                name:'cardtypes',
+                header:true,
+                footer:true,
+                title:'下单',
+                saveScrollPosition: true,
+                component (resolve) {
+                    require(['./components/card-types.vue'], resolve);
                 }
             }
         }

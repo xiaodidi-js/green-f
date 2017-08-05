@@ -105,19 +105,17 @@
                 alertShow: false,
             }
         },
-        created () {
-
+        watch: {
+            $route(to) {
+                if(to.name === 'classify') {
+                    this.readyData();
+                }
+            }
+        },
+        created() {
+            this.readyData();
 		},
         ready() {
-            this.dtype = sessionStorage.getItem('number');
-            if(this.dtype == null) {
-                this.chooseSort(26);
-                this.getChonse(26);
-                this.$router.go({name:'classify'});
-            } else {
-                this.chooseSort(this.dtype);
-                this.getChonse(this.dtype);
-            }
             $(function() {
                 //菜单框架自动获取高度
                 var doc_H = $(document).height();
@@ -129,16 +127,24 @@
             });
             this.onToure();
         },
-        watch: {
-            '$route'(to) {}
-        },
         methods: {
+			readyData() {
+				this.dtype = sessionStorage.getItem('number');
+				if(this.dtype == null) {
+					this.chooseSort(26);
+					this.getChonse(26);
+					this.$router.go({name:'classify'});
+				} else {
+					this.chooseSort(this.dtype);
+					this.getChonse(this.dtype);
+				}
+			},
             todo() {
 				$(".cla-message").css({
                     "transition": "0.5s",
                 }).scrollTop(0);
 			},
-            onToure:function() {
+            onToure() {
                 var content = this;
                 try {
                     content.intervalTime_left = setInterval(function() {
@@ -163,15 +169,10 @@
 				}
 			},
             getChonse: function(type) {
-                if(this.dtype == type) {
-                    return true;
-                }
+                if(this.dtype == type) return true;
                 this.dtype = type;
                 sessionStorage.setItem('number',this.dtype);
                 this.menuIndex = type;
-//                $(".cla-message").css({
-//					"transition": "0.5s",
-//				}).scrollTop(0);
             },
             filters: {
 

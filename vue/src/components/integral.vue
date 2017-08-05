@@ -12,7 +12,7 @@
     </div>
     <div class="integral-tab">
         <ul id="card">
-            <li class="active" @click="main('orders')">全部积分</li>
+            <li class="actives" @click="main('orders')">全部积分</li>
             <li @click="main('qiandao')">签到积分</li>
             <li @click="main('orders')">消费积分</li>
         </ul>
@@ -38,6 +38,8 @@
     import qiandao from 'components/integral-qiandao'
     import arr from 'components/integral-arr'
     import XButton from 'vux/src/components/x-button'
+    import Tab from 'vux/src/components/tab/tab.vue'
+    import TabItem from 'vux/src/components/tab/tab-item'
 
     export default{
         vuex: {
@@ -49,7 +51,9 @@
             orders,
             qiandao,
             arr,
-            XButton
+            XButton,
+            Tab,
+            TabItem,
         },
         data() {
             return {
@@ -127,7 +131,7 @@
                     liDomes[i].index = i;
                     var _this = this;
                     liDomes[i].onclick = function(){
-                        this.className = "active";
+                        this.className = "actives";
                         //同辈元素互斥
                         _this.siblings(this,function(){
                             this.className = "";
@@ -224,7 +228,7 @@
         color:#fff;
     }
 
-    .integral-tab ul .active {
+    .integral-tab ul .actives {
         width:33%;
         height:47px;
         border-bottom: 3px solid #f9cc3d;

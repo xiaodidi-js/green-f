@@ -71,7 +71,9 @@
 	<!-- 弹出 -->
 	<div class="prop-bg" @click="clearpro()" v-show="showpro"></div>
 	<div class="prop-img" id="propimg" v-show="showpro">
-		<div class="towcode"><img src="../images/qq-img.jpg" style="width:100%;height:100%;" /></div>
+		<div class="towcode">
+			<img src="../../dist/assets/img35.png" style="width:100%;height:100%;" />
+		</div>
 		<div class="clear-style" @click="clearpro()"></div>
 	</div>
 

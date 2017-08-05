@@ -271,16 +271,16 @@
 	}
 
 	.card-box .maininfo .img .overtext {
-		width:100%;
-		height:100%;
-		text-align:center;
-		line-height:8.4rem;
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		line-height: 10rem;
 		background: rgba(0,0,0,0.5);
 		position: absolute;
-		top:0px;
-		left:0px;
-		font-size:16px;
-		color:#fff;
+		top: 0px;
+		left: 0px;
+		font-size: 16px;
+		color: #fff;
 		z-index: 100;
 	}
 

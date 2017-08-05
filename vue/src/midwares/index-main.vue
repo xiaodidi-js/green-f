@@ -81,9 +81,6 @@
             this.follow();
             this.timeline();
     	},
-        mouted() {
-
-		},
         computed: {
 
 		},
@@ -104,7 +101,7 @@
                 })
 			},
             follow () {
-                let url = '' , openid = sessionStorage.getItem("openid");
+                let openid = sessionStorage.getItem("openid");
                 if(sessionStorage.getItem('since')) {
                     var options = {
                         sinceid: sessionStorage.getItem('since'),
@@ -117,7 +114,6 @@
                 this.$getData('/index/sale/SaleTimeSolt/uid').then((res) => {
                     if(res.status === 1) {
                         this.maincolumns = res.SaleTimeSolt;
-                        console.log(this.maincolumns);
                     } else {
                         this.toastMessage = res.info;
                         this.toastShow = true;

@@ -6,7 +6,6 @@
 		<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
 		<!-- loading加载框 -->
 		<loading :show="loadingShow" :text="loadingMessage"></loading>
-
 	</div>
 </template>
 <script>

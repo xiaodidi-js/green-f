@@ -17,7 +17,8 @@
 		</div>
 		<button class="btn addCar doBuyButton buyButton" @click="clickCart" v-show="store > 0">加入购物车</button>
 		<x-button type="primary" class="btn doBuy buyButton" @click="clickBuy" v-show="store > 0">立即购买</x-button>
-		<button class="btn shareButton" v-show="share" @click="clickShare">分享抢购</button>
+
+		<x-button type="primary" class="btn shareButton" v-show="share" @click="clickShare">分享抢购</x-button>
 		<div class="btn noBuy" v-show="store <= 0">暂时缺货</div>
 	</div>
 </template>
@@ -310,15 +311,17 @@
 		font-size:14px;
 	}
 
-	.shareButton {
-		width:70%;
-		color:#fff;
+	.bottom-buy .shareButton {
+		width: 70%;
+		color: #fff;
 		float: right;
 		height: 4.5rem;
 		font-size: 14px;
 		line-height: 4.5rem;
 		background: #81c429;
-		border:1px solid #81c429;
+		border: 1px solid #81c429;
+		margin-top: 0px;
+		border-radius: 0px;
 	}
 
 	.shareButton:active {
