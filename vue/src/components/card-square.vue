@@ -148,7 +148,7 @@
                             alert("这是限时抢购商品！");
                             return false;
                         } else if (data.activestu == 2) {
-                            alert("这是限时分享商品！");
+                            alert("请点击商品图片，进入商品详情页进入分享购买！");
                             return false;
                         }
                         if(cart != '') {

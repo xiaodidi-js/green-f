@@ -65,6 +65,10 @@
 						</template>
 					</div>
 				</template>
+				<!--<template v-if="item.type == 4">-->
+					<!--<swiper :list="item.arr" :show-desc-mask="false" :aspect-ratio="650/1242" dots-position="center"-->
+							<!--auto dots-class="dots-my" style="width: 100%;clear:both;"></swiper>-->
+				<!--</template>-->
 				<template style="clear: both;"></template>
 			</template>
 		</div>
@@ -132,7 +136,7 @@
         components: {
             Swiper,
             Toast,
-            Alert
+            Alert,
         },
         methods: {
             listclick(url) {
@@ -173,7 +177,7 @@
                             alert("这是限时抢购商品！");
                             return false;
                         } else if (data.activestu == 2) {
-                            alert("这是限时分享商品！");
+                            alert("请点击商品图片，进入商品详情页进入分享购买！");
                             return false;
                         } else if (data.store == 0) {
                             alert("已售罄");

@@ -1,4 +1,5 @@
 <template>
+
 	<div class="type-bg">
 		<div type="popup" class="cla-wrapper" id="left_Menu" style="float: left;">
 			<div id="scroller">
@@ -14,11 +15,11 @@
 			</div>
 		</div>
 		<div type="popup" class="cla-message">
-			<div style="overflow-y:auto;">
+			<div>
 				<div class="ele-fixed">
 					<template v-for="item in pdata">
 						<div class="main">
-							<a style="display:block" v-link="{name:'detail',params:{pid:item.id}}">
+							<a style="display:block" v-link="{name:'detail',params:{pid:item.id}}"><!--  -->
 								<div class="shotcut" v-if="item.store == 0">
 									<div class="qing">已售罄</div>
 									<img :src="item.src" alt="" style="width:100%;height:100%;" />
@@ -85,11 +86,11 @@
             Scroller,
             formatPop,
             Toast,
-            Alert
+            Alert,
         },
-        data() {
+		data() {
             return {
-                pdata: [],
+				pdata: [],
                 item: [],
                 myScroll: '',
                 dtype: null,
@@ -158,7 +159,8 @@
                                     mouseWheel: true,
                                     vScrollbar: false,
                                     probeType: 2,
-                                    click: true
+                                    click: true,
+                                    preventDefault:true,
                                 });
                                 content.myScroll_left.refresh();
                             }, 100);
@@ -172,13 +174,15 @@
                 if(this.dtype == type) return true;
                 this.dtype = type;
                 sessionStorage.setItem('number',this.dtype);
-                this.menuIndex = type;
+//                $('.cla-card-li').animate({
+//					'scrollTop': $('.cla-card-li').index(this.dtype) * 45,
+//				},100);
             },
             filters: {
 
 			},
             chooseSort(cid){
-                this.$getData('/index/index/classifylist/cid/' + cid).then((res) => {
+                this.$getData('/index/index/classifylist/cid/' + cid).then((res,index) => {
                     if (res.status == 1) {
                         this.pdata = res.info.list;
                         $("#scroller2").css({
@@ -228,7 +232,7 @@
                             alert("这是限时抢购商品！");
                             return false;
                         } else if (data.activestu == 2) {
-                            alert("这是限时分享商品！");
+                            alert("请点击商品图片，进入商品详情页进入分享购买！");
                             return false;
                         }
                         if(sessionStorage.getItem("myCart") != '') {
@@ -257,12 +261,14 @@
 <style scoped>
 
 	.type-bg {
-		width:100%;
-		height:100%;
+		width: 100%;
+		height: 100%;
 		background: #fff;
 		position: fixed;
-		top:46px;
-		left:0px;
+		top: 46px;
+		left: 0px;
+		display: flex;
+		z-index: 9;
 	}
 
 
@@ -270,10 +276,9 @@
 		width:29%;
 		height:calc(100% - 100px);
 		background: #f2f2f2;
-		position:relative;
-		top:0px;
+		position: fixed;
+		top: 46px;
 		left:0px;
-		overflow: hidden;
 		overflow-y: auto;
 		-webkit-overflow-scrolling: touch;
 		-moz-overflow-scrolling: touch;
@@ -338,9 +343,10 @@
 		top: 0px;
 		right: 0px;
 		margin-bottom: 75px;
-		overflow-x:hidden;
-		overflow:hidden;
-		overflow-y: auto;
+		overflow-y: scroll;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 		-webkit-overflow-scrolling: touch;
 		-moz-overflow-scrolling: touch;
 		-ms-overflow-scrolling: touch;

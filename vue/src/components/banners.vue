@@ -1,13 +1,13 @@
 <template>
     <div class="order-search">
         <div class="logo" style="background: none;width:50px;float:left;">
-            <img src="../images/logo_lv.png" alt="" style="width:40px;height:40px;margin: 5px 15px;" />
+            <img src="../images/logo_lv.png" alt="" style="width:40px;height:40px;margin: 5px 15px;"/>
         </div>
         <div class="search" style="width:66%;position:relative;left:12px;">
             <form action="">
-                <input type="search" placeholder="请输入您要搜索的商品" v-model="searchKey" @keydown="breakSearch()" />
+                <input type="search" placeholder="请输入您要搜索的商品" v-model="searchKey" @keydown="breakSearch()"/>
                 <a href="javascript:void(0)" class="order-search-btn" style="display:block;" @click="goSearch()">搜索</a>
-                <input style="display:none;" />
+                <input style="display:none;"/>
             </form>
 
         </div>
@@ -15,6 +15,16 @@
             <a href="javascript:void(0)" class="txt-service" @click="goPage"></a>
         </div>
     </div>
+
+    <!-- 轮播图 -->
+    <!--<template v-for="item in testarr">-->
+        <!--<template v-if="item.type == 4">-->
+            <!--<swiper :list="item.arr" url="item.url" loop dots-position="center" :show-desc-mask="false"-->
+                    <!--:aspect-ratio="650/1242" auto dots-class="dots-my" style="width: 100%;margin-top:50px;">-->
+            <!--</swiper>-->
+        <!--</template>-->
+    <!--</template>-->
+
     <swiper :list="banners" :show-desc-mask="false" :aspect-ratio="650/1242" dots-position="center"
             auto dots-class="dots-my" style="width: 100%;clear:both;top:50px;"></swiper>
 </template>
@@ -24,14 +34,14 @@
     import Swiper from 'vux/src/components/swiper'
     import Scroller from 'vux/src/components/scroller'
     import Toast from 'vux/src/components/toast'
-    import { myActive,mySearch,commitData } from 'vxpath/actions'
+    import {myActive, mySearch, commitData} from 'vxpath/actions'
     import axios from 'axios'
     import qs from 'qs'
     import XButton from 'vux/src/components/x-button'
 
     export default{
         props: {
-            testarr:[]
+            testarr: []
         },
         vuex: {
             actions: {
@@ -51,9 +61,7 @@
             Scroller,
             XButton
         },
-        route: {
-
-        },
+        route: {},
         ready() {
             this.ban();
             this.breakSearch();
@@ -67,17 +75,17 @@
             //按钮回车事件
             breakSearch (event) {
                 var e = window.event || event;
-                if(e && e.keyCode == 13) {
+                if (e && e.keyCode == 13) {
                     this.goSearch();
                 }
             },
             goSearch() {
                 this.$getData('/index/index/searchshop?shopname=' + this.searchKey).then((res) => {
-                    if(res.status == 1) {
+                    if (res.status == 1) {
                         this.$router.go({
-                            name:'search',
-                            params:{
-                                arr:this.mySearch(res.info.data)
+                            name: 'search',
+                            params: {
+                                arr: this.mySearch(res.info.data)
                             }
                         });
                     } else if (res.status == 0) {
@@ -91,9 +99,7 @@
                 this.$router.go({name: 'per-orders'})
             },
         },
-        events: {
-
-        }
+        events: {}
     }
 </script>
 
@@ -101,17 +107,17 @@
 
     @import '../styles/theme.less';
 
-    .order-search{
-        width:100%;
-        height:50px;
+    .order-search {
+        width: 100%;
+        height: 50px;
         background-color: @header-default-bg-color;
         position: fixed;
-        top:0px;
-        left:0px;
+        top: 0px;
+        left: 0px;
         z-index: 99;
     }
 
-    .order-search .search{
+    .order-search .search {
         font-size: 14px;
         width: 70%;
         height: 40px;
@@ -123,7 +129,7 @@
         background-position-x: 6px;
     }
 
-    .order-search .search input[type='search']{
+    .order-search .search input[type='search'] {
         margin: 5px 0px 0px 29px;
         height: 30px;
         border: none;
@@ -131,32 +137,31 @@
     }
 
     .order-search .customer {
-        float:right;
+        float: right;
         position: absolute;
-        top:5px;
-        text-align:center;
-        width:14%;
-        right:0px;
-        color:#fff;
+        top: 5px;
+        text-align: center;
+        width: 14%;
+        right: 0px;
+        color: #fff;
     }
-
 
     .order-search .customer .icon-kefu {
         font-size: 21px;
     }
 
     .order-search .customer .txt-service {
-        display:block;
+        display: block;
         width: 2.8rem;
         height: 3.7rem;
         background: url('../images/logo_kefu.png') no-repeat;
-        background-size:100%;
+        background-size: 100%;
         position: absolute;
         top: 0px;
         left: 10px;
     }
 
-    .order-search-btn{
+    .order-search-btn {
         position: absolute;
         right: 0px;
         top: 0px;
@@ -176,21 +181,23 @@
 
     .order-search-btn:active {
         background: #3cc51f;
-        color:#fff;
+        color: #fff;
     }
 
     /* search start */
-    .search{
+    .search {
         background: #81c429;
-        width:100%;
-        height:66px;
+        width: 100%;
+        height: 66px;
     }
-    .search .logo{
-        width:56px;
-        height:54px;
-        float:left;
+
+    .search .logo {
+        width: 56px;
+        height: 54px;
+        float: left;
         padding: 5px 5px 5px 10px;
     }
+
     /* search end */
 
 </style>

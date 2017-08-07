@@ -157,7 +157,10 @@
             <div class="con inline">
                 <div class="num-counter">
                     <div class="btns" :class="{'disabled':buyNums <= 1}" @click="reduceNums">-</div>
-                    <input type="number" class="input" :value="buyNums" readonly /> <!-- readonly -->
+                    <input type="tel" class="input" v-model="buyNums" /> <!-- :value="buyNums" readonly -->
+
+
+
                     <div class="btns" :class="{'disabled':buyNums >= proNums}" @click="addNums">+</div>
                 </div>
             </div>
@@ -362,6 +365,7 @@
             },
             fetchData() {
                 let getUrl = '', context = this;
+                this.buyNums = 1;
                 this.$nextTick(() => {
                     if (this.$ustore) {
                         getUrl = '/index/index/productdetail/uid/' + this.$ustore.id + '/pid/' + this.$route.params.pid;
@@ -409,15 +413,12 @@
                                         chil[i].style.display = "block";
                                     }
                                 }
-                            } catch (e) {
-                            } finally {
-                            }
+                            } catch (e) {} finally {}
                         }, (res) => {
                             this.toastMessage = "网络开小差啦~";
                             this.toastShow = true;
                         })
-                    } catch (e) {
-                    }
+                    } catch (e) {}
                 });
             },
             goback () {
