@@ -87,7 +87,7 @@ const mutations = {
 	},
 	INCRECARTNUMS (state,id,format) {
 		for(let plist = 0; plist < state.cart.length; plist++) {
-			if(typeof state.cart[plist]==='object'&&state.cart[plist].id==id&&state.cart[plist].format==format){
+			if(typeof state.cart[plist] === 'object' && state.cart[plist].id == id && state.cart[plist].format == format) {
 				state.cart[plist].nums += 1;
 				break;
 			}
@@ -95,8 +95,8 @@ const mutations = {
         localStorage.setItem('myCart',JSON.stringify(state.cart));
 	},
 	REDUCECARTNUMS (state,id,format) {
-		for(let plist=0;plist<state.cart.length;plist++){
-			if(typeof state.cart[plist]==='object'&&state.cart[plist].id==id&&state.cart[plist].format==format){
+		for(let plist = 0;plist < state.cart.length; plist++) {
+			if(typeof state.cart[plist]==='object' &&state.cart[plist].id==id&&state.cart[plist].format==format){
 				if(state.cart[plist].nums>=1) state.cart[plist].nums -= 1;
 				break;
 			}

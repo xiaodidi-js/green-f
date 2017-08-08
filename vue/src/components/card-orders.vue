@@ -42,9 +42,9 @@
 					   <!--v-if="item.pay == 1"-->
 					   <!--@click="clickExpress(item.id,item.snum)">查看快递</a>-->
 
-					<!--<a class="manage-btn"-->
-					   <!--v-if="item.pay == 1 && item.send == 1 && item.receive == 0 && item.status == 0"-->
-					   <!--@click="clickConfirm()">确认收货</a>-->
+					<a class="manage-btn"
+					   v-if="item.pay == 1 && item.send == 1 && item.receive == 0 && item.status == 0"
+					   @click="clickConfirm($index,item.id)">确认收货</a>
 
 					<a class="manage-btn" v-if="item.reject == 0 && item.status == 1"
 					   v-link="{name:'comment-submit',params:{oid:item.id}}">客户评价</a>
@@ -53,7 +53,7 @@
 			</div>
 			<!-- 确定弹框 -->
 			<confirm :show.sync="confirmShow" :title="confirmTitle" confirm-text="确定" cancel-text="取消"
-					 @on-confirm="myConfirmClcik(item.id)" @on-cancel="cancelClick">
+					 @on-confirm="myConfirmClcik($index,item.id)" @on-cancel="cancelClick">
 				<p style="text-align:center;">{{ confirmText }}</p>
 			</confirm>
 		</div>
@@ -112,7 +112,7 @@
 
 		},
 		methods: {
-            myConfirmClcik: function(id) {
+            myConfirmClcik: function(index,id) {
                 switch(this.clickType) {
                     case 1:
                         this.$deleteData('/index/user/getsubmitorder/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/oid/' + id).then((res)=>{
@@ -144,6 +144,8 @@
                         });
                     case 2:
                         let pdata = {uid:this.$ustore.id,token:this.$ustore.token,oid:id};
+                        console.log(index,id);
+                        return;
                         if(pdata.oid === id) {
                             console.log(pdata.oid);
 							console.log(1);
@@ -158,7 +160,7 @@
 //                        });
                 }
 			},
-			buyAgain: function(oid){
+			buyAgain: function(oid) {
 				this.btnStatus = true;
 				this.loadingMessage = '请稍候...';
 				this.loadingShow = true;
@@ -206,12 +208,20 @@
                 this.btnStatus = true;
                 this.confirmShow = true;
 			},
-            clickConfirm: function () {
-                this.clickType = 2;
-                this.confirmTitle = '确认收货';
-                this.confirmText = '请在收到货物后才确认收货,确认?';
-                this.btnStatus = true;
-                this.confirmShow = true;
+            clickConfirm: function (index,id) {
+                let pdata = {uid:this.$ustore.id,token:this.$ustore.token,oid:id};
+                var read = confirm('请在收到货物后才确认收货,确认?');
+                if(read == true) {
+                    this.$putData('/index/user/orderoperation',pdata).then((res)=>{
+                        //刷新当前页面
+                        location.reload();
+                    });
+				}
+//                this.clickType = 2;
+//                this.confirmTitle = '确认收货';
+//                this.confirmText = '请在收到货物后才确认收货,确认?';
+//                this.btnStatus = true;
+//                this.confirmShow = true;
             }
 		}
 	}

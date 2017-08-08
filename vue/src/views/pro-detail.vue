@@ -157,10 +157,8 @@
             <div class="con inline">
                 <div class="num-counter">
                     <div class="btns" :class="{'disabled':buyNums <= 1}" @click="reduceNums">-</div>
+                    <!--<input type="tel" class="input" :value="buyNums" /> &lt;!&ndash; :value="buyNums" readonly &ndash;&gt;-->
                     <input type="tel" class="input" v-model="buyNums" /> <!-- :value="buyNums" readonly -->
-
-
-
                     <div class="btns" :class="{'disabled':buyNums >= proNums}" @click="addNums">+</div>
                 </div>
             </div>
@@ -188,8 +186,7 @@
     import Spinner from'components/spinner'
     import WxJssdk from 'weixin-js-sdk'
     import SeckillFloor from 'components/seckill-floor'
-    import axios from 'axios'
-    import qs from 'qs'
+
     export default{
         vuex: {
             getters: {
@@ -224,6 +221,7 @@
                 tjData: {},		//推荐组合
                 showShare: false,
                 shareEle: false,
+                doubleNumber: 1,
             }
         },
         components: {
@@ -255,6 +253,17 @@
             '$route'(to) {
                 if (parseInt(to.params.pid) !== this.data.id && to.name === 'detail') {
                     this.fetchData();
+                    if (this.data.activestu == 2) {
+                        this.showShare = true;
+                        $(".buyButton").css({
+                            "display": "none"
+                        });
+                    } else {
+                        this.showShare = false
+                        $(".buyButton").css({
+                            "display": "block"
+                        });
+                    }
                 }
             }
         },
@@ -293,7 +302,6 @@
                             alert("已取消分享");
                         },
                     };
-                    console.log(options);
                     WxJssdk.config({
                         debug: false,
                         appId: getSession.appid,
@@ -332,36 +340,42 @@
             },
             shareSuccess() {
                 var content = this;
-                if (this.$ustore == null) {
-                    alert("没有登录，请先登录!");
-                    setTimeout(function () {
-                        content.$router.go({name: 'login'});
-                    }, 800);
-                    return false;
-                }
-                this.$getData('/index/index/addshare?uid=' + this.$ustore.id + '&pid=' + content.data.id + '&activeid=' + content.data.activeid).then((res) => {
-                    var cartObj = {
-                        id: this.$route.params.pid,
-                        shotcut: this.data.shotcut,
-                        name: this.data.name,
-                        price: this.data.price,
-                        deliverytime: this.data.deliverytime,
-                        peisongok: this.data.peisongok,
-                        activestu: this.data.activestu,
-                        activeid: this.data.activeid,
-                        activepay: this.data.activepay,
-                        format: '',
-                        formatName: '',
-                        nums: this.buyNums,
-                        store: this.proNums = res.store,
-                        activestu: this.data.activestu,
-                    };
-                    if (res.status == 1) {
-                        alert(res.info);
-                        content.setCart(cartObj);
-                        content.$router.go({name: 'cart'});
+                if(this.data.activestu == 2) {
+                    if (this.$ustore == null) {
+                        alert("没有登录，请先登录!");
+                        setTimeout(function () {
+                            content.$router.go({name: 'login'});
+                        }, 800);
+                        return false;
                     }
-                });
+                    this.$getData('/index/index/addshare?uid=' + this.$ustore.id + '&pid=' + content.data.id + '&activeid=' + content.data.activeid).then((res) => {
+                        var cartObj = {
+                            id: this.$route.params.pid,
+                            shotcut: this.data.shotcut,
+                            name: this.data.name,
+                            price: this.data.price,
+                            deliverytime: this.data.deliverytime,
+                            peisongok: this.data.peisongok,
+                            activestu: this.data.activestu,
+                            activeid: this.data.activeid,
+                            activepay: this.data.activepay,
+                            format: '',
+                            formatName: '',
+                            nums: this.buyNums,
+                            store: this.proNums = res.store,
+                            activestu: this.data.activestu,
+                        };
+                        if (res.status == 1) {
+                            alert(res.info);
+                            content.setCart(cartObj);
+                            content.$router.go({name: 'cart'});
+                        }
+                    });
+                } else {
+
+                }
+                return;
+
             },
             fetchData() {
                 let getUrl = '', context = this;
@@ -375,6 +389,7 @@
                     try {
                         this.$getData(getUrl).then((res) => {
                             this.data = res;
+                            console.log(this.data);
                             context.share();
 //                            context.tuijian();
                             //判断是否分享商品
@@ -384,7 +399,10 @@
                                     "display": "none"
                                 });
                             } else {
-                                context.showShare = false
+                                context.showShare = false;
+                                $(".buyButton").css({
+                                    "display": "block"
+                                });
                             }
                             if (!this.data.format) {
                                 this.proNums = this.data.store;
@@ -613,6 +631,7 @@
                 let cartObj = {};
                 let cartFormat = this.guige.length > 0 ? this.guige.join(',') : '';
                 let cartFormatName = this.guige.length > 0 ? this.guigeName.join('-') : '';
+
                 cartObj = {
                     id: this.$route.params.pid,
                     shotcut: this.data.shotcut,
@@ -622,7 +641,7 @@
                     peisongok: this.data.peisongok,
                     format: cartFormat,
                     formatName: cartFormatName,
-                    nums: this.buyNums,
+                    nums: parseInt(this.buyNums),
                     store: this.proNums,
                     activestu: this.data.activestu
                 };
@@ -696,7 +715,7 @@
                     activepay: this.data.activepay,
                     format: cartFormat,
                     formatName: cartFormatName,
-                    nums: this.buyNums,
+                    nums: parseInt(this.buyNums),
                     store: this.proNums,
                     activestu: this.data.activestu,
                 };

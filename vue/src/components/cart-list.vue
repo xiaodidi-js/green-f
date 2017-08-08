@@ -27,7 +27,8 @@
 				<div class="status">
 					<div class="num-counter" style="float:left;">
 						<button class="btns" :class="{'disabled':pnums <= 0}" @click.stop="rdcNums()"> - </button>
-						<input type="number" class="input" :value="pnums" @click.stop @touchstart.stop readonly />
+						<input type="number" class="input" :value="pnums" @click.stop @touchstart.stop /> <!--  readonly  -->
+						<!--<input type="tel" class="input" v-model="pnums" @click.stop @touchstart.stop />-->
 						<button class="btns" :class="{'disabled':pnums >= pstore}" @click.stop="addNums()"> + </button>
 					</div>
 					<div class="elestore" style="">
@@ -39,6 +40,7 @@
 			</div>
 		</div>
 		<div class="addition aw" v-show="mode !== 1" v-link="{name:'detail',params:{pid:pid}}">
+
 			<img src="../images/arrow.png" />
 		</div>
 	</div>
@@ -128,6 +130,9 @@
                 default: 0
 			}
 		},
+		ready() {
+
+		},
 		data() {
 			return {
 				confirmShow: false,
@@ -189,8 +194,9 @@
 				this.confirmShow = true;
 			},
 			addNums: function() {
+
 				if(this.pnums < this.pstore) {
-					this.increNums(this.pid,this.pformat);
+				    this.increNums(this.pid,this.pformat);
 				}
 			},
 			rdcNums: function(evt) {
@@ -202,8 +208,7 @@
 					}
 				}
 			},
-			confirmDel: function(){
-			    console.log(this.pid,this.pformat);
+			confirmDel: function() {
 				this.delSingle(this.pid,this.pformat);
 			}
 		}

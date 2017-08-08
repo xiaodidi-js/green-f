@@ -68,7 +68,7 @@
         },
         methods: {
             addNums: function(){
-                if(this.buyNums>=this.proNums){
+                if(this.buyNums >= this.proNums){
                     return false;
                 }
                 this.buyNums++;

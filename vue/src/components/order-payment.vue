@@ -28,9 +28,9 @@
                        v-if="item.pay == 0 && item.send == 0 && item.receive == 0 && item.status == 0"
                        v-link="{name:'order-detail',params:{oid:item.id}}">去付款</a>
 
-                    <a class="manage-btn"
-                       v-if="item.pay == 0 && item.send == 0 && item.receive == 0 && item.status == 0"
-                       @click="clickCancel">取消订单</a>
+                    <!--<a class="manage-btn"-->
+                       <!--v-if="item.pay == 0 && item.send == 0 && item.receive == 0 && item.status == 0"-->
+                       <!--@click="clickCancel">取消订单</a>-->
 
                     <a class="manage-btn"
                        v-if="item.pay == 1 && item.send == 1 && item.receive == 0 && item.status == 0"
@@ -198,12 +198,20 @@
                 this.btnStatus = true;
                 this.confirmShow = true;
             },
-            clickConfirm: function () {
-                this.clickType = 1;
-                this.confirmTitle = '确认收货';
-                this.confirmText = '请在收到货物后才确认收货,确认?';
-                this.btnStatus = true;
-                this.confirmShow = true;
+            clickConfirm: function (index,id) {
+                let pdata = {uid:this.$ustore.id,token:this.$ustore.token,oid:id};
+                var read = confirm('请在收到货物后才确认收货,确认?');
+                if(read == true) {
+                    this.$putData('/index/user/orderoperation',pdata).then((res)=>{
+                        //刷新当前页面
+                        location.reload();
+                    });
+                }
+//                this.clickType = 1;
+//                this.confirmTitle = '确认收货';
+//                this.confirmText = '请在收到货物后才确认收货,确认?';
+//                this.btnStatus = true;
+//                this.confirmShow = true;
             },
             cancelClick: function() {
                 this.btnStatus = false;

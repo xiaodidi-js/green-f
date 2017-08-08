@@ -123,6 +123,7 @@
             $(".group ,.active").css({
                 "color" : "#ccc",
             });
+            console.log(this.cartList);
 		},
         watch: {
 			$route(to) {
