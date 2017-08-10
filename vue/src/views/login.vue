@@ -3,7 +3,7 @@
 	<group title="" style="margin-top: 46px;">
 		<div class="tabmain">
 			<i class="iconfont user_icon icon-yonghu"></i>
-			<x-input :show-clear=true placeholder="手机号码" type="number" :value.sync="data.uname" class="login-ipt"></x-input>
+			<x-input :show-clear=true placeholder="手机号码" type="tel" :value.sync="data.uname" class="login-ipt"></x-input>
 		</div>
 		<div class="tabmain">
 			<div>

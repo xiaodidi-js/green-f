@@ -65,7 +65,7 @@
 		<!-- 商品列表 -->
 		<balance-two :list="data.products" :show-top="true" :show-btm="false" :visi="vieible"></balance-two>
 
-		<div class="express-ele" v-if="data.order.pay == 1" style="display:none;">
+		<div class="express-ele" v-if="data.order.pay == 1">
 			<x-button type="primary" class="express_button" @click="goExpress">查看快递</x-button>
 		</div>
 
@@ -177,7 +177,7 @@ export default{
         payment: function () {
             this.startTimer();
         },
-        '$route'(to,from) {
+        '$route'(to) {
 			var content = this;
 			if(to.params.oid == this.$route.params.oid && to.name === 'order-detail') {
 				content.getDetail();
@@ -188,23 +188,25 @@ export default{
 	    this.getDetail();
         //	开始时间
         this.startTimer();
-
-
-
     },
 	methods: {
         goExpress() {
-			console.log(this.stime,this.data.order.id,this.$ustore.id);
 			for(var i in this.data.products) {
-                console.log(this.data.products[i].id);
+			    console.log(this.data.products[i]);
                 this.$router.go({
                     name: "express",
                     query: {
-                        uid: this.$router.id,
-                        rid: this.data.order.id,
-                        stime: this.stime,
+                        uid: this.$router.id,			//	用户ID
+                        rid: this.data.order.id,		//	订单ID
+                        stime: this.stime,				//	开始时间
+                        state: this.data.order.statext,	//	状态
+                        orderNumber: this.data.order.orderid,	//订单号
+                        person: this.data.order.person,	//	派件人
+                        phone: this.data.order.tel,		//	派件人电话号码
+                        distribution: '绿秧田',			//	公司
+						orderImage: this.data.products[i].shotcut,					//	产品图
 						oid: this.data.products[i].id
-                    }
+                    },
                 })
 			}
 		},
@@ -874,7 +876,7 @@ export default{
 		100% {opacity:1;transform:scale(1.5);}
 	}
 
-	.comment{
+	.comment {
 		width:100%;
 		padding:1rem 0rem;
 		background-color:#fff;
@@ -883,15 +885,15 @@ export default{
 	}
 
 	.comment>a{
-		display:inline-block;
-		padding:0.8rem 0rem;
-		width:93%;
-		border-radius:0.3rem;
-		color:#fff;
-		background-color:#f9ad0c;
-		margin:auto;
-		font-size:1.6rem;
-		letter-spacing:0.2rem;
+		display: inline-block;
+		padding: 0.8rem 0rem;
+		width: 94%;
+		border-radius: 5px;
+		color: #fff;
+		background-color: #f9ad0c;
+		margin: 0px auto;
+		font-size: 1.6rem;
+		letter-spacing: 0.2rem;
 	}
 
 	.comment>a:active{

@@ -3,18 +3,18 @@
 	<!-- 订单状态 -->
 	<div class="bl-info-box status">
 		<div class="icon">
-			<img src="../images/wuliu.png" style="width:100%;height:100%;"/>
+			<img src="{{ orderImage }}" style="width:100%;height:100%;"/>
 		</div>
 		<div class="content">
 			<div class="sta-line">
 				<label class="stit">订单状态：</label>
-				<label class="stat">待收货</label>
+				<label class="stat">{{ state }}</label>
 			</div>
 			<div class="sta-line">
-				配送公司：顺丰快递
+				配送公司：{{ distribution }}
 			</div>
 			<div class="sta-line">
-				快递单号：201601610234949254
+				快递单号：{{ orderNumber }}
 			</div>
 		</div>
 	</div>
@@ -26,10 +26,10 @@
 		</div>
 		<div class="driver-text">
 			<p style="color: #898989;">派送员</p>
-			<p>梁星星</p>
+			<p>{{ person }}</p>
 		</div>
 		<div class="driver-call">
-			<a href="tel:{{}}" style="display:">
+			<a href="tel:{{phone}}" style="display:">
 				<div class="call" @click="callPerson()">
 					<img src="../images/call.png" alt="" style="width:100%;height:100%;" />
 				</div>
@@ -82,10 +82,24 @@
 		data() {
 			return {
 				doDay: this.$route.query.stime,
+				state: '',
+                distribution: '',
+                orderNumber: '',
+				person: '',
+				phone: 0,
+				orderImage: '',
 			}
 		},
 		ready() {
 			this.express();
+		},
+        watch: {
+            '$route'(to) {
+                console.log(to);
+                if(to.name === 'express') {
+                    this.express();
+				}
+            }
 		},
         filters: {
             time: function (value) {
@@ -101,6 +115,14 @@
         },
 		methods: {
 			express() {
+//                console.log(JSON.parse(this.$route.query.data));
+			    console.log(this.$route.query);
+                this.state = this.$route.query.state;
+                this.distribution = this.$route.query.distribution;
+                this.orderNumber = this.$route.query.orderNumber;
+                this.person = this.$route.query.person;
+                this.phone = this.$route.query.phone;
+                this.orderImage = this.$route.query.orderImage;
 			    this.$getData('/index/app/getdelivery/uid/' + this.$ustore.id + "/rid/" + this.$route.query.rid + "/stime/" + this.doDay + "/oid/" + this.$route.query.oid).then((res) => {
                     console.log(res);
                     if(res.status === 0) {
@@ -117,15 +139,15 @@
 
 <style scoped>
 	.bl-info-box{
-		width:94%;
-		padding:0.8rem 3%;
-		background-color:#fff;
-		margin-bottom:3%;
-		font-size:1.4rem;
-		position:fixed;
-		top:46px;
-		left:0;
-		z-index:100;
+		width: 100%;
+		padding: 0.8rem 0%;
+		background-color: #fff;
+		margin-bottom: 3%;
+		font-size: 1.4rem;
+		position: fixed;
+		top: 46px;
+		left: 0;
+		z-index: 100;
 	}
 
 	.bl-info-box.status{
