@@ -43,13 +43,10 @@
 	<div class="htimer nowrap">成交时间:{{ data.createtime }}</div>
 	<!-- 评价组件 -->
 	<comment-group :products.sync="data.list"></comment-group>
-	
 	<!-- 底部按钮 -->
 	<x-button text="发表评价" :disabled="btnDis" class="fixbtn" @click="submitComment" style="line-height: 2.777;z-index:100;"></x-button>
-
 	<!-- toast提示框 -->
 	<toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
-
 	<!-- loading加载框 -->
 	<loading :show="loadingShow" :text="loadingMessage"></loading>
 </template>

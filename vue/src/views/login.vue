@@ -14,7 +14,6 @@
 	</group>
 	<!-- 底部选择 -->
 	<bottom-check title="下次自动登录（公众场所请慎用）" desc="" :status.sync="data.auto"></bottom-check>
-
 	<!-- 底部按钮 -->
 	<div class="btn-wrapper">
 		<x-button type="primary" :text="btnText" :disabled="btnDis" style="line-height:47px;" @click="postData"></x-button>
@@ -68,15 +67,15 @@ export default{
         this.data.auto = true;
 	},
 	methods: {
-		checkBefore: function(){
+		checkBefore: function() {
 			if(this.un.length <= 0 || this.up.length <= 0) {
 				return false;
 			}
 			return true;
 		},
-		postData: function(){
+		postData: function() {
 		    var self = this;
-			if(this.checkBefore() === false){
+			if(this.checkBefore() === false) {
 				alert('请填写登录账号和密码');
 				return false;
 			} else {
@@ -104,7 +103,7 @@ export default{
 						this.toastMessage = response.info;
 						this.toastShow = true;
 						let context = this;
-						setTimeout(function(){
+						setTimeout(function() {
 							context.data.uname = '';
 							context.data.pwd = '';
 							context.data.auto = false;

@@ -1,6 +1,22 @@
 <template>
 
 	<div class="type-bg">
+
+		<!--<div type="popup" class="cla-wrapper" id="left_Menu" style="float: left;">-->
+			<!--<div id="scroller">-->
+				<!--<div class="menu-left">-->
+					<!--<scroller v-ref:scroller lock-x :scrollbar-y="false">-->
+						<!--<ul id="touch-ui">-->
+							<!--<template v-for="item in types">-->
+								<!--<li class="cla-card-li" style="border:none;" :class="{'active':dtype == item.id}" @click="getChonse(item.id)">-->
+									<!--<div class="menu-item" @click="chooseSort(item.id)">{{ item.name }}</div>-->
+								<!--</li>-->
+							<!--</template>-->
+						<!--</ul>-->
+					<!--</scroller>-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
 		<div type="popup" class="cla-wrapper" id="left_Menu" style="float: left;">
 			<div id="scroller">
 				<div class="menu-left">
@@ -446,9 +462,7 @@
 	}
 
 	#touch-ui {
-		transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
-		transition-duration: 0ms;
-		transform: translate(0px, 0px) translateZ(0px);
+		height: 550px;
 	}
 
 	#touch-ui .isChonse {

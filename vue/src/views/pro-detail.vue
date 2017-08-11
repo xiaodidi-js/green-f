@@ -348,6 +348,7 @@
                         }, 800);
                         return false;
                     }
+
                     this.$getData('/index/index/addshare?uid=' + this.$ustore.id + '&pid=' + content.data.id + '&activeid=' + content.data.activeid).then((res) => {
                         var cartObj = {
                             id: this.$route.params.pid,
@@ -362,7 +363,7 @@
                             format: '',
                             formatName: '',
                             nums: this.buyNums,
-                            store: this.proNums = res.store,
+                            store: this.data.store,
                             activestu: this.data.activestu,
                         };
                         if (res.status == 1) {
@@ -389,7 +390,6 @@
                     try {
                         this.$getData(getUrl).then((res) => {
                             this.data = res;
-                            console.log(this.data);
                             context.share();
 //                            context.tuijian();
                             //判断是否分享商品

@@ -1,5 +1,3 @@
-
-
 <template>
 	<!-- 顶部选项 -->
 	<tab default-color="#333333" active-color="#F9AD0C" :line-width="2" class="fixed-tab">
@@ -93,11 +91,6 @@
 		},
 		ready(){
 			this.getData();
-
-			var head = JSON.parse(localStorage.getItem("userHeader"));
-			for(var i in head) {
-                console.log(head[i].headimgurl);
-			}
 		},
 		methods: {
 			changeColumn: function(col){

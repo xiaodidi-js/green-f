@@ -32,7 +32,7 @@
                     transition.next({
                         data: response.data
                     })
-                },(response)=>{
+                },(res)=>{
                     this.toastMessage = "网络开小差啦~";
                     this.toastShow = true;
                 })
