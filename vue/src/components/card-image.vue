@@ -1,4 +1,8 @@
 <template>
+	<div class="msg-head">
+		<div class="msg-back" @click="goback()"></div>
+		<div class="msg-title">活动</div>
+	</div>
 	<div class="wrapper-ele" style="">
 		<div class="wrapper cardImage">
 			<!--<label class="title" v-if="articles.title">{{ articles.title }}</label>-->
@@ -67,6 +71,9 @@
             }
         },
 		methods: {
+            goback () {
+                window.history.back();
+            },
 		    message () {
                 var content = this;
                 if(this.$ustore == null) {

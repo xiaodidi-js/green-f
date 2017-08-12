@@ -147,48 +147,6 @@ export default{
 
 <style>
 
-	.msg-head {
-		width:100%;
-		height:4.6rem;
-		color: #fff;
-		line-height: 4.6rem;
-		text-align: center;
-		background: #35495e;
-		display:block;
-	}
-
-	.msg-head .msg-back {
-		width: 10%;
-		font-size: 16px;
-		margin-left: 1rem;
-		height: 100%;
-		float: left;
-	}
-
-	.msg-head .msg-back:before {
-		content: "";
-		position: absolute;
-		display: block;
-		top: 16px;
-		left: 18px;
-		width: 12px;
-		height: 12px;
-		border: 1px solid #ccc;
-		border-width: 1px 0 0 1px;
-		margin-left: 3px;
-		margin-top: 1px;
-		transform: rotate(315deg);
-		-o-transform: rotate(315deg);
-		-ms-transform: rotate(315deg);
-		-moz-transform: rotate(315deg);
-		-webkit-transform: rotate(315deg);
-	}
-
-	.msg-head .msg-title {
-		font-size: 16px;
-		width: 92%;
-	}
-
 	.btn-wrapper{
 		width: 92%;
 		margin: 5% auto 10%;

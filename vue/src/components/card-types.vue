@@ -1,22 +1,9 @@
 <template>
-
+	<div class="msg-head">
+		<div class="msg-back" @click="goback()"></div>
+		<div class="msg-title">商品分类</div>
+	</div>
 	<div class="type-bg">
-
-		<!--<div type="popup" class="cla-wrapper" id="left_Menu" style="float: left;">-->
-			<!--<div id="scroller">-->
-				<!--<div class="menu-left">-->
-					<!--<scroller v-ref:scroller lock-x :scrollbar-y="false">-->
-						<!--<ul id="touch-ui">-->
-							<!--<template v-for="item in types">-->
-								<!--<li class="cla-card-li" style="border:none;" :class="{'active':dtype == item.id}" @click="getChonse(item.id)">-->
-									<!--<div class="menu-item" @click="chooseSort(item.id)">{{ item.name }}</div>-->
-								<!--</li>-->
-							<!--</template>-->
-						<!--</ul>-->
-					<!--</scroller>-->
-				<!--</div>-->
-			<!--</div>-->
-		<!--</div>-->
 		<div type="popup" class="cla-wrapper" id="left_Menu" style="float: left;">
 			<div id="scroller">
 				<div class="menu-left">
@@ -31,11 +18,11 @@
 			</div>
 		</div>
 		<div type="popup" class="cla-message">
-			<div>
+			<div style="background: #fff;">
 				<div class="ele-fixed">
 					<template v-for="item in pdata">
 						<div class="main">
-							<a style="display:block" v-link="{name:'detail',params:{pid:item.id}}"><!--  -->
+							<a style="display:block" v-link="{name:'detail',params:{pid:item.id}}"><!-- v-link="{name:'detail',params:{pid:item.id}}" -->
 								<div class="shotcut" v-if="item.store == 0">
 									<div class="qing">已售罄</div>
 									<img :src="item.src" alt="" style="width:100%;height:100%;" />
@@ -143,8 +130,21 @@
                 }
             });
             this.onToure();
+
+            //  窗体滚动事件
+            $(window).scroll(function() {
+                if($(window).scrollTop() >= 350) {
+                    $(".goto-type").fadeIn(500);
+                } else {
+                    $(".goto-type").stop(true,true).fadeOut(500);
+                }
+            });
+
         },
         methods: {
+			goback () {
+				window.history.back();
+			},
 			readyData() {
 				this.dtype = sessionStorage.getItem('number');
 				if(this.dtype == null) {
@@ -157,9 +157,7 @@
 				}
 			},
             todo() {
-				$(".cla-message").css({
-                    "transition": "0.5s",
-                }).scrollTop(0);
+				$(window).scrollTop(0);
 			},
             onToure() {
                 var content = this;
@@ -190,9 +188,7 @@
                 if(this.dtype == type) return true;
                 this.dtype = type;
                 sessionStorage.setItem('number',this.dtype);
-//                $('.cla-card-li').animate({
-//					'scrollTop': $('.cla-card-li').index(this.dtype) * 45,
-//				},100);
+                $(window).scrollTop(0);
             },
             filters: {
 
@@ -280,22 +276,22 @@
 		width: 100%;
 		height: 100%;
 		background: #fff;
-		position: fixed;
+		/*position: fixed;*/
 		top: 46px;
 		left: 0px;
 		display: flex;
 		z-index: 9;
 	}
 
-
-	.type-bg .cla-wrapper{
+	.type-bg .cla-wrapper {
 		width:29%;
 		height:calc(100% - 100px);
 		background: #f2f2f2;
 		position: fixed;
-		top: 46px;
+		top: 55px;
 		left:0px;
-		overflow-y: auto;
+		overflow: scroll;
+		z-index: 9;
 		-webkit-overflow-scrolling: touch;
 		-moz-overflow-scrolling: touch;
 		-ms-overflow-scrolling: touch;
@@ -356,10 +352,11 @@
 		width: 72%;
 		height: 100%;
 		position: absolute;
-		top: 0px;
+		top: 50px;
 		right: 0px;
 		margin-bottom: 75px;
-		overflow-y: scroll;
+		/*overflow-y: scroll;*/
+		z-index: 1;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
@@ -374,7 +371,7 @@
 		width: 100%;
 		height: calc(100% - 100px);
 		/*overflow:hidden;*/
-		/*overflow-y:  auto;*/
+		overflow-y:  scroll;
 		margin-bottom: 112px;
 	}
 

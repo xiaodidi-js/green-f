@@ -74,7 +74,7 @@ const routers = {
         subRoutes: {
             '/': {
                 name:'cla-default',
-                header:true,
+                header:false,
                 footer:true,
                 title:'商品分类',
                 position:2,
@@ -96,7 +96,7 @@ const routers = {
             },
             'card-types/:cid': {
                 name:'cardtypes',
-                header:true,
+                header: false,
                 footer:true,
                 title:'下单',
                 saveScrollPosition: true,
@@ -577,7 +577,7 @@ const routers = {
     },
     '/card-image' : {
         name:'card-image',
-        header:true,
+        header: false,
         footer:true,
         title:'活动',
         position:3,

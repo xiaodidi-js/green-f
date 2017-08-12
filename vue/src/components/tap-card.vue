@@ -69,6 +69,7 @@
         watch: {
             "index": function(nval,oval){
                 this.changeTapCard();
+                $('group').css('color' , '#ccc');
             }
         },
         props: {
