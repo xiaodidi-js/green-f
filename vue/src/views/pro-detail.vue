@@ -1,14 +1,14 @@
 <template>
     <div class="msg-head">
         <div class="msg-back" @click="goback()"></div>
-        <div class="msg-title">{{ data.name }}</div>
+        <div class="msg-title message-title">{{ data.name }}</div>
     </div>
     <!-- 顶部选项 -->
     <!--<separator :set-height="44" unit="px"></separator>-->
     <div class="my-swiper"> <!-- @touchstart="tslistener($event)" @touchend="telistener($event)" -->
         <div id="scroller" class="ms-scroller" style="transform:translate3d(0px,0px,0px)">
             <div class="ms-item">
-                <swiper :list="data.gallery" dots-position="center" :show-desc-mask="false"
+                <swiper style="margin-top: 46px;" :list="data.gallery" dots-position="center" :show-desc-mask="false"
                         :aspect-ratio="480/480" dots-class="dots-my-orange" @touchstart.stop @touchend.stop></swiper>
 
                 <!--<swiper :list="data.gallery" auto dots-position="center" :show-desc-mask="false"-->
@@ -248,6 +248,8 @@
             //选项卡
             this.siblingsDom();
             this.timeline();
+
+
         },
         watch: {
             '$route'(to) {
@@ -348,7 +350,6 @@
                         }, 800);
                         return false;
                     }
-
                     this.$getData('/index/index/addshare?uid=' + this.$ustore.id + '&pid=' + content.data.id + '&activeid=' + content.data.activeid).then((res) => {
                         var cartObj = {
                             id: this.$route.params.pid,
@@ -390,6 +391,9 @@
                     try {
                         this.$getData(getUrl).then((res) => {
                             this.data = res;
+                            //  标题截取
+//                            var abc = this.data.name.substring(0,10);
+//                            this.data.name = abc;
                             context.share();
 //                            context.tuijian();
                             //判断是否分享商品
@@ -432,6 +436,7 @@
                                     }
                                 }
                             } catch (e) {} finally {}
+
                         }, (res) => {
                             this.toastMessage = "网络开小差啦~";
                             this.toastShow = true;
@@ -807,6 +812,15 @@
     .msg-head .msg-title {
         font-size: 16px;
         width: 92%;
+    }
+
+    .msg-head .message-title {
+        font-size: 16px;
+        width: 60%;
+        height: 46px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0px auto;
     }
 
     .my-swiper {

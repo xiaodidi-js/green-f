@@ -1,4 +1,6 @@
 <template>
+
+
 	<div class="bal-wrapper">
 		{{ demo | json}}
 		<!-- 发货方式 -->

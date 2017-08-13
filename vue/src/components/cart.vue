@@ -1,4 +1,8 @@
 <template>
+	<div class="msg-head">
+		<div class="msg-back" @click="goback()"></div>
+		<div class="msg-title">购物车</div>
+	</div>
 	<div class="col-wrapper" style="position: relative" v-if="cartList.length > 0">
 		<div class="notify-box">
 			<div class="ntips" v-show="editMode === 1">请选择删除商品</div>
@@ -137,6 +141,9 @@
 			}
         },
         methods: {
+            goback () {
+                window.history.back();
+            },
             setDel: function() {
                 this.confirmShow = true;
             },

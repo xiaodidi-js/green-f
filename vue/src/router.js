@@ -108,7 +108,7 @@ const routers = {
     },
     '/cart': {
         name:'cart',
-        header:true,
+        header:false,
         footer:true,
         title:'购物车',
         position:0,

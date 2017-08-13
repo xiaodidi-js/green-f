@@ -288,7 +288,7 @@
 		height:calc(100% - 100px);
 		background: #f2f2f2;
 		position: fixed;
-		top: 55px;
+		top: 46px;
 		left:0px;
 		overflow: scroll;
 		z-index: 9;
