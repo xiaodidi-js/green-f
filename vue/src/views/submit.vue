@@ -1,6 +1,4 @@
 <template>
-
-
 	<div class="bal-wrapper">
 		{{ demo | json}}
 		<!-- 发货方式 -->
@@ -27,7 +25,7 @@
 						</p>
 						<p>
 							<span class="address-left">电话:</span>
-							<span>{{ data.address.tel }}</span>
+							<span>{{ telphone }}</span>
 						</p>
 					</div>
 					<div class="add" v-if="data.address.area">
@@ -258,7 +256,8 @@
                 myCellTitle: '',
                 chonseParcel: false, //显示隐藏自提点选择框
 				wxName: '',			 // 微信名称
-                expressName: ''		 //	收件人名称
+                expressName: '',		 //	收件人名称
+				telphone: 0,	//	电话号码
             }
         },
         components: {
@@ -382,18 +381,23 @@
                             this.deliverType = 'parcel';
                             this.deliverName = this.data.deliver.parcel;
                         }
+
+						this.$getData('/index/login/useredit/uid/' + this.$ustore.id).then((res)=>{
+                            this.telphone = res.utel;
+							localStorage.setItem('tel',this.data.tel);
+						},(res)=>{
+							this.toastMessage = '网络开小差了~';
+							this.toastShow = true;
+						})
+
+
                         //	判断有没有快递配送
                         typeof(res.address) == '' ? this.myCellTitle = '到店自提' : this.myCellTitle = '请选择配送方式';
                         this.data.pay = res.pay;
                         this.payType = this.data.pay[0].ptype;
-
                         this.data.address = res.address;
-                        console.log(this.data.address.id);
-
                         this.addressid(this.data.address.id);
-
                         this.address = this.data.address.id;
-
                         //	获取微信信息
                         let openid = sessionStorage.getItem("openid");
                         this.$getData('/index/index/get_weixin?openid=' + openid).then((res)=>{  /* 'os0CqxBBANhLuBLTsViL3C0zDlNs' */

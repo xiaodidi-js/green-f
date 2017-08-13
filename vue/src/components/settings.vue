@@ -88,11 +88,6 @@ export default{
 	},
 	methods: {
         chonseColor () {
-
-//            this.$getData('').then((res) => {
-//
-//			});
-
 			$(".color-list").css({"display" : "block"});
 		},
         thatColor () {
@@ -103,8 +98,6 @@ export default{
 
             var header = document.getElementsByTagName("head")[0];
             header.appendChild(links);
-
-//			$(document).append(links);
 		},
 		changePwd: function(event){
 			let pwd = document.getElementById("pwd");
@@ -221,6 +214,10 @@ export default{
 		this.$getData('/index/login/useredit/uid/' + this.$ustore.id).then((res)=>{
 			if(res.status===1){
 				this.data.tel = res.utel;
+				localStorage.setItem('tel',this.data.tel);
+
+
+
 				this.data.name = res.uname;
 				this.data.sex = res.sex;
 				if(res.birthday !== '' && res.birthday!=='0000-00-00'){

@@ -194,7 +194,10 @@
 				this.confirmShow = true;
 			},
 			addNums: function() {
-
+//			    if(this.pnums > this.store) {
+//					console.log(123123);
+//					return;
+//				}
 				if(this.pnums < this.pstore) {
 				    this.increNums(this.pid,this.pformat);
 				}
