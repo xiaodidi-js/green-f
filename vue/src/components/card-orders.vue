@@ -362,7 +362,7 @@
 		float:left;
 	}
 
-	.manage-btn:last-child{
+	.manage-btn:last-child {
 		margin-right:0rem;
 	}
 
@@ -370,6 +370,11 @@
 		background:#81c429;
 		color:#fff;
 	}
+</style>
 
 
+<style>
+	.weui_dialog {
+		padding-top: 10px;
+	}
 </style>

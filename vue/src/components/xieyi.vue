@@ -46,9 +46,9 @@
 <style type="text/css">
     /* xieyi-content start */
     .xieyi-content {
-        padding-top: 65px;
-        width:100%;
-        height: 100%;
+        padding: 65px 0px;
+        width: 100%;
+        height: auto;
         background: #fff;
     }
 

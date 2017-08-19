@@ -43,10 +43,8 @@ let router = new VueRouter({
     saveScrollPosition: true,
     scrollBehavior (to, from, savedPosition) {
         if (savedPosition) {
-            console.log(savedPosition);
             return savedPosition
         } else {
-            console.log(x,y);
             return { x: 0, y: 0 }
         }
     }
@@ -113,34 +111,20 @@ router.beforeEach((transition) => {
         } else {
             $(".goto").stop(true,true).fadeOut(500);
         }
+
     });
 });
 
+
 router.afterEach((transition) => {
 
-    // Vue.http.get('../src/data/classify.json').then(function(res) {
-    //     for(var i in res.data) {
-    //         var pColor = '', fColor = '';
-    //         pColor = res.data[i].publicColor;
-    //         fColor = res.data[i].fontColor;
-    //         $(".weui_btn_primary").css({
-    //             "background" : pColor,
-    //             "color" : fColor
-    //         });
-    //         $(".order-search").css({
-    //             "background" : pColor
-    //         });
-    //         $(".score").css({
-    //             "background" : "url('../src/images/qiandao.png') no-repeat" + pColor,
-    //             "backgroundSize" : "23px 23px",
-    //             "backgroundPosition" : "5px 2px"
-    //         });
-    //
-    //         if($("#card").find(".group").className === 'active') {
-    //             console.log(12123);
-    //         }
-    //     }
+    // Vue.http.get('../../src/data/classify.json', options).then(function(res) {
+    //     val = res.body.notBack.heiVal;
     // });
+
+    $(window).scroll(function() {
+        // options['number'] = $(document).scrollTop();
+    });
 
     //获取微信分享配置
     if(transition.to.name != 'detail') {

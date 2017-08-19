@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="footer_shopcar" @click="addCarts(item)">
-                        <img src="../images/shopcar_youlike.png"/>
+                        <img src="../images/addcart.png"/>
                     </div>
                 </li>
                 <div style="clear:both;"></div>
@@ -83,9 +83,9 @@
                 toastMessage: '',
                 toastShow: false,
                 showQiag: false,
-                proNums:1,
-                buyNums:1,
-                activestu:0,
+                proNums: 1,
+                buyNums: 1,
+                activestu: 0,
                 ids: 0,
                 alertShow: false,
             }
@@ -95,10 +95,7 @@
         },
         methods: {
             listShop: function () {
-                var _this = this;
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                this.$getData('/index/user/cainixihuan/uid/' + ustore.id + '/token/' + ustore.token).then((res)=>{
+                this.$getData('/index/user/cainixihuan/uid/' + this.$ustore.id + '/token/' + this.$ustore.token).then((res)=>{
                     this.likedata = res.tuijian_shop;
                 },(res)=>{
                     this.toastMessage = '网络开小差了~';
@@ -106,18 +103,15 @@
                 });
             },
             addCarts: function (data) {
-                let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
-                ustore = JSON.parse(ustore);
-                var obj = {} , cart = JSON.parse(localStorage.getItem("myCart")) , _self = this;
-                if(ustore == null) {
+                var obj = {} , cart = JSON.parse(localStorage.getItem("myCart")) ,self = this;
+                if(this.$ustore == null) {
                     alert("没有登录，请先登录！");
                     setTimeout(function () {
-                        self.clearAll();
                         self.$router.go({name: 'login'});
                     }, 800);
                     return false;
-                } else if (ustore != null) {
-                    this.$getData('/index/index/productdetail/uid/' + ustore.id + '/pid/' + data.id).then((response)=>{
+                } else if (this.$ustore != null) {
+                    this.$getData('/index/index/productdetail/uid/' + this.$ustore.id + '/pid/' + data.id).then((response)=>{
                         obj = {
                             id:data.id,
                             name:data.name,
@@ -177,7 +171,7 @@
 </script>
 
 <style>
-    .shopcar_youlike{
+    .shopcar_youlike {
         width: 100%;
         height: auto;
         box-sizing:border-box;
@@ -247,7 +241,7 @@
 
     .list_value{
         width: 100%;
-        height: 30px;
+        height: 29px;
         line-height: 14px;
         margin-top: 0.2rem;
         box-sizing: border-box;
@@ -277,17 +271,19 @@
         float: left;
     }
     .footer_shopcar {
-        width: 25%;
-        height: 2.806rem;
+        width: 30px;
+        height: 28px;
         float: right;
         text-align: right;
     }
     .footer_shopcar {
-        margin-top: 5px;
+        margin: 5px 5px 0px 0px;
     }
     .footer_shopcar img {
-        width: 2.3rem;
-        height: 2rem;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        bottom: 3px;
     }
     @media screen and (max-width: 320px){
         .list_value{margin-top:0.1rem;}

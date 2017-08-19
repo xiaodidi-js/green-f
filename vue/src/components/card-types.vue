@@ -61,13 +61,12 @@
     import Scroller from 'vux/src/components/scroller'
     import { setCartStorage,clearAll } from 'vxpath/actions'
     import { cartNums } from 'vxpath/getters'
-	import formatPop from 'components/format-pop'
+    import formatPop from 'components/format-pop'
     import Toast from 'vux/src/components/toast'
     import axios from 'axios'
     import qs from 'qs'
     import Alert from 'vux/src/components/alert'
-
-	export default{
+    export default{
         vuex: {
             getters: {
                 cartNums
@@ -91,9 +90,9 @@
             Toast,
             Alert,
         },
-		data() {
+        data() {
             return {
-				pdata: [],
+                pdata: [],
                 item: [],
                 myScroll: '',
                 dtype: null,
@@ -118,7 +117,7 @@
         },
         created() {
             this.readyData();
-		},
+        },
         ready() {
             $(function() {
                 //菜单框架自动获取高度
@@ -130,7 +129,6 @@
                 }
             });
             this.onToure();
-
             //  窗体滚动事件
             $(window).scroll(function() {
                 if($(window).scrollTop() >= 350) {
@@ -139,26 +137,25 @@
                     $(".goto-type").stop(true,true).fadeOut(500);
                 }
             });
-
         },
         methods: {
-			goback () {
-				window.history.back();
-			},
-			readyData() {
-				this.dtype = sessionStorage.getItem('number');
-				if(this.dtype == null) {
-					this.chooseSort(26);
-					this.getChonse(26);
-					this.$router.go({name:'classify'});
-				} else {
-					this.chooseSort(this.dtype);
-					this.getChonse(this.dtype);
-				}
-			},
+            goback () {
+                window.history.back();
+            },
+            readyData() {
+                this.dtype = sessionStorage.getItem('number');
+                if(this.dtype == null) {
+                    this.chooseSort(26);
+                    this.getChonse(26);
+                    this.$router.go({name:'classify'});
+                } else {
+                    this.chooseSort(this.dtype);
+                    this.getChonse(this.dtype);
+                }
+            },
             todo() {
-				$(window).scrollTop(0);
-			},
+                $(window).scrollTop(0);
+            },
             onToure() {
                 var content = this;
                 try {
@@ -180,10 +177,10 @@
                             }, 100);
                         }
                     } ,10);
-				} catch (e) {
+                } catch (e) {
                     throw e;
-				}
-			},
+                }
+            },
             getChonse: function(type) {
                 if(this.dtype == type) return true;
                 this.dtype = type;
@@ -191,8 +188,7 @@
                 $(window).scrollTop(0);
             },
             filters: {
-
-			},
+            },
             chooseSort(cid){
                 this.$getData('/index/index/classifylist/cid/' + cid).then((res,index) => {
                     if (res.status == 1) {
@@ -201,7 +197,7 @@
                             "transform" : "translate(0px, 0px)"
                         });
                     }
-				}).catch(function(e) {
+                }).catch(function(e) {
                     console.log(e);
                 });
             },
@@ -214,7 +210,7 @@
                         self.$router.go({name: 'login'});
                     }, 800);
                     return false;
-				} else if (this.$ustore != null) {
+                } else if (this.$ustore != null) {
                     this.$getData('/index/index/productdetail/uid/' + this.$ustore.id + '/pid/' + data.id).then((res) => {
                         obj = {
                             id:data.id,
@@ -263,15 +259,14 @@
                         self.setCart(obj);
                         obj = {};
                         alert("加入购物车成功！");
-					});
-				}
-			}
+                    });
+                }
+            }
         },
     }
 </script>
 
 <style scoped>
-
 	.type-bg {
 		width: 100%;
 		height: 100%;
@@ -282,7 +277,6 @@
 		display: flex;
 		z-index: 9;
 	}
-
 	.type-bg .cla-wrapper {
 		width:29%;
 		height:calc(100% - 100px);
@@ -298,7 +292,6 @@
 		-o-overflow-scrolling: touch;
 		overflow-scrolling: touch;
 	}
-
 	.type-bg .cla-wrapper #scroller {
 		position: absolute;
 		z-index: 1;
@@ -320,18 +313,15 @@
 		-o-text-size-adjust: none;
 		text-size-adjust: none;
 	}
-
 	.type-bg .cla-wrapper .menu-left {
 		height:calc(100% - 100px);
 		margin-bottom:50px;
 	}
-
 	@media screen and (min-width: 414px){
 		.type-bg .cla-wrapper{
 			height:87%;
 		}
 	}
-
 	.cla-wrapper .menu-item{
 		vertical-align: top;
 		width: 100%;
@@ -345,8 +335,6 @@
 		word-wrap:break-word;
 		word-break:break-all;
 	}
-
-
 	.cla-message {
 		float: right;
 		width: 72%;
@@ -366,7 +354,6 @@
 		-o-overflow-scrolling: touch;
 		overflow-scrolling: touch;
 	}
-
 	.cla-message .ele-fixed {
 		width: 100%;
 		height: calc(100% - 100px);
@@ -374,7 +361,6 @@
 		overflow-y:  scroll;
 		margin-bottom: 112px;
 	}
-
 	.cla-message .main {
 		width: 95%;
 		height: 100%;
@@ -385,7 +371,6 @@
 		position: relative;
 		padding: 10px 0px 10px;
 	}
-
 	.cla-message .main .shotcut {
 		width: 33%;
 		height: 100%;
@@ -394,7 +379,6 @@
 		position: relative;
 		float: left;
 	}
-
 	.cla-message .main .shotcut .qing {
 		text-align:center;
 		width:100%;
@@ -408,18 +392,12 @@
 		z-index: 1;
 		background: rgba(0,0,0,0.5);
 	}
-
 	.cla-message .main .shotcut .shotcut-img {
 		width: 100%;
 		padding-top:100%;
-
-
-
-
 		background-repeat: no-repeat;
 		background-size: 100%;
 	}
-
 	.shotcut-txt {
 		width: 62%;
 		float: left;
@@ -429,7 +407,6 @@
 		margin-left: 10px;
 		position: relative;
 	}
-
 	.item-title {
 		height:35px;
 		width:100%;
@@ -437,42 +414,34 @@
 		text-overflow: ellipsis;
 		color:#333;
 	}
-
 	.shotcut-txt .money {
 		font-size:22px;
 	}
-
 	.shotcut-txt .relative {
 		color:#f9ad0c;margin-top: 20px;
 	}
-
 	.main .icon-card {
 		display:block;
 		float:right;
-		width: 2.5rem;
-		height: 2.2rem;
-		background: url(../images/gouwuche.png) no-repeat;
+		width: 30px;
+		height: 30px;
+		background: url('../images/addcart.png') no-repeat;
 		background-size: 100%;
 		position: absolute;
 		top: 60px;
 		right:0px;
 	}
-
 	#touch-ui {
 		height: 550px;
 	}
-
 	#touch-ui .isChonse {
 		background: #fff;
 	}
-
 	.active {background: #fff;}
-
 	.type-bg .xs-container {
 		width:100%;
 		height:100%;
 	}
-
 	.fpmasker{
 		position:fixed;
 		top:0;
@@ -482,7 +451,6 @@
 		z-index:98;
 		background-color:transparent;
 	}
-
 	.fpmasker.show{
 		width:100%;
 		height:100%;
@@ -491,7 +459,6 @@
 		transition:background .5s;
 		-webkit-transition:background .5s;
 	}
-
 	.format-pop{
 		width:100%;
 		box-sizing:border-box;
@@ -505,22 +472,18 @@
 		transform:scale(0);
 		-webkit-transform:scale(0);
 	}
-
 	.format-pop .priceButton {
 		width:100%;height:3.5rem;clear:both;
 	}
-
 	.format-pop .priceButton .price-pop {
 		width:100%;height:100%;border:1px solid #c40000;color:#fff;background: #c40000;text-align:center;line-height:3.5rem;
 	}
-
 	.format-pop.show{
 		transform:scale(1);
 		-webkit-transform:scale(1);
 		transition:transform .3s;
 		-webkit-transition:transform .3s;
 	}
-
 	.format-pop .line .pimg{
 		box-sizing:border-box;
 		width:25%;
@@ -534,7 +497,6 @@
 		position:absolute;
 		top:-5%;
 	}
-
 	.format-pop .line .pmes{
 		box-sizing:border-box;
 		width:65%;
@@ -544,16 +506,13 @@
 		left:30%;
 		margin-top:3%;
 	}
-
 	.format-pop .line .pmes div{
 		font-size:1.4rem;
 		color:#808080;
 	}
-
 	.format-pop .line .pmes div.price{
 		color:#F26C60;
 	}
-
 	.format-pop .close{
 		width:1.8rem;
 		height:1.8rem;
@@ -567,30 +526,25 @@
 		top:1rem;
 		right:1rem;
 	}
-
 	.format-pop .line .title{
 		font-size:1.4rem;
 		color:#666;
 		margin:0.68rem 0rem;
 	}
-
 	.format-pop .line .title.inline{
 		display:inline-block;
 		width:30%;
 		vertical-align:middle;
 		font-size:1.4rem;
 	}
-
 	.format-pop .line .con.inline{
 		display:inline-block;
 		width:70%;
 		vertical-align:middle;
 	}
-
 	.format-pop .line .con.inline .num-counter{
 		text-align:right;
 	}
-
 	.num-counter{
 		max-width:100%;
 		height:auto;
@@ -598,7 +552,6 @@
 		font-size:0;
 		overflow:hidden;
 	}
-
 	.num-counter .btns{
 		display:inline-block;
 		vertical-align:top;
@@ -611,19 +564,15 @@
 		border:#ccc solid 1px;
 		text-align:center;
 	}
-
 	.num-counter .btns.disabled{
 		color:#ccc;
 	}
-
 	.num-counter .btns.disabled:active{
 		background-color:#fff;
 	}
-
 	.num-counter .btns:active{
 		background-color:#ccc;
 	}
-
 	.num-counter .input{
 		display:inline-block;
 		vertical-align:top;
@@ -637,7 +586,6 @@
 		border-radius:0;
 		text-align:center;
 	}
-
 	.fpmasker.show{
 		width:100%;
 		height:100%;
@@ -646,7 +594,6 @@
 		transition:background .5s;
 		-webkit-transition:background .5s;
 	}
-
 	.goto-type {
 		width:3.7rem;
 		height:3.7rem;
@@ -658,5 +605,4 @@
 		z-index:1000;
 		display:block;
 	}
-
 </style>

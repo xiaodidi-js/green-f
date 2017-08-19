@@ -76,12 +76,12 @@ export const mySong = function ({dispatch}, song) {
 //通用
 export const commitData = function ({dispatch}, params) {
     dispatch('commitData', params);
-    console.log(params);
+};
+
+export const scrollData = function ({dispatch}, scroll) {
+    dispatch('scrollData', scroll);
 };
 
 export const addressid = function ({dispatch}, addID) {
     dispatch('addressid', addID);
-    console.log(addID);
 };
-
-

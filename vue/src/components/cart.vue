@@ -197,6 +197,11 @@
 
 			}
 		},
+        filters: {
+            fix: function(data) {
+                return Math.round(data);
+            }
+        },
         computed: {
             allsel: function() {
                 if(this.cartList.length === this.choseArr.length) {

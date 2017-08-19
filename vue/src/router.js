@@ -76,6 +76,8 @@ const routers = {
                 name:'cla-default',
                 header:false,
                 footer:true,
+                header: false,
+                footer: true,
                 title:'商品分类',
                 position:2,
                 saveScrollPosition: true,
@@ -99,6 +101,8 @@ const routers = {
                 header: false,
                 footer:true,
                 title:'下单',
+                footer: true,
+                title: '下单',
                 saveScrollPosition: true,
                 component (resolve) {
                     require(['./components/card-types.vue'], resolve);
@@ -497,7 +501,7 @@ const routers = {
     },
     'search': {
         name:'search',
-        header:true,
+        header:false,
         footer:true,
         title:'搜索',
         component (resolve) {

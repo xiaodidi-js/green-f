@@ -37,7 +37,7 @@
 					<div @click="goPage('detail', {pid:item.id})">
 						<div class="img" v-if="item.store == 0" v-bind:style="{backgroundImage:'url('+ item.src +')'}">
 							<div class="qing">已售罄</div>
-							<!--<div v-lazy:background-image="item.src" class="lazyImg"></div>-->
+							<div v-bind:style="{backgroundImage:'url('+ item.src +')'}" class="lazyImg"></div>
 							<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
 						</div>
 						<div class="img" v-else v-bind:style="{backgroundImage:'url('+ item.src +')'}">
@@ -54,7 +54,7 @@
 							<label class="unit">¥</label>{{ item.price }}
 					</div>
 						<div class="scar" @click="addCart(item)">
-							<img src="../images/shopcar_youlike.png" style="width:100%;height:100%;"/>
+							<img src="../images/addcart.png" style="width:100%;height:100%;"/>
 						</div>
 					</div>
 				</div>
@@ -148,7 +148,7 @@
                             alert("这是限时抢购商品！");
                             return false;
                         } else if (data.activestu == 2) {
-                            alert("请点击商品图片，进入商品详情页进入分享购买！");
+                            alert("请点击商品图片，进入商品详情页进行分享购买！");
                             return false;
                         }
                         if(cart != '') {
@@ -284,11 +284,11 @@
 
 	.ui_box .scar {
 		float:right;
-		width:2.5rem;
-		height:2.1rem;
+		width: 33px;
+		height: 30px;
 	}
 
-	.ui_box .money .unit{
+	.ui_box .money .unit {
 		font-size:1.2rem;
 		margin-right:0.2rem;
 	}

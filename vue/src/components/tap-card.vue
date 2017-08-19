@@ -5,7 +5,7 @@
 		<div class="hcon">
 			<div id="header" class="tc-header">
 				<div id="tapper" class="tc-tap">
-					<div class="tc-tap-card" v-for="item in gotimeline" @click="clickChange($index)" :class="[$index==index ? 'selected' : '']">
+					<div class="tc-tap-card" v-for="item in gotimeline" @click="clickChange($index, item.nowsale)" :class="[$index == index ? 'selected' : '']">
 						<div v-if="item.nowsale == 1">
 							<div class="time">{{ item.stime | time }}</div>
 							<div class="status">进行中</div>
@@ -20,18 +20,8 @@
 				</div>
 			</div>
 		</div>
-		<!-- 底部切换swiper -->
-		<template v-for="item in gotimeline">
-			<div class="words">
-				<label class="title">限时限量 疯狂抢购</label>
-				<label class="timer" v-if="item.next == null"></label>
-				<label class="timer" v-else>
-					<timer-countdown :time="item.next - item.servertime" desc="下场开始还有" end="" keep-alive></timer-countdown>
-				</label>
-			</div>
-			<!-- 产品列表 -->
-			<card-rush :products="gotimeline"></card-rush>
-		</template>
+		<!-- 产品列表 -->
+		<card-rush :products="gotimeline" :nowthat="timecount"></card-rush>
 	</div>
 </template>
 <script>
@@ -60,17 +50,25 @@
                 index: 0,
                 data: [],
                 gotimeline: [],
+                rushList: [],
+                timecount: false,
+                visible: false,
             }
         },
         ready() {
             this.timeline();
-           	console.log(this.salelist);
         },
         watch: {
             "index": function(nval,oval){
                 this.changeTapCard();
                 $('group').css('color' , '#ccc');
-            }
+            },
+            "$route": function(to,form) {
+                this.timeline();
+				$('.group').css({
+					"color" : "#ccc"
+				});
+			}
         },
         props: {
             endTime: {
@@ -102,8 +100,20 @@
             }
         },
         methods: {
-            clickChange: function(num) {
+            clickChange: function(num, nowsale) {
                 this.index = num;
+                if(nowsale == 1) {
+					this.visible = true;
+				} else {
+                    this.visible = false;
+				}
+                for(var i in this.gotimeline) {
+					if(this.gotimeline[i].next == null) {
+						this.timecount = false;
+					} else {
+					    this.timecount = true;
+					}
+				}
             },
             changeTapCard: function() {
 //                let tapper = document.getElementById("tapper");
@@ -123,6 +133,11 @@
                 this.$getData('/index/sale/SaleTimeSolt/uid').then((res) => {
                     if(res.status === 1) {
                         this.gotimeline = res.SaleTimeSolt;
+                        this.rushList = res.SaleTimeSolt;
+                        for(var i in this.rushList) {
+                            this.rushList[i];
+						}
+                        console.log(res.SaleTimeSolt);
                     } else if(res.status === -1) {
                         this.toastMessage = res.info;
                         this.toastShow = true;

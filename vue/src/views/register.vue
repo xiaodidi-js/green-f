@@ -90,6 +90,9 @@
                 this.$postData('/index/login/getCodeBySms',options).then((res)=>{
                     this.toastMessage = res.info;
                     this.toastShow = true;
+
+                    console.log('12312312');
+
                     if(res.status === 1) {
                         this.codeText = second+'s';
                         timer = setInterval(function() {

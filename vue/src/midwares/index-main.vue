@@ -22,9 +22,7 @@
 	import CardImage from 'components/card-image'
 	import Toast from 'vux/src/components/toast'
     import Swiper from 'vux/src/components/swiper'
-    import { myActive,mySearch,commitData } from 'vxpath/actions'
-    import axios from 'axios'
-    import qs from 'qs'
+    import { myActive, mySearch, commitData} from 'vxpath/actions'
     import Loading from 'vux/src/components/loading'
 
 	export default{
@@ -42,6 +40,7 @@
                 myActive,
                 mySearch,
                 commitData,
+				scrollWidth: true,
             }
         },
 		data() {
@@ -61,11 +60,26 @@
 			}
 		},
         ready() {
+		    var that = this;
             $(".goto").click(function(){
                 $("html,body").animate({
                     scrollTop:0
                 },200);
             });
+
+
+            $(window).scroll(function() {
+                localStorage.setItem('heiVal', $(document).scrollTop());
+                that.commitData({target: 'scroll', data: localStorage.getItem('heiVal')});
+			});
+            $(window).scrollTop(localStorage.getItem('heiVal'));
+
+        },
+        mounted() {
+
+		},
+        destroyed () {
+            this.scrollWidth = false;
         },
         filters: {
             timeline: function (value) {

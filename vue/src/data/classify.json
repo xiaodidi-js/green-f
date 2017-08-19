@@ -1,7 +1,6 @@
 {
-  "thatColor": {
-    "publicColor": "#3b5998",
-    "fontColor" : "#fff"
+  "notBack": {
+    "heiVal": 500
   }
 }
 

@@ -1,33 +1,30 @@
 <template>
-	<template v-for="item in info">
-		<div v-for="list in item.data" v-if="list.data !== '' ">
-			<div class="card-box" style="box-shadow: none;">
-				<div v-link="{name:'detail',params:{pid:list.id}}">
-					<div class="pict" v-if="list.store == 0">
+	<template v-for="item in info.data">
+		<div v-if="item !== '' ">
+			<div class="card-box" style="box-shadow: none;padding: 2% 0%;">
+				<div v-link="{name:'detail',params:{pid:item.id}}">
+					<div class="pict" v-if="item.store == 0">
 						<div class="qing">已售罄</div>
-						<div class="img" v-bind:style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
+						<div class="img" :style="{backgroundImage:'url('+ item.shotcut +')'}"></div>
 					</div>
 					<div class="pict" v-else>
-						<div class="img" v-bind:style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
+						<div class="img" :style="{backgroundImage:'url('+ item.shotcut +')'}"></div>
 					</div>
-					<div class="mes">
-						<div class="name">{{ list.name }}</div>
+					<div class="mes" style="width: 100%;">
+						<div class="name">{{ item.name }}</div>
 					</div>
 				</div>
 				<div class="money">
 					<label class="unit">¥</label>
-					<label>{{ list.price }}</label>
+					<label>{{ item.price }}</label>
 				</div>
-				<div class="icon_shopcar" @click="addCart(list)"></div>
-			</div>
-			<div class="card-box" style="box-shadow: none;">
-				<div class="shopnull">暂没有推荐商品</div>
+				<div class="icon_shopcar" @click="addCart(item)"></div>
 			</div>
 		</div>
+		<div class="card-box" style="box-shadow: none;" v-else>
+			<div class="shopnull">暂没有推荐商品</div>
+		</div>
 	</template>
-	<div class="nothings" v-else>
-		<span>暂时没有推荐商品~~~</span>
-	</div>
 </template>
 
 <script>
@@ -62,7 +59,7 @@
 			}
 		},
 		ready () {
-
+			console.log(this.info);
 		},
         computed () {
 
@@ -88,7 +85,7 @@
                             peisongok:data.peisongok,
                             activestu:data.activestu,
                             nums:this.buyNums,
-                            store:this.proNums = response.data.store,
+                            store:this.proNums = res.store,
                             format:'',
                             formatName:'',
                         };
@@ -182,11 +179,13 @@
 
 	.mes{
 		padding: 5% 0%;
+		width: 100%;
 	}
 
 	.mes .name{
 		font-size:1.4rem;
 		color:#333;
+		width: 100%;
 		line-height:1.6rem;
 		max-height:3.2rem;
 		height:3.2rem;
@@ -198,10 +197,11 @@
 		white-space:normal;
 	}
 
-	.card-box  .money{
+	.card-box  .money {
 		font-size:1.8rem;
 		color:#F9AD0C;
 		float:left;
+		margin-top: 15px;
 	}
 
 	.card-box  .money .unit{
@@ -210,12 +210,13 @@
 	}
 
 	.icon_shopcar{
-		width: 30%;
-		height: 2.5rem;
+		width: 30px;
+		height: 30px;
 		line-height: 2.806rem;
 		float: right;
+		margin-top: 14px;
 		text-align: right;
-		background: url('../images/gouwuche.png') no-repeat;
+		background: url('../images/addcart.png') no-repeat;
 		background-size: 95%;
 	}
 

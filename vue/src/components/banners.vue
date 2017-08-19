@@ -27,6 +27,7 @@
 
     <swiper :list="banners" :show-desc-mask="false" :aspect-ratio="650/1242" dots-position="center"
             auto dots-class="dots-my" style="width: 100%;clear:both;top:50px;"></swiper>
+
 </template>
 
 <script>

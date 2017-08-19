@@ -1,16 +1,21 @@
 <template>
+	<div class="msg-head">
+		<div class="msg-back" @click="goback()"></div>
+		<div class="msg-title message-title">搜索商品</div>
+	</div>
 	<div class="wrapper-search" style="padding: 50px 0px 20px;">
 		<template v-for="item in list">
 			<div class="ui_box">
 				<div v-link="{name:'detail',params:{pid:item.id}}">
 					<div class="img" v-if="item.store == 0">
 						<div class="qing">已售罄</div>
-						<img :src="item.shotcut" alt="" style="width:100%;height:100%;" />
-						<!--<div class="shotcut" v-lazy:background-image="item.shotcut"></div>-->
+						<!--<img :src="item.shotcut" alt="" style="width:100%;height:100%;" />-->
+						<div class="shotcut" v-bind:style="{backgroundImage:'url('+ item.shotcut +')'}"></div>
 					</div>
 					<div class="img" v-else>
-						<img :src="item.shotcut" alt="" style="width:100%;height:100%;" />
+						<!--<img :src="item.shotcut" alt="" style="width:100%;height:100%;" />-->
 						<!--<div class="shotcut" v-lazy:background-image="item.shotcut"></div>-->
+						<div class="shotcut" v-bind:style="{backgroundImage:'url('+ item.shotcut +')'}"></div>
 					</div>
 					<div class="mes">
 						<div class="name">{{ item.name }}</div>
@@ -21,7 +26,7 @@
 						<label class="unit">¥</label>{{ item.price }}
 					</div>
 					<div class="scar" @click="addCart(item)">
-						<img src="../images/shopcar_youlike.png" style="width:100%;height:100%;"/>
+						<img src="../images/addcart.png" style="width:100%;height:100%;"/>
 					</div>
 				</div>
 			</div>
@@ -94,6 +99,9 @@
 
 		},
 		methods: {
+			goback () {
+				window.history.back();
+			},
             addCart (data){
                 //购物车缓存
                 var date = new Date(), hours = date.getHours();
@@ -120,7 +128,7 @@
                             alert("这是限时抢购商品！");
                             return false;
                         } else if (data.activestu == 2) {
-                            alert("请点击商品图片，进入商品详情页进入分享购买！");
+                            alert("请点击商品图片，进入商品详情页进行分享购买！");
                             return false;
                         }
                         if(cart != '') {
@@ -159,10 +167,9 @@
 </script>
 
 <style>
-	.wrapper-search{
-		width:100%;
+	.wrapper-search {
 		font-size:0;
-		margin-bottom:25px;
+		margin: 0px 2px 25px;
 		overflow: hidden;
 	}
 
@@ -243,7 +250,10 @@
 	}
 
 	.wrapper-search .ui_box .scar {
-		width: 2.5rem;
+		width: 30px;
+		height: 30px;
+		position: relative;
+		top: -7px;
 		float: right;
 	}
 

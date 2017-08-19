@@ -95,8 +95,8 @@
                                 <div class="content">{{ cms.content }}</div>
                                 <div class="format" v-if="cms.fname">{{ cms.fname }}</div>
                                 <div class="cstar">
-                                    <rater :value="cms.stars" :margin="1" active-color="#F9AD0C" :font-size="16"
-                                           :disabled="true"></rater>
+                                    <rater :value="cms.stars" :margin="1" active-color="#F9AD0C"
+                                           :font-size="16" :disabled="true"></rater>
                                 </div>
                             </div>
                             <div class="com-line allcom" v-link="{name:'comment-list',params:{pid:$route.params.pid}}">
@@ -186,7 +186,6 @@
     import Spinner from'components/spinner'
     import WxJssdk from 'weixin-js-sdk'
     import SeckillFloor from 'components/seckill-floor'
-
     export default{
         vuex: {
             getters: {
@@ -248,20 +247,21 @@
             //选项卡
             this.siblingsDom();
             this.timeline();
-
-
+            this.tuijian();
         },
         watch: {
             '$route'(to) {
                 if (parseInt(to.params.pid) !== this.data.id && to.name === 'detail') {
                     this.fetchData();
+                    this.tuijian();
+                    this.siblingsDom();
                     if (this.data.activestu == 2) {
                         this.showShare = true;
                         $(".buyButton").css({
                             "display": "none"
                         });
                     } else {
-                        this.showShare = false
+                        this.showShare = false;
                         $(".buyButton").css({
                             "display": "block"
                         });
@@ -374,10 +374,8 @@
                         }
                     });
                 } else {
-
                 }
                 return;
-
             },
             fetchData() {
                 let getUrl = '', context = this;
@@ -395,7 +393,7 @@
 //                            var abc = this.data.name.substring(0,10);
 //                            this.data.name = abc;
                             context.share();
-//                            context.tuijian();
+                            context.tuijian();
                             //判断是否分享商品
                             if (this.data.activestu == 2) {
                                 context.showShare = true;
@@ -420,23 +418,23 @@
                                 context.seckillShow = true;
                             }
                             var scaleBox = this.data.content;
-                            var itemEle = document.getElementsByClassName('ms-item')[1];
+
                             // 处理异常
                             try {
+                                var chil = itemEle.getElementsByTagName("img");
+                                for (var i in chil) {
+                                    chil[i].style.display = "block";
+                                }
                                 if (scaleBox === '') {
                                     itemEle.innerHTML = "暂时没有详情图~~~";
                                     itemEle.style.paddingTop = "10px";
                                     itemEle.style.height = "100%";
                                     itemEle.style.lineHeight = "150px";
                                 } else {
+                                    var itemEle = document.getElementsByClassName('ms-item')[1];
                                     itemEle.innerHTML = scaleBox;
-                                    var chil = itemEle.getElementsByTagName("img");
-                                    for (var i in chil) {
-                                        chil[i].style.display = "block";
-                                    }
                                 }
                             } catch (e) {} finally {}
-
                         }, (res) => {
                             this.toastMessage = "网络开小差啦~";
                             this.toastShow = true;
@@ -450,7 +448,8 @@
             tuijian () {
                 this.$getData('/index/user/tuijianzuhe/pid/' + this.$route.params.pid).then((res) => {
                     if (res.status == 1) {
-                        this.tjData = res.data;
+                        this.tjData = res.info;
+                        console.log(res.info);
                     } else if (res.status == -1) {
                         console.log("失败");
                     } else {
@@ -636,7 +635,6 @@
                 let cartObj = {};
                 let cartFormat = this.guige.length > 0 ? this.guige.join(',') : '';
                 let cartFormatName = this.guige.length > 0 ? this.guigeName.join('-') : '';
-
                 cartObj = {
                     id: this.$route.params.pid,
                     shotcut: this.data.shotcut,
@@ -781,7 +779,6 @@
         background: #35495e;
         display: block;
     }
-
     .msg-head .msg-back {
         width: 10%;
         font-size: 16px;
@@ -789,7 +786,6 @@
         height: 100%;
         float: left;
     }
-
     .msg-head .msg-back:before {
         content: "";
         position: absolute;
@@ -808,12 +804,10 @@
         -moz-transform: rotate(315deg);
         -webkit-transform: rotate(315deg);
     }
-
     .msg-head .msg-title {
         font-size: 16px;
         width: 92%;
     }
-
     .msg-head .message-title {
         font-size: 16px;
         width: 60%;
@@ -822,20 +816,17 @@
         text-overflow: ellipsis;
         margin: 0px auto;
     }
-
     .my-swiper {
         width: 100%;
         height: auto;
         overflow: hidden;
     }
-
     .ms-scroller {
         min-width: 100%;
         height: auto;
         font-size: 0;
         white-space: nowrap;
     }
-
     .ms-scroller > div.ms-item {
         display: inline-block;
         vertical-align: top;
@@ -846,7 +837,6 @@
         overflow: hidden;
         background: #fff;
     }
-
     .pro-mes {
         width: 96%;
         height: auto;
@@ -854,13 +844,11 @@
         background-color: #FFF;
         font-size: 1.4rem;
     }
-
     .nowrap {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
     }
-
     .pro-mes .title {
         font-size: 16px;
         color: #232326;
@@ -869,7 +857,6 @@
         margin-bottom: 0.5rem;
         white-space: normal;
     }
-
     .pro-mes .desc {
         color: #81c429;
         margin-bottom: 0.3rem;
@@ -877,29 +864,24 @@
         font-size: 14px;
         text-align: left;
     }
-
     .pro-mes .price {
         color: #F9AD0C;
         font-size: 30px;
     }
-
     .pro-mes .price .unit {
         font-size: 20px;
     }
-
     .pro-mes .price .old {
         font-size: 1.2rem;
         color: #ccc;
         text-decoration: line-through;
     }
-
     .divider {
         width: 97%;
         padding-left: 3%;
         margin: 1% 0% 2% 0%;
         border-bottom: #EFEFEF solid 1px;
     }
-
     /* 商品優惠 */
     .preferential {
         width: 100%;
@@ -909,11 +891,9 @@
         clear: both;
         text-indent: 2rem;
     }
-
     .preferential ul li {
         color: #808080;
     }
-
     .preferential ul li .icon-tick {
         background: url("../images/chengnou.png") no-repeat;
         background-size: 83%;
@@ -921,19 +901,16 @@
         position: relative;
         top: 2px;
     }
-
     .preferential ul .free {
         width: 40%;
         float: left;
         font-size: 12px;
     }
-
     .preferential ul .deliver {
         width: 60%;
         float: left;
         font-size: 12px;
     }
-
     /* 商品優惠 */
     .num-counter {
         max-width: 100%;
@@ -942,7 +919,6 @@
         font-size: 0;
         overflow: hidden;
     }
-
     .num-counter .btns {
         display: inline-block;
         vertical-align: top;
@@ -955,19 +931,15 @@
         border: #ccc solid 1px;
         text-align: center;
     }
-
     .num-counter .btns.disabled {
         color: #ccc;
     }
-
     .num-counter .btns.disabled:active {
         background-color: #fff;
     }
-
     .num-counter .btns:active {
         background-color: #ccc;
     }
-
     .num-counter .input {
         display: inline-block;
         vertical-align: top;
@@ -981,7 +953,6 @@
         border-radius: 0;
         text-align: center;
     }
-
     .service-bar {
         width: 96%;
         /*padding:2%;*/
@@ -991,7 +962,6 @@
         height: 38px;
         overflow: hidden;
     }
-
     .service-bar .words {
         font-size: 12px;
         color: #000;
@@ -999,7 +969,6 @@
         vertical-align: middle;
         width: 92%;
     }
-
     .service-bar .arrow {
         display: inline-block;
         vertical-align: middle;
@@ -1007,7 +976,6 @@
         margin: 0% 3%;
         height: 100%;
     }
-
     .service-bar .words .service-span {
         width: 30%;
         height: 38px;
@@ -1016,32 +984,27 @@
         float: left;
         padding-left: 8%;
     }
-
     .service-bar .arrow > img {
         width: 100%;
         height: auto;
     }
-
     .my-icon:before {
         font-size: 1.6rem;
         color: #f26c60;
         margin-right: 0.3rem;
         line-height: 1.6rem;
     }
-
     .comment-box {
         width: 100%;
         margin: 0% 0px 30%;
         height: auto;
         background-color: #fff;
     }
-
     .comment-bar {
         width: 96%;
         padding: 2%;
         font-size: 0;
     }
-
     .comment-bar .com-title {
         font-size: 1.4rem;
         color: #808080;
@@ -1049,7 +1012,6 @@
         vertical-align: middle;
         width: 92%;
     }
-
     .comment-bar .com-arrow {
         display: inline-block;
         vertical-align: middle;
@@ -1057,40 +1019,33 @@
         margin: 0% 3%;
         height: 100%;
     }
-
     .comment-bar .com-arrow > img {
         width: 100%;
         height: auto;
     }
-
     .comment-bar.guige {
         width: 100%;
         padding: 0;
     }
-
     .comment-bar.guige .com-title {
         width: 92%;
     }
-
     .comment-bar.guige .com-arrow {
         width: 7%;
         margin: 0% 1% 0% 0%;
         text-align: right;
     }
-
     .com-line {
         width: 96%;
         padding: 2%;
         font-size: 0;
         border-top: #EFEFEF solid 1px
     }
-
     .com-line > p.first {
         font-size: 1.2rem;
         color: #808080;
         letter-spacing: 0.1rem;
     }
-
     .com-line .cstar, .com-line .cname, .com-line .cdate {
         display: inline-block;
         vertical-align: top;
@@ -1101,18 +1056,15 @@
         text-overflow: ellipsis;
         overflow: hidden;
     }
-
     .com-line .cname, .com-line .cdate {
         /*margin-left:5%;*/
         /*text-align:center;*/
     }
-
     .com-line .cdate {
         text-align: right;
         float: right;
         width: 30%;
     }
-
     .com-line .content {
         width: 100%;
         margin: 2% 0%;
@@ -1120,7 +1072,6 @@
         color: #333;
         white-space: normal;
     }
-
     .com-line .format {
         width: 100%;
         margin: 2% 0% 0% 0%;
@@ -1130,7 +1081,6 @@
         text-overflow: ellipsis;
         overflow: hidden;
     }
-
     .tuijian-box {
         width: 96%;
         height: auto;
@@ -1140,7 +1090,6 @@
         background: #fff;
         clear: both;
     }
-
     .tuijian-box .tj-scroller {
         white-space: nowrap;
         font-size: 0;
@@ -1149,7 +1098,6 @@
         width: 100%;
         float: left;
     }
-
     .pro-mes .main .line .rush {
         width: 96%;
         border-radius: 0.3rem;
@@ -1158,7 +1106,6 @@
         font-size: 0;
         overflow: hidden;
     }
-
     .pro-mes .main .line .rush .rtit {
         display: inline-block;
         vertical-align: middle;
@@ -1169,7 +1116,6 @@
         text-align: center;
         background-color: #f26c60;
     }
-
     .pro-mes .main .line .rush .rcon {
         display: inline-block;
         vertical-align: middle;
@@ -1178,29 +1124,24 @@
         width: 72%;
         margin-left: 3%;
     }
-
     .pro-mes .main .line .rush .rcon > div {
         width: 100%;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
     }
-
     .pro-mes .main .line .rush .rcon .rctit {
         color: #808080;
     }
-
     .pro-mes .main .line .rush .rcon .rccon {
         color: #f26c60;
     }
-
     .pro-mes .deliver {
         font-size: 0;
         color: #ccc;
         margin-top: 0.5rem;
         margin-bottom: 1.2rem;
     }
-
     .pro-mes .deliver .son {
         display: inline-block;
         font-size: 1.2rem;
@@ -1211,15 +1152,12 @@
         overflow: hidden;
         text-align: center;
     }
-
     .pro-mes .deliver .son:nth-child(1) {
         text-align: left;
     }
-
     .pro-mes .deliver .son:nth-child(2) {
         text-align: center;
     }
-
     /*.pro-mes .deliver .son:nth-child(3){*/
     /*text-align:right;*/
     /*}*/
@@ -1230,17 +1168,14 @@
         width: 100%;
         z-index: 90;
     }
-
     .com-line.allcom {
         font-size: 1.4rem;
         color: #81c429;
         text-align: center;
     }
-
     .com-line.allcom:active {
         background-color: #f5f5f5;
     }
-
     .format-pop {
         width: 100%;
         box-sizing: border-box;
@@ -1254,14 +1189,12 @@
         transform: scale(0);
         -webkit-transform: scale(0);
     }
-
     .format-pop.show {
         transform: scale(1);
         -webkit-transform: scale(1);
         transition: transform .3s;
         -webkit-transition: transform .3s;
     }
-
     .format-pop .line .pimg {
         box-sizing: border-box;
         width: 25%;
@@ -1274,7 +1207,6 @@
         position: absolute;
         top: -5%;
     }
-
     .format-pop .line .pmes {
         box-sizing: border-box;
         width: 65%;
@@ -1284,16 +1216,13 @@
         left: 30%;
         margin-top: 3%;
     }
-
     .format-pop .line .pmes div {
         font-size: 1.4rem;
         color: #808080;
     }
-
     .format-pop .line .pmes div.price {
         color: #F26C60;
     }
-
     .format-pop .close {
         width: 1.8rem;
         height: 1.8rem;
@@ -1307,30 +1236,25 @@
         top: 1rem;
         right: 1rem;
     }
-
     .format-pop .line .title {
         font-size: 1.4rem;
         color: #666;
         margin: 0.68rem 0rem;
     }
-
     .format-pop .line .title.inline {
         display: inline-block;
         width: 30%;
         vertical-align: middle;
         font-size: 1.4rem;
     }
-
     .format-pop .line .con.inline {
         display: inline-block;
         width: 70%;
         vertical-align: middle;
     }
-
     .format-pop .line .con.inline .num-counter {
         text-align: right;
     }
-
     .fpmasker {
         position: fixed;
         top: 0;
@@ -1340,7 +1264,6 @@
         z-index: 98;
         background-color: transparent;
     }
-
     .fpmasker.show {
         width: 100%;
         height: 100%;
@@ -1349,7 +1272,6 @@
         transition: background .5s;
         -webkit-transition: background .5s;
     }
-
     .product_titile {
         width: 100%;
         height: 45px;
@@ -1361,7 +1283,6 @@
         background: #fff;
         border-bottom: 1px solid #ccc;
     }
-
     .product_titile ul li {
         width: 33.33%;
         height: 100%;
@@ -1370,19 +1291,16 @@
         float: left;
         line-height: 43px;
     }
-
     .product_titile ul .actives {
         color: #81C429;
         border-bottom: 3px solid #81C429;
     }
-
     .product_details_picture {
         width: 100%;
         height: 554px;
         background: #fff;
         clear: both;
     }
-
     /*.product_details_picture img{*/
     /*width: 100%;*/
     /*height: 554px;*/
@@ -1395,7 +1313,6 @@
         margin-top: 15px;
         display: none;
     }
-
     .product_share_button {
         width: 83%;
         height: 40px;
@@ -1406,13 +1323,11 @@
         background-color: #81C429;
         border-radius: 5px;
     }
-
     .product_share_world {
         width: 100%;
         height: 31px;
         line-height: 31px;
     }
-
     .product_share_line {
         width: 10%;
         height: 1px;
@@ -1420,7 +1335,6 @@
         border-top: 1px #81C429 solid;
         float: left;
     }
-
     .product_share_value {
         width: 65%;
         height: 31px;
@@ -1430,14 +1344,12 @@
         color: #81C429;
         font-size: 12px;
     }
-
     /* 分享 */
     /* 增加数量 */
     .product_button {
         width: 100%;
         height: 50px;
     }
-
     .product_button_num {
         width: 13.76%;
         height: 50px;
@@ -1447,7 +1359,6 @@
         color: #333;
         float: left;
     }
-
     .product_button_number {
         width: 31.89%;
         height: 24px;
@@ -1455,7 +1366,6 @@
         float: left;
         border: 1px #ccc solid;
     }
-
     .product_button_cut {
         width: 25%;
         height: 24px;
@@ -1463,14 +1373,12 @@
         line-height: 24px;
         text-align: center;
     }
-
     .product_button_text {
         width: 50%;
         height: 24px;
         float: left;
         text-align: center;
     }
-
     .product_button_add {
         width: 25%;
         height: 24px;
@@ -1478,7 +1386,6 @@
         text-align: center;
         line-height: 24px;
     }
-
     .product_button_text input {
         width: 96%;
         height: 24px;
@@ -1488,7 +1395,6 @@
         border-right: 0.5px #ccc solid;
         color: #999;
     }
-
     /* 增加数量 */
     .ms-item-class {
         clear: both;
@@ -1498,7 +1404,6 @@
         text-align: center;
         color: #333;
     }
-
     img {
         display: block;
     }
@@ -1508,11 +1413,9 @@
     .ms-scroller > div.ms-item > div, .ms-scroller > div.ms-item table, .ms-scroller > div.ms-item img, .ms-scroller > div.ms-item embed, .ms-scroller > div.ms-item video {
         max-width: 100% !important;
     }
-
     .dots-my-orange > a > .vux-icon-dot {
         background: #fff !important;
     }
-
     .dots-my-orange > a > .vux-icon-dot.active {
         background: #f9ad0c !important;
     }

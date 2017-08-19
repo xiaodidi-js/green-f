@@ -24,12 +24,8 @@ const mutations = {
 	addressid (state, addID) {
 		state.addID = addID;
 	},
-	myVisible (state,visibleEle) {
+	myVisible (state, visibleEle) {
 		state.visibleEle = visibleEle;
-	},
-	scroll (state,scroll) {
-		state.scroll = scroll;
-        sessionStorage.setItem("scrolltop",JSON.stringify(state.scroll));
 	},
     mystu (state,giftstu) {	//赠品状态
         state.giftstu = giftstu;

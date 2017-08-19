@@ -1,22 +1,25 @@
 <template>
-	<div class="wrapper" v-for="item in products">
-		<template v-for="list in item.arr">
-			<div class="card-box" v-link="{name:'detail',params:{pid:list.shopid}}" v-if="item.nowsale == 0">
-				<div class="img" style="padding-top: 35%;" :style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
-				<!-- 即将开始 -->
-				<div class="mes">
-					<div class="name">{{ list.name }}</div>
-					<div class="pre-desc">{{ item.stime | time }}准时开抢</div>
-					<div class="money" v-for="money in list.saledata">
-						<label class="unit">¥</label>{{ money.saleprice }}
-					</div>
-				</div>
+	<div class="wrapper" style="padding-bottom: 6rem;" v-for="item in products">
+		<template v-if="item.next !== null">
+			<div class="words">
+				<label class="title">限时限量 疯狂抢购</label>
+				<label class="timer">
+					<timer-countdown :time="item.next - item.servertime" desc="下场开始还有" end="" v-show="nowthat"></timer-countdown>
+				</label>
 			</div>
-			<div class="card-box" v-link="{name:'detail',params:{pid:list.shopid}}" v-else>
+		</template>
+		<template v-else>
+			<div class="words">
+				<!--<label class="title">限时限量 疯狂抢购</label>-->
+				<label class="timer"></label>
+			</div>
+		</template>
+		<template v-for="list in item.arr">
+			<div class="card-box" v-link="{name:'detail',params:{pid:list.shopid}}">
 				<div class="img" style="padding-top: 35%;" :style="{backgroundImage:'url('+ list.shotcut +')'}"></div>
 				<!-- 正在抢购/抢购完毕 -->
-				<div class="mes">
-					<template  v-for="money in list.saledata">
+				<div class="mes" v-if="item.nowsale == 1">
+					<template v-for="money in list.saledata">
 						<div class="name">{{ list.name }}</div>
 						<progress class="progress-bar" max="100" :value="100 - money.salenub"></progress>
 						<div class="desc">已抢购{{ 100 - money.salenub }}%</div>
@@ -29,6 +32,14 @@
 						</div>
 					</template>
 				</div>
+				<!--即将开始 -->
+				<div class="mes" v-else>
+					<div class="name">{{ list.name }}</div>
+					<div class="pre-desc">{{ item.stime | time }}准时开抢</div>
+					<div class="money" v-for="money in list.saledata">
+						<label class="unit">¥</label>{{ money.saleprice }}
+					</div>
+				</div>
 			</div>
 		</template>
 	</div>
@@ -37,6 +48,7 @@
 <script>
 
     import XButton from 'vux/src/components/x-button'
+    import TimerCountdown from 'components/timer-countdown'
 
 	export default{
 		props: {
@@ -45,13 +57,18 @@
 				default() {
 					return []
 				}
+			},
+            nowthat: {
+			    type: Boolean,
+				default: true,
 			}
 		},
         ready() {
-
+			console.log(this.products);
         },
         components: {
-            XButton
+            XButton,
+            TimerCountdown,
 		},
 		data() {
 			return {
@@ -63,13 +80,13 @@
 		},
         filters: {
             time: function (value) {
-                let d = new Date(parseInt(value) * 1000);
-                var years = d.getFullYear();
-                var moneths = d.getMonth();
-                var dates = d.getDate();
-                var hours = d.getHours();
-                var minutes = d.getMinutes();
-                var seconds = d.getSeconds();
+                var d = new Date(parseInt(value) * 1000),
+					years = d.getFullYear(),
+					moneths = d.getMonth(),
+					dates = d.getDate(),
+					hours = d.getHours(),
+					minutes = d.getMinutes(),
+					seconds = d.getSeconds();
                 return (hours > 9 ? hours : '0' + hours) + '-' + (minutes > 9 ? minutes : '0' + minutes)
             }
         },
@@ -205,5 +222,34 @@
 	progress::-moz-progress-bar { background: #0064B4; }
 	progress::-webkit-progress-bar { background: #eee; }
 	progress::-webkit-progress-value  { background: #81c429; }
+
+	.words{
+		width:100%;
+		height:auto;
+		padding:0% 0% 2% 0%;
+		font-size:0;
+		background-color:#efefef;
+	}
+	.words .title{
+		display:inline-block;
+		vertical-align:middle;
+		width:45%;
+		font-size:1.4rem;
+		color:#333;
+		letter-spacing:1px;
+		white-space:nowrap;
+		text-overflow:ellipsis;
+		overflow:hidden;
+		margin:0.5rem 0rem 0.5rem 0rem;
+		border-left:#81c429 solid 5px;
+		padding-left:2%;
+	}
+	.words .timer{
+		display:inline-block;
+		vertical-align:middle;
+		width:50%;
+		margin:0.5rem 0rem 0.5rem 0rem;
+		text-align:right;
+	}
 
 </style>

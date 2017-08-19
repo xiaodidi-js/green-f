@@ -177,7 +177,7 @@
                             alert("这是限时抢购商品！");
                             return false;
                         } else if (data.activestu == 2) {
-                            alert("请点击商品图片，进入商品详情页进入分享购买！");
+                            alert("请点击商品图片，进入商品详情页进行分享购买！");
                             return false;
                         } else if (data.store == 0) {
                             alert("已售罄");
@@ -434,7 +434,7 @@
 		font-size: 14px;
 		float: left;
 		color: #f9ad0c;
-		width: 75%;
+		width: 70%;
 		margin-top: 10px;
 	}
 
@@ -449,11 +449,11 @@
 	}
 
 	.content_main .box-two .shop-item .add-cart {
-		width:25px;
-		height:22px;
+		width: 30px;
+		height: 30px;
 		display:block;
 		float: right;
-		background: url('../images/shopcar_youlike.png') no-repeat;
+		background: url('../images/addcart.png') no-repeat;
 		background-size: 100%;
 		margin-top: 10px;
 	}

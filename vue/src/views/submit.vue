@@ -12,7 +12,7 @@
 			<div class="border-line"></div>
 			<div class="border-line-vertical" style="left: 0px;"></div>
 			<div class="add-con">
-				<div style="text-align:left;padding-left:2rem;" class="words" v-if="data.address">
+				<div style="text-align:left;padding-left:2rem;background: none;" class="words" v-if="data.address" style="background: none;">
 					<div class="name">
 						<p>{{ deliverName }}</p>
 						<p v-if="deliverName === '到店自提' ">
@@ -89,16 +89,16 @@
 
 		<!-- 支付方式 -->
 		<!--<my-cell title="请选择支付方式" style="clear:both;">-->
-			<!--<my-cell-item @click="changePayType(pitem.ptype)" v-for="pitem in data.pay">-->
-				<!--<div class="line-con zero-font">-->
-					<!--<div class="l-icon" :class="pitem.en"></div>-->
-					<!--<div class="l-tit">{{ pitem.ch }}</div>-->
-					<!--<div class="l-desc radio">-->
-						<!--<icon type="success" class="my-icon-chosen" v-show="payType===pitem.ptype"></icon>-->
-						<!--<icon type="circle" class="my-icon" v-show="payType!==pitem.ptype"></icon>-->
-					<!--</div>-->
-				<!--</div>-->
-			<!--</my-cell-item>-->
+		<!--<my-cell-item @click="changePayType(pitem.ptype)" v-for="pitem in data.pay">-->
+		<!--<div class="line-con zero-font">-->
+		<!--<div class="l-icon" :class="pitem.en"></div>-->
+		<!--<div class="l-tit">{{ pitem.ch }}</div>-->
+		<!--<div class="l-desc radio">-->
+		<!--<icon type="success" class="my-icon-chosen" v-show="payType===pitem.ptype"></icon>-->
+		<!--<icon type="circle" class="my-icon" v-show="payType!==pitem.ptype"></icon>-->
+		<!--</div>-->
+		<!--</div>-->
+		<!--</my-cell-item>-->
 		<!--</my-cell>-->
 
 		<div class="getShop">
@@ -125,15 +125,15 @@
 		<!-- 其他选项 -->
 		<my-cell>
 			<!--<my-cell-item @click="showCou">-->
-				<!--<div class="line-con zero-font">-->
-					<!--<div class="l-icon coupon"></div>-->
-					<!--<div class="l-tit">优惠券</div>-->
-					<!--<div class="l-desc" v-show="coupon == 0">未使用</div>-->
-					<!--<div class="l-desc" v-else>已选择1张优惠券<a class="scross" @click="cancelCoupon">x</a></div>-->
-					<!--<div class="l-arr">-->
-						<!--<img src="../images/arrow.png" />-->
-					<!--</div>-->
-				<!--</div>-->
+			<!--<div class="line-con zero-font">-->
+			<!--<div class="l-icon coupon"></div>-->
+			<!--<div class="l-tit">优惠券</div>-->
+			<!--<div class="l-desc" v-show="coupon == 0">未使用</div>-->
+			<!--<div class="l-desc" v-else>已选择1张优惠券<a class="scross" @click="cancelCoupon">x</a></div>-->
+			<!--<div class="l-arr">-->
+			<!--<img src="../images/arrow.png" />-->
+			<!--</div>-->
+			<!--</div>-->
 			<!--</my-cell-item>-->
 			<my-cell-item style="margin:0px;" v-if="score == 0">
 				<div class="line-con zero-font" style="font-size:14px;">没有可用积分</div>
@@ -182,7 +182,6 @@
 </template>
 
 <script>
-
     import MyCell from 'components/my-cell'
     import MyCellItem from 'components/my-cell-item'
     import MySwitch from 'components/my-switch'
@@ -203,7 +202,6 @@
     import Scroller from 'vux/src/components/scroller'
     import axios from 'axios'
     import qs from 'qs'
-
     export default{
         vuex: {
             getters: {
@@ -245,7 +243,7 @@
                     pay:[]
                 },
                 list: '',//this.$store.state.myGift, //赠品
-				dtype: 0,
+                dtype: 0,
                 shopid:0,
                 shonse:1,
                 theDay: "当日",
@@ -255,9 +253,9 @@
                 lastPaySum: 0,		//	金额
                 myCellTitle: '',
                 chonseParcel: false, //显示隐藏自提点选择框
-				wxName: '',			 // 微信名称
+                wxName: '',			 // 微信名称
                 expressName: '',		 //	收件人名称
-				telphone: 0,	//	电话号码
+                telphone: 0,	//	电话号码
             }
         },
         components: {
@@ -293,16 +291,16 @@
         computed: {
             list: function(){
                 return this.$store.state.giftList
-			},
+            },
             description () {
                 return this.$store.state.song
-			},
+            },
             giftstu () {
                 return this.$store.state.giftstu
-			},
+            },
             openpop () {
                 return this.$store.state.visibleEle
-			},
+            },
             scoreMoney: function() {
                 let obj = {};
                 let money = this.score / 100;
@@ -314,12 +312,11 @@
                         if(res.status == 1) {
                             this.sNumber = parseInt(res.info.jifen);
                         }
-					});
+                    });
                 } else {
                     this.scoreNumber = 2;
                     this.sNumber = 0;
                     obj['makePrice'] = 0;
-
                 }
                 return obj;
             },
@@ -341,12 +338,12 @@
             }
         },
         watch: {
-			'$route'(to) {
-				if(to.name == 'submit') {
+            '$route'(to) {
+                if(to.name == 'submit') {
                     this.submitReady();
-				}
-			},
-		},
+                }
+            },
+        },
         methods: {
             getLastDay(year, month) {
                 var new_year = year;  //取当前的年份
@@ -381,21 +378,20 @@
                             this.deliverType = 'parcel';
                             this.deliverName = this.data.deliver.parcel;
                         }
-
-						this.$getData('/index/login/useredit/uid/' + this.$ustore.id).then((res)=>{
+                        //	获取用户的电话号码
+                        this.$getData('/index/login/useredit/uid/' + this.$ustore.id).then((res)=>{
                             this.telphone = res.utel;
-							localStorage.setItem('tel',this.data.tel);
-						},(res)=>{
-							this.toastMessage = '网络开小差了~';
-							this.toastShow = true;
-						})
-
-
+                            localStorage.setItem('tel',this.data.tel);
+                        },(res)=>{
+                            this.toastMessage = '网络开小差了~';
+                            this.toastShow = true;
+                        });
                         //	判断有没有快递配送
                         typeof(res.address) == '' ? this.myCellTitle = '到店自提' : this.myCellTitle = '请选择配送方式';
                         this.data.pay = res.pay;
                         this.payType = this.data.pay[0].ptype;
                         this.data.address = res.address;
+                        console.log(this.data);
                         this.addressid(this.data.address.id);
                         this.address = this.data.address.id;
                         //	获取微信信息
@@ -408,7 +404,6 @@
                         }
                         this.score = res.score;
                         this.freight = res.freight;
-
                     } else if (res.status === -1) {
                         this.toastMessage = res.info;
                         this.toastShow = true;
@@ -427,47 +422,47 @@
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
                 });
-			},
+            },
             isRadio: function() {
                 var date = new Date() , y = date.getFullYear() , m = date.getMonth() + 1 , d = date.getDate();
                 var time = null;
                 for(let i = 0; i < this.cartInfo.length; i++) {
-					if (this.cartInfo[i].deliverytime == 0) {
-						this.theDay = "次日";
+                    if (this.cartInfo[i].deliverytime == 0) {
+                        this.theDay = "次日";
                         $(".my-icon").eq(1).removeAttr("disabled");
                         console.log(this.getLastDay(y,m));
                         var doDay = this.getLastDay(y,m);
                         if(d === doDay) {
                             time = y + "-" + m + "-" + d;
-						} else {
+                        } else {
                             d = date.getDate() + 1;
                             time = y + "-" + m + "-" + d;
-						}
+                        }
                         $("#today").find("option:selected").text(time);
-					} else if (this.cartInfo[i].deliverytime == 1) {
-						$(".my-icon").eq(0).hide();
+                    } else if (this.cartInfo[i].deliverytime == 1) {
+                        $(".my-icon").eq(0).hide();
                         $(".my-icon").eq(1).css("left","0px");
                         $(".my-icon").eq(1).addClass("my-icon-chosen");
-						$(".label-radio").eq(0).hide();
+                        $(".label-radio").eq(0).hide();
                         this.theDay = "当日";
                         time = y + "-" + m + "-" + d;
                         $("#today").find("option:selected").text(time);
-					}
-				}
-				$(".bor").find(".my-icon").change(function () {
-					$(this).addClass("my-icon-chosen").siblings().removeClass("my-icon-chosen");
+                    }
+                }
+                $(".bor").find(".my-icon").change(function () {
+                    $(this).addClass("my-icon-chosen").siblings().removeClass("my-icon-chosen");
                 });
-			},
-			chosenGift: function (type,store) {
+            },
+            chosenGift: function (type,store) {
                 if(store == '') {
-					return false;
-				} else {
+                    return false;
+                } else {
                     if (this.shopid == type) return true;
                     this.shopid = type;
                     document.getElementsByClassName("addCar")[0].style.background = '#81c429';
                     //清除禁用按钮
                     document.getElementsByClassName("addCar")[0].disabled = "";
-				}
+                }
             },
             changePayType: function(tp){
                 this.payType = tp;
@@ -539,7 +534,7 @@
                         "marginTop" : "17px",
                         "height" : "80%"
                     });
-				} else if (content.deliverName === '到店自提') {
+                } else if (content.deliverName === '到店自提') {
                     content.chonseParcel = true;
                     $(".commentButton").css("width","93%");
                     $(".con-box").css({
@@ -567,7 +562,7 @@
             },
         },
         events: {
-			submitOrder: function() {
+            submitOrder: function() {
                 if(!this.deliverType) {
                     this.toastMessage = '未选择收货方式';
                     this.toastShow = true;
@@ -592,7 +587,7 @@
                     this.toastMessage = '请选择配送时间！';
                     this.toastShow = true;
                     return false;
-				}
+                }
                 for(var i in this.cartInfo) {
                     this.loadingMessage = '正在提交...';
                     this.loadingShow = true;
@@ -608,7 +603,7 @@
                         scoreNumber: this.scoreNumber,
                         paysum: this.lastPaySum,
                         tips: this.memo,
-						openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
+                        openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                         pshonse: this.shonse,
                         gift: {'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                     };
@@ -618,10 +613,10 @@
                             this.$router.replace('order/detail/' + res.oid);
                             this.loadingShow = false;
                         } else if (res.status == 0) {
-							alert(res.info);
+                            alert(res.info);
                             this.loadingShow = false;
-							this.$router.go({name:'cart'});
-						} else if(res.status === -1) {
+                            this.$router.go({name:'cart'});
+                        } else if(res.status === -1) {
                             this.loadingShow = false;
                             this.toastMessage = res.info;
                             this.toastShow = true;
@@ -642,7 +637,7 @@
                         this.toastShow = true;
                     });
                     return true;
-				}
+                }
             }
         }
     }
@@ -653,23 +648,19 @@
 		width:100%;
 		height:auto;
 	}
-
 	.line-con{
 		width:100%;
 		height:auto;
 		font-size:1.6rem;
 	}
-
 	.zero-font{
 		font-size:0px;
 	}
-
 	.l-icon,.l-tit,.l-desc,.l-arr{
 		display:inline-block;
 		vertical-align:middle;
 		font-size:1.4rem;
 	}
-
 	.l-icon{
 		width:6%;
 		padding-top:6%;
@@ -679,35 +670,27 @@
 		background-size:contain;
 		background-image:url('../images/parcel.png');
 	}
-
 	.l-icon.parcel{
 		background-image:url('../images/parcel.png');
 	}
-
 	.l-icon.express{
 		background-image:url('../images/express.png');
 	}
-
 	.l-icon.wxpay{
 		background-image:url('../images/wxpay.png');
 	}
-
 	.l-icon.alipay{
 		background-image:url('../images/alipay.png');
 	}
-
 	.l-icon.coupon{
 		background-image:url('../images/coupon.png');
 	}
-
 	.l-icon.score{
 		background-image:url('../images/score.png');
 	}
-
 	.l-icon.doubt{
 		background-image:url('../images/doubt.png');
 	}
-
 	.l-tit{
 		width:39%;
 		margin-right:3%;
@@ -717,11 +700,9 @@
 		overflow:hidden;
 		color:#808080;
 	}
-
 	.l-tit.score{
 		width:60%;
 	}
-
 	.l-desc{
 		width:45%;
 		margin-right:2%;
@@ -731,7 +712,6 @@
 		color:#808080;
 		text-align:right;
 	}
-
 	.l-desc .scross{
 		display:inline-block;
 		vertical-align:middle;
@@ -745,26 +725,21 @@
 		text-align:center;
 		margin:0rem 0.5rem;
 	}
-
 	.l-desc.score{
 		width:18%;
 	}
-
 	.l-desc.radio{
 		width:48%;
 	}
-
 	.l-arr{
 		width:3%;
 		text-align:center;
 	}
-
 	.l-arr>img{
 		width:50%;
 		height:auto;
 		vertical-align:middle;
 	}
-
 	.line-con .addition{
 		width: 90%;
 		background: #f2f2f2;
@@ -776,9 +751,6 @@
 		line-height: 20px;
 		padding: 0px 5px;
 	}
-
-
-
 	.address-box{
 		width:100%;
 		height:auto;
@@ -786,7 +758,6 @@
 		background-size: 100% 76px;
 		position: relative;
 	}
-
 	.address-box .border-line{
 		width:100%;
 		height:0.6rem;
@@ -795,9 +766,6 @@
 		background-repeat:repeat-x;
 		background-size:contain;
 	}
-
-
-
 	.address-box .border-line-vertical{
 		width:0.6rem;
 		height:100%;
@@ -809,58 +777,48 @@
 		position: absolute;
 		top:0px;
 	}
-
 	.line-left{position:absolute;top:0px;left:0px;}
 	.line-right{position:absolute;top:0px;right:0px;}
-
 	.address-box .add-con{
 		width:100%;
 		height:auto;
 		margin:0.5rem 0rem;
 		font-size:0;
 	}
-
 	.address-box .add-con>div{
 		display:inline-block;
 		vertical-align:middle;
 		font-size:1.4rem;
 	}
-
 	.nowrap{
 		white-space:nowrap;
 		text-overflow:ellipsis;
 		overflow:hidden;
 	}
-
 	.address-box .add-con .add-words {
 		margin:0px 10px;
 	}
-
 	.address-box .add-con>div.words{
 		width: 90%;
 		text-align: center;
 		padding: 0.3rem 0rem;
 		margin: 0px auto;
 	}
-
 	.address-box .add-con>div.words .name p,add p {
 		line-height: 2.5rem;
 	}
-
 	.address-box .add-con>div.words .name{
 		width:100%;
 		color:#333;
 		line-height:1.8rem;
 		margin-bottom:0.2rem;
 	}
-
 	.address-box .add-con>div.words .name .address-left {
 		width:3rem;
 		float:left;
 		display:block;
 		font-size:1.2rem;
 	}
-
 	.address-box .add-con>div.words .add{
 		width:100%;
 		color:#333;
@@ -873,44 +831,37 @@
 		overflow:hidden;
 		text-overflow:ellipsis;
 	}
-
 	.address-box .add-con>div.words .add.noTips>a{
 		color:#c40000;
 	}
-
 	.address-box .add-con>div.arrow{
 		width:5%;
 		text-align:right;
 		margin-right:3%;
 	}
-
 	.address-box .add-con>div.arrow>img{
 		width:30%;
 		height:auto;
 		transform:rotate(90deg);
 		-webkit-transform:rotate(90deg);
 	}
-
 	.cell-arr {
 		position:absolute;
 		top:7px ;
 		right:8px;
 	}
-
 	.give-container {
 		width:100%;
 		background: #fff;
 		height: 100%;
 		margin: 0px 0px 10px;
 	}
-
 	.give-container .give-title {
 		height:45px;
 		line-height:4.5rem;
 		color:#808080;
 		font-size:1.4rem;
 	}
-
 	.give-container .give-title .icon-img1 {
 		background: url("../images/list.png") no-repeat;
 		width: 6%;
@@ -920,39 +871,33 @@
 		float:left;
 		margin:13px 0px;
 	}
-
 	.give-container .give-title span {
 		padding-left: 10px;
 		width:100%;
 	}
-
 	.give-container .give-order {
 		clear:both;
 		height: 130px;
 		overflow-x: auto;
 		overflow-y: hidden;
 	}
-
 	.give-container .give-order ul .notActive {
 		width: 23.7%;
 		float: left;
 		transition: 0.5s;
 		border: 2px solid #fff;
 	}
-
 	.give-container .give-order ul .activeGift {
 		width: 23.7%;
 		float:left;
 		border:2px solid #c40000;
 		transition:0.5s;
 	}
-
 	.give-container .give-order ul li .shop-img {
 		width: 100%;
 		height: 75px;
 		position: relative;
 	}
-
 	.give-container .give-order ul li .shop-img .shopover {
 		font-size:16px;
 		position: absolute;
@@ -965,13 +910,11 @@
 		background: rgba(0,0,0,0.5);
 		color:#fff;
 	}
-
 	.give-container .give-order ul li p {
 		font-size: 12px;
 		line-height: 20px;
 		text-align: left;
 	}
-
 	/* getShop start */
 	.getShop {
 		width:100%;
@@ -980,7 +923,6 @@
 		margin:10px 0px;
 		font-size:1.4rem;
 	}
-
 	.getShop .getShopDate {
 		width:95%;
 		margin:0px auto;
@@ -988,13 +930,11 @@
 		height:3.5rem;
 		line-height:3.5rem;
 	}
-
 	.getShop .getShopDate .selectInput {
 		margin:2px 10px 0px;
 		height:3rem;
 		width:10rem;
 	}
-
 	.getShop .getShopDate .selectInput select {
 		width:10rem;
 		height:2.5rem;
@@ -1004,27 +944,22 @@
 		background-size: 9%;
 		background-position-x: 84px;
 	}
-
 	.getShop .getShopTime {
 		border-bottom: 1px solid #f2f2f2;
 		height:3.5rem;
 		line-height:3.5rem;
 	}
-
 	.bor {
 		position: relative;
 		height:3.5rem;
 	}
-
 	.bor .rada {
 		position: absolute;
 	}
-
 	.bor .radb {
 		position: absolute;
 		left: 8rem;
 	}
-
 	.label-radio {
 		width:8rem;
 		display:block;
@@ -1032,11 +967,9 @@
 		text-indent: 3rem;
 		color: #333;
 	}
-
 	.label-radio span {
 		color: #333;
 	}
-
 	.my-icon{
 		width:2rem;
 		height:2rem;
@@ -1046,7 +979,6 @@
 		float: left;
 		margin:8px 5px;
 	}
-
 	.my-icon-chosen {
 		width:2rem;
 		height:2rem;
@@ -1054,17 +986,14 @@
 		background: url("../images/gou.png") no-repeat;
 		background-size: 100%;
 	}
-
 	.getShop .getShopTime {
 		width:95%;
 		margin:0px auto;
 	}
-
 	.radio-time {
 		border:1px solid #ccc;
 		padding:5px;
 	}
-
 	.getShop .getInformation {
 		width:80%;
 		text-align:center;

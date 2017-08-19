@@ -6,7 +6,7 @@
         <div class="search_panel">
             <form class="search_form">
                 <input type="text" class="search_txt" placeholder="搜索自提点" v-model="search" />
-                <input type="button" class="search_btn"/>
+                <input type="button" class="search_btn" />
             </form>
             <div class="alladdress" v-show="chonse">
                 <span>地区选择:</span>
