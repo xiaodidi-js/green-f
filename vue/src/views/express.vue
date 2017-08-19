@@ -2,9 +2,9 @@
 	<separator :set-height="9.1"></separator>
 	<!-- 订单状态 -->
 	<div class="bl-info-box status">
-		<div class="icon">
-			<img src="{{ orderImage }}" style="width:100%;height:100%;"/>
-		</div>
+		<!--<div class="icon">-->
+			<!--<img src="{{ orderImage }}" style="width:100%;height:100%;"/>-->
+		<!--</div>-->
 		<div class="content">
 			<div class="sta-line">
 				<label class="stit">订单状态：</label>
@@ -81,13 +81,16 @@
 		},
 		data() {
 			return {
-				doDay: this.$route.query.stime,
-				state: '',
-                distribution: '',
-                orderNumber: '',
-				person: '',
-				phone: 0,
+//				doDay: 0,
+				state: '',			//	状态
+                distribution: '',	//	公司名
+                orderNumber: '',	//	订单号
+				person: '',			//	派件人
+				phone: 0,			//	电话号码
 				orderImage: '',
+                options: [],		//	订单列表
+				rid: 0,
+				oid: 0,				//	订单ID
 			}
 		},
 		ready() {
@@ -95,7 +98,6 @@
 		},
         watch: {
             '$route'(to) {
-                console.log(to);
                 if(to.name === 'express') {
                     this.express();
 				}
@@ -115,15 +117,26 @@
         },
 		methods: {
 			express() {
-//                console.log(JSON.parse(this.$route.query.data));
-			    console.log(this.$route.query);
-                this.state = this.$route.query.state;
-                this.distribution = this.$route.query.distribution;
-                this.orderNumber = this.$route.query.orderNumber;
-                this.person = this.$route.query.person;
-                this.phone = this.$route.query.phone;
-                this.orderImage = this.$route.query.orderImage;
-			    this.$getData('/index/app/getdelivery/uid/' + this.$ustore.id + "/rid/" + this.$route.query.rid + "/stime/" + this.doDay + "/oid/" + this.$route.query.oid).then((res) => {
+                var lists = JSON.parse(localStorage.getItem('orderList'));
+//				for(var i in lists) {
+//				    this.rid = lists[i].rid;
+//					this.state = lists[i].state;
+//					this.doDay = lists[i].stime;
+//                    this.distribution = lists[i].distribution;
+//                    this.orderNumber = lists[i].orderNumber;
+//                    this.phone = lists[i].phone;
+//                    this.person = lists[i].person;
+//					this.options = lists[i].order;
+//					console.log(this.doDay);
+//					for(var y in this.options) {
+//					    this.oid = this.options[y].id;
+//					    console.log(this.options[y].id);
+//					}
+//				}
+
+
+
+			    this.$getData('/index/app/getdelivery/uid/' + this.$ustore.id + "/rid/" + this.rid + "/stime/" + this.doDay + "/oid/" + this.oid).then((res) => {
                     console.log(res);
                     if(res.status === 0) {
 						$(".express-box").html(res.info).css({
@@ -174,9 +187,9 @@
 		height:auto;
 	}
 
-	.bl-info-box.status .content{
-		width: 75%;
-		float: right;
+	.bl-info-box.status .content {
+		width: 90%;
+		padding: 0px 5%;
 	}
 
 	.bl-info-box.status .content .sta-line{

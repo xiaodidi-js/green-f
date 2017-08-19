@@ -302,13 +302,13 @@
                 return this.$store.state.visibleEle
             },
             scoreMoney: function() {
-                let obj = {};
-                let money = this.score / 100;
+                let obj = {},	money = this.score / 100;
                 obj['showText'] = money.toFixed(2);
                 if(this.scoreSwitch) {
                     this.scoreNumber = 1;
                     obj['makePrice'] = obj['showText'];
                     this.$getData('/index/index/jifenmoney').then((res) => {
+                        console.log(res);
                         if(res.status == 1) {
                             this.sNumber = parseInt(res.info.jifen);
                         }
@@ -325,7 +325,7 @@
                 if(this.coupon > 0 && this.couponObj != null) {
                     if(this.couponObj.type == 1 || this.couponObj.type == 3) {
                         money = this.couponObj.minus_money;
-                    }else{
+                    } else {
                         money = this.paySum * (1-this.couponObj.discount);
                     }
                 }
@@ -391,7 +391,6 @@
                         this.data.pay = res.pay;
                         this.payType = this.data.pay[0].ptype;
                         this.data.address = res.address;
-                        console.log(this.data);
                         this.addressid(this.data.address.id);
                         this.address = this.data.address.id;
                         //	获取微信信息
@@ -430,7 +429,6 @@
                     if (this.cartInfo[i].deliverytime == 0) {
                         this.theDay = "次日";
                         $(".my-icon").eq(1).removeAttr("disabled");
-                        console.log(this.getLastDay(y,m));
                         var doDay = this.getLastDay(y,m);
                         if(d === doDay) {
                             time = y + "-" + m + "-" + d;
@@ -607,6 +605,8 @@
                         pshonse: this.shonse,
                         gift: {'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                     };
+                    console.log(pdata);
+                    return;
                     this.$postData('/index/user/getSubmitOrder',pdata).then((res)=>{
                         if(res.status === 1) {
                             this.clearSel();

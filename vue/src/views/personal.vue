@@ -8,7 +8,7 @@
 			<div class="nickname">{{ headerIcon.nickname }}</div>
 			<div class="score" v-link="{name:'integral'}">
 				<span>签到积分:</span>
-				<span>{{ number }}</span>
+				<span>{{ uscore }}</span>
 			</div>
 			<input type="file" id="himg" @click="fileClick" @change="getImage" accept="image/jpeg,image/png,image/gif" style="display:none;" />
 		</div>

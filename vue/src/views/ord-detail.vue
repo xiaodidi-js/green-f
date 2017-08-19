@@ -110,7 +110,7 @@ import Toast from 'vux/src/components/toast'
 import Loading from 'vux/src/components/loading'
 import Confirm from 'vux/src/components/confirm'
 import Scroller from 'vux/src/components/scroller'
-import { setCartAgain,clearAll } from 'vxpath/actions'
+import { setCartAgain,clearAll,	commitData } from 'vxpath/actions'
 import Surplus from 'components/surplus'
 import XButton from 'vux/src/components/x-button'
 
@@ -118,7 +118,8 @@ export default{
 	vuex: {
 		actions: {
 			setCartAgain,
-			clearAll
+			clearAll,
+            commitData
 		}
 	},
 	data() {
@@ -191,24 +192,36 @@ export default{
     },
 	methods: {
         goExpress() {
-			for(var i in this.data.products) {
-			    console.log(this.data.products[i]);
-                this.$router.go({
-                    name: "express",
-                    query: {
-                        uid: this.$router.id,			//	用户ID
-                        rid: this.data.order.id,		//	订单ID
-                        stime: this.stime,				//	开始时间
-                        state: this.data.order.statext,	//	状态
-                        orderNumber: this.data.order.orderid,	//订单号
-                        person: this.data.order.person,	//	派件人
-                        phone: this.data.order.tel,		//	派件人电话号码
-                        distribution: '绿秧田',			//	公司
-						orderImage: this.data.products[i].shotcut,					//	产品图
-						oid: this.data.products[i].id
-                    },
-                })
-			}
+            var query = [];
+            var options = {};
+//            for(var i in this.data.products) {
+//				options = {
+//					uid: this.$router.id,						//	用户ID
+//                    rid: this.data.order.id,					//	订单ID
+//                    stime: this.stime,							//	开始时间
+//                    state: this.data.order.statext,				//	状态
+//                    orderNumber: this.data.order.orderid,		//订单号
+//                    person: this.data.order.person,				//	派件人
+//                    phone: this.data.order.tel,					//	派件人电话号码
+//                    distribution: '绿秧田',						//	公司
+//                    orderImage: this.data.products[i].shotcut,	//	产品图
+//                    oid: this.data.products[i].id
+//            	};
+//			}
+			options = {
+				uid: this.$router.id,						//	用户ID
+				rid: this.data.order.id,					//	订单ID
+				stime: this.stime,							//	开始时间
+				state: this.data.order.statext,				//	状态
+				orderNumber: this.data.order.orderid,		//订单号
+				person: this.data.order.person,				//	派件人
+				phone: this.data.order.tel,					//	派件人电话号码
+				distribution: '绿秧田',						//	公司
+				order: this.data.products,
+			};
+            query.push(options);
+            localStorage.setItem('orderList', JSON.stringify(query));
+            this.$router.go({name: 'express'});
 		},
 	    getDetail() {
             var self = this;

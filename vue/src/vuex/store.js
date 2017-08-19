@@ -17,6 +17,7 @@ const state = {
 	scroll: 0,
 	visibleEle: false,
 	addID: 0,
+	orderList: [],
 }
 
 //应用状态操作

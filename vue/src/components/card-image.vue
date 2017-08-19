@@ -10,7 +10,7 @@
 				<!--<div class="img" v-lazy:background-image="item.img"></div>-->
 				<img :src="item.img" class="img" alt="{{ item.title }}" />
 				<div class="mes">
-					<div class="words">
+					<div class="words" style="background: none;">
 						<div class="name">{{ item.title }}</div>
 						<!--<div class="desc">-->
 						<!--{{ item.sdesc }}-->
@@ -122,7 +122,7 @@
 		padding-bottom: 70px;
 	}
 
-	.title{
+	.title {
 		display:block;
 		margin:0.5rem 0rem 1rem 0rem;
 		font-size:1.4rem;
@@ -133,7 +133,7 @@
 		padding-left:0.8rem;
 	}
 
-	.card-box{
+	.card-box {
 		width: 93.7%;
 		height: auto;
 		display: block;
@@ -143,11 +143,11 @@
 		margin-top: 15%;
 	}
 
-	.card-box:last-child{
+	.card-box:last-child {
 		margin-bottom: 0%;
 	}
 
-	.card-box .img{
+	.card-box .img {
 		width:100%;
 		height:auto;
 		margin-bottom:0.5rem;
@@ -158,9 +158,8 @@
 		overflow:hidden;
 	}
 
-	.card-box .mes{
+	.card-box .mes {
 		width: 100%;
-		max-width: 100%;
 		overflow: hidden;
 		position: relative;
 		height: 3.5rem;
@@ -186,6 +185,7 @@
 		white-space:nowrap;
 		text-overflow:ellipsis;
 		overflow:hidden;
+		line-height: 32px;
 	}
 
 	.card-box .mes .words .desc{
