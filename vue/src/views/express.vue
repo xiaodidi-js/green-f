@@ -118,24 +118,21 @@
 		methods: {
 			express() {
                 var lists = JSON.parse(localStorage.getItem('orderList'));
-//				for(var i in lists) {
-//				    this.rid = lists[i].rid;
-//					this.state = lists[i].state;
-//					this.doDay = lists[i].stime;
-//                    this.distribution = lists[i].distribution;
-//                    this.orderNumber = lists[i].orderNumber;
-//                    this.phone = lists[i].phone;
-//                    this.person = lists[i].person;
-//					this.options = lists[i].order;
-//					console.log(this.doDay);
-//					for(var y in this.options) {
-//					    this.oid = this.options[y].id;
-//					    console.log(this.options[y].id);
-//					}
-//				}
-
-
-
+				for(var i in lists) {
+				    this.rid = lists[i].rid;
+					this.state = lists[i].state;
+					this.doDay = lists[i].stime;
+                    this.distribution = lists[i].distribution;
+                    this.orderNumber = lists[i].orderNumber;
+                    this.phone = lists[i].phone;
+                    this.person = lists[i].person;
+					this.options = lists[i].order;
+					console.log(this.doDay);
+					for(var y in this.options) {
+					    this.oid = this.options[y].id;
+					    console.log(this.options[y].id);
+					}
+				}
 			    this.$getData('/index/app/getdelivery/uid/' + this.$ustore.id + "/rid/" + this.rid + "/stime/" + this.doDay + "/oid/" + this.oid).then((res) => {
                     console.log(res);
                     if(res.status === 0) {

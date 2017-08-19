@@ -182,6 +182,7 @@ export default{
 			var content = this;
 			if(to.params.oid == this.$route.params.oid && to.name === 'order-detail') {
 				content.getDetail();
+				this.data.order;
 			}
 		}
     },
@@ -189,26 +190,15 @@ export default{
 	    this.getDetail();
         //	开始时间
         this.startTimer();
+        console.log(this.data);
+
+
+
     },
 	methods: {
         goExpress() {
             var query = [];
-            var options = {};
-//            for(var i in this.data.products) {
-//				options = {
-//					uid: this.$router.id,						//	用户ID
-//                    rid: this.data.order.id,					//	订单ID
-//                    stime: this.stime,							//	开始时间
-//                    state: this.data.order.statext,				//	状态
-//                    orderNumber: this.data.order.orderid,		//订单号
-//                    person: this.data.order.person,				//	派件人
-//                    phone: this.data.order.tel,					//	派件人电话号码
-//                    distribution: '绿秧田',						//	公司
-//                    orderImage: this.data.products[i].shotcut,	//	产品图
-//                    oid: this.data.products[i].id
-//            	};
-//			}
-			options = {
+            var options = {
 				uid: this.$router.id,						//	用户ID
 				rid: this.data.order.id,					//	订单ID
 				stime: this.stime,							//	开始时间
@@ -488,11 +478,10 @@ export default{
     },
 	events: {
 		payOrder: function(){
-            this.$router.go({name: 'order-detail'});
 			this.btnStatus = true;
 			switch(this.data.order.paytype){
 				case 1:
-					//微信支付
+                    //微信支付
 					if(typeof this.data.payment.appId === 'string' && typeof this.data.payment.package === 'string') {
 						this.callpay();
                         this.getDetail();
@@ -508,6 +497,7 @@ export default{
                     this.$putData('/index/user/getsubmitorder',pdata).then((res) => {
                         if(res.status === 1) {
                             this.data.payment = JSON.parse(res.payment);
+
 //                            location.reload();
                             this.callpay();
                             this.getDetail();
