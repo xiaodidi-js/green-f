@@ -174,26 +174,22 @@ export default{
 			}
 		}
 	},
+    ready() {
+	    this.getDetail();
+        //	开始时间
+        this.startTimer();
+    },
     watch: {
         payment: function () {
             this.startTimer();
         },
         '$route'(to) {
-			var content = this;
-			if(to.params.oid == this.$route.params.oid && to.name === 'order-detail') {
-				content.getDetail();
-				this.data.order;
-			}
-		}
-    },
-    ready() {
-	    this.getDetail();
-        //	开始时间
-        this.startTimer();
-        console.log(this.data);
-
-
-
+            var content = this;
+            if(to.params.oid == this.$route.params.oid && to.name === 'order-detail') {
+                content.getDetail();
+                location.reload();
+            }
+        }
     },
 	methods: {
         goExpress() {
@@ -497,7 +493,6 @@ export default{
                     this.$putData('/index/user/getsubmitorder',pdata).then((res) => {
                         if(res.status === 1) {
                             this.data.payment = JSON.parse(res.payment);
-
 //                            location.reload();
                             this.callpay();
                             this.getDetail();

@@ -601,7 +601,7 @@
                         scoreNumber: this.scoreNumber,
                         paysum: this.lastPaySum,
                         tips: this.memo,
-                        openid: 'os0CqxBBANhLuBLTsViL3C0zDlNs',//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
+                        openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                         pshonse: this.shonse,
                         gift: {'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                     };
