@@ -66,14 +66,11 @@
                     scrollTop:0
                 },200);
             });
-
-
             $(window).scroll(function() {
                 localStorage.setItem('heiVal', $(document).scrollTop());
                 that.commitData({target: 'scroll', data: localStorage.getItem('heiVal')});
 			});
             $(window).scrollTop(localStorage.getItem('heiVal'));
-
         },
         mounted() {
 

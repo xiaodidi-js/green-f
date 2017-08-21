@@ -216,7 +216,6 @@
                 toggle: true,
                 gotimeline: [],
                 seckillShow: false,
-                local: localStorage.apiDomain,
                 tjData: {},		//推荐组合
                 showShare: false,
                 shareEle: false,
@@ -252,9 +251,6 @@
         watch: {
             '$route'(to) {
                 if (parseInt(to.params.pid) !== this.data.id && to.name === 'detail') {
-                    this.fetchData();
-                    this.tuijian();
-                    this.siblingsDom();
                     if (this.data.activestu == 2) {
                         this.showShare = true;
                         $(".buyButton").css({
@@ -266,6 +262,9 @@
                             "display": "block"
                         });
                     }
+                    this.fetchData();
+                    this.tuijian();
+                    this.siblingsDom();
                 }
             }
         },
@@ -389,11 +388,8 @@
                     try {
                         this.$getData(getUrl).then((res) => {
                             this.data = res;
-                            //  标题截取
-//                            var abc = this.data.name.substring(0,10);
-//                            this.data.name = abc;
                             context.share();
-                            context.tuijian();
+//                            context.tuijian();
                             //判断是否分享商品
                             if (this.data.activestu == 2) {
                                 context.showShare = true;
@@ -418,21 +414,32 @@
                                 context.seckillShow = true;
                             }
                             var scaleBox = this.data.content;
+                            var itemEle = document.getElementsByClassName('ms-item')[1];
 
+//                            var dHeight = $(document).height();
+//                            dHeight -= 46 + 46;
                             // 处理异常
                             try {
-                                var chil = itemEle.getElementsByTagName("img");
-                                for (var i in chil) {
-                                    chil[i].style.display = "block";
-                                }
                                 if (scaleBox === '') {
-                                    itemEle.innerHTML = "暂时没有详情图~~~";
+//                                    $(window).scroll(function () {
+//                                        if($(document).scrollTop() > 200) {
+//                                            $('#content').css({
+//                                                'height': dHeight / 2 + 'px',
+//                                            });
+//                                        }
+//                                    });
+                                    itemEle.innerHTML = "暂时没有详情图!";
                                     itemEle.style.paddingTop = "10px";
-                                    itemEle.style.height = "100%";
-                                    itemEle.style.lineHeight = "150px";
+                                    itemEle.style.height = 350 + 'px';
+                                    itemEle.style.lineHeight = 350 + 'px';
                                 } else {
-                                    var itemEle = document.getElementsByClassName('ms-item')[1];
+                                    itemEle.style.height = '100%';
+                                    itemEle.style.lineHeight = 25 + 'px';
                                     itemEle.innerHTML = scaleBox;
+                                    var chil = itemEle.getElementsByTagName("img");
+                                    for (var i in chil) {
+                                        chil[i].style.display = "block";
+                                    }
                                 }
                             } catch (e) {} finally {}
                         }, (res) => {
@@ -449,7 +456,18 @@
                 this.$getData('/index/user/tuijianzuhe/pid/' + this.$route.params.pid).then((res) => {
                     if (res.status == 1) {
                         this.tjData = res.info;
-                        console.log(res.info);
+                        var dHeight = $(document).height();
+                        dHeight -= 46 + 46;
+                        if(res.info.data == null) {
+                            $('#scbox').html('暂时没有推荐商品！').css({
+                                'width' : '100%',
+                                'height' : 350 + 'px',
+                                'color': '#333',
+                                'fontSize' : '16px',
+                                'textAlign' : 'center',
+                                'lineHeight' : 350 + 'px',
+                            });
+                        }
                     } else if (res.status == -1) {
                         console.log("失败");
                     } else {
@@ -840,8 +858,8 @@
     .pro-mes {
         width: 96%;
         height: auto;
-        padding: 2%;
-        background-color: #FFF;
+        padding: 2% 2% 0%;
+        background: #FFF;
         font-size: 1.4rem;
     }
     .nowrap {
@@ -1282,6 +1300,7 @@
         font-size: 12px;
         background: #fff;
         border-bottom: 1px solid #ccc;
+        position: relative;
     }
     .product_titile ul li {
         width: 33.33%;

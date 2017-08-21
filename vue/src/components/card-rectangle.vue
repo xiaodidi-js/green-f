@@ -73,9 +73,7 @@
 			</template>
 		</div>
 	</div>
-	<div class="footer-list">
-		—————&nbsp;&nbsp;我是有底线的!&nbsp;&nbsp;—————
-    </div>
+	<div class="footer-list">本商城最终解析权归广州绿秧田食品有限公司拥有</div>
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
 	<!-- 弹出提示框 -->
@@ -564,6 +562,16 @@
 		text-align: center;
 		background: #eee;
 		margin-bottom: 50px;
+	}
+
+	.footer-list::before {
+		content: '——';
+		margin-right: 10px;
+	}
+
+	.footer-list::after {
+		content: '——';
+		margin-left: 10px;
 	}
 
 	/* footer-list end */

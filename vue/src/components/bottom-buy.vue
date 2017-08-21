@@ -68,7 +68,6 @@
 		ready() {
 		    //	主配色
 		    this.$getData('/index/index/wxshare').then((res) => {
-				console.log(res.color);
                 $(".doBuy").css({
                     "background" : res.color,
                     "border" : "1px solid" + res.color
