@@ -222,10 +222,10 @@ const routers = {
     },
     '/detail/:pid': {
         name:'detail',
-        header:false,
-        footer:false,
-        title:'订单详情',
-        position:1,
+        header: false,
+        footer: false,
+        title: '订单详情',
+        position: 1,
         component (resolve) {
             require(['./views/pro-detail.vue'], resolve);
         }
@@ -295,12 +295,12 @@ const routers = {
         } 
     },
     '/order/detail/:oid': {
-        name:'order-detail',
-        header:true,
-        footer:false,
-        title:'订单详情',
-        position:4,
-        login:true,
+        name: 'order-detail',
+        header: true,
+        footer: false,
+        title: '订单详情',
+        position: 4,
+        login: true,
         component (resolve) {
             require(['./views/ord-detail.vue'], resolve);
         } 

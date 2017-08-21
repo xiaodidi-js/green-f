@@ -140,13 +140,13 @@ export default{
 			let ustore = sessionStorage.getItem('userInfo') || localStorage.getItem('userInfo');
 			ustore = JSON.parse(ustore);
 			let pdata = {uid:ustore.id,token:ustore.token,oid:this.$route.params.oid,top:this.data.message.id,content:mes};
-			this.$http.put(localStorage.apiDomain+'public/index/user/afterservice',pdata).then((response)=>{
+			this.$http.put(localStorage.apiDomain + 'public/index/user/afterservice',pdata).then((response)=>{
 				this.sendBtn = false;
-				if(response.data.status===1){
+				if(response.data.status === 1) {
 					this.data.message.subs.push({id:response.data.id,uid:response.data.uid,content:response.data.content,createtime:response.data.createtime});
 					this.sendBtn = false;
 					this.sendText = '';
-					this.$nextTick(function(){
+					this.$nextTick(function() {
 						document.body.scrollTop = document.body.scrollHeight;
 					});
 				}else if(response.data.status===-1){
@@ -197,14 +197,14 @@ export default{
 	}
 
 	.card-box{
-		width:97%;
-		height:auto;
-		padding:10% 0% 0% 3%;
-		border-bottom:#E6E6E6 dashed 1px;
-		background-color:#fff;
+		width: 97%;
+		height: auto;
+		padding: 5% 0% 0% 3%;
+		border-bottom: #E6E6E6 dashed 1px;
+		background: #fff;
 	}
 
-	.card-box .pro-mes{
+	.card-box .pro-mes {
 		width:97%;
 		padding:3% 3% 3% 0%;
 		border-bottom:#F2F2F2 1px solid;
@@ -236,8 +236,9 @@ export default{
 		overflow:hidden;
 	}
 
-	.card-box .pro-mes .words{
-		width:75%;
+	.card-box .pro-mes .words {
+		width: 71%;
+		padding: 0px 0px 0px 10px;
 	}
 
 	.card-box .pro-mes .words .name{

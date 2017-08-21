@@ -34,6 +34,7 @@
                     this.content = res.info.data;
                     var str = this.title.substring(0,9);
                     this.title = str;
+
                 },(res)=>{
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;

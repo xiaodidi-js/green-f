@@ -1,5 +1,5 @@
 <template>
-	<div class="bottom-buy" :class="{'fixed':fixed}" :style="{bottom:fixed===true&&btm>0 ? btm+unit : 0}">
+	<div class="bottom-buy" :class="{'fixed':fixed}" :style="{bottom:fixed === true && btm > 0 ? btm + unit : 0}">
 		<div style="font-size: 0rem;" v-if="pay == 0 && send == 0 && receive == 0">
 			<div class="btn service" :class="{'disabled':disabled}" @click="clickCancel">取消订单</div>
 			<div class="btn again" :class="{'disabled':disabled}" @click="clickPay">确认支付</div>
@@ -57,19 +57,19 @@
 
 		},
 		methods: {
-			clickPay: function(){
+			clickPay: function() {
 				if(this.disabled){
 					return true;
 				}
 				this.$dispatch('payOrder');
 			},
-			clickAgain: function(){
+			clickAgain: function() {
 				if(this.disabled){
 					return true;
 				}
 				this.$dispatch('payAgain');
 			},
-			clickConfirm: function(){
+			clickConfirm: function() {
 				if(this.disabled){
 					return true;
 				}

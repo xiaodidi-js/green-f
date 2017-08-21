@@ -76,7 +76,9 @@
 
 		<!-- 价格详情 -->
 		<balance-price :sum="data.order.sum" :coupon="data.order.coupon" :score="data.order.score"
-				:freight="data.order.freight" :show-sum="true"></balance-price>
+				:freight="data.order.freight" :show-sum="true">
+		</balance-price>
+
 	</div>
 
 	<separator :set-height="4.5" v-show="data.order.status!=-1"></separator>
@@ -231,7 +233,6 @@ export default{
                         this.btnStatus = false;
                     } else if (this.minute == '0' && this.second == "0") {
                         this.clickType = 1;
-                        this.$router.go({name: 'ord-detail'});
                         this.showTime = false;
                     }
                     //判断是否有赠品
@@ -487,8 +488,8 @@ export default{
                     let pdata = {
                         uid: this.$ustore.id,
 						token: this.$ustore.token,
-						oid:this.$route.params.oid,
-						opid:opid
+						oid: this.$route.params.oid,
+						opid: opid
                     };
                     this.$putData('/index/user/getsubmitorder',pdata).then((res) => {
                         if(res.status === 1) {

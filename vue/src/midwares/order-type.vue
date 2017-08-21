@@ -58,6 +58,10 @@
     </div>
     <!-- 回到顶部 -->
     <div class="goto"></div>
+
+    <!-- loading加载框 -->
+    <loading :show="loadingShow" :text="loadingMessage"></loading>
+
 </template>
 
 <script>
@@ -65,6 +69,7 @@
     import payment from 'components/order-payment'
     import Tab from 'vux/src/components/tab/tab.vue'
     import TabItem from 'vux/src/components/tab/tab-item'
+    import Loading from 'vux/src/components/loading'
 
     export default{
         vuex: {
@@ -78,7 +83,8 @@
         components: {
             payment,
             Tab,
-            TabItem
+            TabItem,
+            Loading,
         },
         data() {
             return {
@@ -121,6 +127,7 @@
                     this.loadingMessage = '请稍候...';
                     this.loadingShow = true;
                     this.$getData('/index/user/orderselection/uid/' + this.$ustore.id + '/token/' + this.$ustore.token + '/type/' + type).then((res) => {
+                        this.loadingShow = false;
                         if(res.status === 1) {
                             this.data = res.list;
                         }else if(res.status.status === -1){

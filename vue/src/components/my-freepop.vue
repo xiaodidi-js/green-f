@@ -318,8 +318,6 @@
                         this.showStatus = false;
                         this.showTips = '加载中...';
                         this.options = res.list;
-
-                        console.log(this.addressid);
                         this.oneGift(this.$store.state.addID,this.money);
                     } else if (res.status === -1) {
                         this.$dispatch('showMes', res.info);

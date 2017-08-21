@@ -146,7 +146,7 @@
 					<div class="l-desc score">
 						<my-switch style="background: #04BE02" :value.sync="scoreSwitch"></my-switch>
 					</div>
-					<div class="l-icon doubt" style="margin-right:0%;" @click="showAlert"></div>
+					<div class="l-icon doubt" v-show="switchShow" style="margin-right:0%;" @click="showAlert"></div>
 				</div>
 			</my-cell-item>
 		</my-cell>
@@ -172,7 +172,7 @@
 
 	<!-- 弹出提示框 -->
 	<alert :show.sync="alertShow" title="积分规则" button-text="知道了">
-		<p style="text-align:center;">每<font color="#81c429">100积分</font>可以用作<font color="#81c429">1元</font>抵扣支付金额.</p>
+		<p style="text-align:center;">每<font color="#81c429">100积分</font>可以用作<font color="#81c429">{{ sNumber }}元</font>抵扣支付金额.</p>
 	</alert>
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
@@ -200,8 +200,7 @@
     import { selCartInfo,selCartSum,selCartIdsNoFormat } from 'vxpath/getters'
     import { clearAll, clearSel, addressid} from 'vxpath/actions'
     import Scroller from 'vux/src/components/scroller'
-    import axios from 'axios'
-    import qs from 'qs'
+
     export default{
         vuex: {
             getters: {
@@ -217,10 +216,10 @@
         },
         data() {
             return {
-                loadingShow:false,
-                loadingMessage:'',
-                toastMessage:'',	//提示信息
-                toastShow:false,
+                loadingShow: false,
+                loadingMessage: '',
+                toastMessage: '',	//提示信息
+                toastShow: false,
                 actionShow:false,
                 popShow:false,
                 couShow:false,
@@ -235,7 +234,7 @@
                 sNumber: 0,			//积分 0/1
                 deliverType:'',
                 deliverName:'',
-                freight:0,
+                freight:0,			//	快递费
                 memo:'',			//订单说明
                 data: {				//数据
                     deliver:{},
@@ -256,6 +255,7 @@
                 wxName: '',			 // 微信名称
                 expressName: '',		 //	收件人名称
                 telphone: 0,	//	电话号码
+                switchShow: false,
             }
         },
         components: {
@@ -303,17 +303,16 @@
             },
             scoreMoney: function() {
                 let obj = {},	money = this.score / 100;
-                obj['showText'] = money.toFixed(2);
+                obj['showText'] = money.toFixed(2)
                 if(this.scoreSwitch) {
+                    this.switchShow = true;
                     this.scoreNumber = 1;
                     obj['makePrice'] = obj['showText'];
                     this.$getData('/index/index/jifenmoney').then((res) => {
-                        console.log(res);
-                        if(res.status == 1) {
-                            this.sNumber = parseInt(res.info.jifen);
-                        }
+                        this.sNumber = parseInt(res.info.jifen);
                     });
                 } else {
+                    this.switchShow = false;
                     this.scoreNumber = 2;
                     this.sNumber = 0;
                     obj['makePrice'] = 0;
@@ -332,7 +331,13 @@
                 return money.toFixed(2);
             },
             lastPaySum: function() {
-                let lastMoney = parseFloat(this.paySum) + parseFloat(this.freight) - parseFloat(this.scoreMoney.makePrice) - parseFloat(this.couponMoney);
+
+                let lastMoney =
+					parseFloat(this.paySum) +
+					parseFloat(this.freight) -
+					parseFloat(this.scoreMoney.makePrice) -
+					parseFloat(this.couponMoney);
+
                 if(lastMoney <= 0) lastMoney = 1;
                 return lastMoney.toFixed(2);
             }
@@ -386,6 +391,7 @@
                             this.toastMessage = '网络开小差了~';
                             this.toastShow = true;
                         });
+
                         //	判断有没有快递配送
                         typeof(res.address) == '' ? this.myCellTitle = '到店自提' : this.myCellTitle = '请选择配送方式';
                         this.data.pay = res.pay;
@@ -603,17 +609,15 @@
                         tips: this.memo,
                         openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                         pshonse: this.shonse,
-                        gift: {'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
-                    };
-                    console.log(pdata.paysum);
-
-                    this.$postData('/index/user/getSubmitOrder',pdata).then((res)=>{
+						gift: {'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
+					};
+					this.$postData('/index/user/getSubmitOrder',pdata).then((res)=>{
                         if(res.status === 1) {
                             this.clearSel();
                             this.$router.replace('order/detail/' + res.oid);
                             this.loadingShow = false;
                         } else if (res.status == 0) {
-                            alert(res.info);
+							alert(res.info);
                             this.loadingShow = false;
                             this.$router.go({name:'cart'});
                         } else if(res.status === -1) {

@@ -1,8 +1,8 @@
 <template>
-	<template v-for="item in info.data">
+	<template v-for="item in info">
 		<div v-if="item !== '' ">
 			<div class="card-box" style="box-shadow: none;padding: 2% 0%;">
-				<div v-link="{name:'detail',params:{pid:item.id}}">
+				<div @click="goDetail(item.id)"><!--  v-link="{name:'detail',params:{ pid:item.id }}" -->
 					<div class="pict" v-if="item.store == 0">
 						<div class="qing">已售罄</div>
 						<div class="img" :style="{backgroundImage:'url('+ item.shotcut +')'}"></div>
@@ -59,12 +59,15 @@
 			}
 		},
 		ready () {
-			console.log(this.info);
+
 		},
         computed () {
 
 		},
 		methods: {
+            goDetail: function(id) {
+				this.$router.go({name: 'detail', params:{ pid:id }});
+			},
 			addCart(data) {
 				var obj = {}, content = this , cart = sessionStorage.getItem("myCart");
 				if(this.$ustore === null) {

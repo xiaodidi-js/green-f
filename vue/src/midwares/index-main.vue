@@ -11,7 +11,9 @@
 	<div class="goto"></div>
     <!-- toast提示框 -->
     <toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
-	<loading :show="loadingShow" text="正在加载..."></loading>
+
+	<!--<loading :show="loadingShow" :text="loadingMessage"></loading>-->
+
 </template>
 
 <script>
@@ -45,8 +47,10 @@
         },
 		data() {
 			return {
-				toastMessage:'',
-				toastShow:false,
+				toastMessage: '',
+				toastShow: false,
+                loadingShow: false,
+                loadingMessage: '',
 				data: {
 					articles: {title:'',list:[]},
 					hotproducts: {title:'',list:[]},
@@ -97,8 +101,10 @@
 		},
         methods: {
 		    main() {
+                this.loadingMessage = '请稍候......';
+                this.loadingShow = true;
                 this.$getData('/index/index').then((res) => {
-                    this.loadingShow = true;
+                    this.loadingShow = false;
                     this.data = res.index_data;
                     for (var i = 0; i < this.data.length; i++) {
                         if(this.data[i].type == 4) {
@@ -134,3 +140,7 @@
 		}
 	}
 </script>
+
+<style>
+
+</style>

@@ -57,9 +57,9 @@
                 </div>
                 <div class="product_titile">
                     <ul id="card">
-                        <li class="actives">图文详情</li>
-                        <li>客户评价</li>
-                        <li>推荐组合</li>
+                        <li class="card-tab tab-actives">图文详情</li>
+                        <li class="card-tab">客户评价</li>
+                        <li class="card-tab" @click="tuijian()">推荐组合</li>
                     </ul>
                 </div>
                 <!--<tab default-color="#333" active-color="#F9AD0C" :line-width="2" class="fixed-tab">-->
@@ -246,7 +246,13 @@
             //选项卡
             this.siblingsDom();
             this.timeline();
-            this.tuijian();
+
+
+            console.log(document.getElementById('card').children[0]);
+
+//            $("#card").find('li').each(function() {
+//                console.log($(this).siblings());
+//            });
         },
         watch: {
             '$route'(to) {
@@ -263,8 +269,13 @@
                         });
                     }
                     this.fetchData();
-                    this.tuijian();
                     this.siblingsDom();
+                    document.getElementById('card').children[0].className = 'card-tab tab-actives';
+                    document.getElementById('card').children[1].className = 'card-tab';
+                    document.getElementById('card').children[2].className = 'card-tab';
+                    $('.product_details').css({
+                        'display' : 'block'
+                    });
                 }
             }
         },
@@ -421,17 +432,10 @@
                             // 处理异常
                             try {
                                 if (scaleBox === '') {
-//                                    $(window).scroll(function () {
-//                                        if($(document).scrollTop() > 200) {
-//                                            $('#content').css({
-//                                                'height': dHeight / 2 + 'px',
-//                                            });
-//                                        }
-//                                    });
                                     itemEle.innerHTML = "暂时没有详情图!";
                                     itemEle.style.paddingTop = "10px";
-                                    itemEle.style.height = 350 + 'px';
-                                    itemEle.style.lineHeight = 350 + 'px';
+                                    itemEle.style.height = 50 + 'px';
+                                    itemEle.style.lineHeight = 50 + 'px';
                                 } else {
                                     itemEle.style.height = '100%';
                                     itemEle.style.lineHeight = 25 + 'px';
@@ -455,17 +459,16 @@
             tuijian () {
                 this.$getData('/index/user/tuijianzuhe/pid/' + this.$route.params.pid).then((res) => {
                     if (res.status == 1) {
-                        this.tjData = res.info;
-                        var dHeight = $(document).height();
-                        dHeight -= 46 + 46;
+                        this.tjData = res.info.data;
+                        console.log(res.info);
                         if(res.info.data == null) {
-                            $('#scbox').html('暂时没有推荐商品！').css({
-                                'width' : '100%',
-                                'height' : 350 + 'px',
-                                'color': '#333',
-                                'fontSize' : '16px',
-                                'textAlign' : 'center',
-                                'lineHeight' : 350 + 'px',
+                            $('.tj-scroller').css({
+                                'height' : 50 + 'px',
+                                'lineHeight' : 50 + 'px',
+                            });
+                        } else {
+                            $('.tj-scroller').css({
+                                'height' : '100%',
                             });
                         }
                     } else if (res.status == -1) {
@@ -515,10 +518,10 @@
                     liDomes[i].index = i;
                     var _this = this;
                     liDomes[i].onclick = function () {
-                        this.className = "actives";
+                        this.className = "card-tab tab-actives";
                         //同辈元素互斥
                         _this.siblings(this, function () {
-                            this.className = "";
+                            this.className = "card-tab";
                         });
                         //把对应的选项卡的内容显示出来
                         var tabDom = document.getElementById("content").children[this.index];
@@ -1310,7 +1313,8 @@
         float: left;
         line-height: 43px;
     }
-    .product_titile ul .actives {
+
+    .tab-actives {
         color: #81C429;
         border-bottom: 3px solid #81C429;
     }
