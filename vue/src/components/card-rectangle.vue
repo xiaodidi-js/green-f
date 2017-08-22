@@ -73,6 +73,20 @@
 			</template>
 		</div>
 	</div>
+	<div class="copySao">
+		<div class="copySap-header">
+			<div class="copySap-header-img">
+				<img src="../images/1.jpg" style="width: 100%;height: 100%" />
+			</div>
+			<div class="copySap-header-text">关注公众号</div>
+		</div>
+		<div class="copySap-header">
+			<div class="copySap-header-img">
+				<img src="../images/2.jpg" style="width: 100%;height: 100%" />
+			</div>
+			<div class="copySap-header-text">关注公众号</div>
+		</div>
+	</div>
 	<div class="footer-list">本商城最终解析权归广州绿秧田食品有限公司拥有</div>
 	<!-- toast显示框 -->
 	<toast type="text" :show.sync="toastShow">{{ toastMessage }}</toast>
@@ -81,6 +95,40 @@
 		<p class="alertMsg">加入购物车成功!</p>
 	</alert>
 </template>
+
+<style>
+
+	.copySao {
+		width: 80%;
+		height: auto;
+		/* padding-bottom: 77px; */
+		margin: 20px auto 0px;
+
+
+	}
+
+	.copySao .copySap-header {
+		width: 105px;
+		height: 130px;
+		float: left;
+		margin: 0px 10px;
+	}
+
+	.copySao .copySap-header .copySap-header-img {
+		width: 105px;
+		height: 105px;
+		background: #fff;
+	}
+
+	.copySao .copySap-header .copySap-header-text {
+		font-size: 14px;
+		color: rgb(243,114,27);
+		text-align: center;
+		line-height: 30px;
+		font-weight: bold;
+	}
+
+</style>
 
 <script>
 
@@ -555,13 +603,14 @@
 	/* footer-list start */
 	.footer-list {
 		width: 100%;
-		height: 8.5rem;
-		line-height: 8.5rem;
+		height: 3.5rem;
+		line-height: 3.5rem;
 		font-size: 11px;
 		color: #bfbfbf;
 		text-align: center;
 		background: #eee;
-		margin-bottom: 50px;
+		clear: both;
+		margin: 0px 0px 75px;
 	}
 
 	.footer-list::before {

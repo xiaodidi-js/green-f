@@ -190,7 +190,7 @@
             filters: {
             },
             chooseSort(cid){
-                this.$getData('/index/index/classifylist/cid/' + cid).then((res,index) => {
+                this.$getData('/index/index/classifylist/cid/' + cid).then((res) => {
                     if (res.status == 1) {
                         this.pdata = res.info.list;
                         $("#scroller2").css({

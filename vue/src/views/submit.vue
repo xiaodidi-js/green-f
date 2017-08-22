@@ -135,11 +135,11 @@
 			<!--</div>-->
 			<!--</div>-->
 			<!--</my-cell-item>-->
-			<my-cell-item style="margin:0px;" v-if="score == 0">
+			<my-cell-item style="margin:0px;display: none;" v-if="score == 0">
 				<div class="line-con zero-font" style="font-size:14px;">没有可用积分</div>
 			</my-cell-item>
 
-			<my-cell-item style="margin:0px;" v-else>
+			<my-cell-item style="margin:0px;display: none;" v-else>
 				<div class="line-con zero-font">
 					<div class="l-icon score"></div>
 					<div class="l-tit score">{{ score }}积分(可抵扣{{ scoreMoney.showText }}元)</div>

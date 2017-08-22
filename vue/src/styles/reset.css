@@ -215,11 +215,11 @@ img[lazy=error]{
     width:3.7rem;
     height:3.7rem;
     background: url(../images/img13.png) no-repeat;
-    background-size: 100%;
+    background-size: 82%;
     position: fixed;
-    right:1rem;
-    bottom: 6.5rem;
-    z-index:1000;
+    right: 1rem;
+    bottom: 4.5rem;
+    z-index: 1000;
     display:none;
 }
 /* goto end */
