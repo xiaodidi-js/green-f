@@ -54,51 +54,51 @@
 			}
 		},
 		ready() {
-            this.$getData('/index/index/wxshare').then((res) => {
-                $(".active").css({
-                    "color" : res.color,
-                });
-            });
+//            this.$getData('/index/index/wxshare').then((res) => {
+//                $(".active").css({
+//                    "color" : res.color,
+//                });
+//            });
 		},
         watch: {
             $route(to) {
                 switch(to.position) {
-					case 1:
-                        this.$getData('/index/index/wxshare').then((res) => {
-                            $(".group").css({
-                                "color" : "#ccc",
-                            });
-                            $(".active").css({
-                                "color" : res.color,
-                            });
-                        });
-                    case 2:
-                        this.$getData('/index/index/wxshare').then((res) => {
-                            $(".group").css({
-                                "color" : "#ccc",
-                            });
-                            $(".active").css({
-                                "color" : res.color,
-                            });
-                        });
-                    case 3:
-                        this.$getData('/index/index/wxshare').then((res) => {
-                            $(".group").css({
-                                "color" : "#ccc",
-                            });
-                            $(".active").css({
-                                "color" : res.color,
-                            });
-                        });
-                    case 4:
-                        this.$getData('/index/index/wxshare').then((res) => {
-                            $(".group").css({
-                                "color" : "#ccc",
-                            });
-                            $(".active").css({
-                                "color" : res.color,
-                            });
-                        });
+//					case 1:
+//                        this.$getData('/index/index/wxshare').then((res) => {
+//                            $(".group").css({
+//                                "color" : "#ccc",
+//                            });
+//                            $(".active").css({
+//                                "color" : res.color,
+//                            });
+//                        });
+//                    case 2:
+//                        this.$getData('/index/index/wxshare').then((res) => {
+//                            $(".group").css({
+//                                "color" : "#ccc",
+//                            });
+//                            $(".active").css({
+//                                "color" : res.color,
+//                            });
+//                        });
+//                    case 3:
+//                        this.$getData('/index/index/wxshare').then((res) => {
+//                            $(".group").css({
+//                                "color" : "#ccc",
+//                            });
+//                            $(".active").css({
+//                                "color" : res.color,
+//                            });
+//                        });
+//                    case 4:
+//                        this.$getData('/index/index/wxshare').then((res) => {
+//                            $(".group").css({
+//                                "color" : "#ccc",
+//                            });
+//                            $(".active").css({
+//                                "color" : res.color,
+//                            });
+//                        });
 
 				}
 			},
@@ -256,27 +256,27 @@
 	}
 
 	.wrapper .active .icon-home {
-		background: url('../images/img15.png') no-repeat;
+		background: url('../images/tarbar/1.png') no-repeat;
 		background-size: 100%;
 	}
 
 	.wrapper .active .icon-zizhuxiadan {
-		background: url('../images/img17.png') no-repeat;
+		background: url('../images/tarbar/2.png') no-repeat;
 		background-size: 100%;
 	}
 
 	.wrapper .active .icon-huodong {
-		background: url('../images/img19.png') no-repeat;
+		background: url('../images/tarbar/3.png') no-repeat;
 		background-size: 100%;
 	}
 
 	.wrapper .active .icon-gerenzhongxin {
-		background: url('../images/img21.png') no-repeat;
+		background: url('../images/tarbar/4.png') no-repeat;
 		background-size: 100%;
 	}
 
 	.wrapper .active {
-		color: #81c429;
+		color: #f67816;
 		display:inline-block;
 		width:25%;
 		height:auto;
@@ -285,7 +285,7 @@
 		vertical-align:middle;
 	}
 
-	.group.selected{
+	.group.selected {
 		color:#7fc72b;
 	}
 

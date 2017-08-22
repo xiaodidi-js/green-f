@@ -217,8 +217,8 @@ img[lazy=error]{
     background: url(../images/img13.png) no-repeat;
     background-size: 82%;
     position: fixed;
-    right: 1rem;
-    bottom: 4.5rem;
+    right: 2rem;
+    bottom: 5.5rem;
     z-index: 1000;
     display:none;
 }
