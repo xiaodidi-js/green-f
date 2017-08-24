@@ -54,6 +54,10 @@
 			showSum: {
 				type: Boolean,
 				default: false
+			},
+            openbtn: {
+			    type: Boolean,
+				default: false
 			}
 		},
 		data() {
@@ -62,7 +66,7 @@
 			}
 		},
 		ready() {
-
+			console.log(this.score);
 		},
 		computed: {
 			sfee: function() {
@@ -95,17 +99,12 @@
 			},
 			lastSum: function(){
 				let getSum = '';
-				if(this.score > 0) {
-                    //getSum = (总价 + 快递费) - (优惠券 + 积分) / 积分抵扣
-				    getSum = (this.sum + this.freight) - (this.coupon + this.score) / this.scfee;
-				} else {
-                    //getSum = (总价 + 快递费) - (优惠券 + 积分)
-                    getSum = (this.sum + this.freight) - (this.coupon + this.score);
-				}
-				if(getSum <= 0) {
-					getSum = 1;
+                //getSum = (总价 + 快递费) - (优惠券 + 积分)
+                getSum = (this.sum + this.freight) - (this.coupon + this.score);
+                if(getSum <= 0) {
+                    getSum = 1;
                     this.scfee = this.sum;
-				}
+                }
 				return getSum.toFixed(2);
 			}
 		}

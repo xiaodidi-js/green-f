@@ -125,7 +125,7 @@
             this.modeText = "编辑";
             this.editMode = 0;
             $(".group ,.active").css({
-                "color" : "#ccc",
+                "color" : "#81c429",
             });
             console.log(this.cartList);
 		},
@@ -135,7 +135,7 @@
                     this.modeText = "编辑";
                     this.editMode = 0;
                     $(".group ,.active").css({
-						"color" : "#ccc",
+						"color" : "#81c429",
 					});
 				}
 			}

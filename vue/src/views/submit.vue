@@ -135,11 +135,11 @@
 			<!--</div>-->
 			<!--</div>-->
 			<!--</my-cell-item>-->
-			<my-cell-item style="margin:0px;display: none;" v-if="score == 0">
+			<my-cell-item style="margin:0px;" v-if="score == 0">
 				<div class="line-con zero-font" style="font-size:14px;">没有可用积分</div>
 			</my-cell-item>
 
-			<my-cell-item style="margin:0px;display: none;" v-else>
+			<my-cell-item style="margin:0px;" v-else>
 				<div class="line-con zero-font">
 					<div class="l-icon score"></div>
 					<div class="l-tit score">{{ score }}积分(可抵扣{{ scoreMoney.showText }}元)</div>
@@ -152,7 +152,9 @@
 		</my-cell>
 
 		<!-- 价格详情 -->
-		<balance-price :sum="paySum" :coupon="couponMoney" :score="scoreMoney.makePrice" :freight="freight"></balance-price>
+		<balance-price :sum="paySum" :coupon="couponMoney"
+					   :score="scoreMoney.makePrice" :freight="freight"
+					   :openbtn="scoreSwitch"></balance-price>
 
 	</div>
 
@@ -287,6 +289,7 @@
         ready() {
             this.isRadio();
             this.submitReady();
+            console.log(this.cartInfo);
         },
         computed: {
             list: function(){
@@ -302,8 +305,15 @@
                 return this.$store.state.visibleEle
             },
             scoreMoney: function() {
-                let obj = {},	money = this.score / 100;
-                obj['showText'] = money.toFixed(2)
+                let obj = {}, money = this.score / 100;
+                if(money > 1) {
+                    var count = parseInt(this.paySum);
+                    count -= 1;
+					money = count;
+				} else {
+                    return money = this.score / 100;
+				}
+                obj['showText'] = money.toFixed(2);
                 if(this.scoreSwitch) {
                     this.switchShow = true;
                     this.scoreNumber = 1;
@@ -593,55 +603,62 @@
                     return false;
                 }
                 for(var i in this.cartInfo) {
-                    this.loadingMessage = '正在提交...';
-                    this.loadingShow = true;
-                    let pdata = {
-                        uid: this.$ustore.id,
-                        token: this.$ustore.token,
-                        paytype: this.payType,
-                        products: this.cartInfo,
-                        stype: this.deliverType,
-                        address: this.address,
-                        coupon: this.coupon,
-                        score: this.sNumber,
-                        scoreNumber: this.scoreNumber,
-                        paysum: this.lastPaySum,
-                        tips: this.memo,
-                        openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
-                        pshonse: this.shonse,
-						gift: {'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
-					};
-					this.$postData('/index/user/getSubmitOrder',pdata).then((res)=>{
-                        if(res.status === 1) {
-                            this.clearSel();
-                            this.$router.replace('order/detail/' + res.oid);
-                            this.loadingShow = false;
-                        } else if (res.status == 0) {
-							alert(res.info);
-                            this.loadingShow = false;
-                            this.$router.go({name:'cart'});
-                        } else if(res.status === -1) {
-                            this.loadingShow = false;
-                            this.toastMessage = res.info;
-                            this.toastShow = true;
-                            let context = this;
-                            setTimeout(function(){
-                                context.clearAll();
-                                sessionStorage.removeItem('userInfo');
-                                localStorage.removeItem('userInfo');
-                                context.$router.go({name:'login'});
-                            },800);
-                        } else {
-                            this.loadingShow = false;
-                            alert(res.info);
-                        }
-                    },(res)=>{
-                        this.loadingShow = false;
-                        this.toastMessage = '网络开小差了~';
-                        this.toastShow = true;
-                    });
-                    return true;
+                    if (this.cartInfo[i].deliverytime == 0) {
+                        break;
+                    } else if (this.cartInfo[i].deliverytime == 1) {
+                        alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                        this.$route.go({name: 'card'});
+                        break;
+                    }
                 }
+                this.loadingMessage = '正在提交...';
+                this.loadingShow = true;
+                let pdata = {
+                    uid: this.$ustore.id,
+                    token: this.$ustore.token,
+                    paytype: this.payType,
+                    products: this.cartInfo,
+                    stype: this.deliverType,
+                    address: this.address,
+                    coupon: this.coupon,
+                    score: this.sNumber,
+                    scoreNumber: this.scoreNumber,
+                    paysum: this.lastPaySum,
+                    tips: this.memo,
+                    openid: "os0CqxBBANhLuBLTsViL3C0zDlNs",//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
+                    pshonse: this.shonse,
+                    gift: {'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
+                };
+                this.$postData('/index/user/getSubmitOrder',pdata).then((res)=>{
+                    if(res.status === 1) {
+                        this.clearSel();
+                        this.$router.replace('order/detail/' + res.oid);
+                        this.loadingShow = false;
+                    } else if (res.status == 0) {
+                        alert(res.info);
+                        this.loadingShow = false;
+                        this.$router.go({name:'cart'});
+                    } else if(res.status === -1) {
+                        this.loadingShow = false;
+                        this.toastMessage = res.info;
+                        this.toastShow = true;
+                        let context = this;
+                        setTimeout(function(){
+                            context.clearAll();
+                            sessionStorage.removeItem('userInfo');
+                            localStorage.removeItem('userInfo');
+                            context.$router.go({name:'login'});
+                        },800);
+                    } else {
+                        this.loadingShow = false;
+                        alert(res.info);
+                    }
+                },(res)=>{
+                    this.loadingShow = false;
+                    this.toastMessage = '网络开小差了~';
+                    this.toastShow = true;
+                });
+                return true;
             }
         }
     }

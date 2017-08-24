@@ -101,13 +101,13 @@
                     scrollTop:0
                 },200);
             });
-            $(".group ,.active").css({"color":"#ccc"});
+            $(".group ,.actives").css({"color":"#81c429"});
         },
         watch: {
             $route(to) {
-                if(to.name === 'order-type') {
+                if (to.name === 'order-type') {
                     this.getViewData(0);
-                    $(".group ,.active").css({"color":"#ccc"});
+                    $(".group ,.actives").css({"color": "#81c429"});
                 }
             }
         },

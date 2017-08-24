@@ -92,10 +92,8 @@
 
 	<!-- 确定弹框 -->
 	<confirm :show.sync="confirmShow" :title="confirmTitle"
-			 confirm-text="确定"
-			 cancel-text="取消"
-			 @on-confirm="confirmClcik"
-			 @on-cancel="cancelClick">
+			 confirm-text="确定" cancel-text="取消"
+			 @on-confirm="confirmClcik" @on-cancel="cancelClick">
 		<p style="text-align:center;">{{ confirmText }}</p>
 	</confirm>
 
@@ -127,20 +125,20 @@ export default{
 	data() {
 		return {
 			loadingShow: false,
-			loadingMessage:'',
-			toastMessage:'',
-			toastShow:false,
-			btnStatus:false,
-			confirmShow:false,
-			confirmTitle:'',
-			confirmText:'',
-			clickType:0,
+			loadingMessage: '',
+			toastMessage: '',
+			toastShow: false,
+			btnStatus: false,
+			confirmShow: false,
+			confirmTitle: '',
+			confirmText: '',
+			clickType: 0,
 			data: {				//	数据
-				pindex:0,
-				process:[],
-				order:{},
-				products:[],
-				payment:{}
+				pindex: 0,
+				process: [],
+				order: {},
+				products: [],
+				payment: {}
 			},
             stime: '',			//	开始时间
             showGive: true,		//	开关
