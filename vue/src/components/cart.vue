@@ -3,7 +3,7 @@
 		<div class="msg-back" @click="goback()"></div>
 		<div class="msg-title">购物车</div>
 	</div>
-	<div class="col-wrapper" style="position: relative" v-if="cartList.length > 0">
+	<div class="col-wrapper" style="position: relative;margin-bottom: 0px;" v-if="cartList.length > 0">
 		<div class="notify-box">
 			<div class="ntips" v-show="editMode === 1">请选择删除商品</div>
 			<div class="ntips" v-else>购物车中共有{{ cartList.length }}个商品</div>
@@ -11,7 +11,7 @@
 				<a @click="changMode">{{ modeText }}</a>
 			</div>
 		</div>
-		<div class="card-wrapper" style="padding: 40px 0px 0px;">
+		<div class="card-wrapper" style="padding: 45px 0px 0px;">
 			<cart-list :chosen.sync="choseArr" v-for="item in cartList" :pid="item.id"
 					:img="item.shotcut" :pname="item.name" :pprice="item.price"
 					:pnums="item.nums" :pstore="item.store" :mode="editMode"
@@ -50,7 +50,7 @@
 		</div>
 	</div>
 
-	<div class="col-wrapper" style="padding:25px 0px 5px;" v-else>
+	<div class="col-wrapper" style="padding: 10px 0px 0px;margin-bottom: 0px;" v-else>
 		<div class="image"></div>
 		<p class="tips">亲，您的购物车空空如也~</p>
 		<x-button type="primary" text="逛一逛" class="public-bgcolor" v-link="{name:'index'}"></x-button>
@@ -229,7 +229,7 @@
 </script>
 
 <style scoped>
-	.col-wrapper,.card-wrapper{
+	.col-wrapper,.card-wrapper {
 		width:100%;
 		height:auto;
 	}

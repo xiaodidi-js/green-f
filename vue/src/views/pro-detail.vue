@@ -19,18 +19,22 @@
                     <div class="title">{{ data.name }}</div>
                     <div class="desc">{{ data.description }}</div>
                     <div class="price nowrap">
-                        <div class="price nowrap" v-if="data.is_promote || !data.sale">
-                            <label class="unit">¥</label>
-                            <span style="font-size:40px;">
-								{{ data.price }}
-							</span>
-                            <div class="old">原价:¥ {{ data.starprice }}</div>
-                        </div>
-                        <div class="price nowrap" v-else>
-                            <label class="unit">¥</label>
-                            <span style="font-size:40px;">
-								{{ data.price }}
-							</span>
+                        <!--<div class="price nowrap" v-if="data.is_promote || !data.sale">-->
+                            <!--<label class="unit">¥</label>-->
+                            <!--<span style="font-size:40px;">-->
+								<!--{{ data.price }}-->
+							<!--</span>-->
+                            <!--<div class="old">原价:¥ {{ data.starprice }}</div>-->
+                        <!--</div>-->
+                        <div class="price nowrap">
+                            <div>
+                                <label class="unit">¥</label>
+                                    <span style="font-size:40px;">
+                                    {{ data.price }}
+                                </span>
+                            </div>
+                            <div class="old" style="float: left;">原价:¥ {{ data.starprice }}</div>
+                            <div class="buyingPson" v-show="seckillShow">每人限购{{ data.activepay }}份</div>
                         </div>
                     </div>
                     <div class="deliver">
@@ -248,7 +252,6 @@
             this.timeline();
 
 
-            console.log(document.getElementById('card').children[0]);
 
 //            $("#card").find('li').each(function() {
 //                console.log($(this).siblings());
@@ -897,6 +900,17 @@
         color: #ccc;
         text-decoration: line-through;
     }
+
+    .pro-mes .price .buyingPson {
+        font-size: 16px;
+        color: #c40000;
+        padding-left: 26px;
+        width: 43%;
+        line-height: 18px;
+        font-weight: bold;
+        float: left;
+    }
+
     .divider {
         width: 97%;
         padding-left: 3%;
