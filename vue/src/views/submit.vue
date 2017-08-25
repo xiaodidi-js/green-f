@@ -52,7 +52,7 @@
 
 		<my-cell-item>
 			<div class="line-con">
-				<textarea placeholder="订单补充说明" maxlength="50" class="addition" v-model="memo"></textarea>
+				<textarea placeholder="订单补充说明" maxlength="150" class="addition" v-model="memo"></textarea>
 			</div>
 		</my-cell-item>
 
@@ -135,11 +135,11 @@
 			<!--</div>-->
 			<!--</div>-->
 			<!--</my-cell-item>-->
-			<my-cell-item style="margin:0px;" v-if="score == 0">
+			<my-cell-item style="margin:0px;display: none;" v-if="score == 0">
 				<div class="line-con zero-font" style="font-size:14px;">没有可用积分</div>
 			</my-cell-item>
 
-			<my-cell-item style="margin:0px;" v-else>
+			<my-cell-item style="margin:0px;display: none;" v-else>
 				<div class="line-con zero-font">
 					<div class="l-icon score"></div>
 					<div class="l-tit score">{{ score }}积分(可抵扣{{ scoreMoney.showText }}元)</div>
@@ -289,7 +289,6 @@
         ready() {
             this.isRadio();
             this.submitReady();
-            console.log(this.cartInfo);
         },
         computed: {
             list: function(){
@@ -306,12 +305,15 @@
             },
             scoreMoney: function() {
                 let obj = {}, money = this.score / 100;
-                if(money > 1) {
-                    var count = parseInt(this.paySum);
-                    count -= 1;
-					money = count;
-				} else {
-                    return money = this.score / 100;
+                if(this.scoreSwitch) {
+                    if(money > 1) {
+                        var count = parseInt(this.paySum);
+                        count -= 1;
+                        money = count;
+                        console.log(money);
+                    } else {
+                        return money = this.score / 100;
+                    }
 				}
                 obj['showText'] = money.toFixed(2);
                 if(this.scoreSwitch) {
@@ -335,19 +337,14 @@
                     if(this.couponObj.type == 1 || this.couponObj.type == 3) {
                         money = this.couponObj.minus_money;
                     } else {
-                        money = this.paySum * (1-this.couponObj.discount);
+                        money = this.paySum * (1 - this.couponObj.discount);
                     }
                 }
                 return money.toFixed(2);
             },
             lastPaySum: function() {
-
-                let lastMoney =
-					parseFloat(this.paySum) +
-					parseFloat(this.freight) -
-					parseFloat(this.scoreMoney.makePrice) -
-					parseFloat(this.couponMoney);
-
+                console.log(parseFloat(this.paySum) , parseFloat(this.freight) , parseFloat(this.scoreMoney.makePrice) , parseFloat(this.couponMoney));
+                let lastMoney = parseFloat(this.paySum) + parseFloat(this.freight) - parseFloat(this.scoreMoney.makePrice) - parseFloat(this.couponMoney);
                 if(lastMoney <= 0) lastMoney = 1;
                 return lastMoney.toFixed(2);
             }
@@ -401,7 +398,6 @@
                             this.toastMessage = '网络开小差了~';
                             this.toastShow = true;
                         });
-
                         //	判断有没有快递配送
                         typeof(res.address) == '' ? this.myCellTitle = '到店自提' : this.myCellTitle = '请选择配送方式';
                         this.data.pay = res.pay;
@@ -761,10 +757,10 @@
 		height:auto;
 		vertical-align:middle;
 	}
-	.line-con .addition{
+	.line-con .addition {
 		width: 90%;
 		background: #f2f2f2;
-		height: 5rem;
+		height: 8rem;
 		font-size: 1.3rem;
 		margin: 0px auto;
 		display: block;

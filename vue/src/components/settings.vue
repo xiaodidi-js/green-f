@@ -15,10 +15,10 @@
 				<option v-for="so in sexOpts" :value="so.key" :selected="data.sex === so.key">{{ so.value }}</option>
 			</select>
 		</div>
-		<div class="list">
-			<label>出生日期</label>
-			<input type="text" placeholder="请输入您的出生日期" readonly value="{{ data.birthday }}" @click="getDate" style="color:#999;"/>
-		</div>
+		<!--<div class="list">-->
+			<!--<label>出生日期</label>-->
+			<!--<input type="text" placeholder="请输入您的出生日期" readonly value="{{ data.birthday }}" @click="getDate" style="color:#999;"/>-->
+		<!--</div>-->
 		<!-- 日历组件 -->
 		<calendar v-ref:calendar :value.sync="data.birthday" title="" :weeks-list="['日','一','二','三','四','五','六']"></calendar>
 		<div class="list" @click="changePwd">

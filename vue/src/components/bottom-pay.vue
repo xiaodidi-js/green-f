@@ -1,5 +1,5 @@
 <template>
-	<div class="bottom-buy" :class="{'fixed':fixed}" :style="{bottom:fixed===true&&btm > 0 ? btm + unit : 0}">
+	<div class="bottom-buy" :class="{'fixed':fixed}" :style="{bottom:fixed === true && btm > 0 ? btm + unit : 0}">
 		<div class="mes">
 			<span>合计：</span>
 			<span style="margin-left:12px;">¥{{ sum }}</span>
@@ -44,6 +44,7 @@
             if(this.sum == 0.01) {
 				this.sum = 1;
             }
+            console.log(this.sum);
 		},
 		methods: {
 			submit: function(){

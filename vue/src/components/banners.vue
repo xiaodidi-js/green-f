@@ -26,7 +26,7 @@
     <!--</template>-->
 
     <swiper :list="banners" :show-desc-mask="false" :aspect-ratio="650/1242" dots-position="center"
-            auto dots-class="dots-my" style="width: 100%;clear:both;top:50px;"></swiper>
+            auto dots-class="dots-my" style="width: 100%;clear:both;top:50px;" ></swiper>
 
 </template>
 
@@ -36,8 +36,6 @@
     import Scroller from 'vux/src/components/scroller'
     import Toast from 'vux/src/components/toast'
     import {myActive, mySearch, commitData} from 'vxpath/actions'
-    import axios from 'axios'
-    import qs from 'qs'
     import XButton from 'vux/src/components/x-button'
 
     export default{
@@ -55,6 +53,7 @@
             return {
                 banners: [],
                 searchKey: '',
+                numbers: 5000,
             }
         },
         components: {
