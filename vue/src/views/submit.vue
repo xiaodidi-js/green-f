@@ -289,6 +289,7 @@
         ready() {
             this.isRadio();
             this.submitReady();
+            console.log(this.cartInfo);
         },
         computed: {
             list: function(){
@@ -343,8 +344,11 @@
                 return money.toFixed(2);
             },
             lastPaySum: function() {
-                console.log(parseFloat(this.paySum) , parseFloat(this.freight) , parseFloat(this.scoreMoney.makePrice) , parseFloat(this.couponMoney));
-                let lastMoney = parseFloat(this.paySum) + parseFloat(this.freight) - parseFloat(this.scoreMoney.makePrice) - parseFloat(this.couponMoney);
+                let lastMoney =
+					parseFloat(this.paySum) +
+					parseFloat(this.freight) -
+					parseFloat(this.scoreMoney.makePrice) -
+					parseFloat(this.couponMoney);
                 if(lastMoney <= 0) lastMoney = 1;
                 return lastMoney.toFixed(2);
             }
@@ -358,15 +362,14 @@
         },
         methods: {
             getLastDay(year, month) {
-                var new_year = year;  //取当前的年份
+                var new_year = year;  	//取当前的年份
                 var new_month = month++;//取下一个月的第一天，方便计算（最后一天不固定）
-                if (month > 12)      //如果当前大于12月，则年份转到下一年
-                {
+                if (month > 12)	{		//如果当前大于12月，则年份转到下一年
                     new_month -= 12;    //月份减
-                    new_year++;      //年份增
+                    new_year++;      	//年份增
                 }
                 var new_date = new Date(new_year, new_month, 1);        //取当年当月中的第一天
-                var  day = new Date(new_date.getTime() - 1000 * 60 * 60 * 24);
+                var day = new Date(new_date.getTime() - 1000 * 60 * 60 * 24);
                 return day.getDate();//获取当月最后一天日期
             },
             submitReady() {
@@ -442,8 +445,10 @@
                         this.theDay = "次日";
                         $(".my-icon").eq(1).removeAttr("disabled");
                         var doDay = this.getLastDay(y,m);
+                        var new_date = new Date(y, m, 1);	//取当年当月中的第一天
+                        var thatTime = new_date.getFullYear() + '-' + (new_date.getMonth() + 1) + '-' + new_date.getDate();
                         if(d === doDay) {
-                            time = y + "-" + m + "-" + d;
+                            time = thatTime;
                         } else {
                             d = date.getDate() + 1;
                             time = y + "-" + m + "-" + d;
@@ -621,7 +626,7 @@
                     scoreNumber: this.scoreNumber,
                     paysum: this.lastPaySum,
                     tips: this.memo,
-                    openid: sessionStorage.getItem("openid"),//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
+                    openid: 'os0CqxBBANhLuBLTsViL3C0zDlNs',//sessionStorage.getItem("openid"), os0CqxBBANhLuBLTsViL3C0zDlNs
                     pshonse: this.shonse,
                     gift: {'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                 };

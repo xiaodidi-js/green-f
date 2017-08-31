@@ -1,8 +1,10 @@
 <template>
     <div class="xieyi-content">
-        <div class="xieyi-desc">
-            <strong class="xieyi-title">{{ title }}</strong>
-            <p class="description">{{ content }}</p>
+        <strong class="xieyi-title">{{ title }}</strong>
+        <div class="xieyi-desc" id="desc">
+            <!--<p v-html="content"></p>-->
+            <!--<strong class="xieyi-title">{{ title }}</strong>-->
+            <!--<p class="description">{{ content }}</p>-->
         </div>
     </div>
     <toast :show.sync="toastShow" type="text">{{ toastMessage }}</toast>
@@ -32,6 +34,7 @@
                 this.$getData('/index/index/xieyi').then((res)=>{
                     this.title = res.info.data;
                     this.content = res.info.data;
+                    $("#desc").html(this.content);
                     var str = this.title.substring(0,9);
                     this.title = str;
 
@@ -53,7 +56,7 @@
         background: #fff;
     }
 
-    .xieyi-content .xieyi-title {
+    .xieyi-title {
         font-size: 20px;
         text-align: center;
         color: #81c429;
