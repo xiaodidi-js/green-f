@@ -258,6 +258,7 @@
                 expressName: '',		 //	收件人名称
                 telphone: 0,	//	电话号码
                 switchShow: false,
+                ar: ['22:00','06:00'],
             }
         },
         components: {
@@ -289,6 +290,7 @@
         ready() {
             this.isRadio();
             this.submitReady();
+            this.checkTime(this.ar);
             console.log(this.cartInfo);
         },
         computed: {
@@ -361,6 +363,24 @@
             },
         },
         methods: {
+            //	设置提交订单时间 如果超出时间范围则提交不了订单
+            checkTime: function (ar) {
+                var d = new Date(),	that = this;
+                var current = d.getHours() * 60 + d.getMinutes();
+                var ar_begin = ar[0].split(':');
+                var ar_end = ar[1].split(':');
+                var b = parseInt(ar_begin[0]) * 60 + parseInt(ar_begin[1]);
+                var e = parseInt(ar_end[0]) * 60 + parseInt(ar_end[1]);
+                for(let i in this.cartInfo) {
+                    if (current >= b && current <= e) {
+                        if (this.cartInfo[i].deliverytime == 0) {
+                            alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                            that.$router.go({ name:'cart' });
+                            return false;
+                        }
+                    }
+                }
+			},
             getLastDay(year, month) {
                 var new_year = year;  	//取当前的年份
                 var new_month = month++;//取下一个月的第一天，方便计算（最后一天不固定）
