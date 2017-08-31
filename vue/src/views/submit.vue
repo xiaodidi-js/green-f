@@ -258,6 +258,7 @@
                 expressName: '',		 //	收件人名称
                 telphone: 0,	//	电话号码
                 switchShow: false,
+                ar: ['22:00','23:59'],
             }
         },
         components: {
@@ -362,20 +363,22 @@
         methods: {
             //	设置提交订单时间 如果超出时间范围则提交不了订单
             checkTime: function (ar) {
-                var d = new Date(),	that = this;
+                var d = new Date(),
+					that = this,
+					time = null,
+					date = new Date(),
+					y = date.getFullYear(),
+					m = date.getMonth() + 1;
                 var current = d.getHours() * 60 + d.getMinutes();
                 var ar_begin = ar[0].split(':');
                 var ar_end = ar[1].split(':');
                 var b = parseInt(ar_begin[0]) * 60 + parseInt(ar_begin[1]);
                 var e = parseInt(ar_end[0]) * 60 + parseInt(ar_end[1]);
-                for(let i in this.cartInfo) {
-                    if (current >= b && current <= e) {
-                        if (this.cartInfo[i].deliverytime == 0) {
-                            alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                            that.$router.go({ name:'cart' });
-                            return false;
-                        }
-                    }
+                if (current >= b && current <= e) {
+                    var new_date = new Date(y, m, 1);	//取当年当月中的第一天
+                    var thatTime = new_date.getFullYear() + '-' + (new_date.getMonth() + 1) + '-' + (new_date.getDate() + 1);
+                    time = thatTime;
+                    $("#today").find("option:selected").text(time);
                 }
 			},
             getLastDay(year, month) {
@@ -480,14 +483,8 @@
                         time = y + "-" + m + "-" + d;
                         $("#today").find("option:selected").text(time);
                     }
-                    if (this.cartInfo[i].peisongok == 0) {
-                        var new_date = new Date(y, m, 1);	//取当年当月中的第一天
-                        var thatTime = new_date.getFullYear() + '-' + (new_date.getMonth() + 1) + '-' + (new_date.getDate() + 1);
-                        console.log(thatTime);
-                        time = thatTime;
-                        $("#today").find("option:selected").text(time);
-					}
                 }
+                this.checkTime(this.ar)
                 $(".bor").find(".my-icon").change(function () {
                     $(this).addClass("my-icon-chosen").siblings().removeClass("my-icon-chosen");
                 });
