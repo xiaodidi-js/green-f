@@ -119,6 +119,7 @@
                 choseArr:[],
 				likeOrder:[],
                 data:{},
+                ar: ['22:00','00:01'],
             }
         },
         ready() {
@@ -127,7 +128,6 @@
             $(".group ,.active").css({
                 "color" : "#81c429",
             });
-            console.log(this.cartList);
 		},
         watch: {
 			$route(to) {
@@ -141,6 +141,22 @@
 			}
         },
         methods: {
+            //	设置提交订单时间 如果超出时间范围则提交不了订单
+            checkTime: function (ar) {
+                var d = new Date(),	that = this;
+                var current = d.getHours() * 60 + d.getMinutes();
+                var ar_begin = ar[0].split(':');
+                var ar_end = ar[1].split(':');
+                var b = parseInt(ar_begin[0]) * 60 + parseInt(ar_begin[1]);
+                var e = parseInt(ar_end[0]) * 60 + parseInt(ar_end[1]);
+                for(let i in this.cartList) {
+                    if (current >= b && current <= e) {
+                        if (this.cartList[i].deliverytime == 0) {
+                            alert("抱歉：订单已经超过了今天的截单时间，您的订单将会安排在后天配送。请注意！");
+                        }
+                    }
+                }
+            },
             goback () {
                 window.history.back();
             },
@@ -182,6 +198,7 @@
                     this.$dispatch('showMes','还未选择商品');
                     return false;
                 }
+                content.checkTime(content.ar);
                 content.setSelCart(this.choseArr);
                 content.$router.go({name:'submit'});
             }
@@ -190,7 +207,6 @@
             goOver() {
                 this.modeText = "编辑";
                 this.editMode = 0;
-
                 this.$getData('/index/index/wxshare').then((res)=>{
 					$('.gopay').css('background',res.color);
 				});

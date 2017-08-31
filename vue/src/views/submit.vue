@@ -258,7 +258,6 @@
                 expressName: '',		 //	收件人名称
                 telphone: 0,	//	电话号码
                 switchShow: false,
-                ar: ['22:00','06:00'],
             }
         },
         components: {
@@ -289,9 +288,8 @@
         },
         ready() {
             this.isRadio();
-            this.submitReady();
-            this.checkTime(this.ar);
             console.log(this.cartInfo);
+            this.submitReady();
         },
         computed: {
             list: function(){
@@ -313,7 +311,6 @@
                         var count = parseInt(this.paySum);
                         count -= 1;
                         money = count;
-                        console.log(money);
                     } else {
                         return money = this.score / 100;
                     }
@@ -483,6 +480,13 @@
                         time = y + "-" + m + "-" + d;
                         $("#today").find("option:selected").text(time);
                     }
+                    if (this.cartInfo[i].peisongok == 0) {
+                        var new_date = new Date(y, m, 1);	//取当年当月中的第一天
+                        var thatTime = new_date.getFullYear() + '-' + (new_date.getMonth() + 1) + '-' + (new_date.getDate() + 1);
+                        console.log(thatTime);
+                        time = thatTime;
+                        $("#today").find("option:selected").text(time);
+					}
                 }
                 $(".bor").find(".my-icon").change(function () {
                     $(this).addClass("my-icon-chosen").siblings().removeClass("my-icon-chosen");
