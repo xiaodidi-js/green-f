@@ -484,7 +484,7 @@
                         $("#today").find("option:selected").text(time);
                     }
                 }
-                this.checkTime(this.ar)
+                this.checkTime(this.ar);
                 $(".bor").find(".my-icon").change(function () {
                     $(this).addClass("my-icon-chosen").siblings().removeClass("my-icon-chosen");
                 });

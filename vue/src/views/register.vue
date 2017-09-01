@@ -15,7 +15,7 @@
 	<!--</div>-->
 	<div class="eleChonse">
 		<bottom-check style="width:43%;float:left;" title="我已阅读并同意" :status.sync="data.check"></bottom-check>
-		<a href="javascript:void(0);" v-link="{name: 'xieyi'}" class="xieyi">{{ data.xieyi }}</a>
+		<a href="javascript:void(0);" v-link="{name: 'xieyi'}" class="xieyi">绿秧田商城服务协议</a>
 	</div>
 	<!-- 底部按钮 -->
 	<div class="btn-wrapper" style="width:90%;margin:0px 5%;">
@@ -219,7 +219,7 @@
 	.eleChonse .xieyi {
 		position: absolute;
 		top: 0px;
-		right: 0px;
+		left: 150px;
 	}
 	/* eleChonse end */
 	.btn-wrapper {

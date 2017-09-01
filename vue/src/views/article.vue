@@ -44,8 +44,7 @@
             });
             this.$getData('/index/index/articledetail/cid/' + this.$route.params.cid).then((res)=>{
                 if(res.status === 1) {
-                    this.$id("article").innerHTML = res.content.content;
-                    console.log(res.content.content);
+                    $("#article").html(res.content.content);
                     this.list = res.content;
                 }else{
                     this.toastMessage = res.info;
@@ -66,9 +65,7 @@
             }
         },
 		methods: {
-			$id(id) {
-			    return document.getElementById(id);
-			}
+
 		}
 	}
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="xieyi-content">
-        <strong class="xieyi-title">{{ title }}</strong>
+        <strong class="xieyi-title" v-html="title"></strong>
         <div class="xieyi-desc" id="desc">
             <!--<p v-html="content"></p>-->
             <!--<strong class="xieyi-title">{{ title }}</strong>-->
@@ -37,7 +37,6 @@
                     $("#desc").html(this.content);
                     var str = this.title.substring(0,9);
                     this.title = str;
-
                 },(res)=>{
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;
