@@ -141,6 +141,7 @@ export default{
 					setTimeout(function(){
 						context.btnDis = false;
 						context.btnText = '找回密码';
+                        location.reload();
 						context.$router.go({name:'login'});
 					},800);
 				}else if(typeof res.info !== 'undefined') {

@@ -18,8 +18,8 @@
 	<div class="btn-wrapper">
 		<x-button type="primary" :text="btnText" :disabled="btnDis" style="line-height:47px;" @click="postData"></x-button>
 		<div class="link-box">
-			<a class="left" v-link="{name:'find'}">找回密码</a>
-			<a class="right" v-link="{name:'register'}">免费注册</a>
+			<a class="left leftText-href-a" v-link="{name:'find'}" style="color: #c40000">找回密码</a>
+			<a class="right leftText-href-a" v-link="{name:'register'}">免费注册</a>
 		</div>
 	</div>
 	<!-- 输入内容 -->
@@ -174,6 +174,12 @@ export default{
 		position:absolute;
 		right:0;
 		top:0;
+	}
+
+	.btn-wrapper .link-box .leftText-href-a {
+		color: rgb(129, 199, 51);
+		font-size: 1.5rem;
+		font-weight: bold;
 	}
 
 	.pwd-input {

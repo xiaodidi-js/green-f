@@ -4,7 +4,7 @@
 			<icon type="success" class="my-icon my-icon-chosen" v-show="status"></icon>
 			<icon type="circle" class="my-icon" v-show="!status"></icon>
 		</div>
-		<div class="wbox">
+		<div class="wbox" style="color: rgb(129, 199, 51)">
 			<span style="margin-left: 1.5rem;">{{ title }}</span>
 			<a v-if="desc != ''" style="color:#81c429">
 				<label>{{ desc }}</label>

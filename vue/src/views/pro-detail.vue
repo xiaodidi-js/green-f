@@ -39,7 +39,7 @@
                     </div>
                     <div class="deliver">
                         <div class="son">快递：{{ makeFreight }}</div>
-                        <div class="son">销量：{{ data.virtual_sale }}</div>
+                        <div class="son" style="display: none;">销量：{{ data.virtual_sale }}</div>
                         <div class="son">库存：{{ data.store }}</div>
                     </div>
                     <!-- 分割线 -->
