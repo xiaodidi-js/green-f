@@ -80,7 +80,6 @@
 				if(this.list[i].activity != -1 && this.list[i].activity != 0) {
 					this.vieible = true;
 				}
-
                 if(this.list[i].activity == 0) {
                     this.vieible = true;
                 } else {
@@ -88,7 +87,6 @@
 				}
 
 			}
-
 			$(function() {
 			    $(".todaybtn").mouseover(function() {
 			        $(this).css({

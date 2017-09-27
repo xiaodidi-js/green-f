@@ -114,7 +114,6 @@
             Message:function() {
                 this.$http.get(localStorage.apiDomain + 'public/index/index/productinfo').then((response)=>{
                     this.data = response.data.articles.list;
-                    console.log(this.data);
                 },(response)=>{
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;

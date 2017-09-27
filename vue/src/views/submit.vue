@@ -52,7 +52,7 @@
 
 		<my-cell-item>
 			<div class="line-con">
-				<textarea placeholder="订单补充说明" maxlength="150" class="addition" v-model="memo"></textarea>
+				<textarea placeholder="订单补充说明（若在自提点的送货上门范围内，可在此填写更为详细的地址来获取送货上门的服务。）" maxlength="150" class="addition" v-model="memo"></textarea>
 			</div>
 		</my-cell-item>
 
@@ -461,28 +461,30 @@
                 var date = new Date() , y = date.getFullYear() , m = date.getMonth() + 1 , d = date.getDate();
                 var time = null;
                 for(let i = 0; i < this.cartInfo.length; i++) {
-                    if (this.cartInfo[i].deliverytime == 0) {
-                        this.theDay = "次日";
-                        $(".my-icon").eq(1).removeAttr("disabled");
-                        var doDay = this.getLastDay(y,m);
-                        var new_date = new Date(y, m, 1);	//取当年当月中的第一天
-                        var thatTime = new_date.getFullYear() + '-' + (new_date.getMonth() + 1) + '-' + new_date.getDate();
-                        if(d === doDay) {
-                            time = thatTime;
-                        } else {
-                            d = date.getDate() + 1;
+                    switch (true) {
+						case this.cartInfo[i].deliverytime == 0:
+                            this.theDay = "次日";
+                            $(".my-icon").eq(1).removeAttr("disabled");
+                            var doDay = this.getLastDay(y,m);
+                            var new_date = new Date(y, m, 1);	//取当年当月中的第一天
+                            var thatTime = new_date.getFullYear() + '-' + (new_date.getMonth() + 1) + '-' + new_date.getDate();
+                            if(d === doDay) {
+                                time = thatTime;
+                            } else {
+                                d = date.getDate() + 1;
+                                time = y + "-" + m + "-" + d;
+                            }
+                            $("#today").find("option:selected").text(time);
+
+						case this.cartInfo[i].deliverytime == 1:
+                            $(".my-icon").eq(0).hide();
+                            $(".my-icon").eq(1).css("left","0px");
+                            $(".my-icon").eq(1).addClass("my-icon-chosen");
+                            $(".label-radio").eq(0).hide();
+                            this.theDay = "当日";
                             time = y + "-" + m + "-" + d;
-                        }
-                        $("#today").find("option:selected").text(time);
-                    } else if (this.cartInfo[i].deliverytime == 1) {
-                        $(".my-icon").eq(0).hide();
-                        $(".my-icon").eq(1).css("left","0px");
-                        $(".my-icon").eq(1).addClass("my-icon-chosen");
-                        $(".label-radio").eq(0).hide();
-                        this.theDay = "当日";
-                        time = y + "-" + m + "-" + d;
-                        $("#today").find("option:selected").text(time);
-                    }
+                            $("#today").find("option:selected").text(time);
+					};
                 }
                 this.checkTime(this.ar);
                 $(".bor").find(".my-icon").change(function () {
@@ -563,14 +565,14 @@
                 let content = this;
                 content.popShow = true;
                 content.openpop = true;
-                if (content.deliverName === '快递配送') {
+                if (content.deliverName == '快递配送') {
                     content.chonseParcel = false;
                     $(".commentButton").css("width","45%");
                     $(".con-box").css({
                         "marginTop" : "17px",
                         "height" : "80%"
                     });
-                } else if (content.deliverName === '到店自提') {
+                } else if (content.deliverName == '到店自提') {
                     content.chonseParcel = true;
                     $(".commentButton").css("width","93%");
                     $(".con-box").css({
@@ -599,39 +601,41 @@
         },
         events: {
             submitOrder: function() {
-                if(!this.deliverType) {
-                    this.toastMessage = '未选择收货方式';
-                    this.toastShow = true;
-                    return false;
-                }else if(!this.address) {
-                    this.toastMessage = '未选择收货地址';
-                    this.toastShow = true;
-                    return false;
-                }else if(this.payType <= 0) {
-                    this.toastMessage = '未选择支付方式';
-                    this.toastShow = true;
-                    return false;
-                }else if(this.cartInfo.length <= 0) {
-                    this.toastMessage = '未选择要购买的商品';
-                    this.toastShow = true;
-                    return false;
-                }else if(this.lastPaySum <= 0) {
-                    this.toastMessage = '支付金额不能小于等于0';
-                    this.toastShow = true;
-                    return false;
-                } else if(this.shonse != 0 && this.shonse == -1) {
-                    this.toastMessage = '请选择配送时间！';
-                    this.toastShow = true;
-                    return false;
-                }
+                switch (true) {
+					case !this.deliverType:
+                        this.toastMessage = '未选择收货方式';
+                        this.toastShow = true;
+                        return false;
+					case !this.address:
+                        this.toastMessage = '未选择收货地址';
+                        this.toastShow = true;
+                        return false;
+					case this.payType <= 0:
+                        this.toastMessage = '未选择支付方式';
+                        this.toastShow = true;
+                        return false;
+					case this.cartInfo.length <= 0:
+                        this.toastMessage = '未选择要购买的商品';
+                        this.toastShow = true;
+                        return false;
+					case this.lastPaySum <= 0:
+                        this.toastMessage = '支付金额不能小于等于0';
+                        this.toastShow = true;
+                        return false;
+					case this.shonse != 0 && this.shonse == -1:
+                        this.toastMessage = '请选择配送时间！';
+                        this.toastShow = true;
+                        return false;
+				}
                 for(var i in this.cartInfo) {
-                    if (this.cartInfo[i].deliverytime == 0) {
-                        break;
-                    } else if (this.cartInfo[i].deliverytime == 1) {
-                        alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
-                        this.$route.go({name: 'card'});
-                        break;
-                    }
+                    switch (true) {
+                        case this.cartInfo[i].deliverytime == 0:
+                            break;
+                        case this.cartInfo[i].deliverytime == 1:
+                            alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                            this.$route.go({name: 'card'});
+                            break;
+					}
                 }
                 this.loadingMessage = '正在提交...';
                 this.loadingShow = true;
@@ -652,7 +656,7 @@
                     gift: {'shopid':this.shopid,'id':this.address,'giftstu':this.giftstu},
                 };
                 this.$postData('/index/user/getSubmitOrder',pdata).then((res)=>{
-                    if(res.status === 1) {
+                    if (res.status == 1) {
                         this.clearSel();
                         this.$router.replace('order/detail/' + res.oid);
                         this.loadingShow = false;
@@ -660,7 +664,7 @@
                         alert(res.info);
                         this.loadingShow = false;
                         this.$router.go({name:'cart'});
-                    } else if(res.status === -1) {
+                    } else if (res.status == -1) {
                         this.loadingShow = false;
                         this.toastMessage = res.info;
                         this.toastShow = true;

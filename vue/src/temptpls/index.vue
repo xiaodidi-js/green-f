@@ -55,7 +55,6 @@
 	<card-rectangle :hotproducts="data.hotproducts"></card-rectangle>
 	<!-- 精选文章列表 -->
 	<card-image :articles="data.articles"></card-image>
-
 	<!-- 底部间距 -->
 	<bottom-separator></bottom-separator>
 	<!-- 底部选项卡 -->

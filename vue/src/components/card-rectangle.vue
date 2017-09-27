@@ -178,32 +178,34 @@
                             formatName: '',
                             format: '',
                         };
-                        if(data.peisongok == 0 && data.deliverytime == 1) {
-                            alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
-                            return false;
-                        } else if (data.peisongok == 0 && data.deliverytime == 0) {
-                            alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
-                            return false;
-                        } else if (data.activeid == 1) {
-                            alert("这是限时抢购商品！");
-                            return false;
-                        } else if (data.activestu == 2) {
-                            alert("请点击商品图片，进入商品详情页进行分享购买！");
-                            return false;
-                        } else if (data.store == 0) {
-                            alert("已售罄");
-                            return false;
-                        }
+                        switch (true) {
+                            case data.peisongok == 0 && data.deliverytime == 1:
+                                alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                                return false;
+                            case data.peisongok == 0 && data.deliverytime == 0:
+                                alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
+                                return false;
+                            case data.store == 0:
+                                alert("已售罄");
+                                return false;
+                            case data.activeid == 1:
+                                alert("这是限时抢购商品！");
+                                return false;
+                            case data.activestu == 2:
+                                alert("请点击商品图片，进入商品详情页进行分享购买！");
+                                return false;
+                        };
                         if(sessionStorage.getItem("myCart") != '') {
                             for(var y in cart) {
                                 if (cart[y]["deliverytime"] != data.deliverytime) {
-                                    if (data.deliverytime == 0) {
-                                        alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                        return false;
-                                    } else if (data.deliverytime == 1) {
-                                        alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                        return false;
-                                    }
+                                    switch (true) {
+										case data.deliverytime == 0:
+                                            alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                            return false;
+										case data.deliverytime == 1:
+                                            alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                            return false;
+									}
                                 }
                             }
                         }
@@ -570,7 +572,7 @@
 		width: 100%;
 		height: 4rem;
 		font-size: 11px;
-		color: #bfbfbf;
+		color: #0a0a0a;
 		text-align: center;
 		background: #eee;
 		clear: both;

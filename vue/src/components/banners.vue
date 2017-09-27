@@ -9,7 +9,6 @@
                 <a href="javascript:void(0)" class="order-search-btn" style="display:block;" @click="goSearch()">搜索</a>
                 <input style="display:none;"/>
             </form>
-
         </div>
         <div class="customer">
             <a href="javascript:void(0)" class="txt-service" @click="goPage"></a>

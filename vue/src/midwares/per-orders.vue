@@ -125,17 +125,16 @@
 		ready() {
             this.kefu();
             this.getData(1);
-		    if(this.$store.state.dtype == 5) {
-                this.getData(this.$store.state.dtype);
-                $("#cardOrder").css("display","none");
-			} else {
-                $("#cardOrder").css("display","block");
-                this.getData(1);
-			}
+            this.getColorVisible();
 		},
         watch: {
 			$route(to) {
                 this.getData(1);
+                this.getColorVisible();
+			}
+        },
+		methods: {
+		    getColorVisible () {
                 if(this.$store.state.dtype == 5) {
                     this.getData(this.$store.state.dtype);
                     $("#cardOrder").css("display","none");
@@ -143,9 +142,7 @@
                     $("#cardOrder").css("display","block");
                     this.getData(1);
                 }
-			}
-        },
-		methods: {
+			},
             visiblepro: function () {
 				this.showpro = true;
             },
@@ -190,7 +187,7 @@
 							localStorage.removeItem('userInfo');
 							context.$router.go({name:'login'});
 						},800);
-					}else{
+					} else {
 						this.toastMessage = res.info;
 						this.toastShow = true;
 					}

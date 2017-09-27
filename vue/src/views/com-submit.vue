@@ -52,6 +52,8 @@
 </template>
 
 <script>
+
+
 import CommentGroup from 'components/comment-group'
 import XButton from 'vux/src/components/x-button'
 import Toast from 'vux/src/components/toast'

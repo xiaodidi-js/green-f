@@ -219,20 +219,46 @@ export default{
                     this.data.order = res.order;
                     this.data.products = res.products;
                     this.TimeText = this.data.process[0].endtime - this.data.process[0].stime;
-                    if(this.data.order.statext == '用户取消') {
-                        this.showTime = false;
-                    } else if(this.data.order.statext == '待支付') {
-                        this.showTime = true;
-                    } else if(this.data.order.statext == '确认收货') {
-                        this.showTime = false;
-                        this.btnStatus = false;
-                    } else if(this.data.order.statext == '待发货' || this.data.order.statext == '待收货' || this.data.order.statext == '待评价') {
-                        this.showTime = false;
-                        this.btnStatus = false;
-                    } else if (this.minute == '0' && this.second == "0") {
-                        this.clickType = 1;
-                        this.showTime = false;
-                    }
+                    switch (true) {
+						case this.data.order.statext == '用户取消':
+                            this.showTime = false;
+							break;
+                        case this.data.order.statext == '待支付':
+                            this.showTime = true;
+                            break;
+						case this.data.order.statext == '确认收货':
+                            this.showTime = false;
+                            this.btnStatus = false;
+						    break;
+						case this.data.order.statext == '待发货' || this.data.order.statext == '待收货' || this.data.order.statext == '待评价':
+                            this.showTime = false;
+                            this.btnStatus = false;
+                            break;
+						case this.minute == '0' && this.second == "0":
+                            this.clickType = 1;
+                            this.showTime = false;
+                            break;
+						default:
+						    //	...
+					}
+//                    if(this.data.order.statext == '用户取消') {
+//                        this.showTime = false;
+//                    }
+//                    if(this.data.order.statext == '待支付') {
+//                        this.showTime = true;
+//                    }
+//                    if(this.data.order.statext == '确认收货') {
+//                        this.showTime = false;
+//                        this.btnStatus = false;
+//                    }
+//                    if(this.data.order.statext == '待发货' || this.data.order.statext == '待收货' || this.data.order.statext == '待评价') {
+//                        this.showTime = false;
+//                        this.btnStatus = false;
+//                    }
+//                    if (this.minute == '0' && this.second == "0") {
+//                        this.clickType = 1;
+//                        this.showTime = false;
+//                    }
                     //判断是否有赠品
                     for(var i in this.data.products) {
                         if(self.data.products[i].gift == 1) {
@@ -402,14 +428,14 @@ export default{
 						this.toastMessage = response.info;
 						this.toastShow = true;
 						this.btnStatus = false;
-						if(response.status === 1) {
+						if (response.status === 1) {
 							this.data.order.receive = 1;
 							this.data.pindex = 3;
 							this.data.process[3].status = 1;
 							this.data.process[3].time = response.time;
 							this.data.order.statext = '确认收货';
 							this.data.order.status = 1;
-						}else if(response.status===-1){
+						} else if (response.status===-1) {
 							let context = this;
 							setTimeout(function(){
 								context.clearAll();
@@ -554,8 +580,8 @@ export default{
                 this.toastShow = true;
             });
         },
-		orderCancel: function(){
-			if(this.data.order.pay==1 || this.data.order.send == 1 || this.data.order.receive == 1){
+		orderCancel: function() {
+			if(this.data.order.pay == 1 || this.data.order.send == 1 || this.data.order.receive == 1){
 				this.toastMessage = '订单已支付';
 				this.toastShow = true;
 				return false;
@@ -566,20 +592,34 @@ export default{
 			this.confirmShow = true;
 			this.btnStatus = true;
 		},
-		orderConfirm: function(){
-			if(this.data.order.pay !=1) {
-				this.toastMessage = '订单未支付';
-				this.toastShow = true;
-				return false;
-			}else if(this.data.order.send !=1) {
-				this.toastMessage = '订单未发货';
-				this.toastShow = true;
-				return false;
-			}else if(this.data.order.receive == 1) {
-				this.toastMessage = '订单已确认收货';
-				this.toastShow = true;
-				return false;
+		orderConfirm: function() {
+			switch (true) {
+				case this.data.order.pay != 1:
+                    this.toastMessage = '订单未支付';
+                    this.toastShow = true;
+                    return false;
+                case this.data.order.send != 1:
+                    this.toastMessage = '订单未发货';
+                    this.toastShow = true;
+                    return false;
+                case this.data.order.receive == 1:
+                    this.toastMessage = '订单已确认收货';
+                    this.toastShow = true;
+                    return false;
 			}
+//			if (this.data.order.pay != 1) {
+//				this.toastMessage = '订单未支付';
+//				this.toastShow = true;
+//				return false;
+//			} else if (this.data.order.send != 1) {
+//				this.toastMessage = '订单未发货';
+//				this.toastShow = true;
+//				return false;
+//			} else if (this.data.order.receive == 1) {
+//				this.toastMessage = '订单已确认收货';
+//				this.toastShow = true;
+//				return false;
+//			}
 			this.clickType = 2;
 			this.confirmTitle = '确认收货';
 			this.confirmText = '请在收到货物后才确认收货,确认?';
@@ -616,19 +656,19 @@ export default{
 				this.toastShow = true;
 			});
 		},
-		serviceApply: function(){
-			if(this.data.order.pay!=1){
+		serviceApply: function() {
+			if (this.data.order.pay!=1){
 				this.toastMessage = '订单未支付';
 				this.toastShow = true;
 				return false;
-			}else if(this.data.order.send!=1){
+			} else if (this.data.order.send!=1){
 				this.toastMessage = '订单未发货';
 				this.toastShow = true;
 				return false;
 			}
-			if(this.data.order.status==-2){
+			if (this.data.order.status == -2) {
 				this.$router.go({name:'service',params:{oid:this.$route.params.oid}});
-			}else{
+			} else {
 				this.$router.go({name:'service-apply',params:{oid:this.$route.params.oid}});
 			}
 		}

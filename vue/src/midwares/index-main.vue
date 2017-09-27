@@ -106,7 +106,7 @@
                 this.$getData('/index/index').then((res) => {
                     this.loadingShow = false;
                     this.data = res.index_data;
-                    for (var i = 0; i < this.data.length; i++) {
+                    for (var i in this.data) {
                         if(this.data[i].type == 4) {
                             var l = this.data[i].arr.length;
                             for (var k = 0; k < l; k++) {

@@ -57,7 +57,6 @@
             $(".actives").css({
 				"color" : "#f67816",
 			});
-
 //            this.$getData('/index/index/wxshare').then((res) => {
 //                $(".active").css({
 //                    "color" : res.color,
@@ -103,7 +102,6 @@
                                 "color" : "#f67816",
                             });
                         });
-
 				}
 			},
 		},
@@ -127,7 +125,6 @@
 			},
             goCart: function() {
                 this.goBack();
-                var dom = document.getElementById("card").getElementsByClassName('group');
                 var cardDom = document.getElementById("card"), active = cardDom.children;
                 for(var i in active) {
                     try {

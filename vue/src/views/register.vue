@@ -90,7 +90,7 @@
                 this.$postData('/index/login/getCodeBySms',options).then((res)=>{
                     this.toastMessage = res.info;
                     this.toastShow = true;
-                    if(res.status === 1) {
+                    if (res.status === 1) {
                         this.codeText = second+'s';
                         timer = setInterval(function() {
                             if(second > 0) {
@@ -102,7 +102,7 @@
                                 clearInterval(timer);
                             }
                         },1000);
-                    }else{
+                    } else {
                         this.codeDis = false;
                     }
                 },(res)=>{
@@ -114,39 +114,40 @@
             checkBefore: function() {
                 let telReg = /^[\d]{9,11}$/;
                 let pwdReg = /^[\w@\+\?\.\*-\_\#\^]{6,30}$/;
-                if (this.data.tel.length <= 0) {
-                    this.toastMessage = '请输入您的手机号码';
-                    this.toastShow = true;
-                    return false;
-                } else if(!telReg.test(this.data.tel)) {
-                    this.toastMessage = '手机号码格式不正确';
-                    this.toastShow = true;
-                    return false;
-                } else if(this.data.ucode.length != 5) {
-                    this.toastMessage = '请输入五位验证码';
-                    this.toastShow = true;
-                    return false;
-                } else if(this.unpwd.length <= 0) {
-                    this.toastMessage = '请输入账号密码';
-                    this.toastShow = true;
-                    return false;
-                } else if(!pwdReg.test(this.unpwd)) {
-                    this.toastMessage = '账号密码格式不正确';
-                    this.toastShow = true;
-                    return false;
-                } else if(this.ucpwd.length <= 0) {
-                    this.toastMessage = '请输入确认密码';
-                    this.toastShow = true;
-                    return false;
-                } else if(this.unpwd!==this.ucpwd) {
-                    this.toastMessage = '两次密码不一致';
-                    this.toastShow = true;
-                    return false;
-                } else if(!this.data.check) {
-                    this.toastMessage = '请先仔细阅读使用协议';
-                    this.toastShow = true;
-                    return false;
-                }
+                switch (true) {
+					case this.data.tel.length <= 0:
+                        this.toastMessage = '请输入您的手机号码';
+                        this.toastShow = true;
+                        return false;
+                    case !telReg.test(this.data.tel):
+                        this.toastMessage = '手机号码格式不正确';
+                        this.toastShow = true;
+                        return false;
+					case this.data.ucode.length != 5:
+                        this.toastMessage = '请输入五位验证码';
+                        this.toastShow = true;
+                        return false;
+					case this.unpwd.length <= 0:
+                        this.toastMessage = '请输入账号密码';
+                        this.toastShow = true;
+                        return false;
+					case !pwdReg.test(this.unpwd):
+                        this.toastMessage = '账号密码格式不正确';
+                        this.toastShow = true;
+                        return false;
+					case this.ucpwd.length <= 0:
+                        this.toastMessage = '请输入确认密码';
+                        this.toastShow = true;
+                        return false;
+					case this.unpwd!==this.ucpwd:
+                        this.toastMessage = '两次密码不一致';
+                        this.toastShow = true;
+                        return false;
+					case !this.data.check:
+                        this.toastMessage = '请先仔细阅读使用协议';
+                        this.toastShow = true;
+                        return false;
+				}
                 return true;
             },
             postData: function() {
@@ -159,29 +160,30 @@
                 this.btnText = '正在提交...';
                 let pdata = {utel:this.data.tel,upwd:this.unpwd,cpwd:this.ucpwd,code:this.data.ucode};
                 this.$postData('/index/login/useraction',pdata).then((res) => {
-                    if(res.status === 1) {
-                        let getData = res;
-                        if(getData.id && getData.token && getData.time) {
-                            let storeData = {id:getData.id,token:getData.token,time:getData.time};
-                            storeData = JSON.stringify(storeData);
-                            sessionStorage.removeItem('userInfo');
-                            localStorage.setItem('userInfo',storeData);
-                            location.reload();
-                        }
-                        this.toastMessage = getData.info;
-                        this.toastShow = true;
-                        let context = this;
-                        setTimeout(function(){
-                            context.btnDis = false;
-                            context.btnText = '免费注册';
-                            context.$router.replace('index');
-                        },800);
-                    }else if(typeof res.info !== 'undefined'){
-                        this.toastMessage = res.info;
-                        this.toastShow = true;
-                        this.btnDis = false;
-                        this.btnText = '免费注册';
-                    }
+                    switch (true) {
+						case res.status === 1:
+                            let getData = res;
+                            if(getData.id && getData.token && getData.time) {
+                                let storeData = {id:getData.id,token:getData.token,time:getData.time};
+                                storeData = JSON.stringify(storeData);
+                                sessionStorage.removeItem('userInfo');
+                                localStorage.setItem('userInfo',storeData);
+                                location.reload();
+                            }
+                            this.toastMessage = getData.info;
+                            this.toastShow = true;
+                            let context = this;
+                            setTimeout(function(){
+                                context.btnDis = false;
+                                context.btnText = '免费注册';
+                                context.$router.replace('index');
+                            },800);
+						case typeof res.info !== 'undefined':
+                            this.toastMessage = res.info;
+                            this.toastShow = true;
+                            this.btnDis = false;
+                            this.btnText = '免费注册';
+					}
                 },(res)=>{
                     this.toastMessage = '网络开小差了~';
                     this.toastShow = true;

@@ -250,9 +250,6 @@
             //选项卡
             this.siblingsDom();
             this.timeline();
-
-
-
 //            $("#card").find('li').each(function() {
 //                console.log($(this).siblings());
 //            });
@@ -386,7 +383,6 @@
                             content.$router.go({name: 'cart'});
                         }
                     });
-                } else {
                 }
                 return;
             },
@@ -420,16 +416,28 @@
                                 this.proNums = this.data.store;
                             }
                             //判断是否活动商品
-                            if (context.data.activestu == 0) {
-                                context.seckillShow = false;
-                            } else if (context.data.activestu == 2) {
-                                context.seckillShow = false;
-                            } else if (context.data.activestu == 1) {
-                                context.seckillShow = true;
+                            switch (true) {
+                                case context.data.activestu == 0:
+                                    context.seckillShow = false;
+                                    break;
+                                case context.data.activestu == 2:
+                                    context.seckillShow = false;
+                                    break;
+                                case context.data.activestu == 1:
+                                    context.seckillShow = true;
+                                    break;
+                                default:
+                                    //  ....
                             }
+//                            if (context.data.activestu == 0) {
+//                                context.seckillShow = false;
+//                            } else if (context.data.activestu == 2) {
+//                                context.seckillShow = false;
+//                            } else if (context.data.activestu == 1) {
+//                                context.seckillShow = true;
+//                            }
                             var scaleBox = this.data.content;
                             var itemEle = document.getElementsByClassName('ms-item')[1];
-
 //                            var dHeight = $(document).height();
 //                            dHeight -= 46 + 46;
                             // 处理异常
@@ -463,7 +471,6 @@
                 this.$getData('/index/user/tuijianzuhe/pid/' + this.$route.params.pid).then((res) => {
                     if (res.status == 1) {
                         this.tjData = res.info.data;
-                        console.log(res.info);
                         if(res.info.data == null) {
                             $('.tj-scroller').css({
                                 'height' : 50 + 'px',
@@ -684,14 +691,15 @@
                 if (shoping != null) {
                     for (let i = 0; i < shoping.length; i++) {
                         if (shoping[i]["deliverytime"] != this.data.deliverytime) {
-                            if (this.data.peisongok == 1 && this.data.deliverytime == 0) {
-                                alert("亲！您选购的菜品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                this.$router.go({name: 'cart'});
-                                return false;
-                            } else if (this.data.peisongok == 1 && this.data.deliverytime == 1) {
-                                alert("亲！您选购的菜品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！！");
-                                this.$router.go({name: 'cart'});
-                                return false;
+                            switch(true) {
+                                case this.data.peisongok == 1 && this.data.deliverytime == 0:
+                                    alert("亲！您选购的菜品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                    this.$router.go({name: 'cart'});
+                                    return false;
+                                case this.data.peisongok == 1 && this.data.deliverytime == 1:
+                                    alert("亲！您选购的菜品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！！");
+                                    this.$router.go({name: 'cart'});
+                                    return false;
                             }
                         }
                     }
@@ -706,26 +714,26 @@
                 this.buyNums = 1;
             },
             addCart: function () {
-                if (!this.formatPopShow == true) {
-                    this.formatPopShow = true;
-                    return false;
-                }
-                if (this.proNums <= 0) {
-                    this.toastMessage = '商品暂时缺货';
-                    this.toastShow = true;
-                    return false;
-                } else if (this.buyNums < 1) {
-                    this.toastMessage = '购买数量不能小于1';
-                    this.toastShow = true;
-                    return false;
-                } else if (this.buyNums > this.proNums) {
-                    this.toastMessage = '购买数量超过库存数量';
-                    this.toastShow = true;
-                    return false;
-                } else if (this.data.is_sell == 0) {
-                    this.toastMessage = "商品已下架";
-                    this.toastShow = true;
-                    return false;
+                switch (true) {
+                    case !this.formatPopShow == true:
+                        this.formatPopShow = true;
+                        return false;
+                    case this.proNums <= 0:
+                        this.toastMessage = '商品暂时缺货';
+                        this.toastShow = true;
+                        return false;
+                    case this.buyNums < 1:
+                        this.toastMessage = '购买数量不能小于1';
+                        this.toastShow = true;
+                        return false;
+                    case this.buyNums > this.proNums:
+                        this.toastMessage = '购买数量超过库存数量';
+                        this.toastShow = true;
+                        return false;
+                    case this.data.is_sell == 0:
+                        this.toastMessage = "商品已下架";
+                        this.toastShow = true;
+                        return false;
                 }
                 let cartObj = {};
                 let cartFormat = this.guige.length > 0 ? this.guige.join(',') : '';
@@ -757,16 +765,17 @@
                     return false;
                 }
                 if (shoping != null) {
-                    for (let i = 0; i < shoping.length; i++) {
+                    for (let i in shoping) {
                         if (shoping[i]["deliverytime"] != _self.data.deliverytime) {
-                            if (_self.data.peisongok == 1 && _self.data.deliverytime == 0) {
-                                alert("亲！您选购的商品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
-                                this.$router.go({name: 'cart'});
-                                return false;
-                            } else if (_self.data.peisongok == 1 && _self.data.deliverytime == 1) {
-                                alert("亲！您选购的商品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！！");
-                                this.$router.go({name: 'cart'});
-                                return false;
+                            switch(true) {
+                                case this.data.peisongok == 1 && this.data.deliverytime == 0:
+                                    alert("亲！您选购的菜品为次日配送商品，购物车里存在当日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！");
+                                    this.$router.go({name: 'cart'});
+                                    return false;
+                                case this.data.peisongok == 1 && this.data.deliverytime == 1:
+                                    alert("亲！您选购的菜品为当日配送商品，购物车里存在次日配送商品！所以在配送时间上不一致，请先结付或者删除购物车的菜品，再进行选购结付既可；谢谢您的配合！！");
+                                    this.$router.go({name: 'cart'});
+                                    return false;
                             }
                         }
                     }

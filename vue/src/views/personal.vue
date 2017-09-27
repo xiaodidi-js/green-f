@@ -85,7 +85,7 @@
 						localStorage.removeItem('userInfo');
 						context.$router.go({name:'login'});
 					},800);
-				}else{
+				} else {
 					this.toastMessage = res.info;
 					this.toastShow = true;
 				}

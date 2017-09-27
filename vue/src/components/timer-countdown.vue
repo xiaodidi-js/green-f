@@ -108,9 +108,9 @@
         },
         watch: {
             time: function(nval,oval) {
-                if(oval == ''){
+                if (oval == '') {
                     this.setTime();
-                }else if(nval <= 0){
+                } else if (nval <= 0){
                     this.status = 0;
                     clearInterval(this.timer);
                 }

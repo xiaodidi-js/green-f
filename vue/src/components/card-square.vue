@@ -6,7 +6,9 @@
 				<div class="ui-box" v-for="item in info.list">
 					<div @click="goPage('detail', {pid:item.id})">
 						<div class="img" v-if="item.store == 0">
-							<div class="qing">已售罄</div>
+							<div class="qing">
+								<div class="qing-text">已售罄</div>
+							</div>
 							<!--<div v-lazy:background-image="item.src" class="lazyImg"></div>-->
 							<img :src="item.src" alt="" style="width:100%;height:100%;" />
 						</div>
@@ -36,7 +38,9 @@
 				<div class="ui_box">
 					<div @click="goPage('detail', {pid:item.id})">
 						<div class="img" v-if="item.store == 0" v-bind:style="{backgroundImage:'url('+ item.src +')'}">
-							<div class="qing">已售罄</div>
+							<div class="qing">
+								<div class="qing-text">已售罄</div>
+							</div>
 							<div v-bind:style="{backgroundImage:'url('+ item.src +')'}" class="lazyImg"></div>
 							<!--<img :src="item.src" alt="" style="width:100%;height:100%;" />-->
 						</div>
@@ -135,22 +139,39 @@
                             formatName: '',
                             format: '',
                         };
-                        if(data.peisongok == 0 && data.deliverytime == 1) {
-                            alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
-                            return false;
-                        } else if(data.peisongok == 0 && data.deliverytime == 0) {
-                            alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
-                            return false;
-                        } else if(data.store == 0) {
-                            alert("已售罄");
-                            return false;
-                        } else if (data.activeid == 1) {
-                            alert("这是限时抢购商品！");
-                            return false;
-                        } else if (data.activestu == 2) {
-                            alert("请点击商品图片，进入商品详情页进行分享购买！");
-                            return false;
+                        switch (true) {
+                            case data.peisongok == 0 && data.deliverytime == 1:
+                                alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+                                return false;
+                            case data.peisongok == 0 && data.deliverytime == 0:
+                                alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
+                                return false;
+                            case data.store == 0:
+                                alert("已售罄");
+                                return false;
+                            case data.activeid == 1:
+                                alert("这是限时抢购商品！");
+                                return false;
+                            case data.activestu == 2:
+                                alert("请点击商品图片，进入商品详情页进行分享购买！");
+                                return false;
                         }
+//                        if(data.peisongok == 0 && data.deliverytime == 1) {
+//                            alert("抱歉，当日配送商品已截单。请到次日配送专区选购，谢谢合作！");
+//                            return false;
+//                        } else if(data.peisongok == 0 && data.deliverytime == 0) {
+//                            alert("抱歉，次日配送商品已截单。请到当日配送专区选购，谢谢合作！");
+//                            return false;
+//                        } else if(data.store == 0) {
+//                            alert("已售罄");
+//                            return false;
+//                        } else if (data.activeid == 1) {
+//                            alert("这是限时抢购商品！");
+//                            return false;
+//                        } else if (data.activestu == 2) {
+//                            alert("请点击商品图片，进入商品详情页进行分享购买！");
+//                            return false;
+//                        }
                         if(cart != '') {
                             for(var y in cart) {
                                 if (cart[y]["deliverytime"] != data.deliverytime) {
@@ -240,7 +261,6 @@
 
 	.wrapper-ele .ui_box .img .lazyImg {
 		width:100%;
-		padding-top:100%;
 	}
 
 	.wrapper-ele .ui_box .img .qing {
@@ -250,11 +270,16 @@
 		width: 100%;
 		height: 100%;
 		font-size: 26px;
-		line-height: 200px;
+		line-height: 155px;
 		color: #fff;
 		text-align: center;
 		z-index: 1;
 		background: rgba(0,0,0,0.5);
+	}
+
+	.wrapper-ele .ui_box .img .qing .qing-text {
+		line-height: inherit;
+		text-align: center;
 	}
 
 	.wrapper-ele .ui_box .mes{

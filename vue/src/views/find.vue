@@ -93,34 +93,35 @@ export default{
 		checkBefore: function() {
 			let telReg = /^[\d]{9,11}$/;
 			let pwdReg = /^[\w@\+\?\.\*-\_\#\^]{6,30}$/;
-			if (this.data.tel.length <= 0) {
-				this.toastMessage = '请输入您的手机号码';
-				this.toastShow = true;
-				return false;
-			} else if (!telReg.test(this.data.tel)) {
-				this.toastMessage = '手机号码格式不正确';
-				this.toastShow = true;
-				return false;
-			} else if (this.data.ucode.length != 5) {
-				this.toastMessage = '请输入五位验证码';
-				this.toastShow = true;
-				return false;
-			} else if (this.unpwd.length <= 0) {
-				this.toastMessage = '请输入账号密码';
-				this.toastShow = true;
-				return false;
-			} else if (!pwdReg.test(this.unpwd)) {
-				this.toastMessage = '账号密码格式不正确';
-				this.toastShow = true;
-				return false;
-			} else if (this.ucpwd.length <= 0) {
-				this.toastMessage = '请输入确认密码';
-				this.toastShow = true;
-				return false;
-			} else if (this.unpwd !== this.ucpwd) {
-				this.toastMessage = '两次密码不一致';
-				this.toastShow = true;
-				return false;
+			switch (true) {
+				case this.data.tel.length <= 0:
+                    this.toastMessage = '请输入您的手机号码';
+                    this.toastShow = true;
+                    return false;
+				case !telReg.test(this.data.tel):
+                    this.toastMessage = '手机号码格式不正确';
+                    this.toastShow = true;
+                    return false;
+				case this.data.ucode.length != 5:
+                    this.toastMessage = '请输入五位验证码';
+                    this.toastShow = true;
+                    return false;
+				case this.unpwd.length <= 0:
+                    this.toastMessage = '请输入账号密码';
+                    this.toastShow = true;
+                    return false;
+				case !pwdReg.test(this.unpwd):
+                    this.toastMessage = '账号密码格式不正确';
+                    this.toastShow = true;
+                    return false;
+				case this.ucpwd.length <= 0:
+                    this.toastMessage = '请输入确认密码';
+                    this.toastShow = true;
+                    return false;
+				case this.unpwd !== this.ucpwd:
+                    this.toastMessage = '两次密码不一致';
+                    this.toastShow = true;
+                    return false;
 			}
 			return true;
 		},
@@ -134,21 +135,21 @@ export default{
 			this.btnText = '正在提交...';
 			let pdata = {utel:this.data.tel,upwd:this.unpwd,cpwd:this.ucpwd,code:this.data.ucode};
 			this.$putData('/index/login/useraction',pdata).then((res)=>{
-				if(res.status === 1) {
-					this.toastMessage = res.info;
-					this.toastShow = true;
-					let context = this;
-					setTimeout(function(){
-						context.btnDis = false;
-						context.btnText = '找回密码';
-                        location.reload();
-						context.$router.go({name:'login'});
-					},800);
-				}else if(typeof res.info !== 'undefined') {
-					this.toastMessage = res.info;
-					this.toastShow = true;
-					this.btnDis = false;
-					this.btnText = '找回密码';
+			    switch (true) {
+					case res.status === 1:
+                        this.toastMessage = res.info;
+                        this.toastShow = true;
+                        let context = this;
+                        setTimeout(function(){
+                            context.btnDis = false;
+                            context.btnText = '找回密码';
+                            context.$router.go({name:'login'});
+                        },800);
+					case typeof res.info !== 'undefined':
+                        this.toastMessage = res.info;
+                        this.toastShow = true;
+                        this.btnDis = false;
+                        this.btnText = '找回密码';
 				}
 			},(res)=>{
 				this.toastMessage = '网络开小差了~';
